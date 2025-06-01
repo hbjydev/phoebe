@@ -42,7 +42,7 @@ spec:
           - path: /unifi/data
 
     route:
-      app:
+      main:
         hostnames:
           - "{{ .Release.Name }}.hayden.moe"
           - unifi.hayden.moe
@@ -52,7 +52,7 @@ spec:
             sectionName: https
         rules:
           - backendRefs:
-              - identifier: app
+              - identifier: main
                 port: *port
 
     service:
