@@ -26,3 +26,10 @@ releases:
     version: v1.17.2
     values: ['../kubernetes/apps/cert-manager/cert-manager/app/helm/values.yaml']
     needs: ['kube-system/cilium']
+
+  - name: metallb
+    namespace: metallb-system
+    chart: oci://ghcr.io/home-operations/charts-mirror/metallb
+    version: 0.14.9
+    values: ['../kubernetes/apps/metallb-system/metallb/app/helm/values.yaml']
+    needs: ['kube-system/cilium']
