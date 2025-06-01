@@ -1,0 +1,25 @@
+[env]
+_.python.venv = { path = "{{ config_root }}/.venv", create = true }
+KUBECONFIG = "{{ config_root }}/talos/kubeconfig"
+SOPS_AGE_KEY_FILE = "{{ config_root }}/age.key"
+TALOSCONFIG = "{{ config_root }}/talos/talosconfig"
+TALOS_SCHEMATIC="b61e5aa1d04f02c0c0ebebb049330a03943a38c0ed16f0b6d60973a61bc87f8c"
+# renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
+KUBERNETES_VERSION="v1.33.1"
+# renovate: datasource=docker depName=ghcr.io/siderolabs/installer
+TALOS_VERSION="v1.10.3"
+
+[tools]
+"python" = "3.13"
+"pipx:makejinja" = "2.7.2"
+"aqua:budimanjojo/talhelper" = "3.0.28"
+"aqua:cilium/cilium-cli" = "0.18.3"
+"aqua:FiloSottile/age" = "1.2.1"
+"aqua:fluxcd/flux2" = "2.6.0"
+"aqua:getsops/sops" = "3.10.2"
+"aqua:helm/helm" = "3.18.1"
+"aqua:helmfile/helmfile" = "1.1.1"
+"aqua:kubernetes-sigs/kustomize" = "5.6.0"
+"aqua:kubernetes/kubectl" = "1.33.1"
+"aqua:siderolabs/talos" = "1.10.3"
+"aqua:casey/just" = "1.40.0"

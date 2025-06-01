@@ -1,0 +1,6 @@
+---
+creation_rules:
+  - path_regex: ./clusters/phoebe/.*
+    age:
+      - age1nmqyc2uapa3zd0gj90484xq56ntcuehjx626e5vqkcenqec3w46qd9xcm4 # me
+      - age1wxgpgwxkx0h4dh5sc3yfks2ahn9jpp4uysady0v0t6zah8wz2yqqyak90p # phoebe
