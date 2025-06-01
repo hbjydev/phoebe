@@ -22,5 +22,5 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: flux-system
+  targetNamespace: longhorn-system
   timeout: 5m
