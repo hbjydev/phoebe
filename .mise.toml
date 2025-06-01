@@ -3,7 +3,7 @@ _.python.venv = { path = "{{ config_root }}/.venv", create = true }
 KUBECONFIG = "{{ config_root }}/talos/kubeconfig"
 SOPS_AGE_KEY_FILE = "{{ config_root }}/age.key"
 TALOSCONFIG = "{{ config_root }}/talos/talosconfig"
-TALOS_SCHEMATIC="b61e5aa1d04f02c0c0ebebb049330a03943a38c0ed16f0b6d60973a61bc87f8c"
+TALOS_SCHEMATIC="873759897e719eea74d3139eced7b4fc3b64dc5d3124be3f3ae85751c10d6bcb"
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
 KUBERNETES_VERSION="v1.33.1"
 # renovate: datasource=docker depName=ghcr.io/siderolabs/installer

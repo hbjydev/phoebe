@@ -1,6 +1,27 @@
-# vim:ft=yaml
+# vim:ft=yaml sw=2 ts=2 et
 ---
 machine:
   type: controlplane
   install:
     disk: /dev/nvme0n1
+  nodeLabels:
+    node.longhorn.io/create-default-disk: config
+  nodeAnnotations:
+    node.longhorn.io/default-disks-config: '[{"path":"/var/mnt/longhorn","allowScheduling":true}]'
+---
+apiVersion: v1alpha1
+kind: UserVolumeConfig
+name: longhorn
+provisioning:
+  diskSelector:
+    match: disk.transport == "sata"
+  minSize: 100G
+filesystem:
+  type: xfs
+---
+apiVersion: v1alpha1
+kind: ExtensionServiceConfig
+name: tailscale
+environment:
+  - TS_AUTHKEY=op://phoebe/talos/TS_AUTHKEY
+  - TS_ROUTES=192.168.0.0/16,10.96.0.0/12

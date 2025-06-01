@@ -33,3 +33,10 @@ releases:
     version: 0.14.9
     values: ['../kubernetes/apps/metallb-system/metallb/app/helm/values.yaml']
     needs: ['kube-system/cilium']
+
+  - name: longhorn
+    namespace: longhorn-system
+    chart: oci://ghcr.io/home-operations/charts-mirror/longhorn
+    version: 1.9.0
+    values: ['../kubernetes/apps/longhorn-system/longhorn/app/helm/values.yaml']
+    needs: ['kube-system/cilium']

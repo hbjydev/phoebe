@@ -1,106 +1,124 @@
-# vim:ft=yaml
+# vim:ft=yaml sw=2 ts=2 et
 ---
 version: v1alpha1
 debug: false
 persist: true
 machine:
-    type: controlplane
-    token: op://phoebe/talos/MACHINE_TOKEN
-    ca:
-        crt: op://phoebe/talos/MACHINE_CA_CRT
-        key: op://phoebe/talos/MACHINE_CA_KEY
-    certSANs: ["127.0.0.1", "192.168.1.3"]
-    kubelet:
-        image: ghcr.io/siderolabs/kubelet:{{ ENV.KUBERNETES_VERSION }}
-        defaultRuntimeSeccompProfileEnabled: true
-        disableManifestsDirectory: true
-    network: {}
-    install:
-        disk: /dev/nvme0n1
-        image: factory.talos.dev/metal-installer/{{ ENV.TALOS_SCHEMATIC }}:{{ ENV.TALOS_VERSION }}
-        wipe: false
-    features:
-        rbac: true
-        stableHostname: true
-        apidCheckExtKeyUsage: true
-        diskQuotaSupport: true
-        kubePrism:
-            enabled: true
-            port: 7445
-        hostDNS:
-            enabled: true
-            resolveMemberNames: true
-            forwardKubeDNSToHost: false
-    nodeLabels:
-        node.kubernetes.io/exclude-from-external-load-balancers: ""
+  type: controlplane
+  token: op://phoebe/talos/MACHINE_TOKEN
+  ca:
+    crt: op://phoebe/talos/MACHINE_CA_CRT
+    key: op://phoebe/talos/MACHINE_CA_KEY
+  certSANs: ["127.0.0.1", "192.168.1.3"]
+  kubelet:
+    image: ghcr.io/siderolabs/kubelet:{{ ENV.KUBERNETES_VERSION }}
+    defaultRuntimeSeccompProfileEnabled: true
+    disableManifestsDirectory: true
+    nodeIP:
+      validSubnets: ["192.168.1.0/24"]
+  network: {}
+  install:
+    extraKernelArgs:
+      - -init_on_alloc
+      - -init_on_free
+      - -selinux
+      - apparmor=0
+      - i915.enable_guc=3
+      - init_on_alloc=0
+      - init_on_free=0
+      - intel_iommu=on
+      - iommu=pt
+      - mitigations=off
+      - security=none
+      - sysctl.kernel.kexec_load_disabled=1
+      - talos.auditd.disabled=1
+    disk: /dev/nvme0n1
+    image: factory.talos.dev/metal-installer/{{ ENV.TALOS_SCHEMATIC }}:{{ ENV.TALOS_VERSION }}
+    wipe: false
+  features:
+    rbac: true
+    stableHostname: true
+    apidCheckExtKeyUsage: true
+    diskQuotaSupport: true
+    kubePrism:
+      enabled: true
+      port: 7445
+    hostDNS:
+      enabled: true
+      resolveMemberNames: true
+      forwardKubeDNSToHost: false
+  nodeLabels:
+    node.kubernetes.io/exclude-from-external-load-balancers: ""
 cluster:
-    id: op://phoebe/talos/CLUSTER_ID
-    secret: op://phoebe/talos/CLUSTER_SECRET
-    controlPlane:
-        endpoint: https://192.168.1.3:6443
-    clusterName: phoebe
-    allowSchedulingOnControlPlanes: true
-    network:
-        cni:
-            name: none  # replaced by cilium helm chart deployment later
-        dnsDomain: phoebe.hayden.moe
-        podSubnets:
-            - 10.244.0.0/16
-        serviceSubnets:
-            - 10.96.0.0/12
-    token: op://phoebe/talos/CLUSTER_BOOTSTRAP_TOKEN
-    secretboxEncryptionSecret: op://phoebe/talos/CLUSTER_SECRETBOXENCRYPTIONSECRET
-    ca:
-        crt: op://phoebe/talos/CLUSTER_CA_CRT
-        key: op://phoebe/talos/CLUSTER_CA_KEY
-    aggregatorCA:
-        crt: op://phoebe/talos/CLUSTER_AGGREGATORCA_CRT
-        key: op://phoebe/talos/CLUSTER_AGGREGATORCA_KEY
-    serviceAccount:
-        key: op://phoebe/talos/CLUSTER_SERVICEACCOUNT_KEY
-    apiServer:
-        image: registry.k8s.io/kube-apiserver:{{ ENV.KUBERNETES_VERSION }}
-        certSANs:
-            - 192.168.1.3
-        disablePodSecurityPolicy: true
-        admissionControl:
-            - name: PodSecurity
-              configuration:
-                apiVersion: pod-security.admission.config.k8s.io/v1alpha1
-                defaults:
-                    audit: restricted
-                    audit-version: latest
-                    enforce: baseline
-                    enforce-version: latest
-                    warn: restricted
-                    warn-version: latest
-                exemptions:
-                    namespaces:
-                        - kube-system
-                    runtimeClasses: []
-                    usernames: []
-                kind: PodSecurityConfiguration
-        auditPolicy:
-            apiVersion: audit.k8s.io/v1
-            kind: Policy
-            rules:
-                - level: Metadata
-    controllerManager:
-        image: registry.k8s.io/kube-controller-manager:{{ ENV.KUBERNETES_VERSION }}
-    coreDNS:
-        disabled: true  # replaced by helm chart deployment later
-    proxy:
+  id: op://phoebe/talos/CLUSTER_ID
+  secret: op://phoebe/talos/CLUSTER_SECRET
+  controlPlane:
+    endpoint: https://192.168.1.3:6443
+  clusterName: phoebe
+  allowSchedulingOnControlPlanes: true
+  network:
+    cni:
+      name: none  # replaced by cilium helm chart deployment later
+    dnsDomain: phoebe.local
+    podSubnets:
+      - 10.244.0.0/16
+    serviceSubnets:
+      - 10.96.0.0/12
+  token: op://phoebe/talos/CLUSTER_BOOTSTRAP_TOKEN
+  secretboxEncryptionSecret: op://phoebe/talos/CLUSTER_SECRETBOXENCRYPTIONSECRET
+  ca:
+    crt: op://phoebe/talos/CLUSTER_CA_CRT
+    key: op://phoebe/talos/CLUSTER_CA_KEY
+  aggregatorCA:
+    crt: op://phoebe/talos/CLUSTER_AGGREGATORCA_CRT
+    key: op://phoebe/talos/CLUSTER_AGGREGATORCA_KEY
+  serviceAccount:
+    key: op://phoebe/talos/CLUSTER_SERVICEACCOUNT_KEY
+  apiServer:
+    image: registry.k8s.io/kube-apiserver:{{ ENV.KUBERNETES_VERSION }}
+    certSANs:
+      - 192.168.1.3
+    disablePodSecurityPolicy: true
+    admissionControl:
+      - name: PodSecurity
+        configuration:
+          apiVersion: pod-security.admission.config.k8s.io/v1alpha1
+          defaults:
+            audit: restricted
+            audit-version: latest
+            enforce: baseline
+            enforce-version: latest
+            warn: restricted
+            warn-version: latest
+          exemptions:
+            namespaces:
+              - kube-system
+              - longhorn-system
+              - metallb-system
+            runtimeClasses: []
+            usernames: []
+          kind: PodSecurityConfiguration
+    auditPolicy:
+      apiVersion: audit.k8s.io/v1
+      kind: Policy
+      rules:
+        - level: Metadata
+  controllerManager:
+    image: registry.k8s.io/kube-controller-manager:{{ ENV.KUBERNETES_VERSION }}
+  coreDNS:
+    disabled: true  # replaced by helm chart deployment later
+  proxy:
+    disabled: true
+    image: registry.k8s.io/kube-proxy:{{ ENV.KUBERNETES_VERSION }}
+  scheduler:
+    image: registry.k8s.io/kube-scheduler:{{ ENV.KUBERNETES_VERSION }}
+  discovery:
+    enabled: true
+    registries:
+      kubernetes:
         disabled: true
-        image: registry.k8s.io/kube-proxy:{{ ENV.KUBERNETES_VERSION }}
-    scheduler:
-        image: registry.k8s.io/kube-scheduler:{{ ENV.KUBERNETES_VERSION }}
-    discovery:
-        enabled: true
-        registries:
-            kubernetes:
-                disabled: true
-            service: {}
-    etcd:
-        ca:
-            crt: op://phoebe/talos/CLUSTER_ETCD_CA_CRT
-            key: op://phoebe/talos/CLUSTER_ETCD_CA_KEY
+      service: {}
+  etcd:
+    ca:
+      crt: op://phoebe/talos/CLUSTER_ETCD_CA_CRT
+      key: op://phoebe/talos/CLUSTER_ETCD_CA_KEY
