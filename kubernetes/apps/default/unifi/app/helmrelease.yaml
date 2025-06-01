@@ -53,7 +53,7 @@ spec:
         rules:
           - backendRefs:
               - identifier: main
-                port: *port
+                port: 8443
 
     service:
       main:
