@@ -57,7 +57,10 @@ spec:
 
     service:
       main:
+        type: LoadBalancer
         controller: main
+        annotations:
+          lbipam.cilium.io/ips: "192.168.2.11" # should be static
         ports:
           http:
             port: 8443
