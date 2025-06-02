@@ -17,7 +17,7 @@ spec:
   interval: 1h
   chart:
     spec:
-      chart: argocd
+      chart: argo-cd
       version: 8.0.14
       sourceRef:
         kind: HelmRepository
