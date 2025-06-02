@@ -9,11 +9,16 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/gatus/external
   dependsOn:
     - name: longhorn
       namespace: longhorn-system
   interval: 1h
   path: ./kubernetes/apps/default/jellyfin/app
+  postBuild:
+    substitute:
+      APP: *app
   prune: true
   retryInterval: 2m
   sourceRef:
