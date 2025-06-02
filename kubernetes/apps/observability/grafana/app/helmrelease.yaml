@@ -151,6 +151,11 @@ spec:
           revision: 40
           datasource:
             - { name: DS_PROMETHEUS, value: Prometheus }
+        longhorn:
+          # renovate: depName="Longhorn Dashboard"
+          gnetId: 22705
+          revision: 1
+          datasource: Prometheus
         prometheus:
           # renovate: depName="Prometheus"
           gnetId: 19105
