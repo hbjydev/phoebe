@@ -13,7 +13,7 @@ spec:
   rules:
     - backendRefs:
         - name: argocd-server
-          namespace: flux-system
+          namespace: argocd
           port: 80
       matches:
         - path:
