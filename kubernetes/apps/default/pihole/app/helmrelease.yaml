@@ -69,7 +69,9 @@ spec:
             enabled: true
             port: 53
             protocol: TCP
+            nodePort: 30001
           dns-udp:
             enabled: true
             port: 53
             protocol: UDP
+            nodePort: 30002
