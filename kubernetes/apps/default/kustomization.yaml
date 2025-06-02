@@ -7,6 +7,7 @@ components:
   - ../../components/common
 resources:
   - ./jellyfin/ks.yaml
+  - ./jellyseerr/ks.yaml
   - ./pihole/ks.yaml
   - ./prowlarr/ks.yaml
   - ./radarr/ks.yaml
