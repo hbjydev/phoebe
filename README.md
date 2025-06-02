@@ -15,11 +15,33 @@ _The cluster that runs on my desk, a bare metal Talos Kubernetes cluster, provis
 
 </div>
 
-## Requirements
+---
 
-- [Just](https://just.systems)
-- The Kubernetes CLI (`kubectl`)
-- [Helm](https://helm.sh)
-- [Terraform](https://terraform.io)
-- [`fluxctl`](https://fluxcd.io/flux/cmd/)
-- Patience
+## Overview
+
+This is a monorepo for the cluster that lives on my desk, which I called
+`phoebe`. It uses [Flux](https://fluxcd.io) to deploy services from this
+repository into my cluster, and a combination of [SOPS](https://getsops.io/) and
+[1Password](https://1password.com) to inject secrets into those services.
+
+It automatically updates itself over time using
+[Renovate](https://docs.renovatebot.com/), and tests pull requests for those
+updates using [GitHub Actions](https://github.com/features/actions).
+
+---
+
+## Kubernetes
+
+My Kubernetes cluster is deployed with [Talos](https://www.talos.dev). This
+repository's structure is largely based on the amazing work put in over at
+[`onedr0p/home-ops`](https://github.com/onedr0p/home-ops), but running my own
+services and configurations.
+
+### Core Components
+
+- [cert-manager](https://github.com/cert-manager/cert-manager): Manages TLS certificates via Let's Encrypt.
+- [cilium](https://github.com/cilium/cilium): eBPF-based networking and L2 load balancing with VIPs.
+- [external-dns](https://github.com/kubernetes-sigs/external-dns): Pushes DNS updates to CloudFlare and my internal DNS server when changes are needed.
+- [external-secrets](https://github.com/external-secrets/external-secrets): Managed Kubernetes secrets using [1Password Connect](https://github.com/1Password/connect).
+- [longhorn](https://github.com/longhorn/longhorn): Clustered storage system that handles all the difficult things for me, and is very easy to deploy.
+- [sops](https://github.com/getsops/sops): Managed secrets for Kubernetes, encrypted with Age, safely committed to Git.
