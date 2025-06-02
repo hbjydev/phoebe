@@ -1,0 +1,14 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: discolinear
+spec:
+  project: discolinear
+  source:
+    path: deploy
+    repoURL: 'https://github.com/hbjydev/discolinear'
+    targetRevision: HEAD
+  destination:
+    namespace: discolinear
+    server: 'https://kubernetes.default.svc'
