@@ -36,9 +36,9 @@ spec:
               SONARR__SERVER__PORT: &port 80
               SONARR__UPDATE__BRANCH: develop
               TZ: Europe/London
-            # envFrom:
-            #   - secretRef:
-            #       name: sonarr-secret
+            envFrom:
+              - secretRef:
+                  name: sonarr-secret
             probes:
               liveness: &probes
                 enabled: true
