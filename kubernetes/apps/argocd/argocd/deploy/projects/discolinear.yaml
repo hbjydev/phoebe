@@ -32,7 +32,7 @@ spec:
   namespaceResourceWhitelist:
   - group: 'apps'
     kind: Deployment
-  - group: 'external-secrets.io/v1'
+  - group: 'external-secrets.io'
     kind: ExternalSecret
   roles: []
   # # A role which provides read-only access to all applications in the project
