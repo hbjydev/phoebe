@@ -14,7 +14,7 @@ spec:
     - backendRefs:
         - kind: Service
           name: longhorn-frontend
-          namespace: longhorn-frontend
+          namespace: longhorn-system
           port: 80
       matches:
         - path:
