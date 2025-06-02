@@ -18,6 +18,9 @@ endpointRoutes:
   enabled: true
 envoy:
   rollOutPods: true
+  prometheus:
+    serviceMonitor:
+      enabled: true
 gatewayAPI:
   enabled: true
   enableAlpn: true
@@ -36,7 +39,19 @@ loadBalancer:
   mode: dsr
 localRedirectPolicy: true
 operator:
+  dashboards:
+    enabled: true
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: true
   replicas: 1
+  rollOutPods: true
+prometheus:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    trustCRDsExist: true
 rollOutCiliumPods: true
 routingMode: native
 securityContext:
