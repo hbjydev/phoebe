@@ -9,5 +9,6 @@ resources:
   - ./jellyfin/ks.yaml
   - ./pihole/ks.yaml
   - ./prowlarr/ks.yaml
+  - ./radarr/ks.yaml
   - ./sonarr/ks.yaml
   - ./unifi/ks.yaml
