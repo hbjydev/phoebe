@@ -29,4 +29,9 @@ spec:
     cleanupOnFail: true
     remediation:
       retries: 3
-  values: {}
+  values:
+    global:
+      domain: argocd.hayden.moe
+    configs:
+      params:
+        server.insecure: true
