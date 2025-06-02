@@ -15,7 +15,7 @@ spec:
         - kind: Service
           name: longhorn-frontend
           namespace: longhorn-frontend
-          port: http
+          port: 80
       matches:
         - path:
             type: PathPrefix
