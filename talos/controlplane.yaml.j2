@@ -122,3 +122,5 @@ cluster:
     ca:
       crt: op://phoebe/talos/CLUSTER_ETCD_CA_CRT
       key: op://phoebe/talos/CLUSTER_ETCD_CA_KEY
+    extraArgs:
+      listen-metrics-urls: http://0.0.0.0:2381
