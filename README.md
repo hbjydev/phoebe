@@ -45,3 +45,16 @@ services and configurations.
 - [external-secrets](https://github.com/external-secrets/external-secrets): Managed Kubernetes secrets using [1Password Connect](https://github.com/1Password/connect).
 - [longhorn](https://github.com/longhorn/longhorn): Clustered storage system that handles all the difficult things for me, and is very easy to deploy.
 - [sops](https://github.com/getsops/sops): Managed secrets for Kubernetes, encrypted with Age, safely committed to Git.
+
+---
+
+## Acknowledgements
+
+Thanks to all the people who donate their time to the
+[Home Operations](https://discord.gg/home-operations) Discord community. Their
+help, especially that of [onedr0p](https://github.com/onedr0p), has been
+invaluable in getting my setup working to the degree it does.
+
+They host a mirror of Helm charts I make use of too. They mirror charts with no
+OCI registry available to `ghcr.io`, allowing me to keep all of my Helm charts
+available over OCI images.
