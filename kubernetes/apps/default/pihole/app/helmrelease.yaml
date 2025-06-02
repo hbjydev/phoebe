@@ -66,10 +66,10 @@ spec:
             port: 443
             protocol: HTTPS
           dns-tcp:
-            enabled: false
+            enabled: true
             port: 53
             protocol: TCP
           dns-udp:
-            enabled: false
+            enabled: true
             port: 53
             protocol: UDP
