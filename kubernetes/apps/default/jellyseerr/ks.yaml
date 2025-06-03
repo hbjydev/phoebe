@@ -11,6 +11,7 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/gatus/external
+    - ../../../../components/volsync
   dependsOn:
     - name: longhorn
       namespace: longhorn-system
@@ -21,6 +22,7 @@ spec:
       APP: *app
       GATUS_PATH: /api/v1/status
       GATUS_SUBDOMAIN: request
+      VOLSYNC_CAPACITY: 10Gi
   prune: true
   retryInterval: 2m
   sourceRef:
