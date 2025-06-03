@@ -1,8 +1,14 @@
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: discolinear
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: discolinear
+  namespace: argocd
 spec:
   project: discolinear
   source:
