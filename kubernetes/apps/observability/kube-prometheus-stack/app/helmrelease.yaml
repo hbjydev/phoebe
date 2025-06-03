@@ -96,7 +96,7 @@ spec:
             relabelings:
               - sourceLabels: [__name__]
                 regex: (.*)
-                targetLabels: cluster
+                targetLabel: cluster
                 replacement: phoebe
                 action: replace
         resources:
