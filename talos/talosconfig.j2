@@ -1,0 +1,9 @@
+---
+context: phoebe
+contexts:
+  phoebe:
+    endpoints: [192.168.1.3]
+    nodes: [192.168.1.3]
+    ca: {{ ENV.CA_CRT }}
+    crt: {{ ENV.ADMIN_CRT }}
+    key: {{ ENV.ADMIN_KEY }}
