@@ -38,7 +38,7 @@ spec:
       - name: &name PIHOLE_PASSWORD
         valueFrom:
           secretKeyRef:
-            name: pihole-dns-secret
+            name: &secret pihole-dns-secret
             key: *name
     extraArgs:
       - --registry=noop
