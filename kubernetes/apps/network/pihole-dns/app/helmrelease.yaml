@@ -48,7 +48,7 @@ spec:
       - --crd-source-kind=DNSEndpoint
       - --gateway-name=internal
       - --pihole-api-version=6
-      - --pihole-server=https://pihole.hayden.moe
+      - --pihole-server=http://192.168.1.53
       - --pihole-password=$(PIHOLE_PASSWORD)
     triggerLoopOnEvent: true
     sources: ["crd", "gateway-httproute"]
