@@ -6,9 +6,9 @@ metadata:
 spec:
   project: discolinear
   source:
-    path: deploy
-    repoURL: 'https://github.com/hbjydev/discolinear'
-    targetRevision: HEAD
+    path: ./kubernetes/apps/argocd/argocd/deploy/applications/discolinear
+    repoURL: https://github.com/hbjydev/phoebe
+    targetRevision: main
   destination:
     namespace: discolinear
     server: 'https://kubernetes.default.svc'

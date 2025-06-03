@@ -1,0 +1,23 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discolinear
+  labels:
+    app: discolinear
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: discolinear
+  template:
+    metadata:
+      labels:
+        app: discolinear
+    spec:
+      containers:
+      - name: discolinear
+        image: ghcr.io/hbjydev/discolinear:0.1.0
+        envFrom:
+        - secretRef:
+            name: discolinear-secret
