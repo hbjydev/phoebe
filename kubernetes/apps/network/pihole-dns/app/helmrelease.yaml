@@ -32,6 +32,9 @@ spec:
       retries: 3
   values:
     fullnameOverride: *app
+    image:
+      repository: registry.k8s.io/external-dns/external-dns
+      tag: 0.17.0
     provider:
       name: pihole
     env:
