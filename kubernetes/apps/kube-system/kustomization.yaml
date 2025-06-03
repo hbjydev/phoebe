@@ -10,3 +10,4 @@ resources:
   - ./coredns/ks.yaml
   - ./intel-device-plugin-operator/ks.yaml
   - ./metrics-server/ks.yaml
+  - ./snapshot-controller/ks.yaml
