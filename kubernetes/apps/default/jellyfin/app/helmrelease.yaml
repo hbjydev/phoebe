@@ -82,9 +82,7 @@ spec:
                 port: *port
     persistence:
       config:
-        type: persistentVolumeClaim
-        accessMode: ReadWriteOnce
-        size: 10Gi
+        existingClaim: jellyfin
         globalMounts:
           - path: /config
       config-cache:
