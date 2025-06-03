@@ -15,7 +15,7 @@ spec:
       name: *app
       namespace: *namespace
   interval: 1h
-  path: ./kubernetes/apps/cnpg-system/cnpg/operator
+  path: ./kubernetes/apps/cnpg-system/cloudnative-pg/operator
   prune: true
   retryInterval: 2m
   sourceRef:
