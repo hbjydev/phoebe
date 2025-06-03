@@ -86,9 +86,7 @@ spec:
         globalMounts:
           - path: /config
       config-cache:
-        type: persistentVolumeClaim
-        accessMode: ReadWriteOnce
-        size: 50Gi
+        existingClaim: jellyfin-cache
         globalMounts:
           - path: /config/metadata
       media:
