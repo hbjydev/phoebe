@@ -41,8 +41,6 @@ spec:
             name: &secret pihole-dns-secret
             key: *name
     extraArgs:
-      - --registry=noop
-      - --policy=upsert-only
       - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
       - --crd-source-kind=DNSEndpoint
       - --gateway-name=internal
@@ -50,10 +48,9 @@ spec:
       - --pihole-server=https://pihole.hayden.moe
       - --pihole-password=$(PIHOLE_PASSWORD)
     triggerLoopOnEvent: true
-    policy: sync
     sources: ["crd", "gateway-httproute"]
-    txtOwnerId: default
-    txtPrefix: k8s.
+    registry: noop
+    policy: upsert-only
     domainFilters: ["hayden.moe"]
     serviceMonitor:
       enabled: true
