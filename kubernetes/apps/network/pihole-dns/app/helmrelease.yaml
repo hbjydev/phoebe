@@ -1,0 +1,61 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/source.toolkit.fluxcd.io/ocirepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: pihole-dns
+spec:
+  interval: 5m
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  ref:
+    tag: 1.16.1
+  url: oci://ghcr.io/home-operations/charts-mirror/external-dns
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app pihole-dns
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: pihole-dns
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    fullnameOverride: *app
+    provider:
+      name: pihole
+    env:
+      - name: &name PIHOLE_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: pihole-dns-secret
+            key: *name
+    extraArgs:
+      - --registry=noop
+      - --policy=upsert-only
+      - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
+      - --crd-source-kind=DNSEndpoint
+      - --gateway-name=internal
+      - --pihole-api-version=6
+      - --pihole-server=https://pihole.hayden.moe
+      - --pihole-password=$(PIHOLE_PASSWORD)
+    triggerLoopOnEvent: true
+    policy: sync
+    sources: ["crd", "gateway-httproute"]
+    txtOwnerId: default
+    txtPrefix: k8s.
+    domainFilters: ["hayden.moe"]
+    serviceMonitor:
+      enabled: true
+    podAnnotations:
+      secret.reloader.stakater.com/reload: *secret
