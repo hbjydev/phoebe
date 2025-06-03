@@ -43,5 +43,5 @@ spec:
           username: Phoebe - AlertManager
           avatarURL: https://avatars.githubusercontent.com/in/1354746?s=128  # phoebe-bot
           apiURL:
-            key: discord-webhook-url
+            key: DISCORD_WEBHOOK_URL
             name: alertmanager-secret
