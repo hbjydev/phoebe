@@ -88,9 +88,7 @@ spec:
                 port: *port
     persistence:
       config:
-        type: persistentVolumeClaim
-        accessMode: ReadWriteOnce
-        size: 10Gi
+        existingClaim: sabnzbd
       media:
         type: nfs
         server: 192.168.1.2
