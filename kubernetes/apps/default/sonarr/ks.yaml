@@ -21,7 +21,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 10Gi
-      VOLSYNC_SOURCE_PVC: sonarr-config
+      VOLSYNC_SOURCE_PVC: sonarr
   prune: true
   retryInterval: 2m
   sourceRef:
