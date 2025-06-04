@@ -23,7 +23,6 @@ spec:
       GATUS_PATH: /api/v1/status
       GATUS_SUBDOMAIN: request
       VOLSYNC_CAPACITY: 2Gi
-      VOLSYNC_SOURCE_PVC: jellyseerr-config
   prune: true
   retryInterval: 2m
   sourceRef:
