@@ -35,9 +35,7 @@ spec:
 
     persistence:
       data:
-        type: persistentVolumeClaim
-        accessMode: ReadWriteOnce
-        size: 8Gi
+        existingClaim: unifi
         globalMounts:
           - path: /unifi/data
 
