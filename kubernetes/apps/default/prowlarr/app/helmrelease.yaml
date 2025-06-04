@@ -88,8 +88,6 @@ spec:
                 port: *port
     persistence:
       config:
-        type: persistentVolumeClaim
-        accessMode: ReadWriteOnce
-        size: 10Gi
+        existingClaim: prowlarr
       tmp:
         type: emptyDir
