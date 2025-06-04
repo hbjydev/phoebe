@@ -7,4 +7,4 @@ components:
   - ../../components/common
 resources:
   - ./cloudflare-dns/ks.yaml
-  - ./pihole-dns/ks.yaml
+  - ./unifi-dns/ks.yaml
