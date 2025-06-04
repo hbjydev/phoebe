@@ -1,0 +1,43 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Sync Tailscale ACLs
+
+on:
+  push:
+    branches: &branches ["main"]
+    paths: &paths
+      - misc/ts-acls/acls.json
+      - .github/workflows/ts-acls.yaml
+  pull_request:
+    branches: *branches
+    paths: *paths
+  workflow_dispatch:
+
+concurrency:
+  group: sync-ts-acls
+
+jobs:
+  sync:
+    name: Sync ACLs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Deploy ACL
+        if: github.event_name == 'push'
+        id: deploy-acl
+        uses: tailscale/gitops-acl-action@v1
+        with:
+          api-key: ${{ secrets.TS_API_KEY }}
+          tailnet: ${{ secrets.TS_TAILNET }}
+          action: apply
+
+      - name: Test ACL
+        if: github.event_name == 'pull_request'
+        id: test-acl
+        uses: tailscale/gitops-acl-action@v1
+        with:
+          api-key: ${{ secrets.TS_API_KEY }}
+          tailnet: ${{ secrets.TS_TAILNET }}
+          action: test
