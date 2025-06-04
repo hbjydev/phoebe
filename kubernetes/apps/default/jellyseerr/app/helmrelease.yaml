@@ -83,15 +83,11 @@ spec:
                 port: *port
     persistence:
       config:
-        type: persistentVolumeClaim
-        accessMode: ReadWriteOnce
-        size: 2Gi
+        existingClaim: jellyseerr
         globalMounts:
           - path: /app/config
       config-cache:
-        type: persistentVolumeClaim
-        accessMode: ReadWriteOnce
-        size: 10Gi
+        existingClaim: jellyseerr-cache
         globalMounts:
           - path: /app/config/cache
       tmpfs:
