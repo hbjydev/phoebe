@@ -4,13 +4,15 @@ name: Sync Tailscale ACLs
 
 on:
   push:
-    branches: &branches ["main"]
-    paths: &paths
+    branches: ["main"]
+    paths:
       - misc/ts-acls/acls.json
       - .github/workflows/ts-acls.yaml
   pull_request:
-    branches: *branches
-    paths: *paths
+    branches: ["main"]
+    paths:
+      - misc/ts-acls/acls.json
+      - .github/workflows/ts-acls.yaml
   workflow_dispatch:
 
 concurrency:
