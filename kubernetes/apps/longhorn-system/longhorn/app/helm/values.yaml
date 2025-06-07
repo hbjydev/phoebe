@@ -3,7 +3,7 @@ defaultSettings:
   defaultReplicaCount: 1
   defaultDataPath: /var/mnt/longhorn
 persistence:
-  reclaimPolicy: Retain
+  reclaimPolicy: Delete
   defaultClassReplicaCount: 1
 longhornUI:
   replicas: 1
