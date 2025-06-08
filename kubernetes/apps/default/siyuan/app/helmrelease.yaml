@@ -28,8 +28,6 @@ spec:
               tag: v3.1.32@sha256:5faa0457fc0f2acc6925d6018a9b760abfade1341f5c7f04d0da0a224adc9bac
             env:
               TZ: Europe/London
-              PUID: 1000
-              PGID: 1000
               SIYUAN_WORKSPACE_PATH: /data
             ports:
               - containerPort: &port 6806
