@@ -89,12 +89,3 @@ spec:
         existingClaim: siyuan
         globalMounts:
           - path: /data
-      tmpfs:
-        type: emptyDir
-        advancedMounts:
-          jellyseerr:
-            app:
-              - path: /app/config/logs
-                subPath: logs
-              - path: /tmp
-                subPath: tmp
