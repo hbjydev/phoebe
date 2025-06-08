@@ -41,7 +41,7 @@ spec:
                 custom: true
                 spec:
                   httpGet:
-                    path: /
+                    path: /check-auth?to=%2F
                     port: *port
                   initialDelaySeconds: 0
                   periodSeconds: 10
