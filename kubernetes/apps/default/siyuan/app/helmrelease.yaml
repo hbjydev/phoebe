@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: b3log/siyuan
-              tag: v3.1.32@sha256:5faa0457fc0f2acc6925d6018a9b760abfade1341f5c7f04d0da0a224adc9bac
+              tag: v3.2.0@sha256:0aa719c0b96836ef0b266063b2466b40384525074511382ae992239eec0b19bd
             env:
               TZ: Europe/London
               SIYUAN_WORKSPACE_PATH: /data
