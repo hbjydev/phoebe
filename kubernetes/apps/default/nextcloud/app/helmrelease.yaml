@@ -67,13 +67,14 @@ spec:
       enabled: true
     collabora:
       enabled: true
-      aliasgroups: [https://drive.hayden.moe:443]
-      server_name: docs.hayden.moe:443
-      existingSecret:
-        enabled: true
-        secretName: nextcloud-secret
-        usernameKey: collaboraUsername
-        passwordKey: collaboraPassword
+      collabora:
+        aliasgroups: [https://drive.hayden.moe:443]
+        server_name: docs.hayden.moe:443
+        existingSecret:
+          enabled: true
+          secretName: nextcloud-secret
+          usernameKey: collaboraUsername
+          passwordKey: collaboraPassword
     imaginary:
       enabled: true
     metrics:
