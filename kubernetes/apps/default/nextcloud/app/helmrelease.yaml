@@ -74,14 +74,6 @@ spec:
         secretName: nextcloud-secret
         usernameKey: collaboraUsername
         passwordKey: collaboraPassword
-      prometheus:
-        servicemonitor:
-          enabled: true
-        rules:
-          enabled: true
-      grafana:
-        dashboards:
-          enabled: true
     imaginary:
       enabled: true
     metrics:
