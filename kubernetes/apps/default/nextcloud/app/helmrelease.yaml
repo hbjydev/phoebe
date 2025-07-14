@@ -70,6 +70,7 @@ spec:
       collabora:
         aliasgroups: 
           - host: https://drive.hayden.moe:443
+        extra_params: --o:ssl.enable=false --o:ssl.termination=true
         server_name: docs.hayden.moe:443
         existingSecret:
           enabled: true
