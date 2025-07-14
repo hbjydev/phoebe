@@ -8,6 +8,7 @@ components:
 resources:
   - ./jellyfin/ks.yaml
   - ./jellyseerr/ks.yaml
+  - ./nextcloud/ks.yaml
   - ./prowlarr/ks.yaml
   - ./radarr/ks.yaml
   - ./sabnzbd/ks.yaml
