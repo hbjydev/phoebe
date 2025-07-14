@@ -34,6 +34,20 @@ spec:
     nextcloud:
       host: drive.hayden.moe
       trustedDomains: [drive.hayden.moe]
+      configs:
+        custom.config.php: |
+          <?php
+            $CONFIG = array(
+              "check_data_directory_permissions" => false, # fix data directory permissions error
+              "trusted_domains" => array (
+                $_ENV["NEXTCLOUD_TRUSTED_DOMAINS"], # fix probes 400 error
+              ),
+              'trusted_proxies' => array(
+                0 => '127.0.0.1',
+                1 => '10.0.0.0/8',
+              ),
+              "forwarded_for_headers" => array("HTTP_X_FORWARDED_FOR"),
+            );
       existingSecret:
         enabled: true
         secretName: nextcloud-secret
