@@ -35,7 +35,7 @@ spec:
   rules:
     - backendRefs:
         - kind: Service
-          name: collabora
+          name: nextcloud-collabora
           namespace: default
           port: 9980
       matches:
