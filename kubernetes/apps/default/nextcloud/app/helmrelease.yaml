@@ -33,6 +33,7 @@ spec:
   values:
     nextcloud:
       host: drive.hayden.moe
+      trustedDomains: [drive.hayden.moe]
       existingSecret:
         enabled: true
         secretName: nextcloud-secret
