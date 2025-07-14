@@ -68,7 +68,8 @@ spec:
     collabora:
       enabled: true
       collabora:
-        aliasgroups: [https://drive.hayden.moe:443]
+        aliasgroups: 
+          - host: https://drive.hayden.moe:443
         server_name: docs.hayden.moe:443
         existingSecret:
           enabled: true
