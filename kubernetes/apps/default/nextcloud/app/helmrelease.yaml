@@ -65,6 +65,23 @@ spec:
             bucket: s3Bucket
     cronjob:
       enabled: true
+    collabora:
+      enabled: true
+      aliasgroups: [https://drive.hayden.moe:443]
+      server_name: docs.hayden.moe
+      existingSecret:
+        enabled: true
+        secretName: nextcloud-secret
+        usernameKey: collaboraUsername
+        passwordKey: collaboraPassword
+      prometheus:
+        servicemonitor:
+          enabled: true
+        rules:
+          enabled: true
+      grafana:
+        dashboards:
+          enabled: true
     imaginary:
       enabled: true
     metrics:

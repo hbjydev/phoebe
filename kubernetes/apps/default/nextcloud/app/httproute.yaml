@@ -20,3 +20,25 @@ spec:
         - path:
             type: PathPrefix
             value: /
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: collabora
+spec:
+  parentRefs:
+  - name: external
+    namespace: kube-system
+    sectionName: https
+  hostnames:
+    - docs.hayden.moe
+  rules:
+    - backendRefs:
+        - kind: Service
+          name: collabora
+          namespace: default
+          port: 9980
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
