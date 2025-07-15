@@ -58,3 +58,5 @@ spec:
       persistence:
         library:
           existingClaim: immich
+    redis:
+      enabled: true
