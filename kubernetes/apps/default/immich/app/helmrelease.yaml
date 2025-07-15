@@ -61,6 +61,7 @@ spec:
     server:
       route:
         main:
+          enabled: true
           hostnames: ["photos.hayden.moe"]
           parentRefs:
             - name: external
