@@ -62,5 +62,9 @@ spec:
       persistence:
         library:
           existingClaim: immich
+    server:
+      resources:
+        limits:
+          gpu.intel.com/i915: 1
     redis:
       enabled: true
