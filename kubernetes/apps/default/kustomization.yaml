@@ -6,6 +6,7 @@ namespace: default
 components:
   - ../../components/common
 resources:
+  - ./immich/ks.yaml
   - ./jellyfin/ks.yaml
   - ./jellyseerr/ks.yaml
   - ./nextcloud/ks.yaml
