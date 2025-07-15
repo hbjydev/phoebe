@@ -1,3 +1,4 @@
+---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
@@ -10,12 +11,6 @@ spec:
   postgresql:
     shared_preload_libraries:
       - "vectors.so"
-
-  managed:
-    roles:
-      - name: immich
-        superuser: true
-        login: true
 
   bootstrap:
     initdb:
