@@ -38,7 +38,7 @@ spec:
       DB_PASSWORD:
         valueFrom:
           secretKeyRef:
-            name: immich-pg-user
+            name: immich-postgres-user
             key: password
       DB_HOSTNAME: immich-pg-rw.immich.svc
     immich:
