@@ -58,5 +58,17 @@ spec:
       persistence:
         library:
           existingClaim: immich
+    server:
+      route:
+        main:
+          hostnames: ["photos.hayden.moe"]
+          parentRefs:
+            - name: external
+              namespace: kube-system
+              sectionName: https
+          rules:
+            - backendRefs:
+                - identifier: main
+                  port: 2283
     redis:
       enabled: true
