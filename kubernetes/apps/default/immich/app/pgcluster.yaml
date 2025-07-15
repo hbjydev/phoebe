@@ -9,6 +9,7 @@ spec:
   instances: 1
 
   postgresql:
+    enableAlterSystem: true
     shared_preload_libraries:
       - "vectors.so"
 
