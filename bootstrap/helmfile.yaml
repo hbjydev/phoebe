@@ -37,7 +37,7 @@ releases:
   - name: 1password-connect
     namespace: external-secrets
     chart: oci://ghcr.io/home-operations/charts-mirror/connect
-    version: 2.0.0
+    version: 2.0.2
     values: ['../kubernetes/apps/external-secrets/1password-connect/app/helm/values.yaml']
     needs: ['kube-system/cilium']
 
