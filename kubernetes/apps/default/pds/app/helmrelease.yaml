@@ -36,7 +36,7 @@ spec:
               PDS_REPORT_SERVICE_URL: https://mod.bsky.app
               PDS_REPORT_SERVICE_DID: did:plc:ar7c4by46qjdydhdevvrndac
               PDS_CRAWLERS: https://bsky.network
-              PDS_MAIL_FROM_ADDRESS: pds@tem.hayden.moe
+              PDS_EMAIL_FROM_ADDRESS: pds@tem.hayden.moe
               LOG_ENABLED: true
             envFrom:
               - secretRef:
