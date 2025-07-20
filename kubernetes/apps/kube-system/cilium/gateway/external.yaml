@@ -13,7 +13,7 @@ spec:
       value: 192.168.2.22
   infrastructure:
     annotations:
-      external-dns.alpha.kubernetes.io/hostname: *hostname
+      external-dns.alpha.kubernetes.io/hostname: external.hayden.moe,at.hayden.moe
   listeners:
     - name: http
       protocol: HTTP
