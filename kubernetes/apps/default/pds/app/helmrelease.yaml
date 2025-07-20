@@ -84,7 +84,7 @@ spec:
         parentRefs:
           - name: external
             namespace: kube-system
-            sectionName: https
+            sectionName: https-atp
         rules:
           - backendRefs:
               - identifier: app

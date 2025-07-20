@@ -33,5 +33,14 @@ spec:
         certificateRefs:
           - kind: Secret
             name: hayden-moe-tls
+    - name: https-atp
+      protocol: HTTPS
+      port: 443
+      hostname: "*.at.hayden.moe"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
           - kind: Secret
             name: at-hayden-moe-tls
