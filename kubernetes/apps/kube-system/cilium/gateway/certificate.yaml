@@ -11,3 +11,17 @@ spec:
     kind: ClusterIssuer
   commonName: hayden.moe
   dnsNames: ["hayden.moe", "*.hayden.moe"]
+
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: at-hayden-moe
+spec:
+  secretName: at-hayden-moe-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: at.hayden.moe
+  dnsNames: ["at.hayden.moe", "*.at.hayden.moe"]
