@@ -91,6 +91,6 @@ spec:
                 port: *port
     persistence:
       config:
-        existingClaim: atproto-pds
+        existingClaim: pds
         globalMounts:
           - path: /pds
