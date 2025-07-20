@@ -25,6 +25,7 @@ spec:
               repository: ghcr.io/bluesky-social/pds
               tag: 0.4.158
             env:
+              PDS_PORT: &port "2583"
               PDS_HOSTNAME: at.hayden.moe
               PDS_DATA_DIRECTORY: /pds
               PDS_BLOBSTORE_DISK_LOCATION: /pds/blocks
