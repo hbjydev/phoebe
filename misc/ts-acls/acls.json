@@ -27,6 +27,13 @@
       "ip": ["*"]
     },
 
+    // give access to exit nodes to all users
+    {
+      "src": ["autogroup:member"],
+      "dst": ["autogroup:internet"],
+      "ip":  ["*"]
+    },
+
     // give access to subnets of the network for kubernetes admins
     {
       "src": ["group:phoebe"],
