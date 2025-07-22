@@ -35,12 +35,22 @@
         "tailscale.com/cap/kubernetes": [{
           "impersonate": {
             "groups": ["system:masters"],
-            "recorder": ["tag:k8s-phoebe"],
-            "enforceRecorder": true,
           },
         }],
       },
 		},
+
+    // enforce tsrecorder usage across all kubectl exec sessions
+    {
+      "src": ["*"],
+      "dst": ["*"],
+      "app": {
+        "tailscale.com/cap/kubernetes": [{
+          "recorder":        ["tag:tsrecorder"],
+          "enforceRecorder": true,
+        }],
+      },
+    },
 
 		// give access to exit nodes to all users
 		{
@@ -60,20 +70,19 @@
 	"ssh": [
 		{
 			"action": "accept",
-			"src":    ["autogroup:admin"],
-			"users":  ["root", "hayden", "rocky", "ubuntu", "unifi"],
-		},
-		{
-			"action": "accept",
 			"dst":    ["tag:net-phoebe"],
 			"src":    ["group:net-phoebe"],
 			"users":  ["root", "hayden"],
+      "recorder": ["tag:tsrecorder"],
+      "enforceRecorder": true,
 		},
 		{
 			"action": "accept",
 			"dst":    ["tag:net-tethys"],
 			"src":    ["group:net-tethys"],
 			"users":  ["root", "hayden", "rocky", "ubuntu"],
+      "recorder": ["tag:tsrecorder"],
+      "enforceRecorder": true,
 		},
 	],
 
@@ -82,8 +91,11 @@
 		"tag:net-phoebe": ["group:net-phoebe"],
 		"tag:net-tethys": ["group:net-tethys"],
 
+    // Applications
+    "tag:tsrecorder": ["tag:k8s", "autogroup:admin"],
+
     // Clusters
-		"tag:k8s":        ["tag:k8s", "group:k8s"],
+		"tag:k8s":        ["group:k8s"],
 		"tag:k8s-phoebe": ["tag:k8s", "group:k8s", "group:k8s-phoebe", "group:net-phoebe"],
 	},
 }
