@@ -1,0 +1,9 @@
+apiVersion: tailscale.com/v1alpha1
+kind: Connector
+metadata:
+  name: ts-service-cidrs
+spec:
+  hostname: phoebe-service-cidrs
+  subnetRouter:
+    advertiseRoutes:
+      - "10.244.0.0/16"
