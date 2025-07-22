@@ -1,22 +1,9 @@
 ---
 apiVersion: tailscale.com/v1alpha1
-kind: ProxyClass
-metadata:
-  name: userspace
-spec:
-  statefulSet:
-    pod:
-      tailscaleContainer:
-        env:
-        - name: TS_USERSPACE
-          value: "true"
----
-apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
   name: ts-cidrs
 spec:
-  proxyClass: userspace
   hostname: phoebe-cidrs
   tags:
     - tag:k8s
