@@ -35,6 +35,8 @@
         "tailscale.com/cap/kubernetes": [{
           "impersonate": {
             "groups": ["system:masters"],
+            "recorder": ["tag:k8s-phoebe"],
+            "enforceRecorder": true,
           },
         }],
       },
