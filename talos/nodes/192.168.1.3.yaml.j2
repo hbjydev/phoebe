@@ -19,11 +19,3 @@ provisioning:
   minSize: 100G
 filesystem:
   type: xfs
----
-apiVersion: v1alpha1
-kind: ExtensionServiceConfig
-name: tailscale
-environment:
-  - TS_USERSPACE=false
-  - TS_AUTHKEY=op://phoebe/talos/TS_AUTHKEY
-  - TS_ROUTES=10.96.0.0/12,10.244.0.0/16
