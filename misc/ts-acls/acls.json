@@ -1,77 +1,87 @@
 // vim:ft=jsonc
 {
-  "groups": {
-    "group:phoebe-net": ["hbjydev@github"],
-    "group:phoebe": ["hbjydev@github"],
-    "group:ext-cloud": ["hbjydev@github"]
-  },
+	"groups": {
+    // Control Groups
+		"group:k8s": ["hayden@hayden.moe"],
 
-  "hosts": {
-    // k8s-phoebe nodes
-    "k8s-phoebe-0":           "192.168.1.3",
+    // Networks
+		"group:net-phoebe": ["hayden@hayden.moe"],
+		"group:net-tethys": ["hayden@hayden.moe"],
 
-    // k8s-phoebe gateways
-    "k8s-phoebe-gw-internal": "192.168.2.21",
-    "k8s-phoebe-gw-external": "192.168.2.22"
-  },
+    // Clusters
+		"group:k8s-phoebe": ["hayden@hayden.moe"],
+	},
 
-  "ipsets": {
-      "ipset:k8s-phoebe-lb": [ "add 192.168.2.0/24" ]
-  },
+	"grants": [
+    // give access to everything to admins
+		{
+			"src": ["autogroup:admin"],
+			"dst": ["*"],
+			"ip":  ["*"],
+		},
 
-  "grants": [
-    // give access to the entire network to net admins
-    {
-      "src": ["group:phoebe-net"],
-      "dst": ["tag:phoebe-net"],
-      "ip": ["*"]
-    },
+		// give access to the entire network to net admins
+		{
+			"src": ["group:net-phoebe"],
+			"dst": ["tag:net-phoebe"],
+			"ip":  ["*"],
+		},
 
-    // give access to exit nodes to all users
-    {
-      "src": ["autogroup:member"],
-      "dst": ["autogroup:internet"],
-      "ip":  ["*"]
-    },
+    // give kubernetes api access to k8s admins
+		{
+			"src": ["group:k8s-phoebe", "group:k8s"],
+			"dst": ["tag:k8s-phoebe"],
+      "app": {
+        "tailscale.com/cap/kubernetes": [{
+          "impersonate": {
+            "groups": ["system:masters"],
+          },
+        }],
+      },
+		},
 
-    // give access to subnets of the network for kubernetes admins
-    {
-      "src": ["group:phoebe"],
-      "dst": ["ipset:k8s-phoebe-lb"],
-      "ip": [ "80", "443" ]
-    },
-    {
-      "src": ["group:phoebe"],
-      "dst": ["tag:phoebe"],
-      "ip": [ "50000", "6443" ]
-    },
+		// give access to exit nodes to all users
+		{
+			"src": ["autogroup:member"],
+			"dst": ["autogroup:internet"],
+			"ip":  ["*"],
+		},
 
-    // give access to all the cloud services
-    {
-      "src": ["group:ext-cloud"],
-      "dst": ["tag:ext-cloud"],
-      "ip": ["*"]
-    }
-  ],
+		// give access to all the cloud services
+		{
+			"src": ["group:net-tethys"],
+			"dst": ["tag:net-tethys"],
+			"ip":  ["*"],
+		},
+	],
 
-  "ssh": [
-    {
-      "action": "accept",
-      "dst": ["tag:phoebe-net"],
-      "src": ["group:phoebe-net"],
-      "users": ["root", "hayden"]
-    },
-    {
-      "action": "accept",
-      "dst": ["tag:ext-cloud"],
-      "src": ["group:ext-cloud"],
-      "users": ["root", "hayden", "rocky", "ubuntu"]
-    }
-  ],
+	"ssh": [
+		{
+			"action": "accept",
+			"src":    ["autogroup:admin"],
+			"users":  ["root", "hayden", "rocky", "ubuntu", "unifi"],
+		},
+		{
+			"action": "accept",
+			"dst":    ["tag:net-phoebe"],
+			"src":    ["group:net-phoebe"],
+			"users":  ["root", "hayden"],
+		},
+		{
+			"action": "accept",
+			"dst":    ["tag:net-tethys"],
+			"src":    ["group:net-tethys"],
+			"users":  ["root", "hayden", "rocky", "ubuntu"],
+		},
+	],
 
-  "tagowners": {
-    "tag:phoebe-net": ["group:phoebe-net"],
-    "tag:phoebe": ["group:phoebe", "group:phoebe-net"],
-    "tag:ext-cloud": ["group:ext-cloud"]
-  }
+	"tagowners": {
+    // Networks
+		"tag:net-phoebe": ["group:net-phoebe"],
+		"tag:net-tethys": ["group:net-tethys"],
+
+    // Clusters
+		"tag:k8s":        ["autogroup:admin"],
+		"tag:k8s-phoebe": ["group:k8s-phoebe", "group:net-phoebe"],
+	},
 }
