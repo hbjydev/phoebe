@@ -105,6 +105,9 @@
     "tag:net-phoebe": ["group:team-infra"],
     "tag:net-tethys": ["group:team-infra"],
 
+    // Exit Nodes
+    "tag:eno-phoebe": ["group:team-infra"],
+
     // Applications
     "tag:app-tsrecorder": ["tag:k8s", "group:team-infra"],
 
