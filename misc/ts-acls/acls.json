@@ -45,7 +45,7 @@
       "dst": ["tag:k8s"],
       "app": {
         "tailscale.com/cap/kubernetes": [{
-          "recorder":        ["tag:tsrecorder"],
+          "recorder":        ["tag:app-tsrecorder"],
           "enforceRecorder": true,
         }],
       },
@@ -85,7 +85,7 @@
       "src":             ["group:ctl-phoebe"         ],
       "dst":             ["tag:net-phoebe"           ],
       "users":           ["root", "autogroup:nonroot"],
-      "recorder":        ["tag:tsrecorder"           ],
+      "recorder":        ["tag:app-tsrecorder"       ],
       "enforceRecorder": true,
     },
 
@@ -95,7 +95,7 @@
       "src":             ["group:net-tethys"         ],
       "dst":             ["tag:net-tethys"           ],
       "users":           ["root", "autogroup:nonroot"],
-      "recorder":        ["tag:tsrecorder"           ],
+      "recorder":        ["tag:app-tsrecorder"       ],
       "enforceRecorder": true,
     },
   ],
