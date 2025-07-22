@@ -1,49 +1,48 @@
-// vim:ft=jsonc
+// vim:ft=jsonc sw=2 ts=2 et
 {
-	"groups": {
+  "groups": {
     // Control Groups
-		"group:k8s": ["hayden@hayden.moe"],
+    "group:ctl-k8s":    ["hayden@hayden.moe"],
+    "group:ctl-phoebe": ["hayden@hayden.moe"],
+    "group:ctl-tethys": ["hayden@hayden.moe"],
 
-    // Networks
-		"group:net-phoebe": ["hayden@hayden.moe"],
-		"group:net-tethys": ["hayden@hayden.moe"],
+    // Locales
+    "group:loc-ema": ["hayden@hayden.moe"],
+    "group:loc-cdg": ["hayden@hayden.moe"],
 
-    // Clusters
-		"group:k8s-phoebe": ["hayden@hayden.moe"],
-	},
+    // Teams
+    "group:team-eng":   ["hayden@hayden.moe"],
+    "group:team-infra": ["hayden@hayden.moe"],
+  },
 
-	"grants": [
-    // give access to everything to admins
-		{
-			"src": ["autogroup:admin"],
-			"dst": ["*"],
-			"ip":  ["*"],
-		},
-
-		// give access to the entire network to net admins
-		{
-			"src": ["group:net-phoebe"],
-			"dst": ["tag:net-phoebe"],
-			"ip":  ["*"],
-		},
-
-    // give kubernetes api access to k8s admins
-		{
-			"src": ["group:k8s-phoebe", "group:k8s"],
-			"dst": ["tag:k8s-phoebe"],
-      "app": {
-        "tailscale.com/cap/kubernetes": [{
-          "impersonate": {
-            "groups": ["system:masters"],
-          },
-        }],
-      },
-		},
-
-    // enforce tsrecorder usage across all kubectl exec sessions
+  "grants": [
     {
+      // Allow net access to UK teams
+      "src": ["group:loc-ema"],
+      "dst": ["tag:net-phoebe"],
+      "ip":  ["*"],
+    },
+
+    {
+      // Allow net access to FR teams
+      "src": ["group:loc-cdg"],
+      "dst": ["tag:net-tethys"],
+      "ip":  ["*"],
+    },
+
+    {
+      // Allow Exit Node access to `loc-ema` teams
+      "src": ["group:loc-ema"],
+      "dst": ["autogroup:internet"],
+      "via": ["tag:eno-phoebe"],
+      "ip": ["*"]
+    },
+
+    // Kubernetes Cluster Access
+    {
+      // Enforce session recording on all clusters
       "src": ["*"],
-      "dst": ["*"],
+      "dst": ["tag:k8s"],
       "app": {
         "tailscale.com/cap/kubernetes": [{
           "recorder":        ["tag:tsrecorder"],
@@ -52,50 +51,65 @@
       },
     },
 
-		// give access to exit nodes to all users
-		{
-			"src": ["autogroup:member"],
-			"dst": ["autogroup:internet"],
-			"ip":  ["*"],
-		},
+    {
+      // Give Phoebe-specific Kubernetes API access to k8s admins
+      "src": ["group:ctl-phoebe"],
+      "dst": ["tag:k8s-phoebe"],
+      "app": {
+        "tailscale.com/cap/kubernetes": [{
+          "impersonate": {
+            "groups": ["system:masters"],
+          },
+        }],
+      },
+    },
 
-		// give access to all the cloud services
-		{
-			"src": ["group:net-tethys"],
-			"dst": ["tag:net-tethys"],
-			"ip":  ["*"],
-		},
-	],
+    {
+      // Give Kubernetes API access to k8s admins
+      "src": ["group:ctl-k8s"],
+      "dst": ["tag:k8s"],
+      "app": {
+        "tailscale.com/cap/kubernetes": [{
+          "impersonate": {
+            "groups": ["system:masters"],
+          },
+        }],
+      },
+    },
+  ],
 
-	"ssh": [
-		{
-			"action": "accept",
-			"dst":    ["tag:net-phoebe"],
-			"src":    ["group:net-phoebe"],
-			"users":  ["root", "hayden"],
-      "recorder": ["tag:tsrecorder"],
+  "ssh": [
+    {
+      // Allow Phoebe admins to SSH into any Phoebe servers
+      "action":          "accept",
+      "src":             ["group:ctl-phoebe"         ],
+      "dst":             ["tag:net-phoebe"           ],
+      "users":           ["root", "autogroup:nonroot"],
+      "recorder":        ["tag:tsrecorder"           ],
       "enforceRecorder": true,
-		},
-		{
-			"action": "accept",
-			"dst":    ["tag:net-tethys"],
-			"src":    ["group:net-tethys"],
-			"users":  ["root", "hayden", "rocky", "ubuntu"],
-      "recorder": ["tag:tsrecorder"],
-      "enforceRecorder": true,
-		},
-	],
+    },
 
-	"tagowners": {
+    {
+      // Allow Tethys admins to SSH into any Tethys servers
+      "action":          "accept",
+      "src":             ["group:net-tethys"         ],
+      "dst":             ["tag:net-tethys"           ],
+      "users":           ["root", "autogroup:nonroot"],
+      "recorder":        ["tag:tsrecorder"           ],
+      "enforceRecorder": true,
+    },
+  ],
+
+  "tagowners": {
     // Networks
-		"tag:net-phoebe": ["group:net-phoebe"],
-		"tag:net-tethys": ["group:net-tethys"],
+    "tag:net-phoebe": ["group:team-infra"],
+    "tag:net-tethys": ["group:team-infra"],
 
     // Applications
-    "tag:tsrecorder": ["tag:k8s", "autogroup:admin"],
+    "tag:app-tsrecorder": ["tag:k8s", "group:team-infra"],
 
     // Clusters
-		"tag:k8s":        ["group:k8s"],
-		"tag:k8s-phoebe": ["tag:k8s", "group:k8s", "group:k8s-phoebe", "group:net-phoebe"],
-	},
+    "tag:k8s":        ["group:k8s"],
+    "tag:k8s-phoebe": ["tag:k8s"],
+  },
 }
