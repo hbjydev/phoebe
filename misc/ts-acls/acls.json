@@ -92,7 +92,7 @@
     {
       // Allow Tethys admins to SSH into any Tethys servers
       "action":          "accept",
-      "src":             ["group:net-tethys"         ],
+      "src":             ["group:ctl-tethys"         ],
       "dst":             ["tag:net-tethys"           ],
       "users":           ["root", "autogroup:nonroot"],
       "recorder":        ["tag:app-tsrecorder"       ],
@@ -112,7 +112,7 @@
     "tag:app-tsrecorder": ["tag:k8s", "group:team-infra"],
 
     // Clusters
-    "tag:k8s":        ["group:k8s"],
+    "tag:k8s":        ["group:ctl-k8s", "group:team-infra"],
     "tag:k8s-phoebe": ["tag:k8s"],
   },
 }
