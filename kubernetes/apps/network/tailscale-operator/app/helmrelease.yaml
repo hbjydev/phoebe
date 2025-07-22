@@ -37,3 +37,6 @@ spec:
         - "tag:k8s"
     proxyConfig:
       defaultTags: tag:k8s,tag:phoebe
+    apiServerProxyConfig:
+      allowImpersonation: "true"
+      mode: "true"
