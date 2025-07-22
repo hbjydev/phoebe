@@ -82,6 +82,6 @@
 
     // Clusters
 		"tag:k8s":        ["group:k8s"],
-		"tag:k8s-phoebe": ["group:k8s-phoebe", "group:net-phoebe"],
+		"tag:k8s-phoebe": ["tag:k8s", "group:k8s", "group:k8s-phoebe", "group:net-phoebe"],
 	},
 }
