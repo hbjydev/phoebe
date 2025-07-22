@@ -31,7 +31,8 @@ jobs:
         id: deploy-acl
         uses: tailscale/gitops-acl-action@90d41601ba36b946cf4946ef5a72bf6e16bae14b # v1
         with:
-          api-key: ${{ secrets.TS_API_KEY }}
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-client-secret: ${{ secrets.TS_OAUTH_CLIENT_SECRET }}
           tailnet: ${{ secrets.TS_TAILNET }}
           policy-file: misc/ts-acls/acls.json
           action: apply
@@ -41,7 +42,8 @@ jobs:
         id: test-acl
         uses: tailscale/gitops-acl-action@90d41601ba36b946cf4946ef5a72bf6e16bae14b # v1
         with:
-          api-key: ${{ secrets.TS_API_KEY }}
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-client-secret: ${{ secrets.TS_OAUTH_CLIENT_SECRET }}
           tailnet: ${{ secrets.TS_TAILNET }}
           policy-file: misc/ts-acls/acls.json
           action: test
