@@ -38,6 +38,7 @@ spec:
         custom.config.php: |
           <?php
             $CONFIG = array(
+              "allow_local_remote_servers" => true,
               "check_data_directory_permissions" => false, # fix data directory permissions error
               "trusted_domains" => array (
                 $_ENV["NEXTCLOUD_TRUSTED_DOMAINS"], # fix probes 400 error
