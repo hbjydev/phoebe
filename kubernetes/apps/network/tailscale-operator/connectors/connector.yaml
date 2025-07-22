@@ -1,0 +1,14 @@
+apiVersion: tailscale.com/v1alpha1
+kind: Connector
+metadata:
+  name: ts-cidrs
+spec:
+  hostname: phoebe-cidrs
+  tags:
+    - k8s
+    - k8s-phoebe
+    - net-phoebe
+  subnetRouter:
+    advertiseRoutes:
+      - "10.96.0.0/12"  # pods
+      - "10.244.0.0/16" # services
