@@ -152,9 +152,9 @@ spec:
                 subPath: tmp
               - path: /rails/tmp
                 subPath: tmp-web
-          worker:
-            web:
-              - path: /tmp
-                subPath: tmp
-              - path: /rails/tmp
-                subPath: tmp-worker
+          # worker:
+          #   web:
+          #     - path: /tmp
+          #       subPath: tmp
+          #     - path: /rails/tmp
+          #       subPath: tmp-worker
