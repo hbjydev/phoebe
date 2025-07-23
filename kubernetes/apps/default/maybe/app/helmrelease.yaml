@@ -83,7 +83,7 @@ spec:
             envFrom: *envFrom
             env: *env
             securityContext: *sc
-            command: bundle exec sidekiq
+            command: /usr/local/bin/bundle exec sidekiq
             resources:
               requests:
                 cpu: 10m
@@ -148,9 +148,13 @@ spec:
         advancedMounts:
           maybe:
             web:
+              - path: /tmp
+                subPath: tmp
               - path: /rails/tmp
                 subPath: tmp-web
           worker:
             web:
+              - path: /tmp
+                subPath: tmp
               - path: /rails/tmp
                 subPath: tmp-worker
