@@ -69,26 +69,26 @@ spec:
               readiness: *probes
             securityContext: &sc
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
+              readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 10m
               limits:
                 memory: 512Mi
-      # worker:
-      #   containers:
-      #     worker:
-      #       image: *image
-      #       envFrom: *envFrom
-      #       env: *env
-      #       securityContext: *sc
-      #       command: /usr/local/bin/bundle exec sidekiq
-      #       resources:
-      #         requests:
-      #           cpu: 10m
-      #         limits:
-      #           memory: 512Mi
+      worker:
+        containers:
+          worker:
+            image: *image
+            envFrom: *envFrom
+            env: *env
+            securityContext: *sc
+            command: bin/bundle exec sidekiq
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 512Mi
 
       redis:
         containers:
@@ -145,16 +145,10 @@ spec:
     persistence:
       tmpfs:
         type: emptyDir
-        advancedMounts:
-          maybe:
-            web:
-              - path: /tmp
-                subPath: tmp
-              - path: /rails/tmp
-                subPath: tmp-web
-          # worker:
-          #   web:
-          #     - path: /tmp
-          #       subPath: tmp
-          #     - path: /rails/tmp
-          #       subPath: tmp-worker
+        medium: Memory
+        sizeLimit: 200Mi
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
+          - path: /rails/tmp
+            subPath: rails-tmp
