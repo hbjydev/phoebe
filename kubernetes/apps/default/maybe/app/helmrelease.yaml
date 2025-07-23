@@ -83,7 +83,7 @@ spec:
             envFrom: *envFrom
             env: *env
             securityContext: *sc
-            command: bin/bundle exec sidekiq
+            command: [bundle, exec, sidekiq]
             resources:
               requests:
                 cpu: 10m
