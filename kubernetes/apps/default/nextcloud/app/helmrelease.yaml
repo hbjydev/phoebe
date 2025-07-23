@@ -69,6 +69,8 @@ spec:
       enabled: true
     collabora:
       enabled: true
+      image:
+        tag: 25.04.4.1.1
       collabora:
         aliasgroups: 
           - host: https://drive.hayden.moe:443
