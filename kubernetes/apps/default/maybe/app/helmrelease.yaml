@@ -60,7 +60,7 @@ spec:
                 custom: true
                 spec:
                   httpGet:
-                    path: /api/v1/status
+                    path: /up
                     port: *port
                   initialDelaySeconds: 0
                   periodSeconds: 10
