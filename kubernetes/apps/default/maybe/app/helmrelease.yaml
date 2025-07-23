@@ -147,6 +147,10 @@ spec:
         type: emptyDir
         advancedMounts:
           maybe:
-            app:
-              - path: /tmp
-                subPath: tmp
+            web:
+              - path: /rails/tmp
+                subPath: tmp-web
+          worker:
+            web:
+              - path: /rails/tmp
+                subPath: tmp-worker
