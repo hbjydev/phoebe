@@ -30,7 +30,7 @@ releases:
   - name: longhorn
     namespace: longhorn-system
     chart: oci://ghcr.io/home-operations/charts-mirror/longhorn
-    version: 1.9.0
+    version: 1.9.1
     values: ['../kubernetes/apps/longhorn-system/longhorn/app/helm/values.yaml']
     needs: ['kube-system/cilium']
 
