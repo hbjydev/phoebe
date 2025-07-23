@@ -9,3 +9,7 @@ variable "account_id" {
 variable "storage_class" {
   type = string
 }
+
+variable "region" {
+  type = string
+}
