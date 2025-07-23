@@ -76,19 +76,19 @@ spec:
                 cpu: 10m
               limits:
                 memory: 512Mi
-      worker:
-        containers:
-          worker:
-            image: *image
-            envFrom: *envFrom
-            env: *env
-            securityContext: *sc
-            command: /usr/local/bin/bundle exec sidekiq
-            resources:
-              requests:
-                cpu: 10m
-              limits:
-                memory: 512Mi
+      # worker:
+      #   containers:
+      #     worker:
+      #       image: *image
+      #       envFrom: *envFrom
+      #       env: *env
+      #       securityContext: *sc
+      #       command: /usr/local/bin/bundle exec sidekiq
+      #       resources:
+      #         requests:
+      #           cpu: 10m
+      #         limits:
+      #           memory: 512Mi
 
       redis:
         containers:
