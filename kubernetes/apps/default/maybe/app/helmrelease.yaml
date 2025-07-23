@@ -1,0 +1,152 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: maybe
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      maybe:
+        containers:
+          web:
+            image: &image
+              repository: ghcr.io/maybe-finance/maybe
+              tag: sha-3f92fe0f6f465ddd5293638ef7c42336799f674e@sha256:4e0e7208cd9bcfb0e382b0c2aa9681e95e52e569fd185bdabb0fe710bca1c65d
+            envFrom: &envFrom
+              - secretRef:
+                  name: maybe-secret
+            env: &env
+              TZ: Europe/London
+              SELF_HOSTED: "true"
+              APP_DOMAIN: &domain maybe.hayden.moe
+              ACTIVE_STORAGE_SERVICE: cloudflare
+              PORT: &port 3000
+              REDIS_URL: redis://maybe-redis:6379/1
+              DB_HOST:
+                secretKeyRef:
+                  name: maybe-pg-app
+                  key: host
+              DB_PORT:
+                secretKeyRef:
+                  name: maybe-pg-app
+                  key: port
+              POSTGRES_USER:
+                secretKeyRef:
+                  name: maybe-pg-app
+                  key: username
+              POSTGRES_PASSWORD:
+                secretKeyRef:
+                  name: maybe-pg-app
+                  key: password
+              POSTGRES_DB:
+                secretKeyRef:
+                  name: maybe-pg-app
+                  key: dbname
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/v1/status
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext: &sc
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 512Mi
+      worker:
+        containers:
+          worker:
+            image: *image
+            envFrom: *envFrom
+            env: *env
+            securityContext: *sc
+            command: bundle exec sidekiq
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 512Mi
+
+      redis:
+        containers:
+          redis:
+            image:
+              repository: redis
+              tag: 8.0.3-alpine@sha256:25c0ae32c6c2301798579f5944af53729766a18eff5660bbef196fc2e6214a9c
+            securityContext: *sc
+            probes:
+              liveness: &redis-probe
+                type: 'TCP'
+                port: 6379
+                custom: true
+              readiness: *redis-probe
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 512Mi
+
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      app:
+        controller: maybe
+        ports:
+          http:
+            port: *port
+      redis:
+        controller: redis
+        ports:
+          redis:
+            port: 6379
+
+    route:
+      app:
+        hostnames:
+          - *domain
+        parentRefs:
+          - name: external
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
+
+    persistence:
+      tmpfs:
+        type: emptyDir
+        advancedMounts:
+          maybe:
+            app:
+              - path: /tmp
+                subPath: tmp

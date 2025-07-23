@@ -10,6 +10,7 @@ resources:
   - ./immich/ks.yaml
   - ./jellyfin/ks.yaml
   - ./jellyseerr/ks.yaml
+  - ./maybe/ks.yaml
   - ./nextcloud/ks.yaml
   - ./prowlarr/ks.yaml
   - ./radarr/ks.yaml
