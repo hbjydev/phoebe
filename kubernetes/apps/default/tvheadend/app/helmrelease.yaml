@@ -40,9 +40,9 @@ spec:
                 memory: 1Gi
             ports:
               - containerPort: &port 9981
-                protocol: tcp
+                protocol: TCP
               - containerPort: 9982
-                protocol: tcp
+                protocol: TCP
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
