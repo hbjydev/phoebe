@@ -39,7 +39,7 @@ spec:
               limits:
                 memory: 1Gi
             ports:
-              - containerPort: 9981
+              - containerPort: &port 9981
                 protocol: tcp
               - containerPort: 9982
                 protocol: tcp
