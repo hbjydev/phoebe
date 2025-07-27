@@ -26,6 +26,7 @@ spec:
             image:
               repository: ghcr.io/tvheadend/tvheadend
               tag: master-debian@sha256:97f27c92c793688ae719cd95b348e835787fda62ea74aa5f9d0a09354bfb0353
+            command: [tvheadend, --nosatip]
             env:
               TZ: Europe/London
             securityContext:
