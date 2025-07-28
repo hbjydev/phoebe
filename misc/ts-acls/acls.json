@@ -81,7 +81,7 @@
   "ssh": [
     {
       // Allow Phoebe admins to SSH into any Phoebe servers
-      "action":          "accept",
+      "action":          "check",
       "src":             ["group:ctl-phoebe"         ],
       "dst":             ["tag:net-phoebe"           ],
       "users":           ["root", "autogroup:nonroot"],
@@ -91,7 +91,7 @@
 
     {
       // Allow Tethys admins to SSH into any Tethys servers
-      "action":          "accept",
+      "action":          "check",
       "src":             ["group:ctl-tethys"         ],
       "dst":             ["tag:net-tethys"           ],
       "users":           ["root", "autogroup:nonroot"],
