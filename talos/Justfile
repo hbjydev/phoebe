@@ -9,3 +9,6 @@ apply-node ip machine_type='controlplane' mode='auto':
 # Generates the necessary Kubeconfig to access the cluster
 kubeconfig ip:
   talosctl kubeconfig {{ talos_dir }} --force --nodes "{{ ip }}"
+
+update-schematic:
+  curl -X POST --data-binary @{{ talos_dir }}/schematic.yaml https://factory.talos.dev/schematics

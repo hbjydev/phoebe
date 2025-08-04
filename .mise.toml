@@ -4,7 +4,7 @@ KUBECONFIG = "{{ config_root }}/talos/kubeconfig"
 MINIJINJA_CONFIG_FILE = "{{ config_root }}/.minijinja.toml"
 SOPS_AGE_KEY_FILE = "{{ config_root }}/age.key"
 TALOSCONFIG = "{{ config_root }}/talos/talosconfig"
-TALOS_SCHEMATIC="74bd9e7fe18dd9a6a05f3b7d430bfdd477a7a5dba1423db67d11f27ae79327b7"
+TALOS_SCHEMATIC="e84614f5ff889b7f2fd5a6376bae4862fe58ce018e61b7fafb9aa06080407c1d"
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
 KUBERNETES_VERSION="v1.33.1"
 # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
