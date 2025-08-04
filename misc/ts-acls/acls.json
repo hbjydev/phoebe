@@ -15,11 +15,22 @@
     "group:team-infra": ["hayden@hayden.moe"],
   },
 
+  "ipsets": {
+    // Clusters
+    "ipset:k8s-phoebe": [
+      "add 10.96.0.0/12",
+      "add 10.244.0.0/16",
+    ],
+
+    // Locales
+    "ipset:net-phoebe": ["add 192.168.0.0/16"],
+  },
+
   "grants": [
     {
       // Allow net access to UK teams
       "src": ["group:loc-ema"],
-      "dst": ["tag:net-phoebe"],
+      "dst": ["tag:net-phoebe", "ipset:net-phoebe"],
       "ip":  ["*"],
     },
 
@@ -35,7 +46,7 @@
       "src": ["group:loc-ema"],
       "dst": ["autogroup:internet"],
       "via": ["tag:eno-phoebe"],
-      "ip": ["*"]
+      "ip":  ["*"],
     },
 
     // Kubernetes Cluster Access
@@ -49,6 +60,13 @@
           "enforceRecorder": true,
         }],
       },
+    },
+    
+    {
+      // Allow Phoebe subnet access to admins
+      "src": ["group:ctl-phoebe"],
+      "dst": ["ipset:k8s-phoebe"],
+      "ips": ["*"],
     },
 
     {
@@ -82,20 +100,20 @@
     {
       // Allow Phoebe admins to SSH into any Phoebe servers
       "action":          "check",
-      "src":             ["group:ctl-phoebe"         ],
-      "dst":             ["tag:net-phoebe"           ],
+      "src":             ["group:ctl-phoebe"],
+      "dst":             ["tag:net-phoebe"],
       "users":           ["root", "autogroup:nonroot"],
-      "recorder":        ["tag:app-tsrecorder"       ],
+      "recorder":        ["tag:app-tsrecorder"],
       "enforceRecorder": true,
     },
 
     {
       // Allow Tethys admins to SSH into any Tethys servers
       "action":          "check",
-      "src":             ["group:ctl-tethys"         ],
-      "dst":             ["tag:net-tethys"           ],
+      "src":             ["group:ctl-tethys"],
+      "dst":             ["tag:net-tethys"],
       "users":           ["root", "autogroup:nonroot"],
-      "recorder":        ["tag:app-tsrecorder"       ],
+      "recorder":        ["tag:app-tsrecorder"],
       "enforceRecorder": true,
     },
   ],
