@@ -18,12 +18,12 @@
   "ipsets": {
     // Clusters
     "ipset:k8s-phoebe": [
-      "add 10.96.0.0/12",
-      "add 10.244.0.0/16",
+      "10.96.0.0/12",
+      "10.244.0.0/16",
     ],
 
     // Locales
-    "ipset:net-phoebe": ["add 192.168.0.0/16"],
+    "ipset:net-phoebe": ["192.168.0.0/16"],
   },
 
   "grants": [
@@ -66,7 +66,7 @@
       // Allow Phoebe subnet access to admins
       "src": ["group:ctl-phoebe"],
       "dst": ["ipset:k8s-phoebe"],
-      "ips": ["*"],
+      "ip": ["*"],
     },
 
     {
