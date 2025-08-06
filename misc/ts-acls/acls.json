@@ -2,17 +2,19 @@
 {
   "groups": {
     // Control Groups
-    "group:ctl-k8s":    ["hayden@hayden.moe"],
-    "group:ctl-phoebe": ["hayden@hayden.moe"],
-    "group:ctl-tethys": ["hayden@hayden.moe"],
+    "group:ctl-k8s":    ["hayden@hayden.moe", "haydenuwu@passkey"],
+    "group:ctl-phoebe": ["hayden@hayden.moe", "haydenuwu@passkey"],
+    "group:ctl-tethys": ["hayden@hayden.moe", "haydenuwu@passkey"],
+    "group:ctl-dione":  ["hayden@hayden.moe", "haydenuwu@passkey"],
 
     // Locales
-    "group:loc-ema": ["hayden@hayden.moe"],
-    "group:loc-cdg": ["hayden@hayden.moe"],
+    "group:loc-ema": ["hayden@hayden.moe", "haydenuwu@passkey"],
+    "group:loc-lhr": ["hayden@hayden.moe", "haydenuwu@passkey"],
+    "group:loc-cdg": ["hayden@hayden.moe", "haydenuwu@passkey"],
 
     // Teams
-    "group:team-eng":   ["hayden@hayden.moe"],
-    "group:team-infra": ["hayden@hayden.moe"],
+    "group:team-eng":   ["hayden@hayden.moe", "haydenuwu@passkey"],
+    "group:team-infra": ["hayden@hayden.moe", "haydenuwu@passkey"],
   },
 
   "ipsets": {
@@ -31,6 +33,13 @@
       // Allow net access to UK teams
       "src": ["group:loc-ema"],
       "dst": ["tag:net-phoebe", "ipset:net-phoebe"],
+      "ip":  ["*"],
+    },
+
+    {
+      // Allow net access to UK teams
+      "src": ["group:loc-lhr"],
+      "dst": ["tag:net-dione"],
       "ip":  ["*"],
     },
 
@@ -116,12 +125,23 @@
       "recorder":        ["tag:app-tsrecorder"],
       "enforceRecorder": true,
     },
+
+    {
+      // Allow Dione admins to SSH into any Dione servers
+      "action":          "check",
+      "src":             ["group:ctl-dione"],
+      "dst":             ["tag:net-dione"],
+      "users":           ["root", "autogroup:nonroot"],
+      "recorder":        ["tag:app-tsrecorder"],
+      "enforceRecorder": true,
+    },
   ],
 
   "tagowners": {
     // Networks
     "tag:net-phoebe": ["group:team-infra"],
     "tag:net-tethys": ["group:team-infra"],
+    "tag:net-dione":  ["group:team-infra"],
 
     // Exit Nodes
     "tag:eno-phoebe": ["group:team-infra"],
