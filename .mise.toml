@@ -14,7 +14,7 @@ TALOS_VERSION="v1.10.6"
 
 [tools]
 "python" = "3.13"
-"pipx:makejinja" = "2.8.0"
+"pipx:makejinja" = "2.8.1"
 "aqua:budimanjojo/talhelper" = "3.0.31"
 "aqua:cilium/cilium-cli" = "0.18.5"
 "aqua:FiloSottile/age" = "1.2.1"
