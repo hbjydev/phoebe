@@ -59,7 +59,7 @@ spec:
       route:
         main:
           enabled: true
-          hostnames: [sso.hayden.moe]
+          hostnames: [sso1.hayden.moe]
           parentRefs:
             - name: external
               namespace: kube-system
