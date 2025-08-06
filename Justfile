@@ -1,4 +1,5 @@
 scripts_dir := "./scripts"
 
-mod talos
 mod flux '.just/flux.just'
+mod talos
+mod terraform
