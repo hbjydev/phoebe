@@ -1,10 +1,5 @@
 terraform {
   required_providers {
-    cloudflare = {
-      source  = "cloudflare/cloudflare"
-      version = "~> 5"
-    }
-
     upcloud = {
       source  = "UpCloudLtd/upcloud"
       version = "~> 5"
@@ -16,7 +11,3 @@ terraform {
     }
   }
 }
-
-provider "cloudflare" {}
-provider "upcloud" {}
-provider "tailscale" {}

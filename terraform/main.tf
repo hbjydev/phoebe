@@ -7,3 +7,12 @@ module "bucket" {
   storage_class = try(each.value.storage_class, "Standard")
   region = try(each.value.region, "WEUR")
 }
+
+module "vm_upcloud" {
+  source = "./modules/vm_upcloud"
+  for_each = local.virtual_machines
+
+  name = each.key
+  zone = try(each.value.zone, "uk-lon1")
+  plan = try(each.value.plan, "1xCPU-1GB")
+}
