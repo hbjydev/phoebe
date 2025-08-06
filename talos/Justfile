@@ -11,4 +11,4 @@ kubeconfig ip:
   talosctl kubeconfig {{ talos_dir }} --force --nodes "{{ ip }}"
 
 update-schematic:
-  curl -X POST --data-binary @{{ talos_dir }}/schematic.yaml https://factory.talos.dev/schematics
+  curl -fsSL -X POST --data-binary @{{ talos_dir }}/schematic.yaml https://factory.talos.dev/schematics | jq -r .id

@@ -16,14 +16,6 @@ machine:
     disableManifestsDirectory: true
     nodeIP:
       validSubnets: ["192.168.1.0/24"]
-    extraArgs:
-      system-reserved: cpu=200m,memory=512Mi,ephemeral-storage=1Gi
-      kube-reserved: cpu=200m,memory=512Mi,ephemeral-storage=1Gi
-      eviction-hard: memory.available<256Mi,nodefs.available<10%
-      image-gc-high-threshold: 75
-      image-gc-low-threshold: 60
-      maximum-dead-containers: 50
-      maximum-dead-containers-per-container: 2
   network: {}
   install:
     disk: /dev/nvme0n1
@@ -80,11 +72,6 @@ cluster:
       limits:
         cpu: 500m
         memory: 512Mi
-    extraArgs:
-      watch-cache-sizes: events#100,nodes#100,pods#1000
-      default-watch-cache-size: 100
-      max-requests-inflight: 400
-      max-mutating-requests-inflight: 200
     admissionControl:
       - name: PodSecurity
         configuration:
@@ -120,10 +107,6 @@ cluster:
       limits:
         cpu: 300m
         memory: 256Mi
-    extraArgs:
-      node-monitor-period: 10s
-      node-monitor-grace-period: 60s
-      pod-eviction-timeout: 60s
   coreDNS:
     disabled: true  # replaced by helm chart deployment later
   proxy:
@@ -131,13 +114,6 @@ cluster:
     image: registry.k8s.io/kube-proxy:{{ ENV.KUBERNETES_VERSION }}
   scheduler:
     image: registry.k8s.io/kube-scheduler:{{ ENV.KUBERNETES_VERSION }}
-    resources:
-      requests:
-        cpu: 50m
-        memory: 64Mi
-      limits:
-        cpu: 200m
-        memory: 128Mi
   discovery:
     enabled: true
     registries:
@@ -148,9 +124,3 @@ cluster:
     ca:
       crt: op://phoebe/talos/CLUSTER_ETCD_CA_CRT
       key: op://phoebe/talos/CLUSTER_ETCD_CA_KEY
-    extraArgs:
-      listen-metrics-urls: http://0.0.0.0:2381
-      quota-backend-bytes: 2147483648
-      auto-compaction-retention: 1h
-      auto-compaction-mode: periodic
-      max-request-bytes: 1572864
