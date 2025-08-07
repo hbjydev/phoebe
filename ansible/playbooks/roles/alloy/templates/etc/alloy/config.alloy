@@ -1,0 +1,75 @@
+// Managed by Ansible
+
+logging {
+  level = "warn"
+}
+
+local.file "hostname" {
+  filename = "/etc/hostname"
+}
+
+loki.relabel "journal" {
+  forward_to = []
+
+  rule {
+    source_labels = ["__journal__systemd_unit"]
+    target_label  = "unit"
+  }
+}
+
+loki.source.journal "journal" {
+  forward_to = [loki.write.cockpit.receiver]
+  relabel_rules = loki.relabel.journal.rules
+  labels = {
+    job = "journal",
+    instance = string.trim_space(local.file.hostname.content),
+  }
+}
+
+prometheus.exporter.unix "node" {}
+
+prometheus.scrape "node" {
+  scrape_interval = "60s"
+  scrape_timeout  = "4s"
+  targets    = prometheus.exporter.unix.node.targets
+  forward_to = [prometheus.relabel.fwd.receiver]
+}
+
+{% for name, addr in alloy_metric_jobs.items() %}
+prometheus.scrape "{{ name }}" {
+    scrape_interval = "60s"
+    scrape_timeout  = "4s"
+    targets    = [{__address__ = "{{ addr }}", job="{{ name }}"}]
+    forward_to = [prometheus.relabel.fwd.receiver]
+}
+{% endfor %}
+
+prometheus.relabel "fwd" {
+  forward_to = [prometheus.remote_write.cockpit.receiver]
+
+  rule {
+    action = "replace"
+    target_label = "instance"
+    replacement = string.trim_space(local.file.hostname.content)
+  }
+}
+
+prometheus.remote_write "cockpit" {
+  endpoint {
+    url = "{{ alloy_metrics_endpoint }}"
+    headers = {
+      "X-TOKEN" = "{{ alloy_metrics_token }}",
+    }
+  }
+}
+
+loki.write "cockpit" {
+  endpoint {
+    url = "{{ alloy_logs_endpoint }}"
+    headers = {
+      "X-TOKEN" = "{{ alloy_logs_token }}",
+    }
+  }
+}
+
+// vim:ft=hcl sw=2 ts=2 et

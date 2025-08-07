@@ -1,0 +1,10 @@
+# Managed by Ansible
+
+[Unit]
+Description=Run Restic on a schedule
+
+[Timer]
+OnCalendar={{ restic_schedule }}
+
+[Install]
+WantedBy=timers.target

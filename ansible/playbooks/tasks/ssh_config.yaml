@@ -1,0 +1,40 @@
+---
+- name: Ensure SSH server is installed
+  ansible.builtin.package:
+    name: openssh-server
+    state: present
+
+- name: Ensure SSH daemon is enabled
+  ansible.builtin.service:
+    name: sshd
+    enabled: true
+
+- name: SSH daemon configuration - global
+  block:
+    - name: Ensure sshd_config.d dir exists
+      ansible.builtin.file:
+        state: directory
+        path: "/etc/ssh/sshd_config.d"
+        owner: root
+        group: root
+        mode: "0700"
+      notify: Restart SSHD
+
+    - name: Custom Modular Configuration
+      ansible.builtin.template:
+        src: "etc/ssh/{{ ansible_distribution_file_variety }}-{{ ansible_distribution_major_version }}-60-infra.conf.j2"
+        dest: "/etc/ssh/sshd_config.d/60-infra.conf"
+        owner: root
+        group: root
+        mode: "0600"
+        validate: /usr/sbin/sshd -t -f %s
+        backup: true
+      notify: Restart SSHD
+
+- name: Remove DSA keys
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /etc/ssh/ssh_host_dsa_key.pub
+    - /etc/ssh/ssh_host_dsa_key

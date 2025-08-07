@@ -1,0 +1,11 @@
+---
+scw_cockpit_region: "fr-par"
+scw_logs_url: "https://{{ scw_logs_id }}.logs.cockpit.{{ scw_cockpit_region }}.scw.cloud"
+scw_logs_endpoint: "{{ scw_logs_url }}/loki/api/v1/push"
+scw_metrics_url: "https://{{ scw_metrics_id }}.metrics.cockpit.{{ scw_cockpit_region }}.scw.cloud"
+scw_metrics_endpoint: "{{ scw_metrics_url }}/api/v1/push"
+
+alloy_logs_endpoint: "{{ scw_logs_endpoint }}"
+alloy_logs_token: "{{ scw_cockpit_token }}"
+alloy_metrics_endpoint: "{{ scw_metrics_endpoint }}"
+alloy_metrics_token: "{{ scw_cockpit_token }}"

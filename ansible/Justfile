@@ -1,0 +1,5 @@
+inventory_path := justfile_dir() + "/inventory/hosts.ini"
+playbooks_path := justfile_dir() + "/playbooks"
+
+playbook host playbook:
+  ansible-playbook --inventory {{inventory_path}} --extra-vars "host={{host}}" --ask-become-pass {{playbooks_path}}/{{playbook}}.yaml

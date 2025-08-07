@@ -1,0 +1,13 @@
+---
+alloy_logs_endpoint: ""
+alloy_logs_token: ""
+alloy_metrics_endpoint: ""
+alloy_metrics_token: ""
+
+alloy_log_jobs: {}
+# mclogs: /var/log/minecraft/*.log
+# pdslogs: /var/log/pds/*.log
+
+alloy_metric_jobs: {}
+# mcmetrics: 127.0.0.1:2937
+# pdsmetrics: 127.0.0.1:2737

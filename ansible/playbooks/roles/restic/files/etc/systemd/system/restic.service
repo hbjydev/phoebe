@@ -1,0 +1,13 @@
+# Managed by Ansible
+
+[Unit]
+Description=Restic backup
+After=syslog.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/usr/bin/restic backup --files-from /etc/restic/files
+EnvironmentFile=/etc/restic/env
+AmbientCapabilities=CAP_DAC_READ_SEARCH

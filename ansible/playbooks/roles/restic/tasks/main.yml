@@ -1,0 +1,43 @@
+---
+- name: Install Restic
+  ansible.builtin.package:
+    name: "{{ restic_package }}"
+    state: present
+
+- name: Set up restic files list
+  ansible.builtin.copy:
+    content: "{% for file in restic_files %}{{ file }}\n{% endfor %}"
+    dest: /etc/restic/files
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Set up restic environment file
+  ansible.builtin.template:
+    src: etc/restic/env.j2
+    dest: /etc/restic/env
+    owner: root
+    group: root
+    mode: "0600"
+
+- name: Set up restic systemd unit
+  ansible.builtin.copy:
+    src: etc/systemd/system/restic.service
+    dest: /etc/systemd/system/restic.service
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Set up restic systemd timer
+  ansible.builtin.template:
+    src: etc/systemd/system/restic.timer.j2
+    dest: /etc/systemd/system/restic.timer
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Ensure timer is enabled
+  ansible.builtin.systemd:
+    enabled: true
+    daemon_reload: true
+    name: restic.timer

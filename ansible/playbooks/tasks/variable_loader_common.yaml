@@ -1,0 +1,13 @@
+
+---
+- name: Standard System Configuration Variables
+  block:
+    - name: Loading Variables from OS Common
+      ansible.builtin.include_vars: "{{ item }}"
+      with_items:
+        - "{{ ansible_distribution_file_variety }}.yaml"
+
+    - name: Check if system is EFI
+      ansible.builtin.stat:
+        path: "/sys/firmware/efi"
+      register: efi_installed

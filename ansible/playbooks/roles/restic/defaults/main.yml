@@ -1,0 +1,10 @@
+---
+restic_package: restic
+
+restic_schedule: "*-*-* 0:00:00"
+
+restic_files: []
+restic_repository: ""
+restic_repository_password: ""
+
+restic_env: {}

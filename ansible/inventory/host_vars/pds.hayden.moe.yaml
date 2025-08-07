@@ -1,0 +1,6 @@
+---
+ansible_host: 212.47.236.170
+host_roles:
+  - restic
+restic_files:
+  - /opt/atproto-pds

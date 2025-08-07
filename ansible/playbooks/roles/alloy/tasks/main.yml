@@ -1,0 +1,27 @@
+---
+- name: Install Grafana RPM repo
+  ansible.builtin.copy:
+    src: etc/yum.repos.d/grafana.repo
+    dest: /etc/yum.repos.d/grafana.repo
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Install Alloy
+  ansible.builtin.dnf:
+    name: alloy
+    state: present
+
+- name: Configure Alloy
+  ansible.builtin.template:
+    src: etc/alloy/config.alloy
+    dest: /etc/alloy/config.alloy
+    owner: alloy
+    group: alloy
+    mode: "0600"
+  notify: restart_alloy
+
+- name: Enable Alloy
+  ansible.builtin.systemd:
+    enabled: true
+    name: alloy
