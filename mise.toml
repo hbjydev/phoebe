@@ -12,9 +12,10 @@ KUBERNETES_VERSION="v1.33.1"
 # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
 TALOS_VERSION="v1.10.6"
 
+[settings]
+python.uv_venv_auto = true
+
 [tools]
-"python" = "3.13"
-"pipx:makejinja" = "2.8.0"
 "aqua:budimanjojo/talhelper" = "3.0.31"
 "aqua:cilium/cilium-cli" = "0.18.5"
 "aqua:FiloSottile/age" = "1.2.1"
@@ -30,3 +31,4 @@ TALOS_VERSION="v1.10.6"
 terraform = "1.12.2"
 talosctl = "1.10.6"
 upctl = "3.21.0"
+uv = "0.8.5"
