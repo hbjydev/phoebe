@@ -1,6 +1,10 @@
 ---
 collections:
+  - name: community.docker
   - name: community.general
   - name: ansible.posix
   - name: ansible.utils
   - name: nginxinc.nginx_core
+
+roles:
+  - name: geerlingguy.docker

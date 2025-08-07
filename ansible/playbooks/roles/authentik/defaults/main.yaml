@@ -1,0 +1,5 @@
+---
+authentik_domain: ''
+authentik_pg_pass: ''
+authentik_log_level: 'info'
+authentik_secret_key: ''

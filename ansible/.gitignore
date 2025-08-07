@@ -8,5 +8,7 @@
 __pycache__
 dist
 .ansible
+roles/local/*
+!roles/local/.gitkeep
 
 # End of https://www.toptal.com/developers/gitignore/api/ansible

@@ -1,0 +1,42 @@
+---
+- name: Setup Authentik
+  hosts: "{{ host | default([]) }}"
+  become: true
+
+  pre_tasks:
+    - name: Check if ansible cannot be run here
+      ansible.builtin.stat:
+        path: /etc/no-ansible
+      register: no_ansible
+
+    - name: Verify if we can run ansible
+      ansible.builtin.assert:
+        that:
+          - "not no_ansible.stat.exists"
+        success_msg: "We are able to run on this node"
+        fail_msg: "/etc/no-ansible exists - skipping run on this node"
+
+  tasks:
+    - name: Install GPG2
+      ansible.builtin.package:
+        name: gnupg2
+        state: present
+
+    - name: Run Docker role
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+      when: "'authentik' in host_roles"
+
+    - name: Run Authentik role
+      ansible.builtin.include_role:
+        name: authentik
+      when: "'authentik' in host_roles"
+
+  post_tasks:
+    - name: Touching run file that ansible has ran here
+      ansible.builtin.file:
+        path: /var/log/ansible.run
+        state: touch
+        mode: "0644"
+        owner: root
+        group: root

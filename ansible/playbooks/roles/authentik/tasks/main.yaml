@@ -1,0 +1,62 @@
+---
+- name: Install Nginx
+  ansible.builtin.package:
+    name: nginx
+    state: present
+
+- name: Ensure nginx is enabled
+  ansible.builtin.systemd:
+    enabled: true
+    daemon_reload: true
+    name: nginx.service
+
+- name: Ensure nginx is started
+  ansible.builtin.systemd:
+    name: nginx.service
+    state: started
+
+- name: Ensure nginx can connect to local services
+  ansible.posix.seboolean:
+    name: httpd_can_network_connect
+    state: true
+    persistent: true
+
+- name: Ensure Authentik install directory exists
+  ansible.builtin.file:
+    path: /opt/authentik
+    state: directory
+    mode: '0755'
+    owner: rocky
+    group: rocky
+
+- name: Set up authentik docker compose file
+  ansible.builtin.copy:
+    src: opt/authentik/docker-compose.yaml
+    dest: /opt/authentik/docker-compose.yaml
+    owner: root
+    group: root
+    mode: "0644"
+    backup: true
+
+- name: Configure authentik .env
+  ansible.builtin.template:
+    src: opt/authentik/.env
+    dest: /opt/authentik/.env
+    owner: rocky
+    group: rocky
+    mode: "0600"
+    backup: true
+
+- name: Start Authentik
+  community.docker.docker_compose_v2:
+    project_src: /opt/authentik
+
+- name: Configure authentik nginx
+  ansible.builtin.template:
+    src: etc/nginx/conf.d/authentik.conf
+    dest: /etc/nginx/conf.d/authentik.conf
+    owner: root
+    group: root
+    mode: "0644"
+    backup: true
+  notify: reload_nginx
