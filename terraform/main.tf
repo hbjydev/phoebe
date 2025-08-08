@@ -6,6 +6,11 @@ module "bucket" {
   account_id    = "09c8f0e370aa6c96c9b46741f994d5f5"
   storage_class = try(each.value.storage_class, "Standard")
   region        = try(each.value.region, "WEUR")
+
+  providers = {
+    cloudflare.main = cloudflare
+    cloudflare.tokens = cloudflare.tokens
+  }
 }
 
 module "vm_upcloud" {

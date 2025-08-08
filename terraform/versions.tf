@@ -18,5 +18,10 @@ terraform {
 }
 
 provider "cloudflare" {}
+provider "cloudflare" {
+  alias = "tokens"
+  api_token = var.CLOUDFLARE_TOKENS_API_TOKEN
+}
+
 provider "upcloud" {}
 provider "tailscale" {}

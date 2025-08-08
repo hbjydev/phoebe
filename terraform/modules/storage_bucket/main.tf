@@ -3,6 +3,19 @@ resource "cloudflare_r2_bucket" "self" {
   name = var.name
   location = "WEUR"
   storage_class = var.storage_class
+  provider = cloudflare.main
+}
+
+resource "cloudflare_api_token" "self" {
+  name = "R2-${var.name}-RW"
+
+  policies = [{
+    effect = "allow"
+    resources = { "${local.iam_bucket_name}" = "*" }
+    permission_groups = [for x in local.permission_id_list : { id = x }]
+  }]
+
+  provider = cloudflare.tokens
 }
 
 resource "cloudflare_r2_bucket_cors" "self" {
@@ -19,4 +32,5 @@ resource "cloudflare_r2_bucket_cors" "self" {
     id = "Allow Authentik access"
     max_age_seconds = 3600
   }]
+  provider = cloudflare.main
 }
