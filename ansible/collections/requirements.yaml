@@ -8,4 +8,5 @@ collections:
 
 roles:
   - name: hbjydev.restic
+    version: v1.0.0
   - name: geerlingguy.docker
