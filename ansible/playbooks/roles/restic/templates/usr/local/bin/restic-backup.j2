@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-set -euxo pipefail
-
-{{ restic_install_path }} backup --files-from /etc/restic/files
-{{ restic_install_path }} forget --keep-last {{ restic_keep_last }} --prune

@@ -19,7 +19,7 @@
   tasks:
     - name: Run Restic role
       ansible.builtin.include_role:
-        name: restic
+        name: hbjydev.restic
       when: "'restic' in host_roles"
 
   post_tasks:

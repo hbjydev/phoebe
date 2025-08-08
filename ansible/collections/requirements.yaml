@@ -7,4 +7,5 @@ collections:
   - name: nginxinc.nginx_core
 
 roles:
+  - name: hbjydev.restic
   - name: geerlingguy.docker
