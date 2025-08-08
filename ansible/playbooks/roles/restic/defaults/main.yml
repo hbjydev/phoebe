@@ -5,6 +5,7 @@ restic_download_url: 'https://github.com/restic/restic/releases/download/v{{ res
 restic_install_path: /usr/local/bin/restic_{{ restic_version }}_linux_{{ restic_arch }}
 
 restic_schedule: "*-*-* 0:00:00"
+restic_keep_last: 7
 
 restic_files: []
 restic_repository: ""

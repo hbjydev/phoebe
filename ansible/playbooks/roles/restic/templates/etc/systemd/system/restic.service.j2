@@ -8,6 +8,6 @@ After=network-online.target
 [Service]
 Type=oneshot
 User=root
-ExecStart={{ restic_install_path }} backup --files-from /etc/restic/files
+ExecStart=/usr/local/bin/restic-backup
 EnvironmentFile=/etc/restic/env
 AmbientCapabilities=CAP_DAC_READ_SEARCH
