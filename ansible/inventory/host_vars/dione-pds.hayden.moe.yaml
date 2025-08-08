@@ -1,0 +1,7 @@
+---
+ansible_host: dione-pds
+ansible_user: rocky
+host_roles:
+  - restic
+restic_files:
+  - /opt/atproto-pds
