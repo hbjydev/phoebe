@@ -1,0 +1,20 @@
+---
+apps:
+  pds:
+    network: dione
+    provider: upcloud
+    tailscale: true
+    instance: {}
+    buckets:
+      storage: {}
+      backup: {}
+
+  authentik:
+    network: dione
+    provider: upcloud
+    tailscale: true
+    instance:
+      plan: 2xCPU-2GB
+    buckets:
+      storage: {}
+      backup: {}

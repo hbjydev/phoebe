@@ -1,4 +1,5 @@
 resource "tailscale_tailnet_key" "self" {
+  count = var.tailscale ? 1 : 0
   reusable = false
   ephemeral = false
   tags = ["tag:net-dione"]
@@ -17,13 +18,12 @@ resource "upcloud_server" "self" {
   }
 
   metadata  = true
-  user_data = templatefile(
+  user_data = var.tailscale ? templatefile(
     "${path.module}/userdata.yaml",
     {
-      ts_auth_key = tailscale_tailnet_key.self.key
+      ts_auth_key = tailscale_tailnet_key.self[0].key
     }
-  )
-
+  ) : ""
 
   template {
     storage = "Rocky Linux 10"

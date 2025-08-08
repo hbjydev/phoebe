@@ -9,3 +9,11 @@ variable "zone" {
 variable "plan" {
   type = string
 }
+
+variable "network" {
+  type = string
+}
+
+variable "tailscale" {
+  type = bool
+}
