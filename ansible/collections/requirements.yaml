@@ -5,6 +5,8 @@ collections:
   - name: ansible.posix
   - name: ansible.utils
   - name: nginxinc.nginx_core
+  - name: hbjydev.general
+    version: 1.1.0
 
 roles:
   - name: hbjydev.restic

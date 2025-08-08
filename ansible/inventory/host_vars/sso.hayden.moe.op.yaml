@@ -1,0 +1,11 @@
+---
+# Authentik
+authentik_pg_pass: op://phoebe/sso.hayden.moe/authentik/authentik_pg_pass
+authentik_secret_key: op://phoebe/sso.hayden.moe/authentik/authentik_secret_key
+
+# Restic
+restic_repository: op://phoebe/sso.hayden.moe/restic/restic_repository
+restic_repository_password: op://phoebe/sso.hayden.moe/restic/restic_repository_password
+restic_env:
+  AWS_ACCESS_KEY_ID: op://phoebe/sso.hayden.moe/restic/restic_aws_id
+  AWS_SECRET_ACCESS_KEY: op://phoebe/sso.hayden.moe/restic/restic_aws_secret
