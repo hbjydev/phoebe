@@ -31,4 +31,4 @@ python.uv_venv_auto = true
 terraform = "1.12.2"
 talosctl = "1.10.6"
 upctl = "3.21.0"
-uv = "0.8.5"
+uv = "0.8.8"
