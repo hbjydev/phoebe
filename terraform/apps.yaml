@@ -14,7 +14,7 @@ apps:
     provider: upcloud
     tailscale: true
     instance:
-      plan: 2xCPU-2GB
+      plan: 2xCPU-4GB
     buckets:
       storage: {}
       backup: {}
