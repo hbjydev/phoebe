@@ -7,6 +7,7 @@ provider "registry.terraform.io/cloudflare/cloudflare" {
   hashes = [
     "h1:1af0SiRude2KSo4HeAhdKdL89kftor+1ZhtxbBEV1DI=",
     "h1:24uCJp1H3ZK8CCwszYyR3qtOn5Z5Hn1eCcv2gkH7+4g=",
+    "h1:2uFCyT3jmy53NX5FIKjxocKVK/8PHjwj7FTdEvp2a9A=",
     "zh:0bbd2eaa8210b2214dc426a2471b38cee53db9750b4916b34b0926fc9cbe4d7b",
     "zh:0de3675e2ace7478ab0d354b2b6db4be2ae5a9a5e68b725cdd10e956131ec687",
     "zh:4787a255919911aac5e1f8d47ed19fa45e5b90439ecf1fffbb17ff8bfb28de79",
@@ -23,6 +24,7 @@ provider "registry.terraform.io/tailscale/tailscale" {
   version     = "0.21.1"
   constraints = "~> 0.21"
   hashes = [
+    "h1:g2qRee5bpyioNQ4w99XnZVtM+k1RRtMfm7uNV0JThtE=",
     "h1:jtRN8X5NWpfQgnuxKvGOKdTDqWmDRtgOF85AFwKi690=",
     "zh:0ececf1715d6ece1983e773f8b8def68e8d2d455ff1e5d49fffa97a62c629661",
     "zh:36146ceadff77791297dfdffe3fa39a6a93b8efc5f0cf55e64f8ad9143685bb5",
@@ -45,6 +47,7 @@ provider "registry.terraform.io/upcloudltd/upcloud" {
   version     = "5.23.3"
   constraints = "~> 5.0"
   hashes = [
+    "h1:DV9dqDullADOHRg32llq5DLzwQM4G+HnzmEfxh7tKIA=",
     "h1:TCN3qaCgTBhP/lWvU9bQZD1GPJL33aRWOXED0UuqM/E=",
     "zh:4ba6a1b5079b2d33fc866dd7630af56ec2ae4c95de1c1995494cab3bbc643baf",
     "zh:4f53e9264cd0dbba6722fe5bb48c59928bba8b999df5c11c527849267c7e63c5",
