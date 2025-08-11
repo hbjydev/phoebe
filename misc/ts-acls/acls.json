@@ -138,7 +138,7 @@
 
     {
       // Allow Engineers to use the git user on any Git services
-      "action":          "allow",
+      "action":          "accept",
       "src":             ["group:team-eng"],
       "dst":             ["tag:app-tangled-knot"],
       "users":           ["git"],
