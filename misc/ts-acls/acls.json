@@ -135,6 +135,16 @@
       "recorder":        ["tag:app-tsrecorder"],
       "enforceRecorder": true,
     },
+
+    {
+      // Allow Engineers to use the git user on any Git services
+      "action":          "allow",
+      "src":             ["group:team-eng"],
+      "dst":             ["tag:app-tangled-knot"],
+      "users":           ["git"],
+      "recorder":        ["tag:app-tsrecorder"],
+      "enforceRecorder": true,
+    },
   ],
 
   "tagowners": {
@@ -148,6 +158,7 @@
 
     // Applications
     "tag:app-tsrecorder": ["tag:k8s", "group:team-infra"],
+    "tag:app-tangled-knot": ["group:team-infra"],
 
     // Clusters
     "tag:k8s":        ["group:ctl-k8s", "group:team-infra"],
