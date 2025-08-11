@@ -14,6 +14,11 @@ terraform {
       source = "tailscale/tailscale"
       version = "~> 0.21"
     }
+
+    onepassword = {
+      source = "1Password/onepassword"
+      version = "~> 2"
+    }
   }
 }
 
@@ -24,4 +29,5 @@ provider "cloudflare" {
 }
 
 provider "upcloud" {}
+provider "onepassword" {}
 provider "tailscale" {}

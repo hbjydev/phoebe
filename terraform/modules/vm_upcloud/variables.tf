@@ -17,3 +17,11 @@ variable "network" {
 variable "tailscale" {
   type = bool
 }
+
+variable "volumes" {
+  type = list(object({
+    name      = string
+    mountPath = string
+    size      = number
+  }))
+}

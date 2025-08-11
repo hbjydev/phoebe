@@ -13,3 +13,8 @@ variable "storage_class" {
 variable "region" {
   type = string
 }
+
+variable "op_title" {
+  type = string
+  nullable = true
+}

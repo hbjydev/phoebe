@@ -18,3 +18,15 @@ apps:
     buckets:
       storage: {}
       backup: {}
+
+  knot:
+    network: dione
+    provider: upcloud
+    tailscale: true
+    instance:
+      volumes:
+        - name: git
+          mountPath: /home/git
+          size: 15
+    buckets:
+      backup: {}

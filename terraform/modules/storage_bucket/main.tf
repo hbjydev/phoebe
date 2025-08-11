@@ -18,6 +18,41 @@ resource "cloudflare_api_token" "self" {
   provider = cloudflare.tokens
 }
 
+resource "onepassword_item" "self_token" {
+  vault = "phoebe"
+
+  title = try(var.op_title, "${var.name}-r2")
+  category = "secure_note"
+
+  section {
+    label = "cf-r2_${var.name}"
+
+    field {
+      label = "endpoint"
+      type = "STRING"
+      value = "https://${cloudflare_r2_bucket.self.name}.r2.cloudflarestorage.com/${cloudflare_r2_bucket.self.name}"
+    }
+
+    field {
+      label = "bucket_name"
+      type = "STRING"
+      value = "${cloudflare_r2_bucket.self.name}"
+    }
+
+    field {
+      label = "access_key_id"
+      type = "CONCEALED"
+      value = cloudflare_api_token.self.id
+    }
+
+    field {
+      label = "secret_access_key"
+      type = "CONCEALED"
+      value = sha256(cloudflare_api_token.self.value)
+    }
+  }
+}
+
 resource "cloudflare_r2_bucket_cors" "self" {
   count = var.name == "sso-haydenmoe-storage" ? 1 : 0
 

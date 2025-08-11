@@ -45,4 +45,21 @@ resource "upcloud_server" "self" {
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDkhuhfzyg7R+O62XSktHufGmmhy6FNDi/NuPPJt7bI+", # ssh-personal
     ]
   }
+
+  dynamic "storage_devices" {
+    for_each = upcloud_storage.extra_volume
+    iterator = vol
+    content {
+      storage = vol.value.id
+    }
+  }
+}
+
+resource "upcloud_storage" "extra_volume" {
+  for_each = { for volume in var.volumes : "${volume.name}" => volume }
+
+  size  = try(each.value.size, 5)
+  tier  = "maxiops"  # only available tier currently
+  title = "${var.name}-vol-${each.key}"
+  zone  = var.zone
 }

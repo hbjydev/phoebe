@@ -9,3 +9,6 @@ apply: plan
 
 import res id:
   {{op_run}} --no-masking -- terraform import {{ res }} {{ id }}
+
+init:
+  {{op_run}} -- terraform init

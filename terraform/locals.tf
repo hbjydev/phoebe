@@ -30,6 +30,7 @@ locals {
       tailscale = try(app.tailscale, true)
       plan = try(app.instance.plan, "1xCPU-1GB")
       zone = try(app.instance.region, try(app.region, app.provider == "upcloud" ? "uk-lon1" : "FR-PAR1"))
+      volumes = try(app.instance.volumes, [])
     }
   }
 
