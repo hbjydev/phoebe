@@ -7,7 +7,7 @@ terraform {
 
     upcloud = {
       source  = "UpCloudLtd/upcloud"
-      version = "~> 5"
+      version = ">= 5"
     }
 
     tailscale = {
