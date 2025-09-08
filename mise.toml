@@ -29,6 +29,6 @@ python.uv_venv_auto = true
 "aqua:mikefarah/yq" = "latest"
 "cargo:minijinja-cli" = "latest"
 terraform = "1.12.2"
-talosctl = "1.10.6"
+talosctl = "1.11.1"
 upctl = "3.21.0"
 uv = "0.8.5"
