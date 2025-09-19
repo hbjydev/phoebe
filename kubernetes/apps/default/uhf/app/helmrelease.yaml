@@ -55,6 +55,7 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     service:
       app:
+        type: LoadBalancer
         controller: uhf
         ports:
           http:
