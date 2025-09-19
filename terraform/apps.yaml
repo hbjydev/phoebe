@@ -24,6 +24,7 @@ apps:
     provider: upcloud
     tailscale: true
     instance:
+      plan: DEV-1xCPU-2GB
       volumes:
         - name: git
           mountPath: /home/git

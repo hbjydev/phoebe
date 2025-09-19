@@ -2,15 +2,7 @@ variable "name" {
   type = string
 }
 
-variable "account_id" {
-  type = string
-}
-
-variable "storage_class" {
-  type = string
-}
-
-variable "region" {
+variable "storage_uuid" {
   type = string
 }
 

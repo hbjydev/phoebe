@@ -7,7 +7,7 @@ terraform {
 
     upcloud = {
       source  = "UpCloudLtd/upcloud"
-      version = "~> 5"
+      version = "~> 5.26"
     }
 
     tailscale = {
@@ -17,7 +17,7 @@ terraform {
 
     onepassword = {
       source = "1Password/onepassword"
-      version = "~> 2"
+      version = "~> 2.1"
     }
   }
 }
