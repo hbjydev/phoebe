@@ -72,8 +72,10 @@ spec:
     persistence:
       config:
         existingClaim: uhf
-        globalMounts:
-          - /var/lib/uhf-server
+        advancedMounts:
+          uhf:
+            app:
+              - path: /var/lib/uhf-server
       media:
         type: nfs
         server: 192.168.1.2
