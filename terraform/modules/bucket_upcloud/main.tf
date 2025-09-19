@@ -51,13 +51,13 @@ resource "onepassword_item" "self_token" {
     field {
       label = "endpoint_public"
       type = "STRING"
-      value = "${var.storage_endpoint_public}/${upcloud_managed_object_storage_bucket.self.name}"
+      value = "https://${var.storage_endpoint_public}"
     }
 
     field {
       label = "endpoint_private"
       type = "STRING"
-      value = "${var.storage_endpoint_private}/${upcloud_managed_object_storage_bucket.self.name}"
+      value = "https://${var.storage_endpoint_private}"
     }
   }
 }
