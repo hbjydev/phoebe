@@ -8,6 +8,12 @@ resource "upcloud_managed_object_storage_user" "self" {
   service_uuid = var.storage_uuid
 }
 
+resource "upcloud_managed_object_storage_user_policy" "this" {
+  username     = upcloud_managed_object_storage_user.self.username
+  name         = "ECSS3FullAccess"
+  service_uuid = var.storage_uuid
+}
+
 resource "upcloud_managed_object_storage_user_access_key" "self" {
   username     = upcloud_managed_object_storage_user.self.username
   service_uuid = var.storage_uuid
@@ -23,12 +29,6 @@ resource "onepassword_item" "self_token" {
 
   section {
     label = "uc-os_${var.name}"
-
-    # field {
-    #   label = "endpoint"
-    #   type = "STRING"
-    #   value = "https://${cloudflare_r2_bucket.self.name}.r2.cloudflarestorage.com/${cloudflare_r2_bucket.self.name}"
-    # }
 
     field {
       label = "bucket_name"
@@ -46,6 +46,18 @@ resource "onepassword_item" "self_token" {
       label = "secret_access_key"
       type = "CONCEALED"
       value = upcloud_managed_object_storage_user_access_key.self.secret_access_key
+    }
+
+    field {
+      label = "endpoint_public"
+      type = "STRING"
+      value = "${var.storage_endpoint_public}/${upcloud_managed_object_storage_bucket.self.name}"
+    }
+
+    field {
+      label = "endpoint_private"
+      type = "STRING"
+      value = "${var.storage_endpoint_private}/${upcloud_managed_object_storage_bucket.self.name}"
     }
   }
 }

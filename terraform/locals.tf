@@ -32,6 +32,7 @@ locals {
       zone = try(app.instance.region, try(app.region, app.provider == "upcloud" ? "uk-lon1" : "FR-PAR1"))
       volumes = try(app.instance.volumes, [])
     }
+    if try(app.instance.enabled, false) == true
   }
 
   instances = merge(local.apps_instances, local.manual_instances)
