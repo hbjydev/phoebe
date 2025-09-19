@@ -30,7 +30,8 @@ spec:
               - uhf-server
               - --port
               - &port '8000'
-              - --recordings-dir /media/recordings
+              - --recordings-dir
+              - /media/recordings
               - --enable-commercial-detection
             env:
               TZ: Europe/London
