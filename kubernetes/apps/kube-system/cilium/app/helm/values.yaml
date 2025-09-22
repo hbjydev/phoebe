@@ -21,10 +21,6 @@ envoy:
   prometheus:
     serviceMonitor:
       enabled: true
-gatewayAPI:
-  enabled: true
-  enableAlpn: true
-  enableAppProtocol: true
 ipam:
   mode: kubernetes
 ipv4NativeRoutingCIDR: 10.244.0.0/16
