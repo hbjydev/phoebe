@@ -1,8 +1,3 @@
-moved {
-  from = upcloud_managed_object_storage.dione
-  to = module.network_upcloud["dione"].upcloud_managed_object_storage.self[0]
-}
-
 module "network_upcloud" {
   source   = "./modules/network_upcloud"
   for_each = local.networks_upcloud
