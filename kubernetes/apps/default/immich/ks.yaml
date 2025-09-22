@@ -20,6 +20,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      GATUS_SUBDOMAIN: photos
       VOLSYNC_CAPACITY: 32Gi
   prune: true
   retryInterval: 2m

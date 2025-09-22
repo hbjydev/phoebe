@@ -1,13 +1,9 @@
 endpoints:
   - name: "${APP}"
-    group: guarded
-    url: 1.1.1.1
+    group: internal
+    url: "https://${GATUS_SUBDOMAIN:=${APP}}.hayden.moe${GATUS_PATH:=/}"
     interval: 1m
-    ui:
-      hide-hostname: true
-      hide-url: true
-    dns:
-      query-name: "${GATUS_SUBDOMAIN:=${APP}}.hayden.moe"
-      query-type: A
+    client:
+      dns-resolver: tcp://192.168.0.1:53
     conditions:
-      - "len([BODY]) == 0"
+      - "[STATUS] == ${GATUS_STATUS:=200}"

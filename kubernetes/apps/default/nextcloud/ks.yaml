@@ -20,6 +20,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      GATUS_SUBDOMAIN: drive
       VOLSYNC_CAPACITY: 8Gi
       VOLSYNC_SOURCE_PVC: nextcloud
   prune: true
