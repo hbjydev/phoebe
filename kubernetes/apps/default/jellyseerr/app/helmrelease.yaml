@@ -75,7 +75,7 @@ spec:
           - request.hayden.moe
         parentRefs:
           - name: external
-            namespace: kube-system
+            namespace: network
             sectionName: https
         rules:
           - backendRefs:

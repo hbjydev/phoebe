@@ -7,7 +7,7 @@ spec:
   hostnames: ["photos.hayden.moe"]
   parentRefs:
     - name: external
-      namespace: kube-system
+      namespace: network
       sectionName: https
   rules:
     - matches:

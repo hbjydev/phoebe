@@ -6,7 +6,7 @@ metadata:
 spec:
   parentRefs:
   - name: external
-    namespace: kube-system
+    namespace: network
     sectionName: https
   hostnames:
     - drive.hayden.moe
@@ -28,7 +28,7 @@ metadata:
 spec:
   parentRefs:
   - name: external
-    namespace: kube-system
+    namespace: network
     sectionName: https
   hostnames:
     - docs.hayden.moe

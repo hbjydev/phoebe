@@ -44,7 +44,7 @@ spec:
           hostnames: ["alertmanager.hayden.moe"]
           parentRefs:
             - name: internal
-              namespace: kube-system
+              namespace: network
               sectionName: https
       alertmanagerSpec:
         alertmanagerConfiguration:
@@ -71,7 +71,7 @@ spec:
           hostnames: ["prometheus.hayden.moe"]
           parentRefs:
             - name: internal
-              namespace: kube-system
+              namespace: network
               sectionName: https
       prometheusSpec:
         image:
