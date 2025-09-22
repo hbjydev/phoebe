@@ -16,6 +16,8 @@ devices: eno+
 enableIPv4BIGTCP: true
 endpointRoutes:
   enabled: true
+envoy:
+  enabled: false
 ipam:
   mode: kubernetes
 ipv4NativeRoutingCIDR: 10.244.0.0/16
