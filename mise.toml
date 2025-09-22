@@ -7,7 +7,7 @@ TALOSCONFIG = "{{ config_root }}/talos/talosconfig"
 JUST_UNSTABLE = "1"
 
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
-KUBERNETES_VERSION="v1.33.1"
+KUBERNETES_VERSION="v1.34.1"
 
 # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
 TALOS_VERSION="v1.11.1"
@@ -27,7 +27,7 @@ python.uv_venv_auto = true
 "aqua:kubernetes/kubectl" = "1.33.1"
 "cargo:minijinja-cli" = "latest"
 terraform = "1.12.2"
-talosctl = "1.10.6"
+talosctl = "1.11.1"
 upctl = "3.21.0"
 uv = "0.8.5"
 gum = "0.17.0"
