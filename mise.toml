@@ -10,7 +10,7 @@ JUST_UNSTABLE = "1"
 KUBERNETES_VERSION="v1.33.1"
 
 # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
-TALOS_VERSION="v1.10.6"
+TALOS_VERSION="v1.11.1"
 
 [settings]
 python.uv_venv_auto = true
