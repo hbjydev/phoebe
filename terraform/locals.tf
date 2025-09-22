@@ -10,14 +10,57 @@ locals {
 
   # Automatically configured resources
   resource_prefix = "haydenmoe"
-  apps = yamldecode(file("./apps.yaml"))["apps"]
+  networks = yamldecode(file("./config/networks.yaml"))
+  apps = yamldecode(file("./config/apps.yaml"))
+
+  all_networks = merge({
+    for nk, network in local.networks : nk => {
+      name = "${local.resource_prefix}-${nk}",
+      provider = try(network.provider, "upcloud"),
+      region = try(
+        network.region,
+        network.provider == "upcloud"
+          ? "uk-lon1"
+          : network.provider == "cloudflare"
+            ? "WEUR"
+            : "none"
+      ),
+      address_range_cidr = try(network.cidr, "10.0.0.0/16")
+    }
+  })
+
+  networks_upcloud = {
+    for nk, network in local.all_networks : nk => merge(network, {
+      has_object_storage = can(local.networks[nk].upcloud) ? try(local.networks[nk].upcloud.objectStorage, false) : false
+    })
+    if network.provider == "upcloud"
+  }
+
+  networks_none = {
+    for nk, network in local.all_networks : nk => network
+    if network.provider == "none"
+  }
+
+  network_object_storages = {
+    for nw, network in local.all_networks : nw => {
+      name = "${local.resource_prefix}-${nw}-os"
+    }
+    if network.provider == "upcloud"
+  }
 
   apps_buckets = merge([
     for ak, app in local.apps : {
       for bk, bucket in app.buckets : "${local.resource_prefix}-${ak}-${bk}" => {
-        provider = try(bucket.provider, app.provider),
+        provider = try(
+          bucket.provider,
+          try(app.provider, local.all_networks[app.network].provider)
+        ),
+        network = try(app.network, "dione")
         storage_class = try(bucket.storage_class, "Standard"),
-        region = try(bucket.region, "WEUR"),
+        region = try(
+          bucket.region,
+          try(app.region, local.all_networks[app.network].region)
+        ),
       }
     }
   ]...)

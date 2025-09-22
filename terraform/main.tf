@@ -1,45 +1,16 @@
-resource "upcloud_router" "dione" {
-  name = "${local.resource_prefix}-dione-rt"
-  labels = {
-    "moe.hayden.source" = "github/hbjydev/phoebe",
-    "moe.hayden.network" = "dione",
-  }
+moved {
+  from = upcloud_managed_object_storage.dione
+  to = module.network_upcloud["dione"].upcloud_managed_object_storage.self[0]
 }
 
-resource "upcloud_network" "dione" {
-  name   = "${local.resource_prefix}-dione-net"
-  router = upcloud_router.dione.id
-  zone   = "uk-lon1"
+module "network_upcloud" {
+  source   = "./modules/network_upcloud"
+  for_each = local.networks_upcloud
 
-  ip_network {
-    dhcp    = true
-    family  = "IPv4"
-    address = "172.19.0.0/24"
-  }
-}
-
-resource "upcloud_managed_object_storage" "dione" {
-  name              = "${local.resource_prefix}-dione-os"
-  region            = "europe-1"
-  configured_status = "started"
-
-  network {
-    family = "IPv4"
-    type   = "private"
-    name   = "dione-net"
-    uuid   = upcloud_network.dione.id
-  }
-
-  network {
-    family = "IPv4"
-    type   = "public"
-    name   = "public-net"
-  }
-
-  labels = {
-    "moe.hayden.source" = "github/hbjydev/phoebe",
-    "moe.hayden.network" = "dione",
-  }
+  name               = each.value.name
+  zone               = each.value.region
+  address_range_cidr = each.value.address_range_cidr
+  has_object_storage = each.value.has_object_storage
 }
 
 module "bucket_upcloud" {
@@ -48,9 +19,9 @@ module "bucket_upcloud" {
 
   name = try(each.value.name, each.key)
 
-  storage_uuid             = upcloud_managed_object_storage.dione.id
-  storage_endpoint_private = tolist(upcloud_managed_object_storage.dione.endpoint)[index(tolist(upcloud_managed_object_storage.dione.endpoint.*.type), "private")].domain_name
-  storage_endpoint_public  = tolist(upcloud_managed_object_storage.dione.endpoint)[index(tolist(upcloud_managed_object_storage.dione.endpoint.*.type), "public")].domain_name
+  storage_uuid             = module.network_upcloud[each.value.network].network_object_storage_id
+  storage_endpoint_private = module.network_upcloud[each.value.network].network_object_storage_private_endpoint
+  storage_endpoint_public  = module.network_upcloud[each.value.network].network_object_storage_public_endpoint
 
   op_title = try(each.value.name, "uc-os-${try(each.value.name, each.key)}")
   op_vault = var.PHOEBE_VAULT_ID
@@ -62,7 +33,7 @@ moved {
 }
 
 module "bucket_cloudflare" {
-  source   = "./modules/storage_bucket"
+  source   = "./modules/bucket_cloudflare"
   for_each = local.buckets_cloudflare
 
   name          = try(each.value.name, each.key)
