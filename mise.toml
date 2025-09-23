@@ -17,7 +17,7 @@ python.uv_venv_auto = true
 
 [tools]
 "aqua:budimanjojo/talhelper" = "3.0.31"
-"aqua:cilium/cilium-cli" = "0.18.5"
+"aqua:cilium/cilium-cli" = "0.18.7"
 "aqua:FiloSottile/age" = "1.2.1"
 "aqua:fluxcd/flux2" = "2.6.4"
 "aqua:getsops/sops" = "3.10.2"
