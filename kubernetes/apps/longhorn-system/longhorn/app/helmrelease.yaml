@@ -30,6 +30,20 @@ spec:
     cleanupOnFail: true
     remediation:
       retries: 3
-  valuesFrom:
-    - kind: ConfigMap
-      name: longhorn-values
+  values:
+    defaultSettings:
+      defaultReplicaCount: 1
+      defaultDataPath: /var/mnt/longhorn
+    persistence:
+      reclaimPolicy: Delete
+      defaultClassReplicaCount: 1
+    longhornUI:
+      replicas: 1
+    csi:
+      attacherReplicaCount: 1
+      provisionerReplicaCount: 1
+      resizerReplicaCount: 1
+      snapshotterReplicaCount: 1
+    metrics:
+      serviceMonitor:
+        enabled: true
