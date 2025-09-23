@@ -11,7 +11,7 @@ machine:
     {% if ENV.IS_CONTROLLER %}
     key: op://phoebe/talos/MACHINE_CA_KEY
     {% endif %}
-  certSANs: ["127.0.0.1", "192.168.1.3"]
+  certSANs: ["127.0.0.1", "192.168.2.100"]
   kubelet:
     image: ghcr.io/siderolabs/kubelet:{{ ENV.KUBERNETES_VERSION }}
     defaultRuntimeSeccompProfileEnabled: true
@@ -45,7 +45,7 @@ cluster:
     {% endif %}
   clusterName: phoebe
   controlPlane:
-    endpoint: https://192.168.1.3:6443
+    endpoint: https://192.168.2.100:6443
   id: op://phoebe/talos/CLUSTER_ID
   network:
     cni:
@@ -70,7 +70,7 @@ cluster:
         - level: Metadata
     certSANs:
       - 127.0.0.1
-      - 192.168.1.3
+      - 192.168.2.100
     disablePodSecurityPolicy: true
     extraArgs:
       enable-aggregator-routing: "true"

@@ -4,8 +4,6 @@ set shell := ['bash', '-euo', 'pipefail', '-c']
 
 bootstrap_dir := justfile_dir() + '/bootstrap'
 kubernetes_dir := justfile_dir() + '/kubernetes'
-controller := `talosctl config info -o yaml | yq -e '.endpoints[0]'`
-nodes := `talosctl config info -o yaml | yq -e '.nodes | join (" ")'`
 
 [private]
 default: talos k8s (kubeconfig "node") wait namespaces resources crds apps kubeconfig
@@ -13,7 +11,7 @@ default: talos k8s (kubeconfig "node") wait namespaces resources crds apps kubec
 # Install Talos
 talos:
   just log info "Running stage..." "stage" "$0"
-  for n in {{ nodes }}; do \
+  for n in $(just talos nodes); do \
     if ! op=$(just talos apply-node "$n" --insecure 2>&1); then \
       if [[ "$op" == *"certificate required"* ]]; then \
         just log info "Talos already configured, skipping apply of config" "stage" "$0" "node" "$n"; \
@@ -26,7 +24,7 @@ talos:
 # Install Kubernetes
 k8s:
   just log info "Running stage..." "stage" "$0"
-  until op=$(talosctl -n "{{ controller }}" bootstrap 2>&1 || true) && [[ "$op" == *"AlreadyExists"* ]]; do \
+  until op=$(talosctl -n "$(just talos controller)" bootstrap 2>&1 || true) && [[ "$op" == *"AlreadyExists"* ]]; do \
     just log info "Kubernetes bootstrap in progress. Retrying in 5 seconds..." "stage" "$0"; \
     sleep 5; \
   done
@@ -34,11 +32,11 @@ k8s:
 # Fetch kubeconfig
 kubeconfig lb="cilium":
   just log info "Running stage..." "stage" "$0"
-  if ! talosctl kubeconfig -n "{{ controller }}" -f --force-context-name main {{ justfile_dir() }}; then \
+  if ! talosctl kubeconfig -n "$(just talos controller)" -f --force-context-name main {{ justfile_dir() }}; then \
     just log fatal "Failed to fetch kubeconfig" "stage" "$0"; \
   fi
   if [[ "{{ lb }}" != "cilium" ]]; then \
-    if ! kubectl config set-cluster main --server "https://{{ controller }}:6443"; then \
+    if ! kubectl config set-cluster main --server "https://$(just talos controller):6443"; then \
       just log fatal "Failed to set kubectl cluster server address" "stage" "$0"; \
     fi; \
   fi

@@ -12,6 +12,10 @@ default:
 controller:
   talosctl config info -o yaml | yq -e '.endpoints[0]'
 
+[private]
+nodes:
+  talosctl config info -o yaml | yq -e '.nodes | join(" ")'
+
 # Applies a Talos config to a given node
 apply-node node *args:
   just talos render-config "{{ node }}" | talosctl -n "{{ node }}" apply-config -f /dev/stdin {{ args }}
