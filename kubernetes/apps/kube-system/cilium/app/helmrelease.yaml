@@ -34,6 +34,7 @@ spec:
     - kind: ConfigMap
       name: cilium-values
   values:
+    autoDirectNodeRoutes: true
     bandwidthManager:
       enabled: true
       bbr: true
@@ -41,6 +42,9 @@ spec:
       datapathMode: netkit
       masquerade: true
       preallocateMaps: true
+    bpfClockProbe: true
+    bgpControlPlane:
+      enabled: true
     cgroup:
       automount:
         enabled: false
@@ -53,6 +57,8 @@ spec:
       enabled: true
     envoy:
       enabled: false
+    hubble:
+      enabled: false
     ipam:
       mode: kubernetes
     ipv4NativeRoutingCIDR: 10.244.0.0/16
@@ -61,13 +67,12 @@ spec:
     kubeProxyReplacement: true
     kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
     l2announcements:
-      enabled: true
+      enabled: false
     loadBalancer:
       algorithm: maglev
       mode: dsr
     localRedirectPolicy: true
     operator:
-      tolerations: []
       dashboards:
         enabled: true
       prometheus:
@@ -103,27 +108,3 @@ spec:
           - NET_ADMIN
           - SYS_ADMIN
           - SYS_RESOURCE
-    hubble:
-      enabled: true
-      metrics:
-        enabled:
-          - dns:query
-          - drop
-          - tcp
-          - flow
-          - port-distribution
-          - icmp
-          - http
-        serviceMonitor:
-          enabled: true
-        dashboards:
-          enabled: true
-      relay:
-        enabled: true
-        rollOutPods: true
-        prometheus:
-          serviceMonitor:
-            enabled: true
-      ui:
-        enabled: true
-        rollOutPods: true
