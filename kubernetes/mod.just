@@ -7,6 +7,11 @@ kubernetes_dir := justfile_dir() + "/kubernetes"
 default:
   just -l kube
 
+# Open a shell on a node.
+node-shell node:
+    kubectl debug node/{{ node }} -n default -it --image="rockylinux/rockylinux:latest" --profile sysadmin
+    kubectl delete pod -n default -l app.kubernetes.io/managed-by=kubectl-debug
+
 # Sync GitRepositories
 sync-git:
   kubectl get gitrepo --no-headers -A | while read -r ns name _; do \
