@@ -1,0 +1,60 @@
+# vim:ft=yaml
+---
+clusterName: phoebe
+talosVersion: "{{ ENV.TALOS_VERSION }}"
+kubernetesVersion: "{{ ENV.KUBERNETES_VERSION }}"
+endpoint: https://192.168.2.100:6443
+domain: phoebe.local
+allowSchedulingOnMasters: true
+
+additionalMachineCertSans:
+  - 127.0.0.1
+  - 192.168.2.100
+  - phoebe.local
+additionalApiServerCertSans:
+  - 127.0.0.1
+  - phoebe.local
+
+clusterPodNets: [10.244.0.0/16]
+clusterSvcNets: [10.96.0.0/12]
+
+cniConfig:
+  name: none
+
+nodes:
+  - hostname: phoebe-0
+    ipAddress: 192.168.1.3
+    installDisk: /dev/nvme0n1
+    machineSpec:
+      mode: metal
+      arch: amd64
+      secureboot: false
+    nodeLabels:
+      node.longhorn.io/create-default-disk: config
+      intel.feature.node.kubernetes.io/gpu: 'true'
+    nodeAnnotations:
+      node.longhorn.io/default-disks-config: '[{"path":"/var/mnt/longhorn","allowScheduling":true}]'
+    talosImageUrl: factory.talos.dev/metal-installer/{{ ENV.TALOS_SCHEMATIC }}
+    controlPlane: true
+    userVolumes:
+      - name: longhorn
+        provisioning:
+          diskSelector:
+            match: disk.transport == "sata"
+          minSize: 100G
+        filesystem:
+          type: xfs
+    extraManifests:
+      - '@{{ ENV.TALOS_DIR }}/manifests/global/watchdog.yaml'
+
+patches:
+  - '@{{ ENV.TALOS_DIR }}/patches/global/machine-files.yaml'
+  - '@{{ ENV.TALOS_DIR }}/patches/global/machine-kubelet.yaml'
+  - '@{{ ENV.TALOS_DIR }}/patches/global/machine-network.yaml'
+  - '@{{ ENV.TALOS_DIR }}/patches/global/machine-sysctls.yaml'
+  - '@{{ ENV.TALOS_DIR }}/patches/global/machine-time.yaml'
+
+controlPlane:
+  patches:
+    - '@{{ ENV.TALOS_DIR }}/patches/controller/admission-controller-patch.yaml'
+    - '@{{ ENV.TALOS_DIR }}/patches/controller/cluster.yaml'

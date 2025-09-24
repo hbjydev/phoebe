@@ -1,0 +1,42 @@
+# vim:ft=yaml
+---
+cluster:
+  allowSchedulingOnControlPlanes: true
+
+  apiServer:
+    auditPolicy:
+      apiVersion: audit.k8s.io/v1
+      kind: Policy
+      rules:
+        - level: Metadata
+    disablePodSecurityPolicy: true
+    extraArgs:
+      enable-aggregator-routing: "true"
+      feature-gates: ImageVolume=true,MutatingAdmissionPolicy=true
+      runtime-config: admissionregistration.k8s.io/v1beta1=true
+
+  controllerManager:
+    extraArgs:
+      bind-address: 0.0.0.0
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 300m
+        memory: 256Mi
+
+  coreDNS:
+    disabled: true  # replaced by helm chart deployment later
+
+  etcd:
+    advertisedSubnets: [192.168.1.0/24]
+    extraArgs:
+      listen-metrics-urls: http://0.0.0.0:2381
+
+  proxy:
+    disabled: true
+
+  scheduler:
+    extraArgs:
+      bind-address: 0.0.0.0

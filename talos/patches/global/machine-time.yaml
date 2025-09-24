@@ -1,0 +1,9 @@
+# vim:ft=yaml
+---
+machine:
+  time:
+    disabled: false
+    servers:
+      # Cloudflare NTP
+      - 162.159.200.1
+      - 162.159.200.123
