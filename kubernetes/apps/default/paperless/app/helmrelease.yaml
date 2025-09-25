@@ -35,10 +35,10 @@ spec:
               PAPERLESS_REDIS: "redis://paperless-redis:6379"
 
               # Folders
-              PAPERLESS_DATA_DIR: /data/data
-              PAPERLESS_MEDIA_ROOT: /data/media
-              PAPERLESS_CONSUMPTION_DIR: /mnt/incoming
-              PAPERLESS_EXPORT_DIR: /mnt/export
+              PAPERLESS_DATA_DIR: /data/paperless/data
+              PAPERLESS_MEDIA_ROOT: /data/paperless/media
+              PAPERLESS_CONSUMPTION_DIR: /mnt/paperless/incoming
+              PAPERLESS_EXPORT_DIR: /mnt/paperless/export
 
               # Configure folder importer
               PAPERLESS_CONSUMER_POLLING: "60"
@@ -98,8 +98,6 @@ spec:
               - identifier: app
                 port: *port
     persistence:
-      data:
-        existingClaim: paperless
       mnt:
         type: nfs
         server: 192.168.1.2
