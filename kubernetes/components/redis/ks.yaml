@@ -8,8 +8,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  components:
-    - ../../volsync
   dependsOn:
     - name: longhorn
       namespace: longhorn-system
@@ -18,7 +16,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: ${REDIS_VOLSYNC_CAPACITY:-2Gi}
+      REDIS_CAPACITY: ${REDIS_CAPACITY:-2Gi}
   prune: true
   retryInterval: 2m
   sourceRef:

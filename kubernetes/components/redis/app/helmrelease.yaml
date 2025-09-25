@@ -85,6 +85,9 @@ spec:
 
     persistence:
       data:
-        existingClaim: ${APP}
+        enabled: true
+        type: persistentVolumeClaim
+        accessMode: ReadWriteOnce
+        size: 2Gi
       tmp:
         type: emptyDir
