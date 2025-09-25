@@ -25,6 +25,6 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: *namespace
+  targetNamespace: ${NAMESPACE:-default}
   timeout: 5m
   wait: false
