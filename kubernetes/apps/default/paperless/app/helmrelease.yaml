@@ -51,6 +51,7 @@ spec:
               # Permissions
               USERMAP_UID: 1000
               USERMAP_GID: 1000
+              S6_READ_ONLY_ROOT: 1
             envFrom:
               - secretRef:
                   name: paperless-secret
