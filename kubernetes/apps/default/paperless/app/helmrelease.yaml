@@ -35,8 +35,8 @@ spec:
               PAPERLESS_REDIS: "redis://paperless-redis:6379"
 
               # Folders
-              PAPERLESS_DATA_DIR: /data/paperless/data
-              PAPERLESS_MEDIA_ROOT: /data/paperless/media
+              PAPERLESS_DATA_DIR: /mnt/paperless/data
+              PAPERLESS_MEDIA_ROOT: /mnt/paperless/media
               PAPERLESS_CONSUMPTION_DIR: /mnt/paperless/incoming
               PAPERLESS_EXPORT_DIR: /mnt/paperless/export
 
