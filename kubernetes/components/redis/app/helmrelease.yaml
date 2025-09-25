@@ -1,0 +1,90 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+appVersion: v1
+kind: HelmRelease
+metadata:
+  name: "${REDIS_APP:-${APP}-redis}"
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      redis:
+        containers:
+          app:
+            image:
+              repository: redis
+              tag: ${REDIS_VERSION:-8.2.1}-alpine
+            command:
+              - redis-server
+              - --save
+              - '60'
+              - '1'
+              - '--loglevel'
+              - 'warning'
+            ports:
+              - name: redis
+                containerPort: 6379
+                protocol: tcp
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: redis
+                  initialDelaySeconds: 20
+                  timeoutSeconds: 5
+                  periodSeconds: 5
+                  failureThreshold: 5
+                  successThreshold: 1
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: [redis-cli, ping]
+                  initialDelaySeconds: 10
+                  timeoutSeconds: 5
+                  periodSeconds: 3
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 1000m
+                memory: 1Gi
+
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      app:
+        controller: redis
+        ports:
+          redis:
+            port: redis
+
+    persistence:
+      data:
+        existingClaim: ${REDIS_APP:-${APP}-redis}
+      tmp:
+        type: emptyDir
