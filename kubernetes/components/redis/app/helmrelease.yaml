@@ -3,7 +3,7 @@
 appVersion: v1
 kind: HelmRelease
 metadata:
-  name: "${APP}-redis"
+  name: "${REDIS_APP:-${APP}-redis}"
 spec:
   interval: 1h
   chartRef:
@@ -85,6 +85,6 @@ spec:
 
     persistence:
       data:
-        existingClaim: ${APP}-redis
+        existingClaim: ${REDIS_APP:-${APP}-redis}
       tmp:
         type: emptyDir
