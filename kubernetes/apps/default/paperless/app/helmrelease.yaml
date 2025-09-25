@@ -47,6 +47,10 @@ spec:
 
               # Configure OCR
               PAPERLESS_OCR_LANGUAGE: "eng"
+
+              # Permissions
+              USERMAP_UID: 1000
+              USERMAP_GID: 1000
             envFrom:
               - secretRef:
                   name: paperless-secret
