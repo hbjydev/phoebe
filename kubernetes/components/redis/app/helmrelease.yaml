@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: "${REDIS_APP:-${APP}-redis}"
+  name: "${APP}"
 spec:
   interval: 1h
   chartRef:
@@ -34,7 +34,7 @@ spec:
             ports:
               - name: redis
                 containerPort: 6379
-                protocol: tcp
+                protocol: TCP
             probes:
               liveness:
                 enabled: true
@@ -85,6 +85,6 @@ spec:
 
     persistence:
       data:
-        existingClaim: ${REDIS_APP:-${APP}-redis}
+        existingClaim: ${APP}
       tmp:
         type: emptyDir
