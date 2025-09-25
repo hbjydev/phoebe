@@ -31,6 +31,9 @@ spec:
               PAPERLESS_WEBSERVER_WORKERS: "2"
               PAPERLESS_TASK_WORKERS: "2"
 
+              # Redis Config
+              PAPERLESS_REDIS: "redis://paperless-redis:6379"
+
               # Folders
               PAPERLESS_DATA_DIR: /data/data
               PAPERLESS_MEDIA_ROOT: /data/media
