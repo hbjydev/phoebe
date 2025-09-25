@@ -77,19 +77,14 @@ spec:
                 memory: 128Mi
               limits:
                 memory: 1Gi
-    defaultPodOptions:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
-        fsGroupChangePolicy: OnRootMismatch
+
     service:
       app:
         controller: paperless
         ports:
           http:
             port: *port
+
     route:
       app:
         hostnames: ["{{ .Release.Name }}.hayden.moe"]
@@ -101,6 +96,7 @@ spec:
           - backendRefs:
               - identifier: app
                 port: *port
+
     persistence:
       mnt:
         type: nfs
