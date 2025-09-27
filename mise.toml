@@ -16,7 +16,7 @@ TALOS_VERSION="v1.11.1"
 python.uv_venv_auto = true
 
 [tools]
-"aqua:budimanjojo/talhelper" = "3.0.35"
+"aqua:budimanjojo/talhelper" = "3.0.36"
 "aqua:cilium/cilium-cli" = "0.18.7"
 "aqua:FiloSottile/age" = "1.2.1"
 "aqua:fluxcd/flux2" = "2.6.4"
