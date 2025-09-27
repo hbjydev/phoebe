@@ -7,12 +7,12 @@ metadata:
 spec:
   hostnames: ["signoz.hayden.moe"]
   parentRefs:
-    - name: internal
+    - name: external
       namespace: network
       sectionName: https
   rules:
     - backendRefs:
-        - name: signoz
+        - name: signoz-frontend
           namespace: observability
           port: 80
       matches:
