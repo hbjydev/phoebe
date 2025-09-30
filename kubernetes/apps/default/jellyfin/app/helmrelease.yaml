@@ -23,7 +23,7 @@ spec:
           app:
             image:
               repository: ghcr.io/jellyfin/jellyfin
-              tag: '2025092205'
+              tag: '2025092905'
             env:
               TZ: Europe/London
             probes:
