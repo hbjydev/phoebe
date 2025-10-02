@@ -5,9 +5,10 @@ kind: CiliumLoadBalancerIPPool
 metadata:
   name: pool
 spec:
-  allowFirstLastIPs: "No"
+  allowFirstLastIPs: No
   blocks:
     - cidr: 192.168.2.0/24
+    - cidr: 10.10.0.0/24
 
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cilium.io/ciliumbgpadvertisement_v2.json
