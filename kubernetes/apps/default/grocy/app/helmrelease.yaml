@@ -27,8 +27,6 @@ spec:
               repository: lscr.io/linuxserver/grocy
               tag: 4.5.0@sha256:1ed12d75468d137c24c4ecf9ef239e26e9cc48f0e2c0bcb25a9be4b941e7f770
             env:
-              PUID: 1000
-              PGID: 1000
               GROCY_MODE: "production"
               GROCY_AUTH_CLASS: 'Grocy\Middleware\LdapAuthMiddleware'
               GROCY_LDAP_BASE_DN: 'ou=grocy,dc=ldap,dc=hayden,dc=moe'
@@ -69,10 +67,7 @@ spec:
                 memory: 1Gi
     defaultPodOptions:
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        runAsNonRoot: false
         fsGroupChangePolicy: OnRootMismatch
     service:
       app:
