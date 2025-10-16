@@ -29,6 +29,7 @@ spec:
             env:
               PUID: 1000
               PGID: 1000
+              S6_READ_ONLY_ROOT: 1
               S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: 1
               GROCY_MODE: "production"
               GROCY_AUTH_CLASS: 'Grocy\Middleware\LdapAuthMiddleware'
