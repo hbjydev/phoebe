@@ -1,0 +1,97 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: grocy
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      grocy:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: lscr.io/linuxserver/grocy
+              tag: 4.5.0@sha256:1ed12d75468d137c24c4ecf9ef239e26e9cc48f0e2c0bcb25a9be4b941e7f770
+            env:
+              PUID: 1000
+              PGID: 1000
+              GROCY_MODE: "production"
+              GROCY_LDAP_BASE_DN: 'ou=grocy,dc=ldap,dc=hayden,dc=moe'
+              GROCY_LDAP_USER_FILTER: '(memberOf=cn=Grocy Users,ou=groups,ou=grocy,dc=ldap,dc=hayden,dc=moe)'
+              GROCY_LDAP_UID_ATTR: 'uid'
+              GROCY_DEFAULT_LOCALE: "en_GB"
+              GROCY_CULTURE: "en_GB"
+              GROCY_MEAL_PLAN_FIRST_DAY_OF_WEEK: "1"
+              GROCY_CALENDAR_FIRST_DAY_OF_WEEK: "1"
+              GROCY_CURRENCY: "GBP"
+              GROCY_ENERGY_UNIT: "kcal"
+              TZ: Europe/London
+            envFrom:
+              - secretRef:
+                  name: grocy-secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ping
+                    port: &port 80
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                memory: 1Gi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        controller: grocy
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        hostnames: ["{{ .Release.Name }}.hayden.moe"]
+        parentRefs:
+          - name: internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
+    persistence:
+      config:
+        existingClaim: grocy
+      tmp:
+        type: emptyDir
