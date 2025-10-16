@@ -6,7 +6,7 @@ namespace: default
 components:
   - ../../components/common
 resources:
-  - ./grocy/ks.yaml
+  # - ./grocy/ks.yaml
   - ./immich/ks.yaml
   - ./jellyfin/ks.yaml
   - ./jellyseerr/ks.yaml
