@@ -19,6 +19,11 @@ terraform {
       source = "1Password/onepassword"
       version = "~> 2.1"
     }
+
+    grafana = {
+      source  = "grafana/grafana"
+      version = ">= 2.9.0"
+    }
   }
 }
 
@@ -31,3 +36,6 @@ provider "cloudflare" {
 provider "upcloud" {}
 provider "onepassword" {}
 provider "tailscale" {}
+provider "grafana" {
+  alias = "cloud"
+}
