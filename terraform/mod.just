@@ -23,6 +23,7 @@ import res id *args:
 
 # Initializes the Terraform working directory.
 init *args:
+  op read "op://phoebe/cluster/certs-k8sserviceaccount/key" | base64 -d | openssl rsa -pubout > {{ terraform_dir }}/jwtca.pub && \
   {{op_run}} -- terraform init {{ args }}
 
 # Works with State
