@@ -24,7 +24,12 @@ resource "vault_policy" "eso" {
 path "${vault_mount.phoebe.path}/*" {
   capabilities = ["read"]
 }
+
+# Permission to push TLS certs
 path "${vault_mount.phoebe.path}/tls/*" {
+  capabilities = ["create", "update", "read"]
+}
+path "${vault_mount.phoebe.path}/metadata/tls/*" {
   capabilities = ["create", "update", "read"]
 }
 EOT
