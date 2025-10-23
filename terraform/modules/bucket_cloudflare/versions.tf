@@ -6,9 +6,9 @@ terraform {
       configuration_aliases = [ cloudflare.main, cloudflare.tokens ]
     }
 
-    onepassword = {
-      source = "1Password/onepassword"
-      version = "~> 2"
+    vault = {
+      source = "hashicorp/vault"
+      version = "~> 5.3"
     }
   }
 }

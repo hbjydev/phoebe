@@ -12,19 +12,11 @@ module "bucket_upcloud" {
   source   = "./modules/bucket_upcloud"
   for_each = local.buckets_upcloud
 
-  name = try(each.value.name, each.key)
-
+  name                     = try(each.value.name, each.key)
   storage_uuid             = module.network_upcloud[each.value.network].network_object_storage_id
   storage_endpoint_private = module.network_upcloud[each.value.network].network_object_storage_private_endpoint
   storage_endpoint_public  = module.network_upcloud[each.value.network].network_object_storage_public_endpoint
-
-  op_title = try(each.value.name, "uc-os-${try(each.value.name, each.key)}")
-  op_vault = var.PHOEBE_VAULT_ID
-}
-
-moved {
-  from = module.bucket
-  to = module.bucket_cloudflare
+  vault_mount              = vault_mount.phoebe.path
 }
 
 module "bucket_cloudflare" {
@@ -35,8 +27,7 @@ module "bucket_cloudflare" {
   account_id    = "09c8f0e370aa6c96c9b46741f994d5f5"
   storage_class = try(each.value.storage_class, "Standard")
   region        = try(each.value.region, "WEUR")
-  op_title      = try(each.value.name, "cf-r2-${try(each.value.name, each.key)}")
-  op_vault      = var.PHOEBE_VAULT_ID
+  vault_mount   = vault_mount.phoebe.path
 
   providers = {
     cloudflare.main = cloudflare

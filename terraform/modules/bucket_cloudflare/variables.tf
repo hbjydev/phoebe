@@ -14,12 +14,6 @@ variable "region" {
   type = string
 }
 
-variable "op_title" {
+variable "vault_mount" {
   type = string
-  nullable = true
-}
-
-variable "op_vault" {
-  type = string
-  sensitive = true
 }

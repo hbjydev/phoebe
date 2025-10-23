@@ -14,7 +14,7 @@ plan *args:
   {{op_run}} -- terraform plan -out={{ plan_file }} {{ args }}
 
 # Applies infrastructure changes as specified in the most recent plan.
-apply *args: plan
+apply *args:
   {{op_run}} -- terraform apply {{ plan_file }} {{ args }}
 
 # Imports existing infrastructure into Terraform.
@@ -24,3 +24,7 @@ import res id *args:
 # Initializes the Terraform working directory.
 init *args:
   {{op_run}} -- terraform init {{ args }}
+
+# Works with State
+state *args:
+  {{op_run}} -- terraform state {{ args }}
