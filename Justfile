@@ -18,3 +18,6 @@ log lvl msg *args:
 [private]
 template file *args:
   minijinja-cli "{{ file }}" {{ args }} | op inject
+
+vault-auth:
+  op read "op://Private/OpenBao/root token" | bao login -

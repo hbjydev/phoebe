@@ -5,6 +5,7 @@ MINIJINJA_CONFIG_FILE = "{{ config_root }}/.minijinja.toml"
 SOPS_AGE_KEY_FILE = "{{ config_root }}/age.key"
 TALOSCONFIG = "{{ config_root }}/talos/talosconfig"
 JUST_UNSTABLE = "1"
+VAULT_ADDR="https://vault.hayden.moe"
 
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
 KUBERNETES_VERSION="v1.34.1"
@@ -34,3 +35,4 @@ gum = "0.17.0"
 yq = "4.47.2"
 just = "1.43.0"
 "pipx:flux-local" = "latest"
+openbao = "2.4.3"
