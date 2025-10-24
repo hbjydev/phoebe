@@ -37,4 +37,8 @@ resource "vault_kv_secret_v2" "self_token" {
     secret_access_key = upcloud_managed_object_storage_user_access_key.self.secret_access_key
     restic_password   = var.restic ? random_password.self_restic[0].result : ""
   })
+
+  custom_metadata {
+    data = { managed-by = "terraform" }
+  }
 }

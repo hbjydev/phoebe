@@ -27,6 +27,10 @@ resource "vault_kv_secret_v2" "self_token" {
     access_key_id     = cloudflare_api_token.self.id,
     secret_access_key = sha256(cloudflare_api_token.self.value)
   })
+
+  custom_metadata {
+    data = { managed-by = "terraform" }
+  }
 }
 
 resource "cloudflare_r2_bucket_cors" "self" {
