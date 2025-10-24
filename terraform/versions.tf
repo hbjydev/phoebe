@@ -22,7 +22,7 @@ terraform {
 
     grafana = {
       source  = "grafana/grafana"
-      version = "~> 2.9"
+      version = "~> 4.0"
     }
 
     vault = {
