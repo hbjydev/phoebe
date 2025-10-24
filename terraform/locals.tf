@@ -56,6 +56,7 @@ locals {
           try(app.provider, local.all_networks[app.network].provider)
         ),
         network = try(app.network, "dione")
+        restic = try(bucket.restic, false)
         storage_class = try(bucket.storage_class, "Standard"),
         region = try(
           bucket.region,

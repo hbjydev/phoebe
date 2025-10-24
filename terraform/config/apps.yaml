@@ -3,7 +3,8 @@ volsync:
   network: dione
   provider: upcloud
   buckets:
-    volsync: {}
+    volsync:
+      restic: true
     longhorn: {}
 
 pds:

@@ -17,6 +17,7 @@ module "bucket_upcloud" {
   storage_endpoint_private = module.network_upcloud[each.value.network].network_object_storage_private_endpoint
   storage_endpoint_public  = module.network_upcloud[each.value.network].network_object_storage_public_endpoint
   vault_mount              = vault_mount.phoebe.path
+  restic                   = each.value.restic
 }
 
 module "bucket_cloudflare" {

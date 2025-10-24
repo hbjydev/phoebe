@@ -1,3 +1,9 @@
+resource "random_password" "self_restic" {
+  count   = var.restic ? 1 : 0
+  length  = 100
+  special = true
+}
+
 resource "upcloud_managed_object_storage_bucket" "self" {
   name = var.name
   service_uuid = var.storage_uuid
@@ -29,5 +35,6 @@ resource "vault_kv_secret_v2" "self_token" {
     bucket_name       = "${upcloud_managed_object_storage_bucket.self.name}"
     access_key_id     = upcloud_managed_object_storage_user_access_key.self.access_key_id
     secret_access_key = upcloud_managed_object_storage_user_access_key.self.secret_access_key
+    restic_password   = var.restic ? random_password.self_restic[0].result : ""
   })
 }
