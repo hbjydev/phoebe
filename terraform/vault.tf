@@ -32,6 +32,9 @@ path "${vault_mount.phoebe.path}/tls/*" {
 path "${vault_mount.phoebe.path}/metadata/tls/*" {
   capabilities = ["create", "update", "read"]
 }
+path "${vault_mount.phoebe.path}/data/tls/*" {
+  capabilities = ["create", "update", "read"]
+}
 EOT
 }
 
