@@ -80,12 +80,13 @@ spec:
 
     clusterMetrics:
       enabled: true
-      opencost:
-        enabled: false
       kepler:
         enabled: true
 
     clusterEvents:
+      enabled: true
+
+    prometheusOperatorObjects:
       enabled: true
 
     podLogsViaKubernetesApi:
@@ -102,9 +103,6 @@ spec:
             enabled: true
             port: 4318
 
-    prometheusOperatorObjects:
-      enabled: true
-
     integrations:
       cert-manager:
         instances:
@@ -112,6 +110,16 @@ spec:
             namespace: cert-manager
             labelSelectors:
               app.kubernetes.io/name: cert-manager
+
+      alloy:
+        instances:
+          - name: alloy
+            labelSelectors:
+              app.kubernetes.io/name:
+                - alloy-metrics
+                - alloy-singleton
+                - alloy-logs
+                - alloy-receiver
 
     alloy-metrics:
       enabled: true
