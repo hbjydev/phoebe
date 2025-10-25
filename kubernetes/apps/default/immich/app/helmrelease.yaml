@@ -74,6 +74,7 @@ spec:
               resources:
                 claims:
                   - name: gpu
+
       defaultPodOptions:
         resourceClaims:
           - name: gpu
