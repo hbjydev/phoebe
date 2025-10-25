@@ -1,0 +1,123 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/source.toolkit.fluxcd.io/ocirepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: grafana
+spec:
+  interval: 5m
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  ref:
+    tag: 3.5.4
+  url: oci://ghcr.io/grafana/helm-charts/k8s-monitoring
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: grafana-cloud
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: grafana
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    cluster:
+      name: phoebe
+
+    destinationsMap:
+      metrics:
+        type: prometheus
+        url: https://prometheus-prod-55-prod-gb-south-1.grafana.net/api/prom/push
+        auth:
+          type: basic
+          usernameKey: 'mimirUserId'
+          passwordKey: 'token'
+        secret:
+          create: false
+          name: grafana-cloud
+          namespace: observability
+
+      logs:
+        type: loki
+        host: https://logs-prod-035.grafana.net/loki/api/v1/push
+        auth:
+          type: basic
+          usernameKey: 'logsUserId'
+          passwordKey: 'token'
+        secret:
+          create: false
+          name: grafana-cloud
+          namespace: observability
+
+      otlp:
+        type: otlp
+        url: https://otlp-gateway-prod-gb-south-1.grafana.net./otlp
+        protocol: http
+        auth:
+          type: basic
+          usernameKey: 'stackId'
+          passwordKey: 'token'
+        secret:
+          create: false
+          name: grafana-cloud
+          namespace: observability
+        metrics:
+          enabled: true
+        logs:
+          enabled: true
+        traces:
+          enabled: true
+
+    clusterMetrics:
+      enabled: true
+      opencost:
+        enabled: false
+      kepler:
+        enabled: true
+
+    clusterEvents:
+      enabled: true
+
+    podLogs:
+      enabled: true
+
+    applicationObservability:
+      enabled: true
+      receivers:
+        otlp:
+          grpc:
+            enabled: true
+            port: 4317
+          http:
+            enabled: true
+            port: 4318
+
+    prometheusOperatorObjects:
+      enabled: true
+
+    integrations:
+      cert-manager:
+        instances:
+          - name: cert-manager
+            namespace: cert-manager
+            labelSelectors:
+              app.kubernetes.io/name: cert-manager
+
+    alloy-metrics:
+      enabled: true
+    alloy-singleton:
+      enabled: true
+    alloy-logs:
+      enabled: true
+    alloy-receiver:
+      enabled: true

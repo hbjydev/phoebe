@@ -15,7 +15,7 @@ resource "vault_jwt_auth_backend" "phoebe" {
   description            = "JWT auth backend for the Phoebe Kubernetes cluster"
   path                   = "jwt-phoebe"
   type                   = "jwt"
-  jwt_validation_pubkeys = [ file("./jwtca.pub") ]
+  jwt_validation_pubkeys = [ trimspace(file("./jwtca.pub")) ]
 }
 
 resource "vault_policy" "eso" {
