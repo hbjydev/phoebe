@@ -3,13 +3,14 @@
 clusterName: phoebe
 talosVersion: "{{ ENV.TALOS_VERSION }}"
 kubernetesVersion: "{{ ENV.KUBERNETES_VERSION }}"
-endpoint: https://192.168.2.100:6443
+endpoint: https://10.10.0.5:6443
 domain: phoebe.local
 allowSchedulingOnMasters: true
 
 additionalMachineCertSans:
   - 127.0.0.1
   - 192.168.2.100
+  - 10.10.0.5
   - phoebe.local
 additionalApiServerCertSans:
   - 127.0.0.1

@@ -8,6 +8,8 @@ machine:
     defaultRuntimeSeccompProfileEnabled: true
     disableManifestsDirectory: true
     extraConfig:
+      featureGates:
+        ResourceHealthStatus: true
       serializeImagePulls: false
     nodeIP:
       validSubnets:
