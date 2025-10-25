@@ -89,8 +89,9 @@ spec:
     prometheusOperatorObjects:
       enabled: true
 
-    podLogsViaKubernetesApi:
+    podLogs:
       enabled: true
+      gatherMethod: kubernetesApi
 
     applicationObservability:
       enabled: true
@@ -133,8 +134,9 @@ spec:
         # daemonset isn't necessary without nodeLogs
         type: deployment
       alloy:
-        clustering:
-          enabled: true
+        mounts:
+          varlog: false
+          dockercontainers: false
 
     alloy-receiver:
       enabled: true
