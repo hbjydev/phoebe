@@ -5,10 +5,17 @@ kind: HelmRelease
 metadata:
   name: plex
 spec:
+  interval: 1h
   chartRef:
     kind: OCIRepository
-    name: plex
-  interval: 1h
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
   values:
     controllers:
       plex:
