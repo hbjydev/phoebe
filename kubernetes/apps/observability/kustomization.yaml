@@ -7,3 +7,4 @@ components:
   - ../../components/common
 resources:
   - ./gatus/ks.yaml
+  - ./k8s-monitoring-helm/ks.yaml
