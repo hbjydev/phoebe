@@ -6,4 +6,3 @@ resources:
   - ./pgcluster.yaml
   - ./httproute.yaml
   - ./helmrelease.yaml
-  - ./resourceclaimtemplate.yaml
