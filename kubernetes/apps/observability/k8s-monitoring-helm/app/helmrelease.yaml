@@ -88,8 +88,9 @@ spec:
     clusterEvents:
       enabled: true
 
-    podLogsViaKubernetesApi:
+    podLogs:
       enabled: true
+      gatherMethod: kubernetesApi
 
     applicationObservability:
       enabled: true
@@ -115,9 +116,15 @@ spec:
 
     alloy-metrics:
       enabled: true
+
     alloy-singleton:
       enabled: true
+
     alloy-logs:
       enabled: true
+      controller:
+        # daemonset isn't necessary without nodeLogs
+        type: deployment
+
     alloy-receiver:
       enabled: true
