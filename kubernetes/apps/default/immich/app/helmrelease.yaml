@@ -56,15 +56,25 @@ spec:
           secretKeyRef:
             name: immich-pg-app
             key: host
+
+      REDIS_HOSTNAME: immich-redis
+
     immich:
       metrics:
         enabled: true
       persistence:
         library:
           existingClaim: immich
-    server:
-      resources:
-        limits:
-          gpu.intel.com/i915: 1
-    redis:
-      enabled: true
+
+    machine-learning:
+      controllers:
+        main:
+          containers:
+            main:
+              resources:
+                claims:
+                  - name: gpu
+      defaultPodOptions:
+        resourceClaims:
+          - name: gpu
+            resourceClaimTemplateName: immich
