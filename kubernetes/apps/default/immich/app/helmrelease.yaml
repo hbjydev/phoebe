@@ -36,6 +36,7 @@ spec:
         containers:
           main:
             image:
+              # renovate: datasource=github-releases depName=immich-app/immich
               tag: v2.0.0
             env:
               DB_PASSWORD:
@@ -59,10 +60,6 @@ spec:
                     name: immich-pg-app
                     key: host
               REDIS_HOSTNAME: immich-redis
-
-    image:
-      # renovate: datasource=github-releases depName=immich-app/immich
-      tag: v1.144.4
 
     immich:
       metrics:
