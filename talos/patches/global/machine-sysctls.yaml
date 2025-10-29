@@ -1,4 +1,5 @@
 # vim:ft=yaml
 ---
 machine:
-  sysctls: {}
+  sysctls:
+    user.max_user_namespaces: "11255"
