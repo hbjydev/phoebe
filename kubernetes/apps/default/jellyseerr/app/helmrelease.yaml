@@ -70,6 +70,10 @@ spec:
             port: *port
     route:
       app:
+        annotations:
+          gatus.home-operations.com/endpoint: |
+            url: https://photos.hayden.moe/api/v1/status
+            conditions: ["[STATUS] == 200"]
         hostnames:
           - "{{ .Release.Name }}.hayden.moe"
           - request.hayden.moe
