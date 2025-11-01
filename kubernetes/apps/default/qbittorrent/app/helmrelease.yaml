@@ -104,7 +104,7 @@ spec:
         server: 192.168.1.2
         path: /volume1/media
         globalMounts:
-          - path: /media/downloads/sabnzbd
-            subPath: downloads/sabnzbd
+          - path: /media/downloads/qbittorrent
+            subPath: downloads/qbittorrent
       tmp:
         type: emptyDir
