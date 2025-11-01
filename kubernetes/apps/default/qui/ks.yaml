@@ -9,11 +9,19 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/volsync
   dependsOn:
-    - name: qbittorrent
+    - name: qbittorent
       namespace: default
+    - name: longhorn
+      namespace: longhorn-system
   interval: 1h
   path: ./kubernetes/apps/default/qui/app
+  postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CAPACITY: 1Gi
   prune: true
   retryInterval: 2m
   sourceRef:
