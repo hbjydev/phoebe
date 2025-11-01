@@ -7,4 +7,3 @@ components:
   - ../../components/common
 resources:
   - ./external-secrets/ks.yaml
-  - ./1password-connect/ks.yaml

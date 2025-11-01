@@ -7,3 +7,5 @@ resources:
   - ./helmrelease.yaml
   - ./receiver.yaml
   - ./httproute.yaml
+  - ./podmonitor.yaml
+  - ./prometheusrule.yaml

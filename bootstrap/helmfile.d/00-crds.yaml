@@ -22,14 +22,14 @@ releases:
   - name: external-secrets
     namespace: external-secrets
     chart: oci://ghcr.io/external-secrets/charts/external-secrets
-    version: 0.20.1
+    version: 0.20.4
 
   - name: envoy-gateway
     namespace: network
     chart: oci://docker.io/envoyproxy/gateway-helm
-    version: 1.5.2
+    version: 1.5.4
 
   - name: kube-prometheus-stack
     namespace: observability
     chart: oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack
-    version: 77.12.1
+    version: 79.1.0
