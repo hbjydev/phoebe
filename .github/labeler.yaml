@@ -27,3 +27,12 @@ area/justfile:
   - changed-files:
       - any-glob-to-any-file:
           - "Justfile"
+area/mise:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "mise.*"
+area/venv:
+  - changed-files:
+      - any-glob-to-any-file:
+          - uv.lock
+          - pyproject.toml
