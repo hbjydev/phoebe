@@ -12,7 +12,7 @@ spec:
   components:
     - ../../../../components/volsync
   dependsOn:
-    - name: qbittorent
+    - name: qbittorrent
       namespace: default
     - name: longhorn
       namespace: longhorn-system
