@@ -10,7 +10,7 @@ spec:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
   ref:
-    tag: 0.9.3
+    tag: 0.10.1
   url: oci://ghcr.io/immich-app/immich-charts/immich
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
@@ -31,40 +31,53 @@ spec:
     remediation:
       retries: 3
   values:
-    image:
-      # renovate: datasource=github-releases depName=immich-app/immich
-      tag: v1.144.1
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              # renovate: datasource=github-releases depName=immich-app/immich
+              tag: v2.2.1
+            env:
+              DB_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: immich-pg-app
+                    key: password
+              DB_USERNAME:
+                valueFrom:
+                  secretKeyRef:
+                    name: immich-pg-app
+                    key: username
+              DB_DATABASE_NAME:
+                valueFrom:
+                  secretKeyRef:
+                    name: immich-pg-app
+                    key: dbname
+              DB_HOSTNAME:
+                valueFrom:
+                  secretKeyRef:
+                    name: immich-pg-app
+                    key: host
+              REDIS_HOSTNAME: immich-redis
 
-    env:
-      DB_PASSWORD:
-        valueFrom:
-          secretKeyRef:
-            name: immich-pg-app
-            key: password
-      DB_USERNAME:
-        valueFrom:
-          secretKeyRef:
-            name: immich-pg-app
-            key: username
-      DB_DATABASE_NAME:
-        valueFrom:
-          secretKeyRef:
-            name: immich-pg-app
-            key: dbname
-      DB_HOSTNAME:
-        valueFrom:
-          secretKeyRef:
-            name: immich-pg-app
-            key: host
     immich:
       metrics:
         enabled: true
       persistence:
         library:
           existingClaim: immich
-    server:
-      resources:
-        limits:
-          gpu.intel.com/i915: 1
-    redis:
-      enabled: true
+
+    machine-learning:
+      controllers:
+        main:
+          containers:
+            main:
+              resources:
+                claims:
+                  - name: gpu
+
+      defaultPodOptions:
+        resourceClaims:
+          - name: gpu
+            resourceClaimName: shared-igpu
