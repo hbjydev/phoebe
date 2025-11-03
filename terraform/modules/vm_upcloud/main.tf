@@ -28,6 +28,7 @@ resource "upcloud_server" "self" {
   template {
     storage = "Rocky Linux 10"
     size    = 25
+    tier    = "standard"
     backup_rule {
       interval  = "daily"
       time      = "0100"
@@ -59,7 +60,7 @@ resource "upcloud_storage" "extra_volume" {
   for_each = { for volume in var.volumes : "${volume.name}" => volume }
 
   size  = try(each.value.size, 5)
-  tier  = "maxiops"  # only available tier currently
+  tier  = "standard"  # only available tier currently
   title = "${var.name}-vol-${each.key}"
   zone  = var.zone
 }

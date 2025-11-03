@@ -31,18 +31,3 @@ authentik:
       provider: cloudflare
     backup:
       provider: cloudflare
-
-knot:
-  network: dione
-  provider: upcloud
-  tailscale: true
-  instance:
-    enabled: true
-    plan: DEV-1xCPU-2GB
-    volumes:
-      - name: git
-        mountPath: /home/git
-        size: 15
-  buckets:
-    backup:
-      provider: cloudflare
