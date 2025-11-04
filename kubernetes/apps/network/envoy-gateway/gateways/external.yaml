@@ -31,3 +31,5 @@ spec:
         certificateRefs:
           - kind: Secret
             name: hayden-moe-tls
+          - kind: Secret
+            name: pds-hayden-moe-tls
