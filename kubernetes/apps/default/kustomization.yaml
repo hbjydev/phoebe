@@ -6,6 +6,7 @@ namespace: default
 components:
   - ../../components/common
 resources:
+  - ./atproto-pds/ks.yaml
   - ./immich/ks.yaml
   - ./plex/ks.yaml
   - ./jellyseerr/ks.yaml
