@@ -32,7 +32,7 @@ spec:
 
               PDS_DATA_DIRECTORY: /data
               PDS_BLOBSTORE_DISK_LOCATION: /data/blocks
-              PDS_BLOB_UPLOAD_LIMIT: 52428800
+              PDS_BLOB_UPLOAD_LIMIT: '52428800'
 
               PDS_EMAIL_FROM_ADDRESS: pds@hayden.moe
 
