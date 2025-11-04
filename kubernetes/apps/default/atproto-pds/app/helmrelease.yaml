@@ -1,0 +1,104 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: atproto-pds
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      atproto-pds:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          pds:
+            image:
+              repository: ghcr.io/bluesky-social/pds
+              tag: 0.4.188@sha256:87881525ec7a5cd2411a71b81a70ee2af9b5d79d770f9d1d1b84f74f91da4a9f
+            env:
+              PDS_HOSTNAME: testpds.hayden.moe
+              PDS_PORT: &port 2583
+
+              PDS_DATA_DIRECTORY: /data
+              PDS_BLOBSTORE_DISK_LOCATION: /data/blocks
+              PDS_BLOB_UPLOAD_LIMIT: 52428800
+
+              PDS_EMAIL_FROM_ADDRESS: pds@hayden.moe
+
+              PDS_DID_PLC_URL: https://plc.directory
+              PDS_BSKY_APP_VIEW_URL: https://api.pop1.bsky.app
+              PDS_BSKY_APP_VIEW_DID: did:web:api.bsky.app
+              PDS_REPORT_SERVICE_URL: https://mod.bsky.app
+              PDS_REPORT_SERVICE_DID: did:plc:ar7c4by46qjdydhdevvrndac
+              PDS_CRAWLERS: https://bsky.network,https://relay.upcloud.world
+
+              LOG_ENABLED: true
+              TZ: Europe/London
+            envFrom:
+              - secretRef:
+                  name: atproto-pds-secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /xrpc/_health
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                memory: 1Gi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        controller: radarr
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        hostnames:
+          - testpds.hayden.moe
+          - '*.testpds.hayden.moe'
+        parentRefs:
+          - name: external
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
+    persistence:
+      data:
+        existingClaim: atproto-pds
+      tmp:
+        type: emptyDir
