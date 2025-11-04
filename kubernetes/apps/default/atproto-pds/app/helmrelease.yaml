@@ -86,6 +86,8 @@ spec:
             port: *port
     route:
       pds:
+        annotations:
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
         hostnames:
           - testpds.hayden.moe
           - '*.testpds.hayden.moe'
