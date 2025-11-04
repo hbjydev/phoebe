@@ -23,5 +23,5 @@ spec:
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
-  commonName: testpds.hayden.moe
-  dnsNames: ["testpds.hayden.moe", "*.testpds.hayden.moe"]
+  commonName: pds.hayden.moe
+  dnsNames: ["pds.hayden.moe", "*.pds.hayden.moe"]

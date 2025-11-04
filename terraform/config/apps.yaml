@@ -7,18 +7,6 @@ volsync:
       restic: true
     longhorn: {}
 
-pds:
-  network: dione
-  provider: upcloud
-  tailscale: true
-  instance:
-    enabled: true
-  buckets:
-    storage:
-      provider: cloudflare
-    backup:
-      provider: cloudflare
-
 authentik:
   network: dione
   provider: upcloud
