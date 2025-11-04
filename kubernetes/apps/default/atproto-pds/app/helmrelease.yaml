@@ -79,8 +79,8 @@ spec:
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
     service:
-      app:
-        controller: radarr
+      pds:
+        controller: atproto-pds
         ports:
           http:
             port: *port
