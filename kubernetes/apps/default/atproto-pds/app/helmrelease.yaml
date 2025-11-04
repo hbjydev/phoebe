@@ -27,7 +27,7 @@ spec:
               repository: ghcr.io/bluesky-social/pds
               tag: 0.4.188@sha256:87881525ec7a5cd2411a71b81a70ee2af9b5d79d770f9d1d1b84f74f91da4a9f
             env:
-              PDS_HOSTNAME: testpds.hayden.moe
+              PDS_HOSTNAME: pds.hayden.moe
               PDS_PORT: &port 2583
 
               PDS_DATA_DIRECTORY: /data
@@ -89,8 +89,8 @@ spec:
         annotations:
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
         hostnames:
-          - testpds.hayden.moe
-          - '*.testpds.hayden.moe'
+          - pds.hayden.moe
+          - '*.pds.hayden.moe'
         parentRefs:
           - name: external
             namespace: network
