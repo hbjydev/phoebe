@@ -46,4 +46,4 @@ spec:
       snapshotterReplicaCount: 1
     metrics:
       serviceMonitor:
-        enabled: true
+        enabled: false
