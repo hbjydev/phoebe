@@ -13,6 +13,6 @@ spec:
         key: ACCESS_KEY_ID
       secretAccessKey:
         name: "${PG_NAME:-${APP}-pg}-barman"
-        key: ACCESS_SECRET_KEY
+        key: SECRET_ACCESS_KEY
     wal:
       compression: gzip
