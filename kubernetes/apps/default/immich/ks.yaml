@@ -25,7 +25,11 @@ spec:
       PG_SIZE: 4Gi
       VOLSYNC_CAPACITY: 32Gi
   patches:
-    - patch: |-
+    - target:
+        kind: Cluster
+        group: postgresql.cnpg.io
+        name: immich-pg-new
+      patch: |-
         apiVersion: postgresql.cnpg.io/v1
         kind: Cluster
         metadata:
