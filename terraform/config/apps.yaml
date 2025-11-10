@@ -5,6 +5,8 @@ volsync:
   buckets:
     volsync:
       restic: true
+    postgres:
+      restic: true
     longhorn: {}
 
 authentik:
