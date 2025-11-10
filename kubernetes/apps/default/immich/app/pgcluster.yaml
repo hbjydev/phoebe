@@ -25,7 +25,7 @@ metadata:
   name: immich-pg-barman-os
 spec:
   configuration:
-    destinationPath: s3://haydenmoe-volsync-postgres/${PG_NAME:-${APP}=pg}
+    destinationPath: s3://haydenmoe-volsync-postgres/immich-pg
     endpointURL: https://t9ag6.upcloudobjects.com
     s3Credentials:
       accessKeyId:
