@@ -16,17 +16,16 @@ patches:
       kind: Cluster
       group: postgresql.cnpg.io
       name: immich-pg-new
-    patch: |-
-      apiVersion: postgresql.cnpg.io/v1
-      kind: Cluster
-      metadata:
-        name: immich-pg-new
-      spec:
-        postgresql:
+    patch:
+      - op: add
+        path: /spec/postgresql
+        value:
           enableAlterSystem: true
           shared_preload_libraries:
             - "vectors.so"
-        bootstrap:
+      - op: add
+        path: /spec/bootstrap
+        value:
           initdb:
             database: app
             owner: app
