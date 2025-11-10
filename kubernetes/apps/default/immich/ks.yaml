@@ -11,7 +11,6 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/redis
-    - ../../../../components/postgres
     - ../../../../components/volsync
   dependsOn:
     - name: longhorn
@@ -23,31 +22,8 @@ spec:
       APP: *app
       PG_NAME: immich-pg-new
       PG_SIZE: 4Gi
+      PG_IMAGE: ghcr.io/tensorchord/cloudnative-pgvecto.rs:16.5-v0.3.0@sha256:be3f025d79aa1b747817f478e07e71be43236e14d00d8a9eb3914146245035ba
       VOLSYNC_CAPACITY: 32Gi
-  patches:
-    - target:
-        kind: Cluster
-        group: postgresql.cnpg.io
-        name: immich-pg-new
-      patch: |-
-        apiVersion: postgresql.cnpg.io/v1
-        kind: Cluster
-        metadata:
-          name: immich-pg-new
-        spec:
-          image: ghcr.io/tensorchord/cloudnative-pgvecto.rs:16.5-v0.3.0@sha256:be3f025d79aa1b747817f478e07e71be43236e14d00d8a9eb3914146245035ba
-          postgresql:
-            enableAlterSystem: true
-            shared_preload_libraries:
-              - "vectors.so"
-          bootstrap:
-            initdb:
-              database: app
-              owner: app
-              postInitSQL:
-                - CREATE EXTENSION IF NOT EXISTS "vectors";
-                - CREATE EXTENSION IF NOT EXISTS "cube" CASCADE;
-                - CREATE EXTENSION IF NOT EXISTS "earthdistance" CASCADE;
   prune: true
   retryInterval: 2m
   sourceRef:

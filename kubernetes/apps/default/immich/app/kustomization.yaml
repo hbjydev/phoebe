@@ -2,7 +2,33 @@
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+components:
+  - ../../../../../components/postgres
 resources:
   - ./pgcluster.yaml
   - ./httproute.yaml
   - ./helmrelease.yaml
+
+patches:
+  - target:
+      kind: Cluster
+      group: postgresql.cnpg.io
+      name: ${PG_NAME}
+    patch: |-
+      apiVersion: postgresql.cnpg.io/v1
+      kind: Cluster
+      metadata:
+        name: ${PG_NAME}
+      spec:
+        postgresql:
+          enableAlterSystem: true
+          shared_preload_libraries:
+            - "vectors.so"
+        bootstrap:
+          initdb:
+            database: app
+            owner: app
+            postInitSQL:
+              - CREATE EXTENSION IF NOT EXISTS "vectors";
+              - CREATE EXTENSION IF NOT EXISTS "cube" CASCADE;
+              - CREATE EXTENSION IF NOT EXISTS "earthdistance" CASCADE;
