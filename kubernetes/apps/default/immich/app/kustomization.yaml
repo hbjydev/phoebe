@@ -15,12 +15,12 @@ patches:
   - target:
       kind: Cluster
       group: postgresql.cnpg.io
-      name: ${PG_NAME}
+      name: immich-pg-new
     patch: |-
       apiVersion: postgresql.cnpg.io/v1
       kind: Cluster
       metadata:
-        name: ${PG_NAME}
+        name: immich-pg-new
       spec:
         postgresql:
           enableAlterSystem: true
