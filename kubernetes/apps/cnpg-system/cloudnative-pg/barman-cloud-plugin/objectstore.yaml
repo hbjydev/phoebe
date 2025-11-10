@@ -1,0 +1,19 @@
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: ucos-postgres
+spec:
+  configuration:
+    destinationPath: s3://haydenmoe-volsync-postgres/
+    endpointURL: https://t9ag6.upcloudobjects.com
+    s3Credentials:
+      accessKeyId:
+        name: barman-object-store-secret
+        key: ACCESS_KEY_ID
+      secretAccessKey:
+        name: barman-object-store-secret
+        key: ACCESS_SECRET_KEY
+    wal:
+      compression: gzip
+
