@@ -35,7 +35,9 @@ spec:
         name: "immich-pg-barman"
         key: SECRET_ACCESS_KEY
     wal:
-      compression: gzip
+      compression: bzip2
+    data:
+      compression: bzip2
   instanceSidecarConfiguration:
     env:
       - name: AWS_REQUEST_CHECKSUM_CALCULATION
