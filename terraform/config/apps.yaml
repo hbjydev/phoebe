@@ -7,7 +7,6 @@ volsync:
       restic: true
     postgres:
       restic: true
-    longhorn: {}
 
 authentik:
   network: dione
@@ -15,9 +14,20 @@ authentik:
   tailscale: true
   instance:
     enabled: true
-    plan: CLOUDNATIVE-2xCPU-4GB
+    plan: 1xCPU-2GB
   buckets:
     storage:
       provider: cloudflare
     backup:
       provider: cloudflare
+
+vault:
+  network: dione
+  provider: upcloud
+  tailscale: true
+  instance:
+    enabled: true
+    plan: 1xCPU-2GB
+  buckets:
+    storage: {}
+    backup: {}

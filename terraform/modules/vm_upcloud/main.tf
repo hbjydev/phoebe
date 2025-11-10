@@ -27,7 +27,7 @@ resource "upcloud_server" "self" {
 
   template {
     storage = "Rocky Linux 10"
-    size    = 25
+    size    = 30
     tier    = "standard"
     backup_rule {
       interval  = "daily"
@@ -38,6 +38,11 @@ resource "upcloud_server" "self" {
 
   network_interface {
     type = "public"
+  }
+
+  network_interface {
+    type    = "private"
+    network = var.network_id
   }
 
   login {
@@ -53,6 +58,12 @@ resource "upcloud_server" "self" {
     content {
       storage = vol.value.id
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      user_data,
+    ]
   }
 }
 

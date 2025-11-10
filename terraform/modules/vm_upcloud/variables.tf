@@ -14,6 +14,10 @@ variable "network" {
   type = string
 }
 
+variable "network_id" {
+  type = string
+}
+
 variable "tailscale" {
   type = bool
 }

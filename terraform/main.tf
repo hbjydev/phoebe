@@ -40,10 +40,11 @@ module "vm_upcloud" {
   source   = "./modules/vm_upcloud"
   for_each = local.instances_upcloud
 
-  name      = try(each.value.name, each.key)
-  zone      = try(each.value.zone, "uk-lon1")
-  plan      = try(each.value.plan, "1xCPU-1GB")
-  network   = try(each.value.network, "UNKNOWN")
-  tailscale = try(each.value.tailscale, true)
-  volumes   = try(each.value.volumes, [])
+  name       = try(each.value.name, each.key)
+  zone       = try(each.value.zone, "uk-lon1")
+  plan       = try(each.value.plan, "1xCPU-1GB")
+  network    = try(each.value.network, "UNKNOWN")
+  network_id = module.network_upcloud[each.value.network].network_id
+  tailscale  = try(each.value.tailscale, true)
+  volumes    = try(each.value.volumes, [])
 }
