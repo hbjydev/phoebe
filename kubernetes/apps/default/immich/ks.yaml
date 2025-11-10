@@ -11,6 +11,7 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/redis
+    - ../../../../components/postgres
     - ../../../../components/volsync
   dependsOn:
     - name: longhorn
@@ -20,6 +21,8 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      PG_NAME: test-immich-pg
+      PG_SIZE: 2Gi
       VOLSYNC_CAPACITY: 32Gi
   prune: true
   retryInterval: 2m

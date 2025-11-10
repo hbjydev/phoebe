@@ -1,0 +1,16 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: ${PG_NAME:-${APP}-pg}
+spec:
+  imageName: ${PG_IMAGE:-ghcr.io/cloudnative-pg/postgresql:18-minimal-trixie}
+  instances: ${PG_INSTANCES:-1}
+  storage:
+    size: ${PG_SIZE:-5Gi}
+    storageClass: ${PG_STORAGECLASS:-longhorn}
+  plugins:
+  - name: barman-cloud.cloudnative-pg.io
+    isWALArchiver: true
+    parameters:
+      barmanObjectName: ucos-postgres
