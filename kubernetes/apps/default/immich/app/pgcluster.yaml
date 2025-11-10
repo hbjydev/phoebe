@@ -1,4 +1,49 @@
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: "immich-pg-barman"
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: vault
+  target:
+    name: "immich-pg-barman"
+    template:
+      data:
+        ACCESS_KEY_ID: "{{ .access_key_id }}"
+        SECRET_ACCESS_KEY: "{{ .secret_access_key }}"
+  dataFrom:
+    - extract:
+        key: ucos/haydenmoe-volsync-postgres
+
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: immich-pg-barman-os
+spec:
+  configuration:
+    destinationPath: s3://haydenmoe-volsync-postgres/${PG_NAME:-${APP}=pg}
+    endpointURL: https://t9ag6.upcloudobjects.com
+    s3Credentials:
+      accessKeyId:
+        name: "immich-pg-barman"
+        key: ACCESS_KEY_ID
+      secretAccessKey:
+        name: "immich-pg-barman"
+        key: SECRET_ACCESS_KEY
+    wal:
+      compression: gzip
+  instanceSidecarConfiguration:
+    env:
+      - name: AWS_REQUEST_CHECKSUM_CALCULATION
+        value: when_required
+      - name: AWS_RESPONSE_CHECKSUM_VALIDATION
+        value: when_required
+
+---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
@@ -25,3 +70,9 @@ spec:
   storage:
     size: 4Gi
     storageClass: longhorn
+
+  plugins:
+  - name: barman-cloud.cloudnative-pg.io
+    isWALArchiver: true
+    parameters:
+      barmanObjectName: immich-pg-barman-os
