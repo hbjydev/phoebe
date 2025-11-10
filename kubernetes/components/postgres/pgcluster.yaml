@@ -13,4 +13,4 @@ spec:
   - name: barman-cloud.cloudnative-pg.io
     isWALArchiver: true
     parameters:
-      barmanObjectName: ucos-postgres
+      barmanObjectName: ${PG_NAME:-${APP}-pg}-barman-os
