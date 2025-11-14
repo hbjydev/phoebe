@@ -25,7 +25,7 @@ spec:
           pds:
             image:
               repository: ghcr.io/bluesky-social/pds
-              tag: 0.4.188@sha256:87881525ec7a5cd2411a71b81a70ee2af9b5d79d770f9d1d1b84f74f91da4a9f
+              tag: 0.4.193@sha256:50e60af25fa7b580ddae8fc18ae97b1d7cdeb1a3068a3d345f9161cc7796417b
             env:
               PDS_HOSTNAME: pds.hayden.moe
               PDS_PORT: &port 2583
