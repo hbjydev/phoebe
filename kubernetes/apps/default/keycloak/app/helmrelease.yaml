@@ -40,7 +40,7 @@ spec:
                     name: keycloak-pg-app
                     key: jdbc-uri
               KC_FEATURES: passkeys,scripts,update-email
-            args: ["start"]
+            args: [start, --optimized]
             ports:
               - name: http
                 containerPort: &port 9000
