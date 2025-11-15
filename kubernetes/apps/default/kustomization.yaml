@@ -10,6 +10,7 @@ resources:
   - ./immich/ks.yaml
   - ./plex/ks.yaml
   - ./jellyseerr/ks.yaml
+  - ./keycloak/ks.yaml
   - ./paperless/ks.yaml
   - ./prowlarr/ks.yaml
   - ./qbittorrent/ks.yaml
