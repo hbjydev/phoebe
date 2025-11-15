@@ -27,12 +27,14 @@ spec:
           app:
             image:
               repository: ghcr.io/hbjydev/keycloak
-              tag: 26.4.5@sha256:03cfd085476d4b6eea1a4754c91c4b13d98786fb7f8232cac47f49c06040771c
+              tag: main-322547f@sha256:9bf596fb7aef48bdf884a36783483f11cacbafaef949dbe65ec2605a0e55d1d0
             env:
               TZ: Europe/London
               KC_HOSTNAME: "https://id.hayden.moe"
               KC_HOSTNAME_ADMIN: "https://idm.hayden.moe"
               KC_HTTP_ENABLED: true
+              KC_HEALTH_ENABLED: true
+              KC_METRICS_ENABLED: true
               KC_DB: postgres
               KC_DB_URL:
                 valueFrom:
