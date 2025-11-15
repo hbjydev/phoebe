@@ -107,11 +107,6 @@ spec:
         ports:
           http:
             port: *port
-
-      discovery:
-        controller: keycloak
-        type: ClusterIP
-        clusterIP: None
     route:
       sso:
         hostnames:
