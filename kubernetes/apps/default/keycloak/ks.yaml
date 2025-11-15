@@ -16,12 +16,12 @@ spec:
     - name: longhorn
       namespace: longhorn-system
   interval: 1h
-  path: ./kubernetes/apps/default/jellyseerr/app
+  path: ./kubernetes/apps/default/keycloak/app
   postBuild:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 10Gi
-  prune: true
+  prune: false
   retryInterval: 2m
   sourceRef:
     kind: GitRepository
