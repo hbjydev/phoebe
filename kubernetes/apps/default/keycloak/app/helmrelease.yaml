@@ -1,0 +1,141 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: keycloak
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      keycloak:
+        replicas: 1
+        type: statefulset
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: quay.io/keycloak/keycloak
+              tag: 26.4.5@sha256:653852bfdea2be6e958b9e90a976eff1c6de34edd55f2f679bdc48ef16bc528e
+            env:
+              TZ: Europe/London
+              KC_HOSTNAME_URL: "https://id.hayden.moe"
+              KC_HOSTNAME_ADMIN_URL: "https://idm.hayden.moe"
+              KC_DB_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: keycloak-pg-app
+                    key: jdbc-uri
+              KC_FEATURES: passkeys,scripts,update-email
+            command:
+              - "/opt/keycloak/bin/kc.sh"
+            args:
+              - "start"
+              - "--http-enabled=true"
+              - "--proxy-headers=xforwarded"
+              - "--hostname=https://id.hayden.moe"
+              - "--hostname-admin=https://idm.hayden.moe"
+            ports:
+              - name: http
+                containerPort: &port 9000
+            probes:
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health/live
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health/live
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health/ready
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              limits:
+                cpu: 1000m
+                memory: 1Gi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        controller: keycloak
+        ports:
+          http:
+            port: *port
+
+      discovery:
+        controller: keycloak
+        type: ClusterIP
+        clusterIP: None
+    route:
+      sso:
+        hostnames:
+          - id.hayden.moe
+        parentRefs:
+          - name: external
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
+      admin:
+        hostnames:
+          - idm.hayden.moe
+        parentRefs:
+          - name: internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
+
+    persistence:
+      tmp:
+        type: emptyDir
