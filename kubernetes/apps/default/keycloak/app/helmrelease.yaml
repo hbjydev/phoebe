@@ -26,13 +26,14 @@ spec:
         containers:
           app:
             image:
-              repository: quay.io/keycloak/keycloak
-              tag: 26.4.5@sha256:653852bfdea2be6e958b9e90a976eff1c6de34edd55f2f679bdc48ef16bc528e
+              repository: ghcr.io/hbjydev/keycloak
+              tag: 26.4.5@sha256:03cfd085476d4b6eea1a4754c91c4b13d98786fb7f8232cac47f49c06040771c
             env:
               TZ: Europe/London
-              KC_HTTP_ENABLED: true
               KC_HOSTNAME: "https://id.hayden.moe"
               KC_HOSTNAME_ADMIN: "https://idm.hayden.moe"
+              KC_HTTP_ENABLED: true
+              KC_DB: postgres
               KC_DB_URL:
                 valueFrom:
                   secretKeyRef:
