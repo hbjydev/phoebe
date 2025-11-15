@@ -44,8 +44,6 @@ spec:
               - "start"
               - "--http-enabled=true"
               - "--proxy-headers=xforwarded"
-              - "--hostname=https://id.hayden.moe"
-              - "--hostname-admin=https://idm.hayden.moe"
             ports:
               - name: http
                 containerPort: &port 9000
