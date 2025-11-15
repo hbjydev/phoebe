@@ -53,7 +53,6 @@ spec:
               PAPERLESS_APPS: allauth.socialaccount.providers.openid_connect
               PAPERLESS_AUTO_LOGIN: "true"
               PAPERLESS_AUTO_CREATE: "true"
-              PAPERLESS_LOGOUT_REDIRECT_URL: "https://sso.hayden.moe/application/o/paperless/end-session/"
 
               # Permissions
               USERMAP_UID: 1000
