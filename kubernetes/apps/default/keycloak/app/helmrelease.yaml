@@ -30,8 +30,8 @@ spec:
               tag: 26.4.5@sha256:653852bfdea2be6e958b9e90a976eff1c6de34edd55f2f679bdc48ef16bc528e
             env:
               TZ: Europe/London
-              KC_HOSTNAME_URL: "https://id.hayden.moe"
-              KC_HOSTNAME_ADMIN_URL: "https://idm.hayden.moe"
+              KC_HOSTNAME: "https://id.hayden.moe"
+              KC_HOSTNAME_ADMIN: "https://idm.hayden.moe"
               KC_DB_URL:
                 valueFrom:
                   secretKeyRef:
