@@ -35,6 +35,7 @@ spec:
               KC_HTTP_ENABLED: true
               KC_HEALTH_ENABLED: true
               KC_METRICS_ENABLED: true
+              KC_PROXY_HEADERS: xforwarded
               KC_DB: postgres
               KC_DB_URL:
                 valueFrom:
@@ -133,8 +134,8 @@ spec:
             sectionName: https
         rules:
           - backendRefs:
-              - identifier: admin
-                port: *admin-port
+              - identifier: app
+                port: *port
 
     persistence:
       tmp:
