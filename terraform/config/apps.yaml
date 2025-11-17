@@ -8,6 +8,12 @@ volsync:
     postgres:
       restic: true
 
+pds:
+  network: dione
+  provider: upcloud
+  buckets:
+    blobs:
+
 authentik:
   network: dione
   provider: upcloud
