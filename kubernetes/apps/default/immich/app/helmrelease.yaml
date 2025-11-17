@@ -68,6 +68,20 @@ spec:
         library:
           existingClaim: immich
 
+    server:
+      controllers:
+        main:
+          containers:
+            main:
+              resources:
+                claims:
+                  - name: gpu
+
+      defaultPodOptions:
+        resourceClaims:
+          - name: gpu
+            resourceClaimName: shared-igpu
+
     machine-learning:
       controllers:
         main:
