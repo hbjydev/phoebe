@@ -27,6 +27,14 @@ spec:
               repository: ghcr.io/home-operations/lidarr
               tag: 3.0.1.4866@sha256:05b517d6d05d117745e1b0b7e047a368c348b1f538a9b114343d10564ff53ced
             env:
+              LIDARR__APP__INSTANCENAME: Radarr
+              LIDARR__APP__THEME: dark
+              LIDARR__AUTH__METHOD: External
+              LIDARR__AUTH__REQUIRED: DisabledForLocalAddresses
+              LIDARR__LOG__DBENABLED: "False"
+              LIDARR__LOG__LEVEL: info
+              LIDARR__SERVER__PORT: &port 80
+              LIDARR__UPDATE__BRANCH: develop
               TZ: Europe/London
             envFrom:
               - secretRef:
