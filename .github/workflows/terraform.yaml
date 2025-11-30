@@ -1,0 +1,52 @@
+---
+name: Terraform
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - terraform
+      - '!terraform/mod.just'
+      - .github/workflows/terraform.yaml
+
+  pull_request:
+    branches: ["main"]
+    paths:
+      - terraform
+      - '!terraform/mod.just'
+      - .github/workflows/terraform.yaml
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  plan-apply:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_ENDPOINT_URL_S3: ${{ secrets.AWS_ENDPOINT_URL_S3 }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      GRAFANA_CLOUD_ACCESS_POLICY_TOKEN: ${{ secrets.GRAFANA_CLOUD_ACCESS_POLICY_TOKEN }}
+      OP_ACCOUNT: ${{ secrets.OP_ACCOUNT }}
+      TAILSCALE_OAUTH_CLIENT_ID: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+      TAILSCALE_OAUTH_CLIENT_SECRET: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
+      TAILSCALE_TAILNET: ${{ secrets.TAILSCALE_TAILNET }}
+      TF_VAR_CLOUDFLARE_ACCOUNT_ID: ${{ secrets.TF_VAR_CLOUDFLARE_ACCOUNT_ID }}
+      TF_VAR_CLOUDFLARE_TOKENS_API_TOKEN: ${{ secrets.TF_VAR_CLOUDFLARE_TOKENS_API_TOKEN }}
+      TF_VAR_PHOEBE_VAULT_ID: ${{ secrets.TF_VAR_PHOEBE_VAULT_ID }}
+      UPCLOUD_TOKEN: ${{ secrets.UPCLOUD_TOKEN }}
+      VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+    steps:
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
+      - uses: jdx/mise-action@v2 
+
+      - name: Initialize Terraform
+        run: just terraform init
+
+      - name: Run Terraform Plan
+        run: just terraform plan
+
+      - if: github.event_name == 'push'
+        run: just terraform apply

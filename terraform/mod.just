@@ -9,25 +9,38 @@ plan_file     := terraform_dir + "/plan.tfplan"
 default:
   just -l terraform
 
+[private]
+run *args:
+  cmd=""; \
+  if [[ "${CI:-false}" != "true" ]]; then \
+    cmd="{{op_run}} -- "; \
+  fi; \
+  ${cmd}terraform {{ args }}
+
 # Plans infrastructure changes, but does not apply them.
 plan *args:
-  {{op_run}} -- terraform plan -out={{ plan_file }} {{ args }}
+  just terraform run plan -out={{ plan_file }} {{ args }}
 
 # Applies infrastructure changes as specified in the most recent plan.
 apply *args:
-  {{op_run}} -- terraform apply {{ plan_file }} {{ args }}
-
-# Imports existing infrastructure into Terraform.
-import res id *args:
-  {{op_run}} --no-masking -- terraform import {{ res }} {{ id }} {{ args }}
-
-# Initializes the Terraform working directory.
-init *args:
-  op read "op://cluster-phoebe/talos/certs-k8sserviceaccount/key" \
-    | base64 -d \
-    | openssl rsa -pubout > {{ terraform_dir }}/jwtca.pub && \
-  {{op_run}} -- terraform init {{ args }}
+  just terraform run apply {{ plan_file }} {{ args }}
 
 # Works with State
 state *args:
-  {{op_run}} -- terraform state {{ args }}
+  just terraform run state {{ args }}
+
+# Imports existing infrastructure into Terraform.
+import res id *args:
+  just terraform run import {{ res }} {{ id }} {{ args }}
+
+# Initializes the Terraform working directory.
+init *args:
+  jwtca_pub="${K8SSERVICEACCOUNT_KEY:-}"; \
+  if [[ "${CI:-false}" != "true" ]]; then \
+    jwtca_pub="$(op read 'op://cluster-phoebe/talos/certs-k8sserviceaccount/key' | base64 -d)"; \
+  fi; \
+  echo "$jwtca_pub" | openssl rsa -pubout > {{ terraform_dir }}/jwtca.pub && \
+  just terraform run init {{ args }}
+
+sync-secrets:
+  echo "$(cat {{ terraform_dir }}/.env.op | sed 's/^#.*$//' | op inject)" | gh secret set -f - -e tf-prod
