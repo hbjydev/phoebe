@@ -2,9 +2,21 @@
 phoebe:
   provider: none
   cidr: 192.168.0.0/16
+  tailscale:
+    cidrs:
+      - "192.168.0.0/21"   # 1  - trunk vlan
+      - "192.168.20.0/24"  # 20 - iot vlan
+      - "192.168.40.0/24"  # 40 - trusted vlan
+      - "192.168.50.0/24"  # 50 - untrusted vlan
+      - "10.60.0.0/24"     # 60 - storage vlan
+      - "10.70.0.0/24"     # 70 - servers vlan
+      - "10.80.0.0/24"     # 80 - load balancing, non-vlan
+      - "10.90.0.0/24"     # 90 - privacy vpn vlan
+      - "10.99.0.0/24"     # 99 - management vlan
 
 dione:
   provider: upcloud
   cidr: 172.19.0.0/24
+  tailscale:
   upcloud:
     objectStorage: true

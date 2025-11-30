@@ -5,8 +5,13 @@ locals {
   ts_teamgroup     = "tg"
   ts_appgroup      = "ag"
   ts_clustergroup  = "cg"
+  ts_exitnodetag   = "en"
 
   ts_tags = {
+    "exitnode-phoebe" = {
+      tag = "tag:${local.ts_prefix}-${local.ts_exitnodetag}-phoebe",
+      owners = [local.ts_groups["infra"]]
+    },
     "cluster-phoebe" = {
       tag = "tag:${local.ts_prefix}-${local.ts_clustergroup}-phoebe",
       owners = [local.ts_groups["eng"]]
@@ -19,9 +24,11 @@ locals {
   }
 
   ts_networks = {
-    for k, v in local.networks : k => {
+    for k, v in local.all_networks : k => {
       allow_from = ["${local.ts_groups["infra"]}"]
       tag = "tag:${local.ts_prefix}-nw-${k}"
+      ipset = "ipset:${local.ts_prefix}-nis-${k}"
+      cidrs = v.tailscale.cidrs
     }
   }
 }
@@ -34,26 +41,15 @@ resource "tailscale_acl" "self" {
       "${local.ts_groups["infra"]}": local.ts_admins,
     },
 
-    ipsets: {
+    ipsets: merge({
+      for k, v in local.ts_networks : v.ipset => v.cidrs
+    }, {
       # Clusters
       "ipset:hm-cis-phoebe": [
         "172.18.0.0/16",  # cluster pods
         "172.19.0.0/16",  # cluster services
-      ],
-
-      # Networks
-      "ipset:hm-nis-phoebe": [
-        "192.168.0.0/21",   # 1  - trunk vlan
-        "192.168.20.0/24",  # 20 - iot vlan
-        "192.168.40.0/24",  # 40 - trusted vlan
-        "192.168.50.0/24",  # 50 - untrusted vlan
-        "10.60.0.0/24",     # 60 - storage vlan
-        "10.70.0.0/24",     # 70 - servers vlan
-        "10.80.0.0/24",     # 80 - load balancing, non-vlan
-        "10.90.0.0/24",     # 90 - privacy vpn vlan
-        "10.99.0.0/24",     # 99 - management vlan
-      ],
-    },
+      ]
+    }),
 
     grants: concat([
       for k, v in local.ts_networks : {
@@ -64,7 +60,14 @@ resource "tailscale_acl" "self" {
     ], [
       {
         src: [local.ts_groups["infra"]],
-        dst: ["ipset:hm-nis-phoebe"],
+        dst: ["autogroup:internet"],
+        via: [local.ts_tags["exitnode-phoebe"].tag],
+        ip: ["*"]
+      },
+
+      {
+        src: [local.ts_groups["infra"]],
+        dst: [local.ts_networks["phoebe"].ipset],
         ip: ["*"]
       },
 

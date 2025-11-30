@@ -25,7 +25,10 @@ locals {
             ? "WEUR"
             : "none"
       ),
-      address_range_cidr = try(network.cidr, "10.0.0.0/16")
+      address_range_cidr = try(network.cidr, "10.0.0.0/16"),
+      tailscale = {
+        cidrs = try(network.tailscale.cidrs, [try(network.cidr, "10.0.0.0/16")])
+      },
     }
   })
 
