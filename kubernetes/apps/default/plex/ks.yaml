@@ -12,10 +12,10 @@ spec:
   components:
     - ../../../../components/volsync
   dependsOn:
-    - name: intel-gpu-resource-driver
+    - name: amd-device-plugin
       namespace: kube-system
-    - name: longhorn
-      namespace: longhorn-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/default/plex/app
   postBuild:

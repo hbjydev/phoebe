@@ -1,25 +1,18 @@
 customization:
-  extraKernelArgs: # optional
-    - -init_on_alloc
-    - -init_on_free
-    - -selinux
-    - apparmor=0
-    - i915.enable_guc=3
-    - init_on_alloc=0
-    - init_on_free=0
-    - intel_iommu=on
-    - iommu=pt
-    - mitigations=off
-    - security=none
-    - sysctl.kernel.kexec_load_disabled=1
-    - talos.auditd.disabled=1
-    - sysctl.vm.swappiness=1
-    - sysctl.vm.dirty_ratio=5
-    - sysctl.vm.dirty_background_ratio=2
-    - sysctl.vm.vfs_cache_pressure=50
+  extraKernelArgs:
+    - -init_on_alloc                        # less security, faster puter
+    - -selinux                              # less security, faster puter
+    - apparmor=0                            # less security, faster puter
+    - init_on_alloc=0                       # less security, faster puter
+    - init_on_free=0                        # less security, faster puter
+    - mitigations=off                       # less security, faster puter
+    - security=none                         # less security, faster puter
+    - talos.auditd.disabled=1               # less security, faster puter 
+    - amd_iommu=on                          # pci passthrough
+    - iommu=pt                              # pci passthrough
+    - pcie_aspm=off                         # disable pcie aspm
   systemExtensions:
     officialExtensions:
-      - siderolabs/i915
-      - siderolabs/intel-ucode
-      - siderolabs/iscsi-tools
-      - siderolabs/util-linux-tools
+      - siderolabs/amdgpu
+      - siderolabs/amd-ucode
+      - siderolabs/nfsrahead
