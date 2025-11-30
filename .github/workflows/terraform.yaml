@@ -40,6 +40,7 @@ jobs:
       TF_VAR_PHOEBE_VAULT_ID: ${{ secrets.TF_VAR_PHOEBE_VAULT_ID }}
       UPCLOUD_TOKEN: ${{ secrets.UPCLOUD_TOKEN }}
       VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+      K8SSERVICEACCOUNT_KEY: ${{ secrets.K8SSERVICEACCOUNT_KEY }}
     steps:
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
       - uses: jdx/mise-action@v2 
