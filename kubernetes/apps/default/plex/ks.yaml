@@ -12,7 +12,7 @@ spec:
   components:
     - ../../../../components/volsync
   dependsOn:
-    - name: intel-gpu-resource-driver
+    - name: amd-device-plugin
       namespace: kube-system
     - name: longhorn
       namespace: longhorn-system

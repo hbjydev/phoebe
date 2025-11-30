@@ -13,6 +13,8 @@ spec:
     - ../../../../components/redis
     - ../../../../components/volsync
   dependsOn:
+    - name: amd-device-plugin
+      namespace: kube-system
     - name: longhorn
       namespace: longhorn-system
   interval: 1h
