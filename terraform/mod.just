@@ -37,9 +37,9 @@ import res id *args:
 init *args:
   jwtca_pub="${K8SSERVICEACCOUNT_KEY:-}"; \
   if [[ "${CI:-false}" != "true" ]]; then \
-    jwtca_pub="$(op read 'op://cluster-phoebe/talos/certs-k8sserviceaccount/key' | base64 -d)"; \
+    jwtca_pub="$(op read 'op://cluster-phoebe/talos/certs-k8sserviceaccount/key')"; \
   fi; \
-  echo "$jwtca_pub" | openssl rsa -pubout > {{ terraform_dir }}/jwtca.pub && \
+  echo "$jwtca_pub" | base64 -d | openssl rsa -pubout > {{ terraform_dir }}/jwtca.pub && \
   just terraform run init {{ args }}
 
 sync-secrets:

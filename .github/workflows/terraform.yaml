@@ -6,14 +6,12 @@ on:
     branches: ["main"]
     paths:
       - terraform
-      - '!terraform/mod.just'
       - .github/workflows/terraform.yaml
 
   pull_request:
     branches: ["main"]
     paths:
       - terraform
-      - '!terraform/mod.just'
       - .github/workflows/terraform.yaml
 
 concurrency:
