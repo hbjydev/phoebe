@@ -12,15 +12,15 @@ spec:
   components:
     - ../../../../components/volsync
   dependsOn:
-    - name: longhorn
-      namespace: longhorn-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/default/jellyseerr/app
   postBuild:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 10Gi
-  prune: true
+  prune: false
   retryInterval: 2m
   sourceRef:
     kind: GitRepository

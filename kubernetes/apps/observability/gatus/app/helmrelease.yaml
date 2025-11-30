@@ -26,7 +26,7 @@ spec:
           gatus-sidecar:
             image:
               repository: ghcr.io/home-operations/gatus-sidecar
-              tag: 0.0.9@sha256:31a52dd0e579c1f865b2580a4bb715d2a893deb1351fedeaba73598e9a578cbe
+              tag: 0.0.12@sha256:83bf82d422e9b0529a8076cb584d557a12158d9d8a4c373b4d27afcb87a17569
             args:
               - --auto-httproute
               - --enable-httproute
@@ -41,7 +41,7 @@ spec:
           app:
             image:
               repository: ghcr.io/twin/gatus
-              tag: v5.31.0@sha256:3a432fcc2826b8eb2b38caceb83e7777fda139b8058b1d022c73a82be7342682
+              tag: v5.33.0@sha256:bf249f4d7cf69e825457ade2ebc3d11168d73527ef1657a653119a0d9da97a4a
             env:
               GATUS_CONFIG_PATH: /config
               GATUS_WEB_PORT: &port 80
@@ -71,7 +71,7 @@ spec:
         statefulset:
           volumeClaimTemplates:
             - name: config
-              storageClass: longhorn
+              storageClass: ceph-block
               accessMode: ReadWriteOnce
               size: 5Gi
     defaultPodOptions:

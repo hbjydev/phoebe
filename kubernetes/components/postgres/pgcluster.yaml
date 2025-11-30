@@ -8,7 +8,7 @@ spec:
   instances: ${PG_INSTANCES:-1}
   storage:
     size: ${PG_SIZE:-5Gi}
-    storageClass: ${PG_STORAGECLASS:-longhorn}
+    storageClass: ${PG_STORAGECLASS:-ceph-block}
   plugins:
   - name: barman-cloud.cloudnative-pg.io
     isWALArchiver: true

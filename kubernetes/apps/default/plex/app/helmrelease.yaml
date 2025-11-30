@@ -52,17 +52,13 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: {drop: ["ALL"]}
             resources:
-              claims:
-                - name: gpu
               requests:
                 cpu: 100m
                 memory: 2Gi
               limits:
+                amd.com/gpu: 1
                 memory: 6Gi
     defaultPodOptions:
-      resourceClaims:
-        - name: gpu
-          resourceClaimName: shared-igpu
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -110,7 +106,7 @@ spec:
         existingClaim: "{{ .Release.Name }}"
       media:
         type: nfs
-        server: 192.168.1.2
+        server: ds.hayden.moe
         path: /volume1/media
         globalMounts:
           - path: /media

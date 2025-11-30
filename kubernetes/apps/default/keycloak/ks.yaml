@@ -3,21 +3,25 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app shared-gpu
+  name: &app keycloak
   namespace: &namespace default
 spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/postgres
+    - ../../../../components/volsync
   dependsOn:
-    - name: intel-gpu-resource-driver
-      namespace: kube-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   interval: 1h
-  path: ./kubernetes/apps/default/shared-gpu/app
+  path: ./kubernetes/apps/default/keycloak/app
   postBuild:
     substitute:
       APP: *app
-  prune: true
+      VOLSYNC_CAPACITY: 10Gi
+  prune: false
   retryInterval: 2m
   sourceRef:
     kind: GitRepository
