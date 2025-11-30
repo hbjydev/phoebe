@@ -11,7 +11,9 @@ resource "cloudflare_api_token" "self" {
 
   policies = [{
     effect = "allow"
-    resources = { "${local.iam_bucket_name}" = "*" }
+    resources = jsonencode({
+      "${local.iam_bucket_name}" = "*"
+    })
     permission_groups = [for x in local.permission_id_list : { id = x }]
   }]
 
