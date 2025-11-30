@@ -13,10 +13,10 @@ spec:
     - ../../../../components/redis
     - ../../../../components/volsync
   dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
     - name: amd-device-plugin
       namespace: kube-system
-    - name: longhorn
-      namespace: longhorn-system
   interval: 1h
   path: ./kubernetes/apps/default/immich/app
   postBuild:

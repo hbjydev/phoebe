@@ -12,8 +12,8 @@ spec:
   components:
     - ../../../../components/redis
   dependsOn:
-    - name: longhorn
-      namespace: longhorn-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/default/paperless/app
   postBuild:
