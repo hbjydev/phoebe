@@ -2,7 +2,7 @@ resource "tailscale_tailnet_key" "self" {
   count = var.tailscale ? 1 : 0
   reusable = false
   ephemeral = false
-  tags = ["tag:net-dione"]
+  tags = ["tag:hm-nw-dione"]
   expiry = 3600
 }
 
