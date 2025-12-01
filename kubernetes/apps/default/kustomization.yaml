@@ -18,5 +18,4 @@ resources:
   - ./qui/ks.yaml
   - ./radarr/ks.yaml
   - ./sabnzbd/ks.yaml
-  - ./shared-gpu/ks.yaml
   - ./sonarr/ks.yaml
