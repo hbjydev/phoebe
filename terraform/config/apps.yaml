@@ -14,19 +14,6 @@ pds:
   buckets:
     blobs:
 
-authentik:
-  network: dione
-  provider: upcloud
-  tailscale: true
-  instance:
-    enabled: true
-    plan: 1xCPU-2GB
-  buckets:
-    storage:
-      provider: cloudflare
-    backup:
-      provider: cloudflare
-
 vault:
   network: dione
   provider: upcloud
