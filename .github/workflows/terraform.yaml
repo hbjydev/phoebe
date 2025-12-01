@@ -41,7 +41,7 @@ jobs:
       K8SSERVICEACCOUNT_KEY: ${{ secrets.K8SSERVICEACCOUNT_KEY }}
     steps:
       - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
-      - uses: jdx/mise-action@v2 
+      - uses: jdx/mise-action@c37c93293d6b742fc901e1406b8f764f6fb19dac # v2 
 
       - name: Initialize Terraform
         run: just terraform init
