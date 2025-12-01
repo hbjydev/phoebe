@@ -2,7 +2,7 @@ resource "tailscale_tailnet_key" "self" {
   count = var.tailscale ? 1 : 0
   reusable = false
   ephemeral = false
-  tags = ["tag:hm-nw-dione"]
+  tags = ["tag:hm-nw-${var.network}"]
   expiry = 3600
 }
 
@@ -14,7 +14,7 @@ resource "upcloud_server" "self" {
 
   labels = {
     "moe.hayden.source" = "github/hbjydev/phoebe",
-    "moe.hayden.network" = "dione",
+    "moe.hayden.network" = var.network,
   }
 
   metadata  = true
