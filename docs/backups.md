@@ -4,7 +4,9 @@ This document explains how backups work in the Phoebe cluster.
 
 ## Overview
 
-Phoebe uses [Volsync](https://volsync.readthedocs.io/) to back up persistent volume data to S3-compatible storage (Upcloud Managed Object Storage) using Restic.
+Phoebe uses [Volsync](https://volsync.readthedocs.io/) to back up persistent
+volume data to S3-compatible storage (Upcloud Managed Object Storage) using
+Restic.
 
 ## Architecture
 
@@ -175,7 +177,8 @@ kubectl logs -n <namespace> -l volsync.backube/owner=<replicationsource-name>
 
 ### Prometheus Metrics
 
-Volsync exposes metrics that can be scraped by Prometheus for alerting on backup failures.
+Volsync exposes metrics that can be scraped by Prometheus for alerting on backup
+failures.
 
 ## Troubleshooting
 
