@@ -4,14 +4,14 @@ This document explains how backups work in the Phoebe cluster.
 
 ## Overview
 
-Phoebe uses [Volsync](https://volsync.readthedocs.io/) to back up persistent volume data to S3-compatible storage (Backblaze B2) using Restic.
+Phoebe uses [Volsync](https://volsync.readthedocs.io/) to back up persistent volume data to S3-compatible storage (Upcloud Managed Object Storage) using Restic.
 
 ## Architecture
 
 ```
 ┌─────────────────┐          ┌─────────────────┐          ┌─────────────────┐
 │   Application   │          │    Volsync      │          │   S3 Storage    │
-│      PVC        │ ──────►  │  ReplicationSrc │ ──────►  │  (Backblaze B2) │
+│      PVC        │ ──────►  │  ReplicationSrc │ ──────►  │    (Upcloud)    │
 └─────────────────┘  backup  └─────────────────┘  upload  └─────────────────┘
                                                                   │
                      restore                                      │
@@ -53,7 +53,7 @@ Default backup schedule is hourly (`0 * * * *`). Each backup:
 1. Creates a volume snapshot (using Ceph CSI)
 2. Mounts the snapshot
 3. Runs Restic to incrementally back up changes
-4. Uploads to S3-compatible storage (Backblaze B2)
+4. Uploads to S3-compatible storage (Upcloud Managed Object Storage)
 
 ### Retention Policy
 

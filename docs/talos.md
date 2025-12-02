@@ -216,13 +216,13 @@ Talos provides:
 
 The schematic does disable some security features for performance:
 
+> ⚠️ **Warning**: These are homelab-specific tradeoffs and should **not** be used in production environments. Disabling CPU vulnerability mitigations and security modules significantly increases the attack surface.
+
 ```yaml
 extraKernelArgs:
   - mitigations=off    # CPU vulnerability mitigations disabled
   - security=none      # LSM disabled
 ```
-
-⚠️ These are homelab-specific tradeoffs and should not be used in production.
 
 ## Troubleshooting
 
