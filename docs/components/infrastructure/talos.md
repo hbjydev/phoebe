@@ -1,30 +1,23 @@
-# Talos Management
+---
+icon: simple/talos
+---
 
-This document explains how Talos is managed in the Phoebe cluster.
+# Talos Linux
 
-## Overview
-
-[Talos](https://www.talos.dev/) is an immutable, minimal Linux distribution designed specifically for running Kubernetes. It removes traditional OS components (SSH, package managers, shell access) in favor of a secure, API-driven approach.
+[Talos](https://www.talos.dev/) is an immutable, minimal Linux distribution
+designed specifically for running Kubernetes. It removes traditional OS
+components (SSH, package managers, shell access) in favor of a secure,
+API-driven approach.
 
 ## Architecture
 
-```
-┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
-│   talconfig.yaml │ ──► │   talhelper      │ ──► │  Node Configs    │
-│   (Template)     │     │   (Generator)    │     │  (Per-node YAML) │
-└──────────────────┘     └──────────────────┘     └──────────────────┘
-                                                           │
-                                                           ▼
-                                                  ┌──────────────────┐
-                                                  │    talosctl      │
-                                                  │  (Apply Config)  │
-                                                  └──────────────────┘
-                                                           │
-                                                           ▼
-                                                  ┌──────────────────┐
-                                                  │   Talos Nodes    │
-                                                  │   (Bare Metal)   │
-                                                  └──────────────────┘
+```mermaid
+flowchart TD
+    talconfig(talconfig.yaml) --> talhelper
+    talhelper(Talhelper) --> nodecfg
+    nodecfg(Node configs) --> talosctl
+    talosctl(talosctl apply-node ...) --> nodes
+    nodes(Bare metal nodes)
 ```
 
 ## Configuration Files

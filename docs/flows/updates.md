@@ -1,10 +1,8 @@
 # Updates
 
-This document explains how automatic updates work in the Phoebe cluster.
-
-## Overview
-
-Phoebe uses [Renovate](https://docs.renovatebot.com/) to automatically propose updates for all dependencies. This includes Helm chart versions, container images, and GitHub Actions.
+Phoebe uses [Renovate](https://docs.renovatebot.com/) to automatically propose
+updates for all dependencies. This includes Helm chart versions, container
+images, and GitHub Actions.
 
 ## How Renovate Works
 
@@ -103,7 +101,7 @@ Version updates for Talos and Kubernetes are managed through:
 
 ## Dashboard
 
-Renovate maintains a [Dependency Dashboard](https://github.com/hbjydev/phoebe/issues?q=is%3Aissue+%22Renovate+Dashboard%22) issue that shows:
+Renovate maintains a [Dependency Dashboard](https://github.com/hbjydev/phoebe/issues/9) issue that shows:
 
 - Pending updates
 - Awaiting merge PRs

@@ -10,18 +10,29 @@ Restic.
 
 ## Architecture
 
+**Backups:**
+
+```mermaid
+flowchart LR
+    epvc(Application PVC)
+    rsrc(Volsync ReplicationSource)
+    s3(S3 Storage in UpCloud)
+
+    epvc-- backup -->rsrc
+    rsrc-- upload -->s3
 ```
-┌─────────────────┐          ┌─────────────────┐          ┌─────────────────┐
-│   Application   │          │    Volsync      │          │   S3 Storage    │
-│      PVC        │ ──────►  │  ReplicationSrc │ ──────►  │    (Upcloud)    │
-└─────────────────┘  backup  └─────────────────┘  upload  └─────────────────┘
-                                                                  │
-                     restore                                      │
-┌─────────────────┐          ┌─────────────────┐                  │
-│   New/Restored  │ ◄─────── │    Volsync      │ ◄────────────────┘
-│      PVC        │          │  ReplicationDst │     restore
-└─────────────────┘          └─────────────────┘
+
+**Restores/Recreations:**
+```mermaid
+flowchart RL
+    s3(S3 Storage in UpCloud)
+    rdst(Volsync ReplicationDest)
+    npvc(New/Restored PVC)
+
+    s3-- download -->rdst
+    rdst-- restore -->npvc
 ```
+
 
 ## Components
 

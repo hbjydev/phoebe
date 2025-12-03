@@ -1,15 +1,13 @@
 # GitOps Flow
 
-This document explains how changes get from Git to the Kubernetes cluster.
-
-## Overview
-
-Phoebe uses [Flux](https://fluxcd.io) as its GitOps operator. Flux continuously monitors the Git repository and automatically applies changes to the cluster when they are committed to the `main` branch.
+Phoebe uses [Flux](https://fluxcd.io) as its GitOps operator. Flux continuously
+monitors the Git repository and automatically applies changes to the cluster
+when they are committed to the `main` branch.
 
 ## Architecture
 
 ```
-┌─────────────────┐    push     ┌──────────────┐    sync    ┌─────────────┐
+┌─────────────────┐    push    ┌──────────────┐    sync    ┌─────────────┐
 │   Developer     │ ─────────► │   GitHub     │ ◄───────── │    Flux     │
 │   (You!)        │            │   Repository │            │  (Cluster)  │
 └─────────────────┘            └──────────────┘            └─────────────┘
