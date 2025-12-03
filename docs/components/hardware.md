@@ -1,0 +1,62 @@
+---
+icon: octicons/server-24
+---
+
+# Hardware
+
+This page documents the hardware I use in my setup, should you want to either
+reference specific parts or be insane enough to try and replicate it.
+
+## Compute
+
+### Minisforum MS-A2
+
+My setup is powered by a [Minisforum MS-A2](https://www.minisforum.uk/products/minisforum-ms-a2?utm_source=google&utm_medium=cpcg&gad_source=1&gad_campaignid=22483783901&gbraid=0AAAAAppTh6pc9ocXOK50v93u2hw_n5qgj&gclid=CjwKCAiA3L_JBhAlEiwAlcWO5_zgpCagm8PTEDx19jqFYo7g4wMq_SySfeISsW2UYmGyFMlWs7jTHxoCx8cQAvD_BwE)
+with 64GB of DDR5-5600 RAM and a Ryzen 9 9955HX (16 cores, 12 threads).
+
+It sits on my TV unit next to the network switch it's connected to.
+
+## Networking
+
+### Unifi UCG Ultra
+
+My gateway of choice was the [Unifi Cloud Gateway Ultra](https://uk.store.ui.com/uk/en/category/all-cloud-gateways/products/ucg-ultra).
+
+It provides me with full gigabit networking, with support for a 2.5GbE WAN
+uplink, easy-to-use firewalling, and a Unifi Network Controller, all in one easy
+little box.
+
+### Unifi USW Lite 8 PoE
+
+My core switch is currently the [Unifi USW Lite 8 PoE](https://uk.store.ui.com/uk/en/category/all-switching/products/usw-lite-8-poe).
+
+### Unifi USW Flex Mini
+
+My only leaf switch is the one sat on my desk, which is a [Unifi USW Flex Mini](https://uk.store.ui.com/uk/en/category/switching-utility/products/usw-flex-mini).
+
+It's powered by PoE from the USW Lite 8 PoE on my TV unit.
+
+### Unifi U6+ AP
+
+My Wi-Fi AP is a [Unifi U6+](https://uk.store.ui.com/uk/en/category/all-wifi/products/u6-plus),
+which does Wi-Fi 6 for all my devices. It currently broadcasts two networks, my
+main network for client devices, and an IoT network for any 'smart' appliances
+like my Apple TV 4K, my smart plugs, and any vendor-provided gear like the IHD
+I got from British Gas, largely all things I don't necessarily want to be able
+to talk to or see my other devices.
+
+## Storage
+
+### Synology DS223j
+
+Regrettably, I went with a Synology 2-bay NAS for my networked storage solution,
+which I wish I hadn't done now, but it's the [DS223j](https://www.synology.com/en-global/products/DS223j).
+
+I regret it for a few reasons:
+
+- It's a completely locked-down little machine (no serial, no way to install
+  anything other than DSM)
+- It only has 2 drive bays, which I stupidly decided to set up in RAID-0 to get
+  capacity.
+- DSM sucks as an OS, and is annoying to manage. It also has no ZFS support,
+  which is something I'd really like to use, but can't.
