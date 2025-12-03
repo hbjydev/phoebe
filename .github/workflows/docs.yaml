@@ -20,6 +20,7 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/checkout@v5
       - uses: jdx/mise-action@146a28175021df8ca24f8ee1828cc2a60f980bd5 # v3 
+      - run: uv sync
       - run: zensical build --clean 
       - uses: actions/upload-pages-artifact@v4
         with:
