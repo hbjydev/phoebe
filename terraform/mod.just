@@ -43,4 +43,4 @@ init *args:
   just terraform run init {{ args }}
 
 sync-secrets:
-  echo "$(cat {{ terraform_dir }}/.env.op | sed 's/^#.*$//' | op inject)" | gh secret set -f - -e tf-prod
+  echo "$(cat {{ terraform_dir }}/.env.op | sed 's/^#.*$//' | op inject)" | gh secret set -f -

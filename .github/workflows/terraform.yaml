@@ -21,8 +21,6 @@ concurrency:
 jobs:
   plan-apply:
     runs-on: ubuntu-latest
-    environment:
-      name: tf-prod
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_ENDPOINT_URL_S3: ${{ secrets.AWS_ENDPOINT_URL_S3 }}
