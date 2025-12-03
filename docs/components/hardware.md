@@ -9,6 +9,13 @@ reference specific parts or be insane enough to try and replicate it.
 
 ## Compute
 
+### Intel NUC10i7FNH **(Removed!)**
+
+This NUC _used_ to run everything, with 16GB of DDR4 RAM and an Intel i7-10710u
+CPU.
+
+However, the fan died, so no more.
+
 ### Minisforum MS-A2
 
 My setup is powered by a [Minisforum MS-A2](https://www.minisforum.uk/products/minisforum-ms-a2?utm_source=google&utm_medium=cpcg&gad_source=1&gad_campaignid=22483783901&gbraid=0AAAAAppTh6pc9ocXOK50v93u2hw_n5qgj&gclid=CjwKCAiA3L_JBhAlEiwAlcWO5_zgpCagm8PTEDx19jqFYo7g4wMq_SySfeISsW2UYmGyFMlWs7jTHxoCx8cQAvD_BwE)
