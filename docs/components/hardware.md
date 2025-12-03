@@ -26,6 +26,22 @@ It provides me with full gigabit networking, with support for a 2.5GbE WAN
 uplink, easy-to-use firewalling, and a Unifi Network Controller, all in one easy
 little box.
 
+#### VLANs
+
+I have a few VLANs I use to segregate network traffic in my home network:
+
+| VLAN | Name | Category | CIDR | Description |
+| ---- | ---- | -------- | ---- | ----------- |
+| 1    | default | N/a | `192.168.0.0/21` | The VLAN all unconfigured traffic ends up on. If I've set everything up right, there should be _zero_ traffic going here. |
+| 20   | IoT | Untrusted | `192.168.20.0/24` | The VLAN all my IoT devices live on. |
+| 40   | Trusted | Trusted | `192.168.40.0/24` | The VLAN all of my 'trusted' devices live on. 'Trusted' here means that they're devices I know should be secure, and devices with passthrough access to the Management, DMZ and IoT VLANs. |
+| 50   | Untrusted | Untrusted | `192.168.50.0/24` | The VLAN all of my 'untrusted' devices live on. This includes devices from sketchy manufacturers as well as guests on my networks, who I don't necessarily trust to keep devices secure. |
+| 60   | Storage | DMZ | `10.60.0.0/24` | My Storage VLAN contains anything storage-related. This got its own VLAN because of plans I have to expand my storage setup to one of more devices. |
+| 70   | Servers | DMZ | `10.70.0.0/24` | My Servers VLAN has all of my, well... servers. |
+| 80*  | Service | DMZ | `10.80.0.0/24` | The Services VLAN isn't _actually_ a VLAN, it's more just a reserved space in my network for things like [Cilium](./infrastructure/cilium.md) to advertise IP addresses on that need to be routable by the rest of the network. |
+| 90   | VPN | Isolated | `10.90.0.0/24` | This VLAN is configured with a [Surfshark](https://surfshark.com/) WireGuard tunnel that protects my privacy. I mainly use it for things my ISP deems 'unsafe', which is a growing list these days. |
+| 99   | Management | Isolated | `10.99.0.0/24` | The VLAN all of my network devices live on. Mainly used to segregate management interfaces for things like network gear away from untrusted devices. |
+
 ### Unifi USW Lite 8 PoE
 
 My core switch is currently the [Unifi USW Lite 8 PoE](https://uk.store.ui.com/uk/en/category/all-switching/products/usw-lite-8-poe).
