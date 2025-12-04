@@ -14,4 +14,4 @@ machine:
     net.ipv4.neigh.default.gc_thresh3: 16384    # Prevent ARP cache overflows
     sunrpc.tcp_slot_table_entries: 128          # NFS
     sunrpc.tcp_max_slot_table_entries: 128      # NFS
-    # user.max_user_namespaces: "11255"           # User Namespaces
+    user.max_user_namespaces: "11255"           # User Namespaces
