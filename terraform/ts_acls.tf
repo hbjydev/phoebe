@@ -22,7 +22,7 @@ locals {
     }
     "k8s-phoebe" = {
       tag = "tag:${local.ts_prefix}-${local.ts_appgroup}-k8s-phoebe",
-      owners = [local.ts_tags["k8soperator-phoebe"].tag]
+      owners = ["tag:${local.ts_prefix}-${local.ts_appgroup}-k8s-operator-phoebe"]
     }
   }
 
