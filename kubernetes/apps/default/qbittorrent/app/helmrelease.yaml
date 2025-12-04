@@ -101,7 +101,7 @@ spec:
             subPath: .qbt.toml
       media:
         type: nfs
-        server: 192.168.1.2
+        server: ds.hayden.moe
         path: /volume1/media
         globalMounts:
           - path: /media/downloads/qbittorrent
