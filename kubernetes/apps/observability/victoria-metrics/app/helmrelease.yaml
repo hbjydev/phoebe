@@ -1,0 +1,33 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: victoria-metrics
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: victoria-metrics
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    server:
+      retentionPeriod: 7d
+      persistentVolume:
+        existingClaim: "victoria-metrics"
+      serviceMonitor:
+        enabled: true
+      route:
+        enabled: true
+        hostnames:
+          - "vm.hayden.moe"
+        parentRefs:
+          - name: internal
+            namespace: network
+            sectionName: https
