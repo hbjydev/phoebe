@@ -10,7 +10,7 @@ spec:
     - tag:hm-ag-tsrecorder
   storage:
     s3:
-      endpoint: https://t9ag6.upcloudobjects.com
+      endpoint: t9ag6.upcloudobjects.com
       bucket: haydenmoe-tsrecorder-data
       credentials:
         secret:
