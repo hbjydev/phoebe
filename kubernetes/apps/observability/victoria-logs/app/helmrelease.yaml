@@ -20,11 +20,10 @@ spec:
     server:
       retentionPeriod: 7d
       persistentVolume:
-        existingClaim: "{{ .Release.Name }}"
+        existingClaim: "victoria-logs"
       route:
         enabled: true
         hostnames:
-          - "{{ .Release.Name }}.hayden.moe"
           - "vl.hayden.moe"
         parentRefs:
           - name: internal
