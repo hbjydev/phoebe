@@ -11,6 +11,12 @@ spec:
       source: source
       recoveryTarget:
         targetTime: "2025-11-20 11:00:01+00:00"
+  externalClusters:
+  - name: source
+    plugin:
+      name: barman-cloud.cloudnative-pg.io
+      parameters:
+        barmanObjectName: ${PG_NAME:-${APP}-pg}-barman-os
   storage:
     size: ${PG_SIZE:-5Gi}
     storageClass: ${PG_STORAGECLASS:-ceph-block}
