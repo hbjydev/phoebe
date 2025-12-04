@@ -9,3 +9,4 @@ resources:
   - ./gatus/ks.yaml
   - ./k8s-monitoring-helm/ks.yaml
   - ./unpoller/ks.yaml
+  - ./victoria-logs/ks.yaml
