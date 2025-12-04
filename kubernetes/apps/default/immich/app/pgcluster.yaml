@@ -74,7 +74,7 @@ spec:
 
   storage:
     size: 4Gi
-    storageClass: rook-ceph
+    storageClass: ceph-block
 
   plugins:
   - name: barman-cloud.cloudnative-pg.io
