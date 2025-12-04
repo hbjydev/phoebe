@@ -6,5 +6,4 @@ metadata:
 spec:
   enableUI: true
   tags:
-    - tag:tsrecorder
-    - tag:k8s-phoebe
+    - tag:hm-ag-k8s-phoebe
