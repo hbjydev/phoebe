@@ -6,14 +6,14 @@ metadata:
 spec:
   retentionPeriod: "7d"
 
-  storageDataPath: /data
+  storageDataPath: /storage
   volumes:
     - name: vm-data
       persistentVolumeClaim:
         claimName: victoria-metrics-metrics
   volumeMounts:
     - name: vm-data
-      mountPath: /data
+      mountPath: /storage
 
   resources:
     requests:
