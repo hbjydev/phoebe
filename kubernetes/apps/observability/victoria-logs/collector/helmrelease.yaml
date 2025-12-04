@@ -19,6 +19,12 @@ spec:
   values:
     remoteWrite:
       - url: http://victoria-logs-victoria-logs-single-server:9428
+        ignoreFields:
+          - kubernetes.container_id
+          - kubernetes.pod_annotations*
+          - kubernetes.node_labels*
+          - kubernetes.namespace_labels*
+          - kubernetes.pod_labels*
 
     resources:
       limits:
