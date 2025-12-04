@@ -108,11 +108,12 @@ resource "tailscale_acl" "self" {
 
     ssh: [
       for k, v in local.ts_networks : {
-        action: "accept", # todo: check
-        src:    v.allow_from,
-        dst:    [v.tag],
-        users:  ["root", "autogroup:nonroot"],
-        # todo: recorder & enforceRecorder
+        action:          "accept", # todo: check
+        src:             v.allow_from,
+        dst:             [v.tag],
+        users:           ["root", "autogroup:nonroot"],
+        recorder:        [local.ts_tags["tsrecorder-phoebe"].tag],
+        enforceRecorder: true,
       }
     ],
 
