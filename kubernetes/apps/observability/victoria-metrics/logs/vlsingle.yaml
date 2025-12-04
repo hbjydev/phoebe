@@ -1,0 +1,24 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VLSingle
+metadata:
+  name: victoria-logs
+spec:
+  retentionPeriod: "7d"
+
+  storageDataPath: /data
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: victoria-metrics-logs
+  volumeMounts:
+    - name: data
+      mountPath: /data
+
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+      cpu: 1000m
