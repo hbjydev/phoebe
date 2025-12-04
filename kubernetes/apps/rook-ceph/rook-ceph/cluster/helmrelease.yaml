@@ -37,6 +37,10 @@ spec:
       csi:
         readAffinity:
           enabled: true
+      dashboard:
+        enabled: true
+        urlPrefix: /
+        ssl: false
       mgr:
         count: 1
         modules:
