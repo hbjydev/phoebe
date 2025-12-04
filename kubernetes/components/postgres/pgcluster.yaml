@@ -3,6 +3,8 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: ${PG_NAME:-${APP}-pg}
+  annotations:
+    cnpg.io/skipEmptyWalArchiveCheck: enabled
 spec:
   imageName: ${PG_IMAGE:-ghcr.io/cloudnative-pg/postgresql:18-minimal-trixie}
   instances: ${PG_INSTANCES:-1}
