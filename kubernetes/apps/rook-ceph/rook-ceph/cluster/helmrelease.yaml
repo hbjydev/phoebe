@@ -67,7 +67,7 @@ spec:
         useAllDevices: false
         devicePathFilter: /dev/disk/by-id/nvme-CT1000P3PSSD8_25044DD0CC34_.*
         config:
-          osdsPerDevice: "3"
+          osdsPerDevice: "1"
     cephBlockPools:
       - name: ceph-blockpool
         spec:
