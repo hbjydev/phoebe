@@ -9,4 +9,4 @@ subset.remove("172.16.0.0/12")
 subset.remove("192.168.0.0/16")
 
 for subnet in subset.iter_cidrs():
-    print(dumps({'dst': str(subnet), 'gw': '192.168.20.1'}) + ',')
+    print(dumps({'dst': str(subnet), 'gw': '10.90.0.1'}) + ',')
