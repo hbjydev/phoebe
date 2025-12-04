@@ -6,6 +6,11 @@ metadata:
 spec:
   imageName: ${PG_IMAGE:-ghcr.io/cloudnative-pg/postgresql:18-minimal-trixie}
   instances: ${PG_INSTANCES:-1}
+  bootstrap:
+    recovery:
+      source: source
+      recoveryTarget:
+        targetTime: "2025-11-20 12:00:01+00:00"
   storage:
     size: ${PG_SIZE:-5Gi}
     storageClass: ${PG_STORAGECLASS:-ceph-block}
