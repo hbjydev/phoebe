@@ -74,8 +74,6 @@ spec:
           containers:
             main:
               resources:
-                requests:
-                  amd.com/gpu: 10m
                 limits:
                   amd.com/gpu: 1
 
@@ -85,7 +83,5 @@ spec:
           containers:
             main:
               resources:
-                requests:
-                  amd.com/gpu: 10m
                 limits:
                   amd.com/gpu: 1
