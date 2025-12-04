@@ -105,7 +105,7 @@ spec:
     persistence:
       mnt:
         type: nfs
-        server: 192.168.1.2
+        server: ds.hayden.moe
         path: /volume1/media
       tmp:
         type: emptyDir

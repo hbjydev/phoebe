@@ -37,7 +37,12 @@ spec:
       csi:
         readAffinity:
           enabled: true
+      dashboard:
+        enabled: true
+        urlPrefix: /
+        ssl: false
       mgr:
+        count: 1
         modules:
           - name: diskprediction_local
             enabled: true
@@ -47,6 +52,9 @@ spec:
             enabled: true
           - name: rook
             enabled: true
+      mon:
+        count: 1
+        allowMultiplePerNode: true
       network:
         provider: host
         addressRanges:
@@ -61,7 +69,7 @@ spec:
       storage:
         useAllNodes: true
         useAllDevices: false
-        devicePathFilter: /dev/disk/by-id/nvme-SAMSUNG_MZQL23T8HCLS-00A07_.*
+        devicePathFilter: /dev/disk/by-id/nvme-CT1000P3PSSD8_25044DD0CC34_.*
         config:
           osdsPerDevice: "1"
     cephBlockPools:
@@ -69,7 +77,7 @@ spec:
         spec:
           failureDomain: host
           replicated:
-            size: 3
+            size: 1
         storageClass:
           enabled: true
           name: ceph-block

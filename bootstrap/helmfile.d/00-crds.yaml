@@ -8,8 +8,9 @@ helmDefaults:
   args:
     - --include-crds
     - --no-hooks
-  postRenderer: bash
+  postRenderer: /usr/bin/env
   postRendererArgs:
+    - bash
     - -c
     - yq ea -e 'select(.kind == "CustomResourceDefinition")'
 

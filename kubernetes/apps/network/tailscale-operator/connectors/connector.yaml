@@ -6,10 +6,8 @@ metadata:
 spec:
   hostname: phoebe-cidrs
   tags:
-    - tag:k8s
-    - tag:k8s-phoebe
-    - tag:net-phoebe
+    - "tag:hm-ag-k8s-phoebe"
   subnetRouter:
     advertiseRoutes:
-      - "10.96.0.0/12"  # pods
-      - "10.244.0.0/16" # services
+      - "172.18.0.0/16"  # pods
+      - "172.19.0.0/16" # services

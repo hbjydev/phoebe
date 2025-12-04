@@ -67,7 +67,7 @@ spec:
           [{
             "name": "vpn",
             "namespace": "kube-system",
-            "ips": ["192.168.20.11/24"],
+            "ips": ["10.90.0.11/24"],
             "mac": "d6:67:45:f6:29:e5"
           }]
       securityContext:
@@ -100,7 +100,7 @@ spec:
         existingClaim: sabnzbd
       media:
         type: nfs
-        server: 192.168.1.2
+        server: ds.hayden.moe
         path: /volume1/media
         globalMounts:
           - path: /media/downloads/sabnzbd

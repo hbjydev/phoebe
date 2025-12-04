@@ -6,5 +6,12 @@ metadata:
 spec:
   enableUI: true
   tags:
-    - tag:tsrecorder
-    - tag:k8s-phoebe
+    - tag:hm-ag-k8s-phoebe
+    - tag:hm-ag-tsrecorder
+  storage:
+    s3:
+      endpoint: t9ag6.upcloudobjects.com
+      bucket: haydenmoe-tsrecorder-data
+      credentials:
+        secret:
+          name: tsrecorder-secret

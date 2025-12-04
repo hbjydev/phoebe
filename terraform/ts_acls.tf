@@ -16,6 +16,22 @@ locals {
       tag = "tag:${local.ts_prefix}-${local.ts_clustergroup}-phoebe",
       owners = [local.ts_groups["eng"]]
     },
+    "k8soperator-phoebe" = {
+      tag = "tag:${local.ts_prefix}-${local.ts_appgroup}-k8s-operator-phoebe",
+      owners = [local.ts_groups["eng"]]
+    }
+    "k8s-phoebe" = {
+      tag = "tag:${local.ts_prefix}-${local.ts_appgroup}-k8s-phoebe",
+      owners = ["tag:${local.ts_prefix}-${local.ts_appgroup}-k8s-operator-phoebe"]
+    }
+    "tsrecorder-phoebe" = {
+      tag = "tag:${local.ts_prefix}-${local.ts_appgroup}-tsrecorder",
+      owners = [
+        local.ts_groups["infra"],
+        local.ts_groups["eng"],
+        "tag:${local.ts_prefix}-${local.ts_appgroup}-k8s-operator-phoebe"
+      ]
+    }
   }
 
   ts_groups = {
@@ -92,11 +108,12 @@ resource "tailscale_acl" "self" {
 
     ssh: [
       for k, v in local.ts_networks : {
-        action: "accept", # todo: check
-        src:    v.allow_from,
-        dst:    [v.tag],
-        users:  ["root", "autogroup:nonroot"],
-        # todo: recorder & enforceRecorder
+        action:          "accept", # todo: check
+        src:             v.allow_from,
+        dst:             [v.tag],
+        users:           ["root", "autogroup:nonroot"],
+        recorder:        [local.ts_tags["tsrecorder-phoebe"].tag],
+        enforceRecorder: true,
       }
     ],
 

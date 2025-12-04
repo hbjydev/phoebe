@@ -67,21 +67,3 @@ spec:
       persistence:
         library:
           existingClaim: immich
-
-    server:
-      controllers:
-        main:
-          containers:
-            main:
-              resources:
-                limits:
-                  amd.com/gpu: 1
-
-    machine-learning:
-      controllers:
-        main:
-          containers:
-            main:
-              resources:
-                limits:
-                  amd.com/gpu: 1

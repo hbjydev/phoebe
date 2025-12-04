@@ -7,5 +7,6 @@ components:
   - ../../components/common
 resources:
   - ./gatus/ks.yaml
-  - ./k8s-monitoring-helm/ks.yaml
-  - ./unpoller/ks.yaml
+  # - ./grafana/ks.yaml
+  # - ./unpoller/ks.yaml
+  # - ./victoria-metrics/ks.yaml  # TODO: Fix this, it doesn't work right atm
