@@ -47,6 +47,9 @@ spec:
             enabled: true
           - name: rook
             enabled: true
+      mon:
+        count: 1
+        allowMultiplePerNode: true
       network:
         provider: host
         addressRanges:
