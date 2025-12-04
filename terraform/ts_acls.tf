@@ -16,6 +16,14 @@ locals {
       tag = "tag:${local.ts_prefix}-${local.ts_clustergroup}-phoebe",
       owners = [local.ts_groups["eng"]]
     },
+    "k8soperator-phoebe" = {
+      tag = "tag:${local.ts_prefix}-${local.ts_appgroup}-k8s-operator-phoebe",
+      owners = [local.ts_groups["eng"]]
+    }
+    "k8s-phoebe" = {
+      tag = "tag:${local.ts_prefix}-${local.ts_appgroup}-k8s-phoebe",
+      owners = [local.tags["k8soperator-phoebe"].tag]
+    }
   }
 
   ts_groups = {
