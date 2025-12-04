@@ -1,7 +1,7 @@
 # vim:ft=yaml
 ---
 clusterName: phoebe
-endpoint: https://10.80.0.8:6443
+endpoint: https://10.70.0.186:6443
 domain: cluster.local
 
 talosVersion: "{{ ENV.TALOS_VERSION }}"
@@ -25,7 +25,7 @@ allowSchedulingOnMasters: true
 nodes:
   - hostname: phoebe-k-ctrl-01
     controlPlane: true
-    ipAddress: 10.70.0.10
+    ipAddress: 10.70.0.186
     installDiskSelector:
       serial: S4EUNZFN539342N # 256gb Samsung 950 EVO Plus
     machineSpec:
@@ -34,28 +34,21 @@ nodes:
     nodeLabels:
       amd.feature.node.kubernetes.io/gpu: 'true'
     networkInterfaces:
-      - interface: eno1
+      - interface: enp3s0
+        dhcp: false
         vlans:
           - # phoebe-v-iot
             vlanId: 20
-            dhcp: true
+            dhcp: false
+            mtu: 1500
           - # phoebe-v-servers
             vlanId: 70
-            addresses:
-              - 10.70.0.10/24
+            dhcp: true
             mtu: 1500
-            routes:
-              - network: 0.0.0.0/0
-                gateway: 10.70.0.1
           - # phoebe-v-vpn
             vlanId: 90
-            dhcp: true
-    userVolumes:
-      - name: local-hostpath
-        provisioning:
-          diskSelector:
-            match: disk.model == "SAMSUNG ..." && !system_disk
-          minSize: 1TB
+            dhcp: false
+            mtu: 1500
 
 patches:
   - '@{{ ENV.TALOS_DIR }}/manifests/global/watchdog.yaml'
