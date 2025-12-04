@@ -61,13 +61,16 @@ spec:
       - "vectors.so"
 
   bootstrap:
-    initdb:
-      database: app
-      owner: app
-      postInitSQL:
-        - CREATE EXTENSION IF NOT EXISTS "vectors";
-        - CREATE EXTENSION IF NOT EXISTS "cube" CASCADE;
-        - CREATE EXTENSION IF NOT EXISTS "earthdistance" CASCADE;
+    recovery:
+      source: source
+
+  externalClusters:
+  - name: source
+    plugin:
+      name: barman-cloud.cloudnative-pg.io
+      parameters:
+        barmanObjectName: immich-pg-barman-os
+        serverName: immich-pg
 
   storage:
     size: 4Gi
