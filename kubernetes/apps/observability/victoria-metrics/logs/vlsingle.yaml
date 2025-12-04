@@ -8,11 +8,11 @@ spec:
 
   storageDataPath: /data
   volumes:
-    - name: data
+    - name: vl-data
       persistentVolumeClaim:
         claimName: victoria-metrics-logs
   volumeMounts:
-    - name: data
+    - name: vl-data
       mountPath: /data
 
   resources:

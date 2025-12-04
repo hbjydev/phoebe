@@ -8,11 +8,11 @@ spec:
 
   storageDataPath: /data
   volumes:
-    - name: data
+    - name: vm-data
       persistentVolumeClaim:
         claimName: victoria-metrics-metrics
   volumeMounts:
-    - name: data
+    - name: vm-data
       mountPath: /data
 
   resources:
