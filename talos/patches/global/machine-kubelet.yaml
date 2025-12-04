@@ -5,6 +5,8 @@ machine:
     node.kubernetes.io/exclude-from-external-load-balancers: ""
 
   kubelet:
+    clusterDNS:
+      - 172.19.0.53
     defaultRuntimeSeccompProfileEnabled: true
     disableManifestsDirectory: true
     extraConfig:
