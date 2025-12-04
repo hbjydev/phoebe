@@ -6,3 +6,4 @@ resources:
   - ./externalsecret.yaml
   - ./objectstore.yaml
   - ./pgcluster.yaml
+  - ./scheduledbackup.yaml
