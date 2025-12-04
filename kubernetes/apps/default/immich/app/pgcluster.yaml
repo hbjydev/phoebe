@@ -66,8 +66,8 @@ spec:
   bootstrap:
     recovery:
       source: source
-      backup:
-        name: 20251120T120001
+      recoveryTarget:
+        targetTime: "2025-11-20 12:00:01+00:00"
 
   externalClusters:
   - name: source
