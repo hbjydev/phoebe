@@ -53,6 +53,7 @@ spec:
               capabilities: {drop: ["ALL"]}
             resources:
               requests:
+                amd.com/gpu: 10m
                 cpu: 100m
                 memory: 2Gi
               limits:
