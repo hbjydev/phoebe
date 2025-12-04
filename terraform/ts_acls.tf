@@ -24,6 +24,14 @@ locals {
       tag = "tag:${local.ts_prefix}-${local.ts_appgroup}-k8s-phoebe",
       owners = ["tag:${local.ts_prefix}-${local.ts_appgroup}-k8s-operator-phoebe"]
     }
+    "tsrecorder-phoebe" = {
+      tag = "tag:${local.ts_prefix}-${local.ts_appgroup}-tsrecorder",
+      owners = [
+        local.ts_groups["infra"],
+        local.ts_groups["eng"],
+        "tag:${local.ts_prefix}-${local.ts_appgroup}-k8s-operator-phoebe"
+      ]
+    }
   }
 
   ts_groups = {
