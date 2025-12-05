@@ -16,3 +16,5 @@ spec:
     isWALArchiver: true
     parameters:
       barmanObjectName: ${PG_NAME:-${APP}-pg}-barman-os
+  monitoring:
+    enablePodMonitor: true
