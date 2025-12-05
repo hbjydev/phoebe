@@ -8,5 +8,6 @@ components:
 resources:
   - ./gatus/ks.yaml
   - ./grafana/ks.yaml
+  - ./kube-prometheus-stack/ks.yaml
   # - ./unpoller/ks.yaml
   # - ./victoria-metrics/ks.yaml  # TODO: Fix this, it doesn't work right atm
