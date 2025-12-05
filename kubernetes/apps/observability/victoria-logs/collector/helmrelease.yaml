@@ -18,7 +18,7 @@ spec:
       retries: 3
   values:
     remoteWrite:
-      - url: http://victoria-logs-victoria-logs-single-server:9428
+      - url: http://victoria-logs-server:9428
         ignoreFields:
           - kubernetes.container_id
           - kubernetes.pod_annotations*
