@@ -19,6 +19,8 @@ spec:
   values:
     server:
       retentionPeriod: 7d
+      serviceMonitor:
+        enabled: true
       persistentVolume:
         existingClaim: "victoria-logs"
       route:
@@ -29,3 +31,7 @@ spec:
           - name: internal
             namespace: network
             sectionName: https
+    dashboards:
+      enabled: true
+      grafanaOperator:
+        enabled: true
