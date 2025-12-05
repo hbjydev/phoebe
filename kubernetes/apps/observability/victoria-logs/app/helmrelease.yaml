@@ -22,7 +22,9 @@ spec:
       serviceMonitor:
         enabled: true
       persistentVolume:
-        existingClaim: "victoria-logs"
+        enabled: true
+        storageClassName: ceph-block
+        size: 20Gi
       route:
         enabled: true
         hostnames:
@@ -31,11 +33,17 @@ spec:
           - name: internal
             namespace: network
             sectionName: https
+        extraRules:
+          - filters:
+              - type: RequestRedirect
+                requestRedirect:
+                  path:
+                    type: ReplaceFullPath
+                    replaceFullPath: /select/vmui/
+                  statusCode: 302
+            matches:
+              - path:
+                  type: Exact
+                  value: /
     dashboards:
       enabled: true
-      grafanaOperator:
-        enabled: true
-        spec:
-          instanceSelector:
-            matchLabels:
-              grafana.internal/instance: grafana
