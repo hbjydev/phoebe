@@ -26,6 +26,16 @@ spec:
           - kubernetes.namespace_labels*
           - kubernetes.pod_labels*
 
+    timeField:
+      - time
+      - ts
+      - timestamp
+
+    msgField:
+      - message.msg
+      - message
+      - msg
+
     resources:
       limits:
         cpu: 1000m
