@@ -35,6 +35,7 @@ spec:
       enabled: true
       grafanaOperator:
         enabled: true
-        instanceSelector:
-          matchLabels:
-            grafana.internal/instance: grafana
+        spec:
+          instanceSelector:
+            matchLabels:
+              grafana.internal/instance: grafana
