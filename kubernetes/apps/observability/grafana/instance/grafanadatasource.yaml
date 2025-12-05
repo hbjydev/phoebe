@@ -46,4 +46,4 @@ spec:
     name: VictoriaLogs
     access: proxy
     isDefault: true
-    url: http://victoria-logs-victoria-logs-single-server:9428
+    url: http://victoria-logs-server:9428
