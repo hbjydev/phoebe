@@ -1,0 +1,43 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: starr-pg-radarr
+spec:
+  name: radarr
+  owner: app
+  cluster:
+    name: starr-pg
+
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: starr-pg-sonarr
+spec:
+  name: sonarr
+  owner: app
+  cluster:
+    name: starr-pg
+
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: starr-pg-prowlarr
+spec:
+  name: prowlarr
+  owner: app
+  cluster:
+    name: starr-pg
+
+---
+apiversion: postgresql.cnpg.io/v1
+kind: database
+metadata:
+  name: starr-pg-lidarr
+spec:
+  name: lidarr
+  owner: app
+  cluster:
+    name: starr-pg
