@@ -35,6 +35,25 @@ spec:
               PROWLARR__LOG__LEVEL: info
               PROWLARR__SERVER__PORT: &port 80
               PROWLARR__UPDATE__BRANCH: develop
+
+              PROWLARR__POSTGRES__MAINDB: prowlarr
+              PROWLARR__POSTGRES__HOST:
+                secretKeyRef:
+                  name: starr-pg-app
+                  key: host
+              PROWLARR__POSTGRES__PORT:
+                secretKeyRef:
+                  name: starr-pg-app
+                  key: port
+              PROWLARR__POSTGRES__USER:
+                secretKeyRef:
+                  name: starr-pg-app
+                  key: username
+              PROWLARR__POSTGRES__PASSWORD:
+                secretKeyRef:
+                  name: starr-pg-app
+                  key: password
+
               TZ: Europe/London
             envFrom:
               - secretRef:
