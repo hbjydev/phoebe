@@ -35,6 +35,25 @@ spec:
               RADARR__LOG__LEVEL: info
               RADARR__SERVER__PORT: &port 80
               RADARR__UPDATE__BRANCH: develop
+
+              RADARR__POSTGRES__MAINDB: radarr
+              RADARR__POSTGRES__HOST:
+                secretKeyRef:
+                  name: starr-pg-app
+                  key: host
+              RADARR__POSTGRES__PORT:
+                secretKeyRef:
+                  name: starr-pg-app
+                  key: port
+              RADARR__POSTGRES__USER:
+                secretKeyRef:
+                  name: starr-pg-app
+                  key: username
+              RADARR__POSTGRES__PASSWORD:
+                secretKeyRef:
+                  name: starr-pg-app
+                  key: password
+
               TZ: Europe/London
             envFrom:
               - secretRef:
