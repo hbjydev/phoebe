@@ -32,8 +32,8 @@ spec:
     name: starr-pg
 
 ---
-apiversion: postgresql.cnpg.io/v1
-kind: database
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
 metadata:
   name: starr-pg-lidarr
 spec:
