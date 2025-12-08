@@ -11,6 +11,8 @@ spec:
   storage:
     size: ${PG_SIZE:-5Gi}
     storageClass: ${PG_STORAGECLASS:-ceph-block}
+  backup:
+    retentionPolicy: ${PG_RETENTION_POLICY:-7d}
   plugins:
   - name: barman-cloud.cloudnative-pg.io
     isWALArchiver: true
