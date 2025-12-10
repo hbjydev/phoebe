@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: ghcr.io/pennydreadful/bookshelf
-              tag: hardcover-v0.4.20.91@sha256:eb2cb4a291e5f755e76d68c2be7e1da11f23724d6b9a5934b00388bd2e4212c6
+              tag: hardcover-v0.4.19.82@sha256:9ccb2e9a5c446f5ec6bdcfa85a91dd7333314e1f46b8d37aeb052d3eb7acf449
             env:
               READARR__APP__INSTANCENAME: Bookshelf
               READARR__APP__THEME: dark
