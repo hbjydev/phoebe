@@ -87,13 +87,8 @@ spec:
               - identifier: booklore
                 port: *port
     persistence:
-      data:
+      app-data:
         existingClaim: '{{ .Release.Name }}'
-        globalMounts:
-          - path: /data
-            subPath: appdata
-          - path: /bookdrop
-            subPath: bookdrop
       books:
         type: nfs
         server: ds.hayden.moe
@@ -101,5 +96,12 @@ spec:
         globalMounts:
           - path: /books
             subPath: books
+      bookdrop:
+        type: nfs
+        server: ds.hayden.moe
+        path: /volume1/media
+        globalMounts:
+          - path: /bookdrop
+            subPath: bookdrop
       tmp:
         type: emptyDir
