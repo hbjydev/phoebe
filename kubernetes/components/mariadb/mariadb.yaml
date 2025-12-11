@@ -1,0 +1,23 @@
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: MariaDB
+metadata:
+  name: ${MARIADB_NAME:-${APP}-mariadb}
+spec:
+  replicas: 1
+  rootPasswordSecretKeyRef:
+    name: ${MARIADB_NAME:-${APP}-mariadb}
+    key: password
+  port: ${MARIADB_PORT:-3306}
+  storage:
+    size: ${MARIADB_SIZE:-5Gi}
+    storageClass: ${MARIADB_STORAGECLASS:-ceph-block}
+  metrics:
+    enabled: true
+  resources:
+    requests:
+      cpu: ${MARIADB_REQ_CPU:-500m}
+      memory: ${MARIADB_REQ_CPU:-1Gi}
+    limits:
+      cpu: ${MARIADB_LIM_CPU:-1000m}
+      memory: ${MARIADB_LIM_CPU:-1Gi}
