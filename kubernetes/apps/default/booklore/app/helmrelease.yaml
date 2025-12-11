@@ -78,6 +78,8 @@ spec:
     persistence:
       app-data:
         existingClaim: '{{ .Release.Name }}'
+        globalMounts:
+          - /app/data
       media:
         type: nfs
         server: ds.hayden.moe
