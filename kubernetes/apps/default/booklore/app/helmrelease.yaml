@@ -31,11 +31,11 @@ spec:
               USER_ID: 1000
               GROUP_ID: 1000
               BOOKLORE_PORT: &port 8080
-              DATABASE_URL: jdbc:mariadb://{{ .Release.Name }}-mariadb:3306/{{ .Release.Name }}
-              DATABASE_USER: '{{ .Release.Name }}'
+              DATABASE_URL: jdbc:mariadb://booklore-mariadb:3306/booklore
+              DATABASE_USER: 'booklore'
               DATABASE_PASSWORD:
                 secretKeyRef:
-                  name: '{{ .Release.Name }}-mariadb'
+                  name: 'booklore-mariadb'
                   key: password
             probes:
               liveness: &probes
@@ -100,6 +100,6 @@ spec:
         path: /volume1/media
         globalMounts:
           - path: /books
-            subPath: /books
+            subPath: books
       tmp:
         type: emptyDir
