@@ -134,6 +134,8 @@ spec:
           - path: /app/config
           - path: /.cache
             subPath: .cache
+          - path: /data/images
+            subPath: .images
       media:
         type: nfs
         server: ds.hayden.moe
