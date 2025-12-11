@@ -13,7 +13,7 @@ spec:
     - ../../../../components/mariadb
   dependsOn:
     - name: mariadb-operator
-      namespace: mariadb-operator
+      namespace: mariadb-system
     - name: rook-ceph-cluster
       namespace: rook-ceph
   interval: 1h
