@@ -1,0 +1,142 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: mediamanager
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      mediamanager:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/maxdorninger/mediamanager/mediamanager
+              tag: 1.10.0@sha256:4771a20bf2ea210e0e31b0c491b71f631dda750c98f5fa62ec517cec11cb1c78
+            env:
+              MEDIAMANAGER_MISC__FRONTEND_URL: https://mediamanager.hayden.moe
+              MEDIAMANAGER_MISC__TV_LIBRARIES: '[{"name": "TV", "path": "/media/tv"}]'
+              MEDIAMANAGER_MISC__MOVIE_LIBRARIES: '[{"name": "Movies", "path": "/media/movies"}]'
+
+              MEDIAMANAGER_AUTH__OPENID_CONNECT__ENABLED: true
+              MEDIAMANAGER_AUTH__OPENID_CONNECT__NAME: hayden.moe SSO
+              MEDIAMANAGER_AUTH__OPENID_CONNECT__CLIENT_ID: mediamanager
+              MEDIAMANAGER_AUTH__OPENID_CONNECT__CONFIGURATION_ENDPOINT: https://id.hayden.moe/realms/haydenmoe/.well-known/openid-configuration
+
+              MEDIAMANAGER_TORRENTS__QBITTORRENT__ENABLED: true
+              MEDIAMANAGER_TORRENTS__QBITTORRENT__HOST: http://qbittorrent
+              MEDIAMANAGER_TORRENTS__QBITTORRENT__PORT: 80
+
+              MEDIAMANAGER_TORRENTS__SABNZBD__ENABLED: true
+              MEDIAMANAGER_TORRENTS__SABNZBD__HOST: http://sabnzbd
+              MEDIAMANAGER_TORRENTS__SABNZBD__PORT: 80
+              MEDIAMANAGER_TORRENTS__SABNZBD__API_KEY:
+                secretKeyRef:
+                  name: sabnzbd-secret
+                  key: SABNZBD__API_KEY
+
+              MEDIAMANAGER_INDEXERS__PROWLARR__ENABLED: true
+              MEDIAMANAGER_INDEXERS__PROWLARR__URL: 'http://prowlarr'
+              MEDIAMANAGER_INDEXERS__PROWLARR__API_KEY:
+                secretKeyRef:
+                  name: prowlarr-secret
+                  key: PROWLARR__AUTH__APIKEY
+
+              MEDIAMANAGER_DATABASE__DBNAME:
+                secretKeyRef:
+                  name: mediamanager-pg-app
+                  key: dbname
+              MEDIAMANAGER_DATABASE__HOST:
+                secretKeyRef:
+                  name: mediamanager-pg-app
+                  key: host
+              MEDIAMANAGER_DATABASE__PORT:
+                secretKeyRef:
+                  name: mediamanager-pg-app
+                  key: port
+              MEDIAMANAGER_DATABASE__USER:
+                secretKeyRef:
+                  name: mediamanager-pg-app
+                  key: username
+              MEDIAMANAGER_DATABASE__PASSWORD:
+                secretKeyRef:
+                  name: mediamanager-pg-app
+                  key: password
+
+              TZ: Europe/London
+            envFrom:
+              - secretRef:
+                  name: mediamanager-secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: &port 8000
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                memory: 1Gi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        controller: mediamanager
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        hostnames: ["{{ .Release.Name }}.hayden.moe"]
+        parentRefs:
+          - name: internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
+    persistence:
+      data:
+        existingClaim: '{{ .Release.Name }}'
+        globalMounts:
+          - path: /app/config
+      media:
+        type: nfs
+        server: ds.hayden.moe
+        path: /volume1/media
+        globalMounts:
+          - path: /media
+      tmp:
+        type: emptyDir
