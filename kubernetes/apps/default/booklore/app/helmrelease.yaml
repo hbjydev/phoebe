@@ -89,18 +89,13 @@ spec:
     persistence:
       app-data:
         existingClaim: '{{ .Release.Name }}'
-      books:
+      media:
         type: nfs
         server: ds.hayden.moe
         path: /volume1/media
         globalMounts:
           - path: /books
             subPath: books
-      bookdrop:
-        type: nfs
-        server: ds.hayden.moe
-        path: /volume1/media
-        globalMounts:
           - path: /bookdrop
             subPath: bookdrop
       tmp:
