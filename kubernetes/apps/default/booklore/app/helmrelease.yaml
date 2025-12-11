@@ -32,7 +32,7 @@ spec:
               GROUP_ID: 1000
               BOOKLORE_PORT: &port 8080
               DATABASE_URL: jdbc:mariadb://{{ .Release.Name }}-mariadb:3306/{{ .Release.Name }}
-              DATABASE_USER: {{ .Release.Name }}
+              DATABASE_USER: '{{ .Release.Name }}'
               DATABASE_PASSWORD:
                 secretKeyRef:
                   name: '{{ .Release.Name }}-mariadb'
