@@ -132,6 +132,8 @@ spec:
         existingClaim: '{{ .Release.Name }}'
         globalMounts:
           - path: /app/config
+          - path: /.cache
+            subPath: .cache
       media:
         type: nfs
         server: ds.hayden.moe
