@@ -5,3 +5,6 @@ kind: Component
 resources:
   - ./externalsecret.yaml
   - ./mariadb.yaml
+  - ./user.yaml
+  - ./database.yaml
+  - ./grant.yaml

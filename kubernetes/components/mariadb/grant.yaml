@@ -1,0 +1,15 @@
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Grant
+metadata:
+  name: ${MARIADB_NAME:-${APP}-mariadb}-grant-${MARIADB_USER:-${APP}}-${MARIADB_DB:-${APP}}
+spec:
+  mariaDbRef:
+    name: ${MARIADB_NAME:-${APP}-mariadb}
+  privileges:
+    - "ALL PRIVILEGES"
+  database: ${MARIADB_DB:-${APP}}
+  table: "*"
+  username: ${MARIADB_USER:-${APP}}
+  grantOption: true
+  host: "%"

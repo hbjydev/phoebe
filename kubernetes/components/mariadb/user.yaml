@@ -1,0 +1,15 @@
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: User
+metadata:
+  name: ${MARIADB_NAME:-${APP}-mariadb}-${MARIADB_USER:-${APP}}
+spec:
+  name: ${MARIADB_USER:-${APP}}
+  mariaDbRef:
+    name: ${MARIADB_NAME:-${APP}-mariadb}
+  passwordSecretKeyRef:
+    name: ${MARIADB_NAME:-${APP}-mariadb}
+    key: password
+  maxUserConnections: ${MARIADB_USER_MAX_CONN:-20}
+  host: "%"
+  cleanupPolicy: Delete  

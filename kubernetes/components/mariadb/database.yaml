@@ -1,0 +1,11 @@
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Database
+metadata:
+  name: ${MARIADB_NAME:-${APP}-mariadb}-${MARIADB_DB:-${APP}}
+spec:
+  name: ${MARIADB_DB:-${APP}}
+  mariaDbRef:
+    name: ${MARIADB_NAME:-${APP}-mariadb}
+  characterSet: ${MARIADB_DB_CHARSET:-utf8}
+  collate: ${MARIADB_DB_COLLATE:-utf8_general_ci}

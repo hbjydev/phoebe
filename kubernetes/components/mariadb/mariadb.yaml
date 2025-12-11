@@ -7,7 +7,7 @@ spec:
   replicas: 1
   rootPasswordSecretKeyRef:
     name: ${MARIADB_NAME:-${APP}-mariadb}
-    key: password
+    key: rootPassword
   port: ${MARIADB_PORT:-3306}
   storage:
     size: ${MARIADB_SIZE:-5Gi}
