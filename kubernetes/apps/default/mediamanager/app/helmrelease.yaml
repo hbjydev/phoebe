@@ -28,8 +28,6 @@ spec:
               tag: 1.10.0@sha256:4771a20bf2ea210e0e31b0c491b71f631dda750c98f5fa62ec517cec11cb1c78
             env:
               MEDIAMANAGER_MISC__FRONTEND_URL: https://mediamanager.hayden.moe
-              MEDIAMANAGER_MISC__TV_LIBRARIES: '[{"name": "TV", "path": "/media/tv"}]'
-              MEDIAMANAGER_MISC__MOVIE_LIBRARIES: '[{"name": "Movies", "path": "/media/movies"}]'
 
               MEDIAMANAGER_AUTH__OPENID_CONNECT__ENABLED: true
               MEDIAMANAGER_AUTH__OPENID_CONNECT__NAME: hayden.moe SSO
@@ -141,6 +139,11 @@ spec:
         server: ds.hayden.moe
         path: /volume1/media
         globalMounts:
-          - path: /media
+          - path: /data/tv
+            subPath: tv
+          - path: /data/movies
+            subPath: movies
+          - path: /data/downloads
+            subPath: downloads
       tmp:
         type: emptyDir
