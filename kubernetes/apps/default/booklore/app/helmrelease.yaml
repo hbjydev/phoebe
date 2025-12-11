@@ -50,10 +50,6 @@ spec:
                   timeoutSeconds: 1
                   failureThreshold: 3
               readiness: *probes
-            securityContext:
-              allowPrivilegeEscalation: true
-              readOnlyRootFilesystem: false
-              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 500m
@@ -61,13 +57,6 @@ spec:
               limits:
                 cpu: 1000m
                 memory: 2Gi
-    defaultPodOptions:
-      securityContext:
-        runAsNonRoot: false
-        runAsUser: 0
-        runAsGroup: 0
-        fsGroup: 0
-        fsGroupChangePolicy: OnRootMismatch
     service:
       booklore:
         controller: booklore
