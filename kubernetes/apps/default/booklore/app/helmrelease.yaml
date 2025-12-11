@@ -30,7 +30,7 @@ spec:
               TZ: Europe/London
               USER_ID: 1000
               GROUP_ID: 1000
-              BOOKLORE_PORT: &port 8080
+              BOOKLORE_PORT: &port 5500
               DATABASE_URL: jdbc:mariadb://booklore-mariadb:3306/booklore
               DATABASE_USERNAME: 'booklore'
               DATABASE_PASSWORD:
