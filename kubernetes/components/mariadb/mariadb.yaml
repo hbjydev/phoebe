@@ -11,7 +11,7 @@ spec:
   port: ${MARIADB_PORT:-3306}
   storage:
     size: ${MARIADB_SIZE:-5Gi}
-    storageClass: ${MARIADB_STORAGECLASS:-ceph-block}
+    storageClassName: ${MARIADB_STORAGECLASS:-ceph-block}
   metrics:
     enabled: true
   resources:
