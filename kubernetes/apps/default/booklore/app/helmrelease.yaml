@@ -1,0 +1,105 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: booklore
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      booklore:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          main:
+            image:
+              repository: ghcr.io/booklore-app/booklore
+              tag: v1.13.2@sha256:fe65b1aa151cd2688875866ef16112946554bc9beef36cdb3f51263b066156d4
+            env:
+              TZ: Europe/London
+              USER_ID: 1000
+              GROUP_ID: 1000
+              BOOKLORE_PORT: &port 8080
+              DATABASE_URL: jdbc:mariadb://{{ .Release.Name }}-mariadb:3306/{{ .Release.Name }}
+              DATABASE_USER: {{ .Release.Name }}
+              DATABASE_PASSWORD:
+                secretKeyRef:
+                  name: '{{ .Release.Name }}-mariadb'
+                  key: password
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/v1/version
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 500m
+                memory: 512Mi
+              limits:
+                cpu: 1000m
+                memory: 2Gi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      booklore:
+        controller: booklore
+        ports:
+          http:
+            port: *port
+    route:
+      booklore:
+        hostnames:
+          - '{{ .Release.Name }}.hayden.moe'
+        parentRefs:
+          - name: external
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: booklore
+                port: *port
+    persistence:
+      data:
+        existingClaim: '{{ .Release.Name }}'
+        globalMounts:
+          - path: /data
+            subPath: appdata
+          - path: /bookdrop
+            subPath: bookdrop
+      books:
+        type: nfs
+        server: ds.hayden.moe
+        path: /volume1/media
+        globalMounts:
+          - path: /books
+            subPath: /books
+      tmp:
+        type: emptyDir
