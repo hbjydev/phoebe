@@ -37,6 +37,7 @@ spec:
               READARR__UPDATE__BRANCH: develop
 
               READARR__POSTGRES__MAINDB: bookshelf
+              READARR__POSTGRES__CACHEDB: bookshelf-cache
               READARR__POSTGRES__HOST:
                 secretKeyRef:
                   name: starr-pg-app
@@ -75,7 +76,6 @@ spec:
               # fuck you s6
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
-              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 100m
