@@ -121,6 +121,5 @@ spec:
           - path: /media
       run:
         type: emptyDir
-        medium: memory
       tmp:
         type: emptyDir
