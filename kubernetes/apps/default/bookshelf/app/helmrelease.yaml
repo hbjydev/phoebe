@@ -38,6 +38,7 @@ spec:
 
               READARR__POSTGRES__MAINDB: bookshelf
               READARR__POSTGRES__CACHEDB: bookshelf-cache
+              READARR__POSTGRES__LOGDB: bookshelf-log
               READARR__POSTGRES__HOST:
                 secretKeyRef:
                   name: starr-pg-app

@@ -35,6 +35,17 @@ spec:
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:
+  name: starr-pg-bookshelf-log
+spec:
+  name: bookshelf-log
+  owner: app
+  cluster:
+    name: starr-pg
+
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
   name: starr-pg-sonarr
 spec:
   name: sonarr
