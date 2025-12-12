@@ -8,6 +8,7 @@ components:
 resources:
   - ./atproto-pds/ks.yaml
   - ./booklore/ks.yaml
+  - ./bookshelf/ks.yaml
   - ./home-assistant/ks.yaml
   - ./immich/ks.yaml
   - ./plex/ks.yaml

@@ -13,6 +13,17 @@ spec:
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:
+  name: starr-pg-bookshelf
+spec:
+  name: bookshelf
+  owner: app
+  cluster:
+    name: starr-pg
+
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
   name: starr-pg-sonarr
 spec:
   name: sonarr
