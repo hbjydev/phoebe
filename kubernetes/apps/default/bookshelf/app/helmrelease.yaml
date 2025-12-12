@@ -28,6 +28,7 @@ spec:
               tag: hardcover-v0.4.20.91@sha256:eb2cb4a291e5f755e76d68c2be7e1da11f23724d6b9a5934b00388bd2e4212c6
             env:
               S6_READ_ONLY_ROOT: '1'
+              S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: '1'
               READARR__APP__INSTANCENAME: Bookshelf
               READARR__APP__THEME: dark
               READARR__AUTH__METHOD: External
