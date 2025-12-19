@@ -17,6 +17,10 @@ cluster:
       feature-gates: ImageVolume=true,MutatingAdmissionPolicy=true
       runtime-config: admissionregistration.k8s.io/v1beta1=true
 
+      oidc-issuer-url: https://id.hayden.moe/realms/haydenmoe
+      oidc-username-claim: username
+      oidc-client-id: headlamp
+
   controllerManager:
     extraArgs:
       bind-address: 0.0.0.0
