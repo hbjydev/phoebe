@@ -5,9 +5,9 @@ metadata:
   name: admin-user-clusterrolebinding
 subjects:
   - kind: User
-    name: hayden
+    name: https://id.hayden.moe/realms/haydenmoe#hayden
     apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole
-  name: cluster-admin # Specify the name of the ClusterRole to be bound
+  name: cluster-admin
   apiGroup: rbac.authorization.k8s.io
