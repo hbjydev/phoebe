@@ -17,5 +17,5 @@ never have to think about keeping on top of certificates, they're just...
 handled.
 
 I also have [External Secrets](./external-secrets.md) configured to push the
-current certificate to [Vault](../infrastructure/vault.md) so that things like
-my Unifi controller can use it too.
+current certificate to 1Password so that things like my Unifi controller can use
+it too.

@@ -14,15 +14,6 @@ GCP.
 
 <div class="grid cards" markdown>
 
--   :octicons-codespaces-24:{ .lg .middle } **Virtual Machines**
-
-    ---
-
-    I use UpCloud to provide me with a VM running [OpenBao](../vault.md), which
-    gives me secure secrets management.
-
-    [:octicons-arrow-right-24: Read More](./virtual-machines.md)
-
 -   :octicons-file-directory-24:{ .lg .middle } **Object Storage**
 
     ---

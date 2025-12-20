@@ -55,7 +55,7 @@ components:
 
 This adds three resources:
 
-1. **ExternalSecret** - Fetches S3 credentials from Vault
+1. **ExternalSecret** - Fetches S3 credentials from 1Password
 2. **ReplicationSource** - Configures scheduled backups
 3. **PVC** - Provides cache storage for Restic
 
@@ -152,16 +152,16 @@ spec:
 
 ## Secrets Management
 
-Backup credentials are stored in Vault and fetched via External Secrets:
+Backup credentials are stored in 1Password and fetched via External Secrets:
 
 ```yaml
 spec:
   secretStoreRef:
     kind: ClusterSecretStore
-    name: vault
+    name: 1password
   dataFrom:
     - extract:
-        key: ucos/haydenmoe-volsync-volsync
+        key: strg-ucos-haydenmoe-volsync-volsync
 ```
 
 The secret includes:
