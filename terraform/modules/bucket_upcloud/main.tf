@@ -70,7 +70,7 @@ resource "onepassword_item" "self" {
       label = "restic"
 
       field {
-        label = "password"
+        label = "resticRepoPassword"
         type = "CONCEALED"
         value = random_password.self_restic[0].result
       }
