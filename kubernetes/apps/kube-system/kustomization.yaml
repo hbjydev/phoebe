@@ -12,5 +12,5 @@ resources:
   - ./metrics-server/ks.yaml
   - ./multus/ks.yaml
   - ./snapshot-controller/ks.yaml
-  - ./rbac
+  - ./rbac/ks.yaml
   - ./reloader/ks.yaml
