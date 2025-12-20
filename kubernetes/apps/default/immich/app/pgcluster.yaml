@@ -24,6 +24,7 @@ kind: ObjectStore
 metadata:
   name: immich-pg-barman-os
 spec:
+  retentionPolicy: 7d
   configuration:
     destinationPath: s3://haydenmoe-volsync-postgres/immich-pg
     endpointURL: https://t9ag6.upcloudobjects.com
