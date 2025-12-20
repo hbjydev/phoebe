@@ -3,6 +3,16 @@
 apiVersion: v1
 kind: Secret
 metadata:
+  name: onepassword-secret
+  namespace: external-secrets
+stringData:
+  1password-credentials.json: "op://cluster-phoebe/svc-onepassword/connectCredentialsJson"
+  token: op://cluster-phoebe/svc-onepassword/connectToken
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
   name: sops-age
   namespace: flux-system
 stringData:
