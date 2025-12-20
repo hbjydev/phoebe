@@ -43,4 +43,11 @@ resource "onepassword_item" "self" {
   tags = ["managed-by/terraform"]
   category = "password"
   password = cloudflare_api_token.self.value
+  section {
+    label = "meta"
+    field {
+      label = "zoneId"
+      value = cloudflare_zone.haydenmoe.id
+    }
+  }
 }
