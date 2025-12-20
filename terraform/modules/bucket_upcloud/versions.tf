@@ -9,5 +9,10 @@ terraform {
       source = "hashicorp/vault"
       version = "~> 5.3"
     }
+
+    onepassword = {
+      source = "1Password/onepassword"
+      version = "~> 3.0"
+    }
   }
 }

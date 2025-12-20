@@ -18,6 +18,7 @@ module "bucket_upcloud" {
   storage_endpoint_public  = module.network_upcloud[each.value.network].network_object_storage_public_endpoint
   vault_mount              = vault_mount.phoebe.path
   restic                   = each.value.restic
+  op_vault_id              = var.PHOEBE_VAULT_ID
 }
 
 module "bucket_cloudflare" {
@@ -29,6 +30,8 @@ module "bucket_cloudflare" {
   storage_class = try(each.value.storage_class, "Standard")
   region        = try(each.value.region, "WEUR")
   vault_mount   = vault_mount.phoebe.path
+  restic        = each.value.restic
+  op_vault_id   = var.PHOEBE_VAULT_ID
 
   providers = {
     cloudflare.main = cloudflare

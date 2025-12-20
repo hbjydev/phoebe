@@ -26,6 +26,58 @@ resource "upcloud_managed_object_storage_user_access_key" "self" {
   status       = "Active"
 }
 
+resource "onepassword_item" "self" {
+  vault = var.op_vault_id
+  title = "strg-ucos-${var.name}"
+  tags = ["bucket/upcloud", "managed-by/terraform"]
+  category = "password"
+
+  section {
+    label = "s3"
+
+    field {
+      label = "bucketName"
+      value = upcloud_managed_object_storage_bucket.self.name
+    }
+
+    field {
+      label = "accessKeyId"
+      value = upcloud_managed_object_storage_user_access_key.self.access_key_id
+    }
+
+    field {
+      label = "secretAccessKey"
+      type = "CONCEALED"
+      value = upcloud_managed_object_storage_user_access_key.self.secret_access_key
+    }
+
+    field {
+      label = "endpointPublic"
+      type = "URL"
+      value = "https://${var.storage_endpoint_public}"
+    }
+
+    field {
+      label = "endpointPrivate"
+      type = "URL"
+      value = "https://${var.storage_endpoint_private}"
+    }
+  }
+
+  dynamic "section" {
+    for_each = var.restic ? [1] : []
+    content {
+      label = "restic"
+
+      field {
+        label = "password"
+        type = "CONCEALED"
+        value = random_password.self_restic[0].result
+      }
+    }
+  }
+}
+
 resource "vault_kv_secret_v2" "self_token" {
   mount     = var.vault_mount
   name      = "ucos/${var.name}"
