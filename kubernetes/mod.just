@@ -36,6 +36,12 @@ sync-oci:
     kubectl -n "$ns" annotate --field-manager flux-client-side-apply --overwrite ocirepo "$name" reconcile.fluxcd.io/requestedAt="$(date +%s)"; \
   done
 
+# Sync ExternalSecrets
+sync-es:
+  kubectl get externalsecret --no-headers -A | while read -r ns name _; do \
+    kubectl -n "$ns" annotate --overwrite externalsecret "$name" force-sync="$(date +%s)"; \
+  done
+
 [private]
 render-local-ks dir ks="*":
   flux-local build ks --all-namespaces --path "{{ kubernetes_dir }}/apps/{{ dir }}" {{ if ks != "*" { ks } else { "" } }}
