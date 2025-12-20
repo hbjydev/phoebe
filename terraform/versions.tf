@@ -24,11 +24,6 @@ terraform {
       source  = "grafana/grafana"
       version = "~> 4.0"
     }
-
-    vault = {
-      source = "hashicorp/vault"
-      version = "~> 5.3"
-    }
   }
 }
 
@@ -43,8 +38,4 @@ provider "onepassword" {}
 provider "tailscale" {}
 provider "grafana" {
   alias = "cloud"
-}
-
-provider "vault" {
-  address = "https://vault.hayden.moe"
 }

@@ -19,14 +19,3 @@ pds:
   provider: upcloud
   buckets:
     blobs:
-
-vault:
-  network: dione
-  provider: upcloud
-  tailscale: true
-  instance:
-    enabled: true
-    plan: 1xCPU-2GB
-  buckets:
-    storage: {}
-    backup: {}
