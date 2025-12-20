@@ -7,16 +7,16 @@ metadata:
 spec:
   secretStoreRef:
     kind: ClusterSecretStore
-    name: vault
+    name: onepassword
   target:
     name: "immich-pg-barman"
     template:
       data:
-        ACCESS_KEY_ID: "{{ .access_key_id }}"
-        SECRET_ACCESS_KEY: "{{ .secret_access_key }}"
+        ACCESS_KEY_ID: "{{ .accessKeyId }}"
+        SECRET_ACCESS_KEY: "{{ .secretAccessKey }}"
   dataFrom:
     - extract:
-        key: ucos/haydenmoe-volsync-postgres
+        key: strg-ucos-haydenmoe-volsync-postgres
 
 ---
 apiVersion: barmancloud.cnpg.io/v1
