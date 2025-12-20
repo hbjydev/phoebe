@@ -18,10 +18,6 @@ variable "region" {
   type = string
 }
 
-variable "vault_mount" {
-  type = string
-}
-
 variable "op_vault_id" {
   type = string
 }

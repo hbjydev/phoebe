@@ -77,20 +77,3 @@ resource "onepassword_item" "self" {
     }
   }
 }
-
-resource "vault_kv_secret_v2" "self_token" {
-  mount     = var.vault_mount
-  name      = "ucos/${var.name}"
-  data_json = jsonencode({
-    endpoint          = "https://${var.storage_endpoint_public}"
-    endpoint_private  = "https://${var.storage_endpoint_private}"
-    bucket_name       = "${upcloud_managed_object_storage_bucket.self.name}"
-    access_key_id     = upcloud_managed_object_storage_user_access_key.self.access_key_id
-    secret_access_key = upcloud_managed_object_storage_user_access_key.self.secret_access_key
-    restic_password   = var.restic ? random_password.self_restic[0].result : ""
-  })
-
-  custom_metadata {
-    data = { managed-by = "terraform" }
-  }
-}

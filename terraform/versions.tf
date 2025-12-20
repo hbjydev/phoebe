@@ -44,7 +44,3 @@ provider "tailscale" {}
 provider "grafana" {
   alias = "cloud"
 }
-
-provider "vault" {
-  address = "https://vault.hayden.moe"
-}

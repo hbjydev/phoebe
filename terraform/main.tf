@@ -16,7 +16,6 @@ module "bucket_upcloud" {
   storage_uuid             = module.network_upcloud[each.value.network].network_object_storage_id
   storage_endpoint_private = module.network_upcloud[each.value.network].network_object_storage_private_endpoint
   storage_endpoint_public  = module.network_upcloud[each.value.network].network_object_storage_public_endpoint
-  vault_mount              = vault_mount.phoebe.path
   restic                   = each.value.restic
   op_vault_id              = var.PHOEBE_VAULT_ID
 }
@@ -29,7 +28,6 @@ module "bucket_cloudflare" {
   account_id    = "09c8f0e370aa6c96c9b46741f994d5f5"
   storage_class = try(each.value.storage_class, "Standard")
   region        = try(each.value.region, "WEUR")
-  vault_mount   = vault_mount.phoebe.path
   restic        = each.value.restic
   op_vault_id   = var.PHOEBE_VAULT_ID
 
