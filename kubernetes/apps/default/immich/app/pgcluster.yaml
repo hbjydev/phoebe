@@ -67,7 +67,7 @@ spec:
     enablePodMonitor: true
 
   backup:
-    retentionPolicy: ${PG_RETENTION_POLICY:-7d}
+    retentionPolicy: 7d
 
   storage:
     size: 4Gi
