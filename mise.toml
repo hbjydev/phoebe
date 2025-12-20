@@ -16,6 +16,9 @@ TALOS_VERSION="1.11.5"
 [settings]
 python.uv_venv_auto = true
 
+[plugins]
+krew = "https://github.com/soupglasses/mise-krew"
+
 [tools]
 "aqua:budimanjojo/talhelper" = "3.0.41"
 "aqua:cilium/cilium-cli" = "0.18.9"
@@ -36,3 +39,7 @@ yq = "4.49.2"
 just = "1.43.1"
 "pipx:flux-local" = "8.0.1"
 openbao = "2.4.3"
+"aqua:kubernetes-sigs/krew" = "0.4.5"
+"krew:cnpg" = "v1.28.0"
+"krew:oidc-login" = "v1.35.0"
+"krew:volsync" = "v0.14.0"
