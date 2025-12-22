@@ -1,12 +1,15 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/miiyakumo/sops/main/schema/sops.json
 ---
 creation_rules:
   - path_regex: kubernetes/.+\.sops\.yaml
     encrypted_regex: ^(data|stringData)$
     mac_only_encrypted: true
-    age: age16c45zxayen5nnfzd020wqz75wrca5mhkgdk95d5pwaazwzqed5asc8z4xw
+    age:
+      - age16c45zxayen5nnfzd020wqz75wrca5mhkgdk95d5pwaazwzqed5asc8z4xw
   - path_regex: ansible/inventory/.+\.sops\.yaml
     mac_only_encrypted: true
-    age: age16c45zxayen5nnfzd020wqz75wrca5mhkgdk95d5pwaazwzqed5asc8z4xw
+    age:
+      - age16c45zxayen5nnfzd020wqz75wrca5mhkgdk95d5pwaazwzqed5asc8z4xw
 stores:
   yaml:
     indent: 2

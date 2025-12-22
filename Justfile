@@ -11,6 +11,10 @@ mod terraform "terraform"
 default:
     just -l
 
+# Get Age key from 1Password
+age:
+  op read "op://cluster-phoebe/sops/SOPS_PRIVATE_KEY" > {{ justfile_directory() / "age.key" }}
+
 [private]
 log lvl msg *args:
   gum log -t rfc3339 -s -l "{{ lvl }}" "{{ msg }}" "{{ args }}"
