@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: ghcr.io/maxdorninger/mediamanager/mediamanager
-              tag: 1.10.0@sha256:4771a20bf2ea210e0e31b0c491b71f631dda750c98f5fa62ec517cec11cb1c78
+              tag: 1.11.1@sha256:29e31ee1a0dd11d93174dd393a913eedf5a96befbc05e9a3c8c50f003b2ad0d1
             env:
               MEDIAMANAGER_MISC__FRONTEND_URL: https://mediamanager.hayden.moe
 
