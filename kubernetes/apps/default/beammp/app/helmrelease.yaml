@@ -62,8 +62,9 @@ spec:
       data:
         type: nfs
         server: ds.hayden.moe
-        path: /volume1/media/beammp
+        path: /volume1/media
         globalMounts:
           - path: /data
+            subPath: beammp
       tmp:
         type: emptyDir
