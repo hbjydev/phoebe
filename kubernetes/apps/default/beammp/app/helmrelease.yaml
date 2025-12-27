@@ -22,7 +22,7 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
-          pds:
+          beammp:
             image:
               repository: mbentley/beammp-server
               tag: 3.9.0
@@ -43,24 +43,20 @@ spec:
               limits:
                 memory: 2Gi
     defaultPodOptions:
+      annotations:
+        k8s.v1.cni.cncf.io/networks: |-
+          [{
+            "name": "iot",
+            "namespace": "kube-system",
+            "ips": ["192.168.20.25/24"],
+            "mac": "c6:07:27:af:fb:54"
+          }]
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
-    service:
-      beammp:
-        controller: beammp
-        type: LoadBalancer
-        ports:
-          game-tcp:
-            port: 30814
-            protocol: TCP
-          game-udp:
-            port: 30815
-            targetPort: 30814
-            protocol: UDP
 
     persistence:
       data:
