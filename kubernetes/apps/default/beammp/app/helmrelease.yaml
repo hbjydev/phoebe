@@ -54,7 +54,7 @@ spec:
         controller: beammp
         type: LoadBalancer
         ports:
-          http:
+          game:
             port: 30814
 
     persistence:
