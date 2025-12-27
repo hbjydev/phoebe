@@ -24,13 +24,10 @@ spec:
         containers:
           beammp:
             image:
-              repository: rouhim/beammp-server
-              tag: latest@sha256:e44d41d8f5d026c79275f8fd9706b6860ad6b9d989e89566195f49734748e93f
+              repository: mbentley/beammp-server
+              tag: 3.9.0
             env:
               BEAMMP_NAME: Phoebe | Smeg
-              BEAMMP_MAX_CARS: 1
-              BEAMMP_MAX_PLAYERS: 8
-              BEAMMP_MAP: /levels/italy/info.json
               TZ: Europe/London
             envFrom:
               - secretRef:
@@ -63,6 +60,10 @@ spec:
 
     persistence:
       data:
-        existingClaim: beammp
+        type: nfs
+        server: ds.hayden.moe
+        path: /volume1/media/beammp
+        globalMounts:
+          - path: /data
       tmp:
         type: emptyDir
