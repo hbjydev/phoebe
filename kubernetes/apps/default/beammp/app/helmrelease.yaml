@@ -54,8 +54,13 @@ spec:
         controller: beammp
         type: LoadBalancer
         ports:
-          game:
+          game-tcp:
             port: 30814
+            protocol: TCP
+          game-udp:
+            port: 30815
+            targetPort: 30814
+            protocol: UDP
 
     persistence:
       data:
