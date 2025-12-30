@@ -15,7 +15,6 @@ resources:
   - ./jellyseerr/ks.yaml
   - ./keycloak/ks.yaml
   - ./lidarr/ks.yaml
-  - ./mediamanager/ks.yaml
   - ./paperless/ks.yaml
   - ./prowlarr/ks.yaml
   - ./qbittorrent/ks.yaml
