@@ -40,7 +40,7 @@ jobs:
       VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
       K8SSERVICEACCOUNT_KEY: ${{ secrets.K8SSERVICEACCOUNT_KEY }}
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
       - uses: jdx/mise-action@146a28175021df8ca24f8ee1828cc2a60f980bd5 # v3 
 
       - name: Initialize Terraform
