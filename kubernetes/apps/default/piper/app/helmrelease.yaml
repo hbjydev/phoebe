@@ -1,0 +1,104 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: piper
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      piper:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          pds:
+            image:
+              repository: ghcr.io/teal-fm/piper
+              tag: main@sha256:e4c961653b7509a984a2fd188ac2a21b1120f2b55e98524bef7e760eaa8da9b4
+            env:
+              SERVER_HOST: 0.0.0.0
+              SERVER_PORT: &port 8080
+              SERVER_ROOT_URL: https://piper.hayden.moe
+
+              CALLBACK_SPOTIFY: https://piper.hayden.moe/callback/spotify
+              SPOTIFY_AUTH_URL: https://accounts.spotify.com/authorize
+              SPOTIFY_TOKEN_URL: https://accounts.spotify.com/api/token
+              SPOTIFY_SCOPES: user-read-currently-playing user-read-email
+
+              ATPROTO_CLIENT_ID: https://piper.hayden.moe/oauth-client-metadata.json
+              ATPROTO_METADATA_URL: https://piper.hayden.moe/oauth-client-metadata.json
+              ATPROTO_CALLBACK_URL: https://piper.hayden.moe/callback/atproto
+
+              TRACKER_INTERVAL: 30
+
+              ALLOWED_DIDS: did:plc:puvaym5ytsvejx3rwjrnxhvb
+
+              DB_PATH: /db/piper.db
+              TZ: Europe/London
+            envFrom:
+              - secretRef:
+                  name: piper-secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /xrpc/_health
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                memory: 2Gi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      piper:
+        controller: piper
+        ports:
+          http:
+            port: *port
+    route:
+      piper:
+        hostnames:
+          - piper.hayden.moe
+        parentRefs:
+          - name: external
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: piper
+                port: *port
+    persistence:
+      data:
+        existingClaim: piper
+      tmp:
+        type: emptyDir
