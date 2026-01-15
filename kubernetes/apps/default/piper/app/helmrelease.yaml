@@ -73,6 +73,11 @@ spec:
               limits:
                 memory: 2Gi
     defaultPodOptions:
+      hostAliases:
+        - ip: "193.28.39.254"
+          hostnames:
+            - pds.hayden.moe
+
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
