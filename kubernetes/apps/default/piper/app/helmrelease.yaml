@@ -44,7 +44,7 @@ spec:
 
               ALLOWED_DIDS: did:plc:puvaym5ytsvejx3rwjrnxhvb
 
-              DB_PATH: /db/piper.db
+              DB_PATH: /data/piper.db
               TZ: Europe/London
             envFrom:
               - secretRef:
