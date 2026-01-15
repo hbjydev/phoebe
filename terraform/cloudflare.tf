@@ -31,7 +31,8 @@ resource "cloudflare_zone" "roostmoe" {
   name = "roost.moe"
 }
 
-resource "cloudflare_api_token" "self" {
+resource "cloudflare_account_token" "self" {
+  account_id = var.CLOUDFLARE_ACCOUNT_ID
   name = "tok-phoebe-external-dns"
 
   policies = [{
@@ -55,8 +56,12 @@ resource "onepassword_item" "self" {
   section {
     label = "meta"
     field {
-      label = "zoneId"
+      label = "haydenmoeZoneId"
       value = cloudflare_zone.haydenmoe.id
+    }
+    field {
+      label = "roostmoeZoneId"
+      value = cloudflare_zone.roostmoe.id
     }
   }
 }
