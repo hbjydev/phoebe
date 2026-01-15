@@ -93,7 +93,7 @@ spec:
     route:
       piper:
         hostnames:
-          - piper.hayden.moe
+          - piper.roost.moe
         parentRefs:
           - name: external
             namespace: network

@@ -23,6 +23,14 @@ resource "cloudflare_zone" "haydenmoe" {
   name = "hayden.moe"
 }
 
+resource "cloudflare_zone" "roostmoe" {
+  account = {
+    id = var.CLOUDFLARE_ACCOUNT_ID
+  }
+
+  name = "roost.moe"
+}
+
 resource "cloudflare_api_token" "self" {
   name = "tok-phoebe-external-dns"
 
@@ -30,6 +38,7 @@ resource "cloudflare_api_token" "self" {
     effect = "allow"
     resources = jsonencode({
       "com.cloudflare.api.account.zone.${cloudflare_zone.haydenmoe.id}" = "*"
+      "com.cloudflare.api.account.zone.${cloudflare_zone.roostmoe.id}" = "*"
     })
     permission_groups = local.cf_api_perms
   }]

@@ -57,7 +57,7 @@ spec:
     sources: ["crd", "gateway-httproute"]
     txtOwnerId: default
     txtPrefix: k8s.
-    domainFilters: ["hayden.moe"]
+    domainFilters: ["hayden.moe", "roost.moe"]
     serviceMonitor:
       enabled: true
     podAnnotations:

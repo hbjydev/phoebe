@@ -63,7 +63,7 @@ spec:
     sources: ["gateway-httproute", "service"]
     txtOwnerId: main
     txtPrefix: k8s.phoebe.
-    domainFilters: ["hayden.moe"]
+    domainFilters: ["hayden.moe", "roost.moe"]
     serviceMonitor:
       enabled: true
     podAnnotations:
