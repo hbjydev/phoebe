@@ -1,10 +1,11 @@
-data "cloudflare_api_token_permission_groups_list" "self" {
+data "cloudflare_account_api_token_permission_groups_list" "self" {
+  account_id = var.CLOUDFLARE_ACCOUNT_ID
   provider = cloudflare.tokens
 }
 
 locals {
   cf_api_perms = [
-    for x in data.cloudflare_api_token_permission_groups_list.self.result : {
+    for x in data.cloudflare_account_api_token_permission_groups_list.self.result : {
       id = x.id
     }
     if contains([
@@ -35,14 +36,16 @@ resource "cloudflare_account_token" "self" {
   account_id = var.CLOUDFLARE_ACCOUNT_ID
   name = "tok-phoebe-external-dns"
 
-  policies = [{
-    effect = "allow"
-    resources = jsonencode({
-      "com.cloudflare.api.account.zone.${cloudflare_zone.haydenmoe.id}" = "*"
-      "com.cloudflare.api.account.zone.${cloudflare_zone.roostmoe.id}" = "*"
-    })
-    permission_groups = local.cf_api_perms
-  }]
+  policies = [
+    {
+      effect = "allow"
+      resources = jsonencode({
+        "com.cloudflare.api.account.zone.${cloudflare_zone.haydenmoe.id}" = "*"
+        "com.cloudflare.api.account.zone.${cloudflare_zone.roostmoe.id}" = "*"
+      })
+      permission_groups = local.cf_api_perms
+    }
+  ]
 
   provider = cloudflare.tokens
 }
@@ -52,7 +55,7 @@ resource "onepassword_item" "self" {
   title = "svc-cloudflare"
   tags = ["managed-by/terraform"]
   category = "password"
-  password = cloudflare_api_token.self.value
+  password = cloudflare_account_token.self.value
   section {
     label = "meta"
     field {

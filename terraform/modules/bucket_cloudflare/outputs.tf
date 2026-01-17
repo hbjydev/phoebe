@@ -7,15 +7,15 @@ output "cf_r2_bucket_location" {
 }
 
 output "cf_r2_bucket_token" {
-  value = cloudflare_api_token.self.value
+  value = cloudflare_account_token.self.value
   sensitive = true
 }
 
 output "cf_r2_bucket_token_id" {
-  value = cloudflare_api_token.self.id
+  value = cloudflare_account_token.self.id
 }
 
 output "cf_r2_bucket_token_secret_access_key" {
-  value = sha256(cloudflare_api_token.self.value)
+  value = sha256(cloudflare_account_token.self.value)
   sensitive = true
 }

@@ -12,7 +12,8 @@ resource "cloudflare_r2_bucket" "self" {
   provider = cloudflare.main
 }
 
-resource "cloudflare_api_token" "self" {
+resource "cloudflare_account_token" "self" {
+  account_id = var.account_id
   name = "R2-${var.name}-RW"
 
   policies = [{
@@ -42,13 +43,13 @@ resource "onepassword_item" "self" {
 
     field {
       label = "accessKeyId"
-      value = cloudflare_api_token.self.id
+      value = cloudflare_account_token.self.id
     }
 
     field {
       label = "secretAccessKey"
       type = "CONCEALED"
-      value = sha256(cloudflare_api_token.self.value)
+      value = sha256(cloudflare_account_token.self.value)
     }
 
     field {
