@@ -17,3 +17,23 @@ spec:
       backendRefs:
         - name: signoz
           port: 8080
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: signoz-otel
+spec:
+  hostnames: ["otel.hayden.moe"]
+  parentRefs:
+    - name: internal
+      namespace: network
+      sectionName: https
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: signoz-otel-collector
+          port: 4318
