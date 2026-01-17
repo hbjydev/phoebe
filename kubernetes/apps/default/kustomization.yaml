@@ -16,7 +16,6 @@ resources:
   - ./keycloak/ks.yaml
   - ./lidarr/ks.yaml
   - ./paperless/ks.yaml
-  - ./piper/ks.yaml
   - ./prowlarr/ks.yaml
   - ./qbittorrent/ks.yaml
   - ./qui/ks.yaml

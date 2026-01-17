@@ -25,17 +25,3 @@ spec:
     kind: ClusterIssuer
   commonName: pds.hayden.moe
   dnsNames: ["pds.hayden.moe", "*.pds.hayden.moe"]
-
----
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cert-manager.io/certificate_v1.json
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: roost-moe
-spec:
-  secretName: roost-moe-tls
-  issuerRef:
-    name: letsencrypt-production
-    kind: ClusterIssuer
-  commonName: roost.moe
-  dnsNames: ["roost.moe", "*.roost.moe"]

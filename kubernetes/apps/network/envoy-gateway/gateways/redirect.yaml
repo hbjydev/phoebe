@@ -14,13 +14,6 @@ spec:
     - name: external
       namespace: kube-system
       sectionName: http
-
-    - name: internal
-      namespace: kube-system
-      sectionName: roost-http
-    - name: external
-      namespace: kube-system
-      sectionName: roost-http
   rules:
     - filters:
         - requestRedirect:
