@@ -71,7 +71,7 @@ spec:
     retentionPolicy: 7d
 
   storage:
-    size: 4Gi
+    size: 6Gi
     storageClass: ceph-block
 
   plugins:
