@@ -22,6 +22,7 @@ spec:
     substitute:
       APP: *app
       PG_NAME: starr-pg
+      PG_SIZE: 10Gi
   prune: false
   retryInterval: 2m
   sourceRef:
