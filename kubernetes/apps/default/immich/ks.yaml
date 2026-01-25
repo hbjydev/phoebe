@@ -23,6 +23,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 32Gi
+      PG_SIZE: 10Gi
   prune: true
   retryInterval: 2m
   sourceRef:
