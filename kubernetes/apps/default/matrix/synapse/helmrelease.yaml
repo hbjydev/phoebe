@@ -1,0 +1,38 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: matrix-synapse
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: matrix-synapse
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    serverName: hayden.moe
+    wellKnownDelegation:
+      enabled: false
+    synapse:
+      ingress:
+        host: matrix.hayden.moe
+    elementAdmin:
+      ingress:
+        host: element-admin.hayden.moe
+    matrixRTC:
+      ingress:
+        host: mrtc.hayden.moe
+    matrixAuthenticationService:
+      ingress:
+        host: mas.hayden.moe
+    elementWeb:
+      ingress:
+        host: element.hayden.moe
+      additional:
+        extra-config.json: '{"default_theme": "dark"}'
