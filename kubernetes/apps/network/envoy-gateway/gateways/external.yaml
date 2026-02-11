@@ -33,3 +33,14 @@ spec:
             name: hayden-moe-tls
           - kind: Secret
             name: pds-hayden-moe-tls
+    - name: matrix
+      protocol: HTTPS
+      port: 8448
+      hostname: "*.hayden.moe"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: hayden-moe-tls

@@ -9,6 +9,9 @@ spec:
     - name: external
       namespace: network
       sectionName: https
+    - name: external
+      namespace: network
+      sectionName: matrix
   rules:
     - matches:
         - path: {type: PathPrefix, value: /_matrix/client/api/v1/login}
