@@ -25,13 +25,13 @@ spec:
         - path: {type: PathPrefix, value: /_matrix/client/unstable/logout}
       backendRefs:
         - name: matrix-synapse-matrix-authentication-service
-          port: http
+          port: 8080
     - matches:
         - path: {type: PathPrefix, value: /_matrix}
         - path: {type: PathPrefix, value: /_synapse}
       backendRefs:
         - name: matrix-synapse-synapse
-          port: haproxy-synapse
+          port: 8008
 
 ---
 apiVersion: gateway.networking.k8s.io/v1
@@ -49,7 +49,7 @@ spec:
         - path: {type: PathPrefix, value: /}
       backendRefs:
         - name: matrix-synapse-matrix-authentication-service
-          port: http
+          port: 8080
 
 ---
 apiVersion: gateway.networking.k8s.io/v1
@@ -67,12 +67,12 @@ spec:
         - path: {type: PathPrefix, value: /sfu/get}
       backendRefs:
         - name: matrix-synapse-matrix-rtc-authorisation-service
-          port: http
+          port: 8080
     - matches:
         - path: {type: PathPrefix, value: /}
       backendRefs:
         - name: matrix-synapse-matrix-rtc-sfu
-          port: http
+          port: 7880
 
 ---
 apiVersion: gateway.networking.k8s.io/v1
@@ -90,7 +90,7 @@ spec:
         - path: {type: PathPrefix, value: /}
       backendRefs:
         - name: matrix-synapse-element-web
-          port: http
+          port: 8080
 
 ---
 apiVersion: gateway.networking.k8s.io/v1
@@ -108,4 +108,4 @@ spec:
         - path: {type: PathPrefix, value: /}
       backendRefs:
         - name: matrix-synapse-element-admin
-          port: http
+          port: 8080
