@@ -80,7 +80,7 @@ spec:
       app:
         hostnames: ["matrix.hayden.moe"]
         parentRefs:
-          - name: internal
+          - name: external
             namespace: network
             sectionName: https
         rules:
@@ -89,6 +89,6 @@ spec:
                 port: *port
     persistence:
       data:
-        existingClaim: '{{ .Release.Name }}'
+        existingClaim: matrix-tuwunel
       tmp:
         type: emptyDir
