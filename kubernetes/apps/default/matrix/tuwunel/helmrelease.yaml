@@ -1,0 +1,94 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tuwunel
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      tuwunel:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/matrix-construct/tuwunel
+              tag: v1.5.0@sha256:e97954396fe5c584a7f1d26e774ea1ee9cb3c9b462a7a561d9e4bb9308c2598f
+            env:
+              TUWUNEL_SERVER_NAME: matrix.hayden.moe
+              TUWUNEL_DATABASE_PATH: /data
+              TUWUNEL_NEW_USER_DISPLAYNAME_SUFFIX: ""
+              TUWUNEL_ADDRESS: 0.0.0.0
+              TUWUNEL_PORT: &port 8008
+              TUWUNEL_ALLOW_ENCRYPTION: true
+              TUWUNEL_ENCRYPTION_ENABLED_BY_DEFAULT_FOR_ROOM_TYPE: invite
+              TUWUNEL_ALLOW_FEDERATION: true
+              TUWUNEL_ALLOW_PUBLIC_ROOM_DIRECTORY_OVER_FEDERATION: true
+              TZ: Europe/London
+            envFrom:
+              - secretRef:
+                  name: tuwunel-secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ping
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                memory: 1Gi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        controller: tuwunel
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        hostnames: ["matrix.hayden.moe"]
+        parentRefs:
+          - name: internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
+    persistence:
+      data:
+        existingClaim: '{{ .Release.Name }}'
+      tmp:
+        type: emptyDir
