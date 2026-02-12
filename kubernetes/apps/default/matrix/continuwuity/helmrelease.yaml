@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: tuwunel
+  name: continuwuity
 spec:
   interval: 1h
   chartRef:
@@ -18,29 +18,29 @@ spec:
       retries: 3
   values:
     controllers:
-      tuwunel:
+      continuwuity:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
           app:
             image:
-              repository: ghcr.io/matrix-construct/tuwunel
-              tag: v1.5.0@sha256:e97954396fe5c584a7f1d26e774ea1ee9cb3c9b462a7a561d9e4bb9308c2598f
+              repository: forgejo.ellis.link/continuwuation/continuwuity
+              tag: v0.5.4-maxperf@sha256:71874923ccfd0095fb007c9d915d500453cfa4096cf8c75efb7f95c9939b2655
             env:
-              TUWUNEL_SERVER_NAME: hayden.moe
-              TUWUNEL_DATABASE_PATH: /data
-              TUWUNEL_NEW_USER_DISPLAYNAME_SUFFIX: ""
-              TUWUNEL_ADDRESS: 0.0.0.0
-              TUWUNEL_PORT: &port 8008
-              TUWUNEL_ALLOW_REGISTRATION: true
-              TUWUNEL_ALLOW_ENCRYPTION: true
-              TUWUNEL_ENCRYPTION_ENABLED_BY_DEFAULT_FOR_ROOM_TYPE: invite
-              TUWUNEL_ALLOW_FEDERATION: true
-              TUWUNEL_ALLOW_PUBLIC_ROOM_DIRECTORY_OVER_FEDERATION: true
+              CONTINUWUITY_SERVER_NAME: hayden.moe
+              CONTINUWUITY_DATABASE_PATH: /data
+              CONTINUWUITY_NEW_USER_DISPLAYNAME_SUFFIX: ""
+              CONTINUWUITY_ADDRESS: 0.0.0.0
+              CONTINUWUITY_PORT: &port 8008
+              CONTINUWUITY_ALLOW_REGISTRATION: true
+              CONTINUWUITY_ALLOW_ENCRYPTION: true
+              CONTINUWUITY_ENCRYPTION_ENABLED_BY_DEFAULT_FOR_ROOM_TYPE: invite
+              CONTINUWUITY_ALLOW_FEDERATION: true
+              CONTINUWUITY_ALLOW_PUBLIC_ROOM_DIRECTORY_OVER_FEDERATION: true
               TZ: Europe/London
             envFrom:
               - secretRef:
-                  name: tuwunel-secret
+                  name: continuwuity-secret
             probes:
               liveness: &probes
                 enabled: true
@@ -59,10 +59,11 @@ spec:
               capabilities: { drop: ["ALL"] }
             resources:
               requests:
-                cpu: 100m
-                memory: 128Mi
-              limits:
+                cpu: 1000m
                 memory: 1Gi
+              limits:
+                cpu: 4000m
+                memory: 4Gi
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -72,7 +73,7 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     service:
       app:
-        controller: tuwunel
+        controller: continuwuity
         ports:
           http:
             port: *port
@@ -89,6 +90,6 @@ spec:
                 port: *port
     persistence:
       data:
-        existingClaim: matrix-tuwunel
+        existingClaim: matrix-continuwuity
       tmp:
         type: emptyDir
