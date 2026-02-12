@@ -32,6 +32,7 @@ spec:
               TUWUNEL_NEW_USER_DISPLAYNAME_SUFFIX: ""
               TUWUNEL_ADDRESS: 0.0.0.0
               TUWUNEL_PORT: &port 8008
+              TUWUNEL_ALLOW_REGISTRATION: true
               TUWUNEL_ALLOW_ENCRYPTION: true
               TUWUNEL_ENCRYPTION_ENABLED_BY_DEFAULT_FOR_ROOM_TYPE: invite
               TUWUNEL_ALLOW_FEDERATION: true
