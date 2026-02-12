@@ -37,9 +37,6 @@ spec:
               TUWUNEL_ALLOW_FEDERATION: true
               TUWUNEL_ALLOW_PUBLIC_ROOM_DIRECTORY_OVER_FEDERATION: true
               TZ: Europe/London
-            envFrom:
-              - secretRef:
-                  name: tuwunel-secret
             probes:
               liveness: &probes
                 enabled: true
