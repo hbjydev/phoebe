@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: forgejo.ellis.link/continuwuation/continuwuity
-              tag: v0.5.4-maxperf@sha256:71874923ccfd0095fb007c9d915d500453cfa4096cf8c75efb7f95c9939b2655
+              tag: v0.5.5-maxperf
             env:
               CONTINUWUITY_SERVER_NAME: hayden.moe
               CONTINUWUITY_DATABASE_PATH: /data
