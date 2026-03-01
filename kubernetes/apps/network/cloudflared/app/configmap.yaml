@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflared-config
+data:
+  config.yaml: |
+    ingress:
+      - service: https://10.80.0.20
+        originRequest:
+          noTLSVerify: true
