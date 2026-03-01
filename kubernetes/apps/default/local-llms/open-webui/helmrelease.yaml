@@ -28,6 +28,9 @@ spec:
               tag: v0.8.5
             env:
               OLLAMA_BASE_URL: http://ollama
+            envFrom:
+              - secretRef:
+                  name: open-webui-secret
             probes:
               liveness: &probes
                 enabled: true
