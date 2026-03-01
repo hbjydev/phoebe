@@ -82,6 +82,8 @@ spec:
     persistence:
       app-backend-data:
         existingClaim: 'llm-{{ .Release.Name }}'
+        globalMounts:
+          - path: /app/backend/data
       dev-dri:
         type: hostPath
         hostPath: /dev/dri
