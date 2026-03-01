@@ -74,7 +74,7 @@ spec:
         cache:
           enabled: true
           size: 10Gi
-          type: persistentVolume
+          type: persistentVolumeClaim
           accessMode: ReadWriteOnce
           storageClass: ceph-block
         dev-dri:
