@@ -11,3 +11,4 @@ data:
         originRequest:
           noTLSVerify: true
           http2Origin: true
+          httpHostHeader: ""
