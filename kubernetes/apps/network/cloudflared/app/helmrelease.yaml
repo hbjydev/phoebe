@@ -31,7 +31,8 @@ spec:
               - tunnel
               - --no-autoupdate
               - run
-              - --config /etc/cloudflared/config.yaml
+              - --config
+              - /etc/cloudflared/config.yaml
             env:
               TZ: Europe/London
             envFrom:
