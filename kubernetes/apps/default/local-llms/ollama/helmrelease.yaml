@@ -78,7 +78,7 @@ spec:
       data:
         existingClaim: 'llm-{{ .Release.Name }}'
         globalMounts:
-          - path: /root/.ollama
+          - path: /home/ubuntu/.ollama
       dev-dri:
         type: hostPath
         hostPath: /dev/dri
