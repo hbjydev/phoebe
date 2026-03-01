@@ -10,5 +10,4 @@ data:
         service: https://external
         originRequest:
           noTLSVerify: true
-          http2Origin: true
-          httpHostHeader: ""
+          matchSNIToHost: true
