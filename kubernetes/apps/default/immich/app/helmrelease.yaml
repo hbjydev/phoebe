@@ -67,3 +67,25 @@ spec:
       persistence:
         library:
           existingClaim: immich
+
+    machine-learning:
+      enabled: true
+      controllers:
+        main:
+          env:
+            TRANSFORMERS_CACHE: /cache
+            HF_XET_CACHE: /cache/huggingface-xet
+            MPLCONFIGDIR: /cache/matplotlib-config
+      persistence:
+        cache:
+          enabled: true
+          size: 10Gi
+          type: persistentVolume
+          accessMode: ReadWriteOnce
+          storageClass: ceph-block
+        dev-dri:
+          type: hostPath
+          hostPath: /dev/dri
+        dev-kfd:
+          type: hostPath
+          hostPath: /dev/kfd
