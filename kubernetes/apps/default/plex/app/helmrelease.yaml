@@ -114,6 +114,6 @@ spec:
         hostPath: /dev/dri
       dev-kfd:
         type: hostPath
-        hostPath: /dev/dri
+        hostPath: /dev/kfd
       tmp:
         type: emptyDir
