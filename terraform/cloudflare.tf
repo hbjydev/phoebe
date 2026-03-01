@@ -10,6 +10,7 @@ locals {
     }
     if contains([
       "Zone Read",
+      "Zone Edit",
       "DNS Read",
       "DNS Edit",
     ], x.name)
