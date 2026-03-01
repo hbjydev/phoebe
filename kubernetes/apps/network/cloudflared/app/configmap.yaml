@@ -6,6 +6,6 @@ metadata:
 data:
   config.yaml: |
     ingress:
-      - service: https://gateway
+      - service: https://external
         originRequest:
           noTLSVerify: true
