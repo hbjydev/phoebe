@@ -27,7 +27,7 @@ spec:
               repository: ghcr.io/open-webui/open-webui
               tag: v0.8.5
             env:
-              OLLAMA_BASE_URL: http://ollama
+              OLLAMA_BASE_URL: http://ollama:11434
             envFrom:
               - secretRef:
                   name: open-webui-secret
