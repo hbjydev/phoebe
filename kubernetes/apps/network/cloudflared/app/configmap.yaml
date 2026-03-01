@@ -6,6 +6,7 @@ metadata:
 data:
   config.yaml: |
     ingress:
-      - service: https://external
+      - host: *.hayden.moe
+        service: https://external
         originRequest:
           noTLSVerify: true
