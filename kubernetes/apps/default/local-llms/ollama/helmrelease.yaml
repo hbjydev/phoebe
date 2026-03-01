@@ -76,7 +76,7 @@ spec:
                 port: *port
     persistence:
       data:
-        existingClaim: '{{ .Release.Name }}'
+        existingClaim: 'llm-{{ .Release.Name }}'
         globalMounts:
           - path: /root/.ollama
       dev-dri:

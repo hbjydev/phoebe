@@ -78,7 +78,7 @@ spec:
                 port: *port
     persistence:
       app-backend-data:
-        existingClaim: '{{ .Release.Name }}'
+        existingClaim: 'llm-{{ .Release.Name }}'
       dev-dri:
         type: hostPath
         hostPath: /dev/dri
