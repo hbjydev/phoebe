@@ -56,7 +56,6 @@ spec:
                 cpu: 100m
                 memory: 2Gi
               limits:
-                amd.com/gpu: 1
                 memory: 6Gi
     defaultPodOptions:
       securityContext:
@@ -110,5 +109,11 @@ spec:
         path: /volume1/media
         globalMounts:
           - path: /media
+      dev-dri:
+        type: hostPath
+        hostPath: /dev/dri
+      dev-kfd:
+        type: hostPath
+        hostPath: /dev/dri
       tmp:
         type: emptyDir
