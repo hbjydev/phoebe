@@ -92,7 +92,7 @@ spec:
       pds:
         hostnames:
           - pds.hayden.moe
-          - 'hayden.pds.hayden.moe'
+          - '*.pds.hayden.moe'
         parentRefs:
           - name: external
             namespace: network
