@@ -11,4 +11,3 @@ data:
         originRequest:
           http2Origin: true
           originServerName: external.hayden.moe
-      - service: http_status:404
