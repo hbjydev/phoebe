@@ -90,11 +90,9 @@ spec:
             port: *port
     route:
       pds:
-        annotations:
-          external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
         hostnames:
           - pds.hayden.moe
-          - '*.pds.hayden.moe'
+          - 'hayden.pds.hayden.moe'
         parentRefs:
           - name: external
             namespace: network
