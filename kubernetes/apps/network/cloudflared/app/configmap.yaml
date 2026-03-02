@@ -7,7 +7,10 @@ data:
   config.yaml: |
     ingress:
       - host: "*.hayden.moe"
-        service: https://external
         originRequest:
           http2Origin: true
+          keepAliveTimeout: 3600s
           originServerName: external.hayden.moe
+          tcpKeepAlive: 7200s
+        service: https://external
+      - service: http_status:404
