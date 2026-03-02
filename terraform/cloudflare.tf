@@ -44,6 +44,15 @@ resource "cloudflare_zero_trust_tunnel_cloudflared" "cloudflared" {
   tunnel_secret = random_bytes.cloudflare_tunnel_secret.base64
 }
 
+resource "cloudflare_dns_record" "tunnel_haydenmoe" {
+  zone_id = cloudflare_zone.haydenmoe.id
+  name = "external.hayden.moe"
+  ttl = 1
+  type = "CNAME"
+  content = "${cloudflare_zero_trust_tunnel_cloudflared.cloudflared.id}.cfargotunnel.com"
+  proxied = true
+}
+
 resource "cloudflare_account_token" "self" {
   account_id = var.CLOUDFLARE_ACCOUNT_ID
   name = "tok-phoebe-external-dns"
