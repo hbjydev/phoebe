@@ -56,7 +56,7 @@ metadata:
     cnpg.io/skipEmptyWalArchiveCheck: enabled
 spec:
   # At the time of writing, immich is only compatible with pgvecto.rs <0.4. Latest postgres image with that version is 16.5.
-  imageName: ghcr.io/immich-app/postgres:18-vectorchord0.5.3-pgvector0.8.1
+  imageName: ghcr.io/tensorchord/cloudnative-pgvecto.rs:17.5
   instances: 1
 
   postgresql:
@@ -91,7 +91,6 @@ spec:
         parameters:
           barmanObjectName: immich-pg-barman-os
           serverName: immich-pg
-
 
 ---
 apiVersion: postgresql.cnpg.io/v1
