@@ -55,7 +55,8 @@ metadata:
   annotations:
     cnpg.io/skipEmptyWalArchiveCheck: enabled
 spec:
-  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:16.13-1.1.1
+  # At the time of writing, immich is only compatible with pgvecto.rs <0.4. Latest postgres image with that version is 16.5.
+  imageName: ghcr.io/corentingiraud/cnpg-pgvector-vectorchord:16-migration
   instances: 1
 
   postgresql:
