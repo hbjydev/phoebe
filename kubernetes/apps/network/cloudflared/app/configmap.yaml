@@ -6,7 +6,7 @@ metadata:
 data:
   config.yaml: |
     ingress:
-      - host: "*.hayden.moe"
+      - hostname: "*.hayden.moe"
         originRequest:
           http2Origin: true
           keepAliveTimeout: 3600s
