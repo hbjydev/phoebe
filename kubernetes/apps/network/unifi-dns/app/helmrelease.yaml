@@ -62,7 +62,7 @@ spec:
       - --gateway-name=internal
     triggerLoopOnEvent: true
     policy: sync
-    sources: ["crd", "gateway-httproute", "service"]
+    sources: ["gateway-httproute", "service"]
     txtOwnerId: main
     txtPrefix: k8s.phoebe.
     domainFilters: ["hayden.moe"]
