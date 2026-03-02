@@ -47,38 +47,43 @@ spec:
       - name: AWS_RESPONSE_CHECKSUM_VALIDATION
         value: when_required
 
----
-apiVersion: postgresql.cnpg.io/v1
-kind: Cluster
-metadata:
-  name: immich-pg
-  annotations:
-    cnpg.io/skipEmptyWalArchiveCheck: enabled
-spec:
-  # At the time of writing, immich is only compatible with pgvecto.rs <0.4. Latest postgres image with that version is 16.5.
-  imageName: ghcr.io/immich-app/postgres:18-vectorchord0.5.3-pgvector0.8.1
-  instances: 1
-
-  postgresql:
-    enableAlterSystem: true
-    shared_preload_libraries:
-      - "vectors.so"
-
-  monitoring:
-    enablePodMonitor: true
-
-  backup:
-    retentionPolicy: 7d
-
-  storage:
-    size: 6Gi
-    storageClass: ceph-block
-
-  plugins:
-  - name: barman-cloud.cloudnative-pg.io
-    isWALArchiver: true
-    parameters:
-      barmanObjectName: immich-pg-barman-os
+# ---
+# apiVersion: postgresql.cnpg.io/v1
+# kind: Cluster
+# metadata:
+#   name: immich-pg
+#   annotations:
+#     cnpg.io/skipEmptyWalArchiveCheck: enabled
+# spec:
+#   # At the time of writing, immich is only compatible with pgvecto.rs <0.4. Latest postgres image with that version is 16.5.
+#   imageName: ghcr.io/immich-app/postgres:18-vectorchord0.5.3-pgvector0.8.1
+#   instances: 1
+#
+#   postgresql:
+#     enableAlterSystem: true
+#     shared_preload_libraries:
+#       - "vectors.so"
+#
+#   monitoring:
+#     enablePodMonitor: true
+#
+#   backup:
+#     retentionPolicy: 7d
+#
+#   bootstrap:
+#     recovery:
+#       backup:
+#         name: immich-pg-20260302200057
+#
+#   storage:
+#     size: 6Gi
+#     storageClass: ceph-block
+#
+#   plugins:
+#   - name: barman-cloud.cloudnative-pg.io
+#     isWALArchiver: true
+#     parameters:
+#       barmanObjectName: immich-pg-barman-os
 
 ---
 apiVersion: postgresql.cnpg.io/v1
