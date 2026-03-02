@@ -56,7 +56,7 @@ metadata:
     cnpg.io/skipEmptyWalArchiveCheck: enabled
 spec:
   # At the time of writing, immich is only compatible with pgvecto.rs <0.4. Latest postgres image with that version is 16.5.
-  imageName: hbjy/psql-temp:16-1.1.1
+  imageName: hbjy/psql-temp:16-1.1.0
   instances: 1
 
   postgresql:
