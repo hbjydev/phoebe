@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/envoyproxy/gateway/refs/heads/main/charts/gateway-helm/crds/generated/gateway.envoyproxy.io_clienttrafficpolicies.yaml
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/gateway.envoyproxy.io/backendtrafficpolicy_v1alpha1.json
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: BackendTrafficPolicy
 metadata:
@@ -8,12 +8,22 @@ spec:
   targetSelectors:
     - group: gateway.networking.k8s.io
       kind: Gateway
-  compression:
+  compressor:
+    - type: Zstd
     - type: Brotli
     - type: Gzip
+  retry:
+    numRetries: 2
+    retryOn:
+      triggers:
+        - reset
+  tcpKeepalive: {}
+  timeout:
+    http:
+      requestTimeout: 0s
 
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/envoyproxy/gateway/refs/heads/main/charts/gateway-helm/crds/generated/gateway.envoyproxy.io_clienttrafficpolicies.yaml
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/gateway.envoyproxy.io/clienttrafficpolicy_v1alpha1.json
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: ClientTrafficPolicy
 metadata:
@@ -23,9 +33,12 @@ spec:
     xForwardedFor:
       numTrustedHops: 1
   # http3: {}
+  http2:
+    onInvalidMessage: TerminateStream
   targetSelectors:
     - group: gateway.networking.k8s.io
       kind: Gateway
+  tcpKeepalive: {}
   tls:
     minVersion: "1.2"
     alpnProtocols:
