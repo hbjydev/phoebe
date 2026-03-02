@@ -58,8 +58,6 @@ spec:
             port: http-webhook
           initialDelaySeconds: 10
           timeoutSeconds: 5
-    extraArgs:
-      - --gateway-name=internal
     triggerLoopOnEvent: true
     policy: sync
     sources: ["gateway-httproute", "service"]
