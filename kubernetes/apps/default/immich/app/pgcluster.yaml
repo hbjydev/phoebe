@@ -55,7 +55,7 @@ metadata:
   annotations:
     cnpg.io/skipEmptyWalArchiveCheck: enabled
 spec:
-  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:16.13-0.3.0
+  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:16.13-1.1.1
   instances: 1
 
   postgresql:
