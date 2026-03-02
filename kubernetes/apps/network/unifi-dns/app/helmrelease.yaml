@@ -46,10 +46,6 @@ spec:
               secretKeyRef:
                 name: &secret unifi-dns-secret
                 key: UNIFI_API_KEY
-        extraArgs:
-          - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
-          - --crd-source-kind=DNSEndpoint
-          - --gateway-name=internal
         livenessProbe:
           httpGet:
             path: /healthz
@@ -62,6 +58,8 @@ spec:
             port: http-webhook
           initialDelaySeconds: 10
           timeoutSeconds: 5
+    extraArgs:
+      - --gateway-name=internal
     triggerLoopOnEvent: true
     policy: sync
     sources: ["crd", "gateway-httproute", "service"]
