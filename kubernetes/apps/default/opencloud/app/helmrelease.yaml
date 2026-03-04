@@ -1,0 +1,120 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: opencloud
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3 
+  values:
+    controllers:
+      opencloud:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            fsGroup: 2000
+            fsGroupChangePolicy: OnRootMismatch
+            runAsNonRoot: true
+        initContainers:
+          init-config:
+            image:
+              repository: docker.io/opencloudeu/opencloud-rolling
+              tag: 5.1.0@sha256:6229e937e32e5e114ddac81af7e851fb9346a818c58a36b784529d5503530f93
+            command:
+              - /bin/sh
+              - -c
+              - test -f /etc/opencloud/opencloud.yaml || opencloud init --insecure=true
+            envFrom:
+              - secretRef:
+                  name: opencloud-secret
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+        containers:
+          opencloud:
+            image:
+              repository: docker.io/opencloudeu/opencloud-rolling
+              tag: 5.1.0@sha256:6229e937e32e5e114ddac81af7e851fb9346a818c58a36b784529d5503530f93
+            command:
+              - opencloud
+              - server
+            env:
+              PROXY_AUTOPROVISION_ACCOUNTS: false
+              PROXY_ROLE_ASSIGNMENT_DRIVER: oidc
+              OC_OIDC_ISSUER: https://id.hayden.moe/realms/haydenmoe/
+              WEB_OPTION_ACCOUNT_EDIT_LINK_HREF: https://id.hayden.moe/realms/haydenmoe/account
+              PROXY_OIDC_REWRITE_WELLKNOWN: true
+              PROXY_USER_OIDC_CLAIM: sub
+              OC_ADMIN_USER_ID: ""
+              OC_EXCLUDE_RUN_SERVICES: idp,idm
+              SETTINGS_SETUP_DEFAULT_ASSIGNMENTS: "false"
+              GRAPH_ASSIGN_DEFAULT_USER_ROLE: "false"
+              GRAPH_USERNAME_MATCH: none
+              OC_ENABLE_OCM: false
+              OC_INSECURE: false
+              OC_LOG_LEVEL: info
+              OC_URL: https://drive.hayden.moe
+              PROXY_TLS: false
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                memory: 1024Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+
+    service:
+      app:
+        ports:
+          http:
+            port: 9200
+
+    route:
+      app:
+        hostnames:
+          - drive.hayden.moe
+        parentRefs:
+          - name: external
+            namespace: network
+
+    persistence:
+      data:
+        type: nfs
+        server: ds.hayden.moe
+        path: /volume1/media
+        globalMounts:
+          - path: /var/lib/opencloud
+            subPath: opencloud/data
+          - path: /etc/opencloud
+            subPath: opencloud/config
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
