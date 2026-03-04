@@ -16,7 +16,6 @@ resources:
   - ./lidarr/ks.yaml
   - ./local-llms/ks.yaml
   - ./matrix/ks.yaml
-  - ./opencloud/ks.yaml
   - ./paperless/ks.yaml
   - ./plex/ks.yaml
   - ./prowlarr/ks.yaml
