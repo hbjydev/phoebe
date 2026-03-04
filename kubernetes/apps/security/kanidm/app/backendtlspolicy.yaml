@@ -11,4 +11,4 @@ spec:
       name: kanidm
   validation:
     wellKnownCACertificates: System
-    hostname: sso.roost.moe
+    hostname: sso.hayden.moe
