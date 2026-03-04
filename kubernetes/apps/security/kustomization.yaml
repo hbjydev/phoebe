@@ -5,4 +5,5 @@ kind: Kustomization
 namespace: security
 components:
   - ../../components/common
-resources: []
+resources:
+  - ./kanidm/ks.yaml
