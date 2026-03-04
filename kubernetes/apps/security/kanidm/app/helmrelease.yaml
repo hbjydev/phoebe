@@ -53,6 +53,14 @@ spec:
           ldap:
             port: 3636
 
+    route:
+      app:
+        hostnames:
+          - sso.hayden.moe
+        parentRefs:
+          - name: external
+            namespace: network
+
     persistence:
       data:
         existingClaim: kanidm
