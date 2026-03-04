@@ -37,7 +37,7 @@ spec:
           main:
             image:
               # renovate: datasource=github-releases depName=immich-app/immich
-              tag: v2.3.1
+              tag: v2.5.6
             env:
               DB_PASSWORD:
                 valueFrom:
@@ -67,3 +67,19 @@ spec:
       persistence:
         library:
           existingClaim: immich
+
+    machine-learning:
+      enabled: true
+      persistence:
+        cache:
+          enabled: true
+          size: 10Gi
+          type: persistentVolumeClaim
+          accessMode: ReadWriteOnce
+          storageClass: ceph-block
+        dev-dri:
+          type: hostPath
+          hostPath: /dev/dri
+        dev-kfd:
+          type: hostPath
+          hostPath: /dev/kfd
