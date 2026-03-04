@@ -15,8 +15,6 @@ spec:
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
-    - name: amd-device-plugin
-      namespace: kube-system
   interval: 1h
   path: ./kubernetes/apps/default/immich/app
   postBuild:

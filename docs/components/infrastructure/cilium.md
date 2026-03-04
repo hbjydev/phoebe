@@ -46,8 +46,9 @@ network, making the services with `type: LoadBalancer` in my cluster (like
 [Envoy](./envoy)) available to all the clients connected to my Wi-Fi and over
 Ethernet.
 
-This allows me to have two gateways, an internal and external one, which route
-traffic through my cluster, without having to buy dedicated load balancing
-hardware or be working in a cloud environment, or figure out a hacky way to
-route traffic to individual Kubernetes nodes (or, heaven fobid, the pods
-themselves).
+This allows me to have internal gateways which route traffic through my cluster
+without having to buy dedicated load balancing hardware or be working in a cloud
+environment, or figure out a hacky way to route traffic to individual Kubernetes
+nodes (or, heaven forbid, the pods themselves). For external access, I use
+[Cloudflare Tunnels](https://www.cloudflare.com/products/tunnel/) instead of
+port forwarding.
