@@ -12,15 +12,6 @@ spec:
   values:
     controllers:
       dispatcharr:
-        podOptions:
-          annotations:
-            k8s.v1.cni.cncf.io/networks: |-
-              [{
-                "name": "vpn",
-                "namespace": "kube-system",
-                "ips": ["10.90.0.22/24"],
-                "mac": "d6:67:45:f6:29:e9"
-              }]
         containers:
           app:
             image:
@@ -38,6 +29,15 @@ spec:
                 memory: 1Gi
               limits:
                 memory: 3Gi
+    defaultPodOptions:
+      annotations:
+        k8s.v1.cni.cncf.io/networks: |-
+          [{
+            "name": "vpn",
+            "namespace": "kube-system",
+            "ips": ["10.90.0.22/24"],
+            "mac": "d6:67:45:f6:29:e9"
+          }]
 
     service:
       app:
