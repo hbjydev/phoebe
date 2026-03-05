@@ -57,26 +57,6 @@ spec:
             'default_phone_region' => 'GB',
             'maintenance_window_start' => 2,
           ); ?>
-
-    collabora:
-      enabled: true
-      collabora:
-        aliasgroups:
-          - host: https://drive.hayden.moe:443
-        server_name: &collabora_host collabora.hayden.moe
-      route:
-        enabled: true
-        hostnames:
-          - *collabora_host
-        parentRefs:
-          - name: internal
-            namespace: network
-      resources:
-        requests:
-          cpu: 100m
-        limits:
-          memory: 512Mi
-
     httpRoute:
       enabled: true
       hostnames:
@@ -101,12 +81,3 @@ spec:
     redis:
       enabled: true
       architecture: standalone
-    metrics:
-      enabled: true
-      rules:
-        enabled: true
-        labels:
-          prometheus: default
-        defaults:
-          labels:
-            service: nextcloud
