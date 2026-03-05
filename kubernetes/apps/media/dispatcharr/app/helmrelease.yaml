@@ -39,15 +39,12 @@ spec:
 
     persistence:
       data:
-        existingClaim: dispatcharr
-        advancedMounts:
-          dispatcharr:
-            app:
-              - path: /data
-                subPath: data
-            chown-dbdir:
-              - path: /data
-                subPath: data
+        type: nfs
+        server: ds.hayden.moe
+        path: /volume1/media
+        globalMounts:
+          - path: /data
+            subPath: dispatcharr
       dev-dri:
         type: hostPath
         hostPath: /dev/dri
