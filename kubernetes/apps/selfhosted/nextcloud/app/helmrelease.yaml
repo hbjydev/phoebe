@@ -37,7 +37,6 @@ spec:
         runAsGroup: 1022
         runAsNonRoot: true
         runAsUser: 1022
-        fsGroup: 1022
       configs:
         proxy.config.php: |-
           <?php
