@@ -39,10 +39,7 @@ spec:
             "mac": "d6:67:45:f6:29:e9"
           }]
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        fsGroup: 0
         fsGroupChangePolicy: OnRootMismatch
 
     service:
