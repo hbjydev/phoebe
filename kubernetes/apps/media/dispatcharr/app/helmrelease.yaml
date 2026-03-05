@@ -64,7 +64,12 @@ spec:
             chown-dbdir:
               - path: /data
                 subPath: data
-
+      dev-dri:
+        type: hostPath
+        hostPath: /dev/dri
+      dev-kfd:
+        type: hostPath
+        hostPath: /dev/kfd
       tmpfs:
         type: emptyDir
         advancedMounts:
@@ -78,5 +83,5 @@ spec:
         hostnames:
           - dispatcharr.hayden.moe
         parentRefs:
-          - name: envoy-internal
+          - name: internal
             namespace: network
