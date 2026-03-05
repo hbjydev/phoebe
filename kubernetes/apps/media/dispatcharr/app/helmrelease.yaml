@@ -12,22 +12,6 @@ spec:
   values:
     controllers:
       dispatcharr:
-        pod:
-          hostUsers: false
-        initContainers:
-          chown-dbdir:
-            image:
-              repository: docker.io/library/alpine
-              tag: "3.23"
-            command:
-              - /bin/sh
-              - -c
-            args:
-              - |
-                mkdir -p /data/db
-                chmod 0750 /data/db
-            securityContext:
-              runAsUser: 0
         containers:
           app:
             image:
