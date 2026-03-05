@@ -33,11 +33,11 @@ spec:
       host: &host drive.hayden.moe
       mail:
         enabled: false
-      podSecurityContext:
-        fsGroup: 33
-        runAsGroup: 33
+      securityContext:
+        runAsGroup: 1022
         runAsNonRoot: true
-        runAsUser: 33
+        runAsUser: 1022
+        fsGroup: 1022
       configs:
         proxy.config.php: |-
           <?php
