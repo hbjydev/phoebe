@@ -33,6 +33,28 @@ spec:
       host: &host drive.hayden.moe
       mail:
         enabled: false
+      extraInitContainers:
+        - name: create-redis-session-ini
+          image: busybox:1.37-uclibc
+          command:
+            - sh
+            - -c
+            - touch /mnt/redis-session.ini
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: php-confd
+              mountPath: /mnt
+      extraVolumeMounts:
+        - name: php-confd
+          mountPath: /usr/local/etc/php/conf.d/redis-session.ini
+          subPath: redis-session.ini
+      extraVolumes:
+        - name: php-confd
+          emptyDir: {}
       podSecurityContext:
         fsGroup: 33
         runAsGroup: 33
