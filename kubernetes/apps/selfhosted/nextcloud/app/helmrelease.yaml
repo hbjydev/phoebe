@@ -20,7 +20,7 @@ spec:
           runAsNonRoot: true
           runAsUser: 1022
     image:
-      flavor: fpm-alpine
+      flavor: fpm
     nginx:
       enabled: true
     nextcloud:
