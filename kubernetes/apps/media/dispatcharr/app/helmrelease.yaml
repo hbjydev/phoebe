@@ -38,13 +38,20 @@ spec:
             port: *port
 
     persistence:
-      data:
+      media:
         type: nfs
         server: ds.hayden.moe
         path: /volume1/media
         globalMounts:
-          - path: /data
-            subPath: dispatcharr
+          - path: /data/recordings
+            subPath: dispatcharr/recordings
+      data:
+        existingClaim: dispatcharr
+        advancedMounts:
+          dispatcharr:
+            app:
+              - path: /data
+                subPath: data
       dev-dri:
         type: hostPath
         hostPath: /dev/dri
