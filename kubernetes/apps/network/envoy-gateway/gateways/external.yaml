@@ -6,6 +6,10 @@ metadata:
   name: external
   annotations:
     external-dns.alpha.kubernetes.io/target: &hostname external.hayden.moe
+    gatus.home-operations.com/endpoint: |-
+      client:
+        dns-resolver: tcp://1.1.1.1:53
+      group: external
 spec:
   gatewayClassName: envoy
   infrastructure:
@@ -33,14 +37,3 @@ spec:
             name: hayden-moe-tls
           - kind: Secret
             name: pds-hayden-moe-tls
-    - name: matrix
-      protocol: HTTPS
-      port: 8448
-      hostname: "*.hayden.moe"
-      allowedRoutes:
-        namespaces:
-          from: All
-      tls:
-        certificateRefs:
-          - kind: Secret
-            name: hayden-moe-tls

@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflared-config
+data:
+  config.yaml: |
+    ingress:
+      - hostname: "*.hayden.moe"
+        originRequest:
+          http2Origin: true
+          keepAliveTimeout: 3600s
+          originServerName: external.hayden.moe
+          tcpKeepAlive: 7200s
+        service: https://external
+      - service: http_status:404

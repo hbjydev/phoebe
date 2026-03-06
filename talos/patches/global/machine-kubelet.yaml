@@ -13,6 +13,7 @@ machine:
       featureGates:
         ResourceHealthStatus: true
       serializeImagePulls: false
+      maxPods: 256
     nodeIP:
       validSubnets:
         - 10.70.0.0/24

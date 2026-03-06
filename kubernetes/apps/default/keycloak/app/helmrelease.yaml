@@ -115,6 +115,10 @@ spec:
             port: *admin-port
     route:
       sso:
+        annotations:
+          gatus.home-operations.com/endpoint: |
+            url: https://id.hayden.moe/gatus
+            conditions: ["[STATUS] == 404"]
         hostnames:
           - id.hayden.moe
         parentRefs:

@@ -55,20 +55,23 @@ metadata:
   annotations:
     cnpg.io/skipEmptyWalArchiveCheck: enabled
 spec:
-  # At the time of writing, immich is only compatible with pgvecto.rs <0.4. Latest postgres image with that version is 16.5.
-  imageName: ghcr.io/tensorchord/cloudnative-pgvecto.rs:16.5-v0.3.0@sha256:be3f025d79aa1b747817f478e07e71be43236e14d00d8a9eb3914146245035ba
+  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:18.3-1.1.1
   instances: 1
 
   postgresql:
     enableAlterSystem: true
     shared_preload_libraries:
-      - "vectors.so"
+      - "vchord.so"
 
   monitoring:
     enablePodMonitor: true
 
   backup:
     retentionPolicy: 7d
+
+  bootstrap:
+    recovery:
+      source: origin
 
   storage:
     size: 6Gi
@@ -79,6 +82,14 @@ spec:
     isWALArchiver: true
     parameters:
       barmanObjectName: immich-pg-barman-os
+
+  externalClusters:
+    - name: origin
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: immich-pg-barman-os
+          serverName: immich-pg
 
 ---
 apiVersion: postgresql.cnpg.io/v1

@@ -1,0 +1,80 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: dispatcharr
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  interval: 30m
+  values:
+    controllers:
+      dispatcharr:
+        containers:
+          app:
+            image:
+              repository: ghcr.io/dispatcharr/dispatcharr
+              tag: 0.20.2@sha256:116f7f4ffa512afc4d196f2f1649bb5af55a3384097632c33203dd8feb37a91b
+            env:
+              CELERY_BROKER_URL: redis://localhost:6379/0
+              DISPATCHARR_ENV: aio
+              DISPATCHARR_LOG_LEVEL: info
+              DISPATCHARR_PORT: &port 9191
+              REDIS_HOST: localhost
+            resources:
+              requests:
+                cpu: 50m
+                memory: 1Gi
+              limits:
+                memory: 3Gi
+    defaultPodOptions:
+      annotations:
+        k8s.v1.cni.cncf.io/networks: |-
+          [{
+            "name": "vpn",
+            "namespace": "kube-system",
+            "ips": ["10.90.0.22/24"],
+            "mac": "d6:67:45:f6:29:e9"
+          }]
+      securityContext:
+        fsGroup: 0
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      app:
+        ports:
+          http:
+            appProtocol: kubernetes.io/wss
+            port: *port
+
+    persistence:
+      data:
+        existingClaim: dispatcharr
+        advancedMounts:
+          dispatcharr:
+            app:
+              - path: /data
+                subPath: data
+      dev-dri:
+        type: hostPath
+        hostPath: /dev/dri
+      dev-kfd:
+        type: hostPath
+        hostPath: /dev/kfd
+      tmpfs:
+        type: emptyDir
+        advancedMounts:
+          dispatcharr:
+            app:
+              - path: /tmp
+                subPath: tmp
+
+    route:
+      app:
+        hostnames:
+          - dispatcharr.hayden.moe
+        parentRefs:
+          - name: internal
+            namespace: network
