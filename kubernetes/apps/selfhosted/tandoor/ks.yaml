@@ -12,6 +12,7 @@ spec:
   components:
     - ../../../../components/redis
     - ../../../../components/postgres
+    - ../../../../components/volsync
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
