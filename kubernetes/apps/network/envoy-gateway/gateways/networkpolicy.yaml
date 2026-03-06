@@ -10,7 +10,11 @@ spec:
       kind: Gateway
   compressor:
     - type: Brotli
+      brotli: {}
     - type: Gzip
+      gzip: {}
+    - type: Zstd
+      zstd: {}
   retry:
     numRetries: 2
     retryOn:
@@ -19,7 +23,7 @@ spec:
   tcpKeepalive: {}
   timeout:
     http:
-      requestTimeout: 0s
+      requestTimeout: 300s
 
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/gateway.envoyproxy.io/clienttrafficpolicy_v1alpha1.json
@@ -30,14 +34,11 @@ metadata:
 spec:
   clientIPDetection:
     xForwardedFor:
-      numTrustedHops: 1
+      numTrustedHops: 2
   # http3: {}
-  http2:
-    onInvalidMessage: TerminateStream
   targetSelectors:
     - group: gateway.networking.k8s.io
       kind: Gateway
-  tcpKeepalive: {}
   tls:
     minVersion: "1.2"
     alpnProtocols:
