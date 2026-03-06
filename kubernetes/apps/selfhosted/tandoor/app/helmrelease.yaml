@@ -85,7 +85,7 @@ spec:
           - "recipes.hayden.moe"
         parentRefs:
           - name: external
-            namespace: networking
+            namespace: network
             sectionName: https
         rules:
           - backendRefs:
