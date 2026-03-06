@@ -20,6 +20,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      NAMESPACE: *namespace
       VOLSYNC_CAPACITY: 32Gi
       PG_SIZE: 10Gi
   prune: true
