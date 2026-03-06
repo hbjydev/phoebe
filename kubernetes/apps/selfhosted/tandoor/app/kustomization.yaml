@@ -2,11 +2,6 @@
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: selfhosted
-components:
-  - ../../components/common
 resources:
-  - ./immich/ks.yaml
-  - ./nextcloud/ks.yaml
-  - ./paperless/ks.yaml
-  - ./tandoor/ks.yaml
+  - ./externalsecret.yaml
+  - ./helmrelease.yaml

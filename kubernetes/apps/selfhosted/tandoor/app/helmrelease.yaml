@@ -1,0 +1,93 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tandoor
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  values:
+    controllers:
+      tandoor:
+        labels:
+          postgres: "true"
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: 18@sha256:6fa1f331cddd2eb0b6afa7b8d3685c864127a81ab01c3d9400bc3ff5263a51cf
+            envFrom: &envFrom
+              - secretRef:
+                  name: tandoor-secret
+        containers:
+          app:
+            image:
+              repository: ghcr.io/tandoorrecipes/recipes
+              tag: 2.5.3@sha256:7ce6534c9ab0e471fd0f08add67e871b9173fb580c2f86294c3ead025603a3d7
+            env:
+              TZ: ${TIMEZONE}
+              ALLOWED_HOSTS: recipes.hayden.moe
+              COMMENT_PREF_DEFAULT: 1
+              DB_ENGINE: django.db.backends.postgresql_psycopg2
+              DEBUG: 0
+              ENABLE_PDF_EXPORT: 1
+              ENABLE_SIGNUP: 0
+              FRACTION_PREF_DEFAULT: 0
+              GUNICORN_MEDIA: 0
+              SHOPPING_MIN_AUTOSYNC_INTERVAL: 5
+              SOCIAL_PROVIDERS: allauth.socialaccount.providers.openid_connect
+            envFrom: *envFrom
+            securityContext:
+              allowPrivilegeEscalation: true
+              readOnlyRootFilesystem: false
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 1024Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        ports:
+          http:
+            port: 80
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.hayden.moe"
+          - "recipes.hayden.moe"
+        parentRefs:
+          - name: external
+            namespace: networking
+    persistence:
+      data:
+        existingClaim: "{{ .Release.Name }}"
+        advancedMounts:
+          tandoor:
+            app:
+              - path: /opt/recipes/mediafiles
+                subPath: mediafiles
+              - path: /opt/recipes/staticfiles
+                subPath: staticfiles
+      tmpfs:
+        type: emptyDir
+        advancedMounts:
+          tandoor:
+            app:
+              - path: /opt/recipes/cookbook/static/django_js_reverse
+                subPath: django_js_reverse
+              - path: /var/lib/nginx/logs
+                subPath: logs
+              - path: /tmp
+                subPath: tmp
