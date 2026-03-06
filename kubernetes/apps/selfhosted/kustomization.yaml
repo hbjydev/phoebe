@@ -7,3 +7,4 @@ components:
   - ../../components/common
 resources:
   - ./nextcloud/ks.yaml
+  - ./paperless/ks.yaml
