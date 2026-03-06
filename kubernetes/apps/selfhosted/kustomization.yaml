@@ -6,5 +6,6 @@ namespace: selfhosted
 components:
   - ../../components/common
 resources:
+  - ./immich/ks.yaml
   - ./nextcloud/ks.yaml
   - ./paperless/ks.yaml
