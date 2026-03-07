@@ -73,5 +73,9 @@ spec:
             subPath: ksp-mp/plugins
           - path: /LMPServer/Universe
             subPath: ksp-mp/universe
+      logs:
+        type: emptyDir
+        globalMounts:
+          - path: /LMPServer/logs
       tmp:
         type: emptyDir
