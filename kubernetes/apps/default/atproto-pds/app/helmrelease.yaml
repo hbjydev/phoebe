@@ -33,7 +33,7 @@ spec:
               PDS_DATA_DIRECTORY: /data
               PDS_BLOB_UPLOAD_LIMIT: '52428800'
 
-              PDS_EMAIL_FROM_ADDRESS: pds@hayden.moe
+              PDS_EMAIL_FROM_ADDRESS: noreply+atproto@hayden.moe
 
               PDS_DID_PLC_URL: https://plc.directory
               PDS_BSKY_APP_VIEW_URL: https://api.pop1.bsky.app
