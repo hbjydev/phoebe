@@ -43,5 +43,5 @@ spec:
         hostnames:
           - collabora.hayden.moe
         parentRefs:
-          - name: external
+          - name: internal
             namespace: network
