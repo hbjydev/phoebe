@@ -29,4 +29,4 @@ machine:
     hostDNS:
       enabled: true
       resolveMemberNames: true
-      forwardKubeDNSToHost: false
+      forwardKubeDNSToHost: true
