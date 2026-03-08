@@ -45,24 +45,3 @@ spec:
         parentRefs:
           - name: internal
             namespace: network
-        rules:
-          # WebSocket route for Collabora's /cool/ endpoint
-          - matches:
-              - path:
-                  type: PathPrefix
-                  value: /cool/
-                headers:
-                  - type: Exact
-                    name: Upgrade
-                    value: websocket
-            backendRefs:
-              - identifier: app
-                port: 9980
-          # Regular HTTP routes
-          - matches:
-              - path:
-                  type: PathPrefix
-                  value: /
-            backendRefs:
-              - identifier: app
-                port: 9980
