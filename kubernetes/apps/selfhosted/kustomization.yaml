@@ -9,4 +9,5 @@ resources:
   - ./immich/ks.yaml
   - ./nextcloud/ks.yaml
   - ./paperless/ks.yaml
+  - ./smtp-relay/ks.yaml
   - ./tandoor/ks.yaml
