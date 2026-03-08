@@ -19,8 +19,8 @@ spec:
               tag: 25.04.9.2.1@sha256:cfbf62dbed7f3a2bebeb634235c606613813a1857f85111da3a97db316029bba
             env:
               extra_params: --o:ssl.termination=true --o:ssl.enable=false --o:security.capabilities=false --o:logging.level=error
-              aliasgroup1: https://cloud.hayden.moe:443
-              domain: cloud\\.hayden\\.moe
+              aliasgroup1: https://drive.hayden.moe:443
+              domain: drive\\.hayden\\.moe
             resources:
               requests:
                 cpu: 150m
