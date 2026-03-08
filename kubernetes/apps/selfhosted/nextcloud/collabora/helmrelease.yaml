@@ -1,0 +1,47 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: nextcloud-collabora
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  values:
+    controllers:
+      collabora:
+        containers:
+          app:
+            image:
+              repository: collabora/code
+              tag: 25.04.9.2.1@sha256:cfbf62dbed7f3a2bebeb634235c606613813a1857f85111da3a97db316029bba
+            env:
+              extra_params: --o:ssl.termination=true --o:ssl.enable=false --o:security.capabilities=false --o:logging.level=error
+              aliasgroup1: https://cloud.hayden.moe:443
+              domain: cloud\\.hayden\\.moe
+            resources:
+              requests:
+                cpu: 150m
+                memory: 768Mi
+              limits:
+                memory: 2Gi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: [ALL] }
+
+    service:
+      app:
+        ports:
+          http:
+            port: 9980
+
+    route:
+      app:
+        hostnames:
+          - collabora.hayden.moe
+        parentRefs:
+          - name: external
+            namespace: network
