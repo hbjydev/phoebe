@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: ghcr.io/lunamultiplayer/lunamultiplayer/server
-              tag: master@sha256:3c0933c1ad992fed2d981fb377625319800a1fae651dad4bdb195a37672c0bc3
+              tag: master@sha256:e5c181c748fac1aeacf911866cd613139eb7fd18325fe89f7f83312f2c5ce203
             env:
               TZ: Europe/London
             probes:
