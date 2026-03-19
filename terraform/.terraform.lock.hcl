@@ -2,18 +2,24 @@
 # Manual edits may be lost in future updates.
 
 provider "registry.terraform.io/1password/onepassword" {
-  version     = "3.2.1"
+  version     = "3.3.1"
   constraints = "~> 3.0"
   hashes = [
-    "h1:hZrcwOpBicojsJA33Iv5ZvY/3rB4pf9WAuwrRWE4W5k=",
-    "zh:56c142b07295608de4ef2b7915684578b384bc2b47519c6811e93184945cd161",
-    "zh:785b52b0c7055deb249843063327bb25cbc952fb560681d2a84c4e32283a6eae",
-    "zh:8622fa665dabeb753443a5bb8495857e65827c5ac24bc002cfcb15213712b141",
+    "h1:35PCpSNLVubReT1imwfC+FpIP5gQWx+rvG4njkXkZKM=",
+    "h1:GqvBYImDNYNPMi9o3kJTSIJDeEnNO7om46RWA0wjeso=",
+    "h1:Tg8bJ+ATy5pla6ZTn87lb3nIyiTJTgQHJdxOWQjFF9k=",
+    "h1:a8DHdeyXt8YaEngXGEWZC75W27OG742wtw5BmRnhrpI=",
+    "h1:bPFt8A+PWGwEj3wQ3D0GxyrTMmr1piNrwEuPJu7AZTo=",
+    "h1:nThx/0XctUKlAa6aAsSEHZvx/mD1tSxCE6pacSnotxU=",
+    "h1:syh+iS5VPBQTLszL503BOi5rLpL1wGl1IjyYqgpKYIg=",
+    "zh:02d93a7f520ec69ad8944a68dcbf512e2f9920a6696628b8d05e6ad408309f35",
+    "zh:0f91a902da84470af95f0da4dc21127b84e23c856a431ff9ecfe45d9c6775ef0",
+    "zh:161bc55c466214a5d425ba85753d74ed5078212db965f726e6650d2e1524d633",
+    "zh:3de4a9f212e1046016a3ace8816e2cb15cfb7b9579161e468a08b9034d6a5f51",
+    "zh:730105346065ea3d2bd6acc6f5fe36f7b8a2b54c513d20a46bcd51d656e82bb4",
     "zh:890df766e9b839623b1f0437355032a3c006226a6c200cd911e15ee1a9014e9f",
-    "zh:b40068bfcff2b5cccd219852fcb9dc45594cad5df2bca41b1f95473e5d9d0d68",
-    "zh:d2d0191eccb20dbab553d7faabcd6fc34568aa9532264b6ecd71d7211752f21b",
-    "zh:d7073f3d2e84fc6051915c390b7ca580d7cfa8647caa116cf295e9d43dbb2fac",
-    "zh:dae5b257dd8b3ced1318ecf6cb730326deb85b538c46da5d378771281c3621d3",
+    "zh:c29f6025d099bc8f1f96e7bb4cd66c5d07209b4141d2fd7720228cf20c9c8efd",
+    "zh:d8ea431d396986ca6baf033fa9aaccb73d6a9f9b7d42bea7af8dc73b9ef20297",
   ]
 }
 
