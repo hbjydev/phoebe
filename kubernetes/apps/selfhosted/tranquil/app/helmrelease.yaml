@@ -95,7 +95,27 @@ spec:
               - identifier: app
                 port: *port
 
+    configMaps:
+      msmtprc:
+        enabled: true
+        data:
+          msmtprc: |
+            defaults
+
+            account relay
+            host smtp-relay
+            from pds@hayden.moe
+
+            account default: relay
+
     persistence:
+      msmtprc:
+        type: configMap
+        name: '{{ .Release.Name }}-msmtprc'
+        globalMounts:
+          - path: /etc/msmtprc
+            subPath: msmtprc
+
       tmpfs:
         type: emptyDir
         globalMounts:
