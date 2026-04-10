@@ -19,3 +19,9 @@ pds:
   provider: upcloud
   buckets:
     blobs:
+
+tranquil:
+  network: dione
+  provider: upcloud
+  buckets:
+    blobs:
