@@ -11,3 +11,4 @@ resources:
   - ./paperless/ks.yaml
   - ./smtp-relay/ks.yaml
   - ./tandoor/ks.yaml
+  - ./tranquil/ks.yaml
