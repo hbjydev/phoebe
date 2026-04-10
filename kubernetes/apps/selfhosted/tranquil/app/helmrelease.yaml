@@ -57,6 +57,8 @@ spec:
               limits:
                 memory: 1024Mi
     defaultPodOptions:
+      imagePullSecrets:
+        - name: atcr-secret
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
