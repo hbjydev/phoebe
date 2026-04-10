@@ -20,11 +20,6 @@ terraform {
       version = "~> 3.0"
     }
 
-    grafana = {
-      source  = "grafana/grafana"
-      version = "~> 4.0"
-    }
-
     random = {
       source = "hashicorp/random"
       version = "~> 3.0"
@@ -41,6 +36,3 @@ provider "cloudflare" {
 provider "upcloud" {}
 provider "onepassword" {}
 provider "tailscale" {}
-provider "grafana" {
-  alias = "cloud"
-}
