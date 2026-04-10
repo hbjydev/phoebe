@@ -111,7 +111,7 @@ spec:
     persistence:
       msmtprc:
         type: configMap
-        name: '{{ .Release.Name }}-msmtprc'
+        name: '{{ .Release.Name }}'
         globalMounts:
           - path: /etc/msmtprc
             subPath: msmtprc
