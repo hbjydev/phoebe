@@ -26,7 +26,7 @@ spec:
               SERVER_PORT: &port 3000
               PDS_AGE_ASSURANCE_OVERRIDE: true
               INVITE_CODE_REQUIRED: true
-              DATABASE_URI:
+              DATABASE_URL:
                 secretKeyRef:
                   name: tranquil-pg-app
                   key: uri
