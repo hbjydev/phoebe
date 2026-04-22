@@ -92,15 +92,6 @@ spec:
         ports:
           http:
             port: *port
-      soulseek:
-        type: LoadBalancer
-        annotations:
-          lbipam.cilium.io/ips: 10.80.0.50
-        externalTrafficPolicy: Local
-        ports:
-          soulseek-tcp:
-            port: *soulseekPort
-            protocol: TCP
     route:
       app:
         hostnames:
