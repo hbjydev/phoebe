@@ -71,6 +71,14 @@ spec:
               accessMode: ReadWriteOnce
               size: 5Gi
     defaultPodOptions:
+      annotations:
+        k8s.v1.cni.cncf.io/networks: |-
+          [{
+            "name": "vpn",
+            "namespace": "kube-system",
+            "ips": ["10.90.0.12/24"],
+            "mac": "d6:67:45:f6:29:e6"
+          }]
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
