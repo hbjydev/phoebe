@@ -98,7 +98,7 @@ spec:
         hostnames:
           - "{{ .Release.Name }}.hayden.moe"
         parentRefs:
-          - name: envoy-internal
+          - name: internal
             namespace: network
         rules:
           - backendRefs:
