@@ -26,6 +26,9 @@ spec:
               ND_PORT: &port 4533
               ND_SCANSCHEDULE: 30m
               ND_BASEURL: https://navidrome.hayden.moe
+            envFrom:
+              - secretRef:
+                  name: navidrome-secret
             resources:
               requests:
                 cpu: 50m
