@@ -44,6 +44,14 @@ spec:
           http:
             port: *port
 
+    route:
+      app:
+        hostnames:
+          - navidrome.hayden.moe
+        parentRefs:
+          - name: internal
+            namespace: network
+
     persistence:
       data:
         existingClaim: navidrome
@@ -54,18 +62,3 @@ spec:
         globalMounts:
           - path: /media/music
             subPath: music
-      tmpfs:
-        type: emptyDir
-        advancedMounts:
-          dispatcharr:
-            app:
-              - path: /tmp
-                subPath: tmp
-
-    route:
-      app:
-        hostnames:
-          - navidrome.hayden.moe
-        parentRefs:
-          - name: internal
-            namespace: network
