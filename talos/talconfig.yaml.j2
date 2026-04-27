@@ -25,7 +25,7 @@ allowSchedulingOnMasters: true
 nodes:
   - hostname: phoebe-k-ctrl-01
     controlPlane: true
-    ipAddress: 10.70.0.188
+    ipAddress: 10.70.0.186
     installDiskSelector:
       serial: S4EUNZFN539342N # 256gb Samsung 950 EVO Plus
     machineSpec:
@@ -37,13 +37,13 @@ nodes:
       - interface: enp3s0
         dhcp: false
         vlans:
-          - # phoebe-v-iot
-            vlanId: 20
-            dhcp: false
-            mtu: 1500
           - # phoebe-v-servers
             vlanId: 70
             dhcp: true
+            mtu: 1500
+          - # phoebe-v-iot
+            vlanId: 20
+            dhcp: false
             mtu: 1500
           - # phoebe-v-vpn
             vlanId: 90
