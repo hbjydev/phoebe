@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: atcr.io/tranquil.farm/tranquil-pds
-              tag: 0.5.5
+              tag: 0.5.5@sha256:1aa52ce3d4e3145c008adee3b17b34400641ff0e88dce634765ceb7969586b3f
             env:
               TZ: Europe/London
               PDS_HOSTNAME: at.hayden.moe
