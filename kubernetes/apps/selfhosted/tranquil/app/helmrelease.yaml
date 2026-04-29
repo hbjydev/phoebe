@@ -14,11 +14,12 @@ spec:
       tandoor:
         annotations:
           reloader.stakater.com/auto: "true"
+        strategy: RollingUpdate
         containers:
           app:
             image:
-              repository: ghcr.io/hbjydev/tranquil-pds
-              tag: a6ed07c@sha256:6bf1605640ffec69d357a0cb18263af7f4fbe5eb7735db725743051ae6e824fc
+              repository: atcr.io/tranquil.farm/tranquil-pds
+              tag: efd499bb264fe6c02e103cac8644cb9f0be3de67@sha256:65551205c6e899d0734fb068db0d9070d11b4268f887bc207a91a69d23b99f03
             env:
               TZ: Europe/London
               PDS_HOSTNAME: at.hayden.moe
@@ -60,7 +61,7 @@ spec:
                 memory: 1024Mi
     defaultPodOptions:
       imagePullSecrets:
-        - name: atcr-secret
+        - name: imp-atcr
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
