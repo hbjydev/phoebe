@@ -51,11 +51,11 @@ jobs:
           app-id: "${{ secrets.BOT_APP_ID }}"
           private-key: "${{ secrets.BOT_APP_PRIVATE_KEY }}"
 
-      - uses: 1password/load-secrets-action/configure@v2
+      - uses: 1password/load-secrets-action/configure@92467eb28f72e8255933372f1e0707c567ce2259 # v4
         with:
           service-account-token: ${{ secrets.OP_SAT_RENOVATE }}
 
-      - uses: 1password/load-secrets-action@v2
+      - uses: 1password/load-secrets-action@92467eb28f72e8255933372f1e0707c567ce2259 # v4
         env:
           ATCR_USERNAME: "op://cluster-phoebe/svc-atcr/username"
           ATCR_PASSWORD: "op://cluster-phoebe/svc-atcr/password"
