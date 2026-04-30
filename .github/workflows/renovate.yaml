@@ -51,6 +51,15 @@ jobs:
           app-id: "${{ secrets.BOT_APP_ID }}"
           private-key: "${{ secrets.BOT_APP_PRIVATE_KEY }}"
 
+      - uses: 1password/load-secrets-action/configure@v2
+        with:
+          service-account-token: ${{ secrets.OP_SAT_RENOVATE }}
+
+      - uses: 1password/load-secrets-action@v2
+        env:
+          ATCR_USERNAME: "op://cluster-phoebe/svc-atcr/username"
+          ATCR_PASSWORD: "op://cluster-phoebe/svc-atcr/password"
+
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -67,6 +76,8 @@ jobs:
           RENOVATE_INTERNAL_CHECKS_FILTER: strict
           RENOVATE_PLATFORM: github
           RENOVATE_PLATFORM_COMMIT: true
+          RENOVATE_HOST_RULES: |
+            [{"matchHost":"atcr.io","username":"${{ env.ATCR_USERNAME }}","password":"${{ env.ATCR_PASSWORD }}"}]
         with:
           token: "${{ steps.app-token.outputs.token }}"
           renovate-version: "${{ inputs.version || 'latest' }}"
