@@ -22,7 +22,7 @@ spec:
       tag: v4.5.9@sha256:5e331fb1575c21838af15c4fd59e700488d6253f0f5cacc4b180e422607fa45f
 
     allowedHosts:
-      - netbox.hayden.moe
+      - ${APP}.hayden.moe
 
     email:
       server: smtp-relay
@@ -31,25 +31,25 @@ spec:
     postgresql:
       enabled: false
     externalDatabase:
-      host: "{{ .Release.Name }}-pg-rw"
+      host: "${APP}-pg-rw"
       port: 5432
       database: app
-      existingSecretName: "{{ .Release.Name }}-pg-app"
+      existingSecretName: "${APP}-pg-app"
       existingSecretKey: password
 
     valkey:
       enabled: false
     tasksDatabase:
-      host: "{{ .Release.Name }}-redis"
+      host: "${APP}-redis"
     cachingDatabase:
-      host: "{{ .Release.Name }}-redis"
+      host: "${APP}-redis"
 
     persistence:
-      existingClaim: "{{ .Release.Name }}"
+      existingClaim: "${APP}"
 
     httpRoute:
       enabled: true
-      hostnames: ["{{ .Release.Name }}.hayden.moe"]
+      hostnames: ["${APP}.hayden.moe"]
       parentRefs:
         - name: internal
           namespace: network
