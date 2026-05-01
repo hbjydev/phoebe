@@ -8,6 +8,7 @@ components:
 resources:
   - ./actual/ks.yaml
   - ./immich/ks.yaml
+  - ./netbox/ks.yaml
   - ./nextcloud/ks.yaml
   - ./paperless/ks.yaml
   - ./smtp-relay/ks.yaml

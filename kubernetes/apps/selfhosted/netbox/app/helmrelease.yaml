@@ -1,0 +1,56 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: netbox
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: netbox
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    image:
+      registry: ghcr.io
+      repository: netbox-community/netbox
+      tag: v4.5.9@sha256:5e331fb1575c21838af15c4fd59e700488d6253f0f5cacc4b180e422607fa45f
+
+    allowedHosts: netbox.hayden.moe
+
+    email:
+      server: smtp-relay
+      from: netbox@hayden.moe
+
+    postgresql:
+      enabled: false
+    externalDatabase:
+      host: "{{ .Release.Name }}-pg-rw"
+      port: 5432
+      database: app
+      existingSecretName: "{{ .Release.Name }}-pg-app"
+      existingSecretKey: password
+
+    valkey:
+      enabled: false
+    tasksDatabase:
+      host: "{{ .Release.Name }}-redis"
+    cachingDatabase:
+      host: "{{ .Release.Name }}-redis"
+
+    persistence:
+      existingClaim: "{{ .Release.Name }}"
+
+    httpRoute:
+      enabled: true
+      hostnames: ["{{ .Release.Name }}.hayden.moe"]
+      parentRefs:
+        - name: internal
+          namespace: network
+          sectionName: https
+
