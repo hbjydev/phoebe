@@ -21,7 +21,8 @@ spec:
       repository: netbox-community/netbox
       tag: v4.5.9@sha256:5e331fb1575c21838af15c4fd59e700488d6253f0f5cacc4b180e422607fa45f
 
-    allowedHosts: netbox.hayden.moe
+    allowedHosts:
+      - netbox.hayden.moe
 
     email:
       server: smtp-relay
