@@ -30,10 +30,12 @@ spec:
 
     postgresql:
       enabled: false
+
     externalDatabase:
       host: "${APP}-pg-rw"
       port: 5432
       database: app
+      username: app
       existingSecretName: "${APP}-pg-app"
       existingSecretKey: password
 
