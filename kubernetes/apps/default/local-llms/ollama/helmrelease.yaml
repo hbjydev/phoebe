@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: ollama/ollama
-              tag: 0.17.7-rocm@sha256:0fd5eac2bcb4235e3368656621a4c3a13ef02aec3a257a27941ca84b18ccf4fc
+              tag: 0.22.1-rocm@sha256:9fe76e352e3fe4ac2db4f70d34aa0525c6ed4bd99438f4bdd9568ebe09f3791e
             probes:
               liveness: &probes
                 enabled: true
