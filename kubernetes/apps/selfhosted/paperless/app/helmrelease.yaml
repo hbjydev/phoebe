@@ -57,6 +57,10 @@ spec:
               PAPERLESS_AUTO_LOGIN: "true"
               PAPERLESS_AUTO_CREATE: "true"
 
+              # Configure SMTP
+              PAPERLESS_EMAIL_HOST: smtp-relay
+              PAPERLESS_EMAIL_FROM: docs@hayden.moe
+
               # Permissions
               USERMAP_UID: 1000
               USERMAP_GID: 1000
