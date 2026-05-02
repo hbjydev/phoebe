@@ -11,17 +11,20 @@ spec:
   interval: 1h
   values:
     controllers:
-      matter-server:
-        containers:
-          app:
-            image:
-              repository: ghcr.io/matter-js/python-matter-server
-              tag: 8.1.2
-
       home-assistant:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
+          matter-server:
+            image:
+              repository: ghcr.io/matter-js/python-matter-server
+              tag: 8.1.2
+            command:
+              - --storage-path
+              - /config/matterdata
+              - --paa-root-cert-dir
+              - /config/matterdata/credentials
+
           app:
             image:
               repository: ghcr.io/home-operations/home-assistant
@@ -77,8 +80,6 @@ spec:
         existingClaim: "{{ .Release.Name }}"
         globalMounts:
           - path: /config
-          - path: /data
-            subPath: matterData
       config-cache:
         existingClaim: "{{ .Release.Name }}-cache"
         globalMounts:
