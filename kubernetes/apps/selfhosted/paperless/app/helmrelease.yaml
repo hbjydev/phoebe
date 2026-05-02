@@ -46,6 +46,9 @@ spec:
               PAPERLESS_CONSUMER_SUBDIRS_AS_TAGS: "true"
 
               # Configure OCR
+              PAPERLESS_TIKA_ENABLED: '1'
+              PAPERLESS_TIKA_GOTENBERG_ENDPOINT: 'http://localhost:3000'
+              PAPERLESS_TIKA_ENDPOINT: 'http://localhost:9998'
               PAPERLESS_OCR_LANGUAGE: "eng"
 
               # Configure SSO
@@ -73,6 +76,38 @@ spec:
                   timeoutSeconds: 1
                   failureThreshold: 3
               readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                memory: 2Gi
+
+          gotenberg:
+            image:
+              repository: gotenberg/gotenberg
+              tag: 8.32.0@sha256:a40c5a46b79d812ce2f5e139278163142a054050bfd1e5f162da36d3d11c7138
+            command:
+              - gotenberg
+              - --chromium-disable-javascript=true
+              - --chromium-allow-list=file:///tmp/.*
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                memory: 2Gi
+
+          tika:
+            image:
+              repository: apache/tika
+              tag: 3.3.0.0-full@sha256:ecdd37e204308266b1f8e28569f8516ebd5b96d7a4518a71d3904710b20c03b3
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
