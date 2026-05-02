@@ -11,6 +11,13 @@ spec:
   interval: 1h
   values:
     controllers:
+      matter-server:
+        containers:
+          app:
+            image:
+              repository: ghcr.io/matter-js/python-matter-server
+              tag: 8.1.2
+
       home-assistant:
         annotations:
           reloader.stakater.com/auto: "true"
