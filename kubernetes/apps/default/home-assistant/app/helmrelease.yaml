@@ -77,6 +77,8 @@ spec:
         existingClaim: "{{ .Release.Name }}"
         globalMounts:
           - path: /config
+          - path: /data
+            subPath: matterData
       config-cache:
         existingClaim: "{{ .Release.Name }}-cache"
         globalMounts:
