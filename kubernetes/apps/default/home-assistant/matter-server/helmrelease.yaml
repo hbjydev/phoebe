@@ -29,6 +29,13 @@ spec:
         fsGroup: 0
         fsGroupChangePolicy: OnRootMismatch
         supplementalGroups: [34]
+        sysctls:
+          - name: net.ipv6.conf.net1.accept_ra
+            value: "2"
+          - name: net.ipv6.conf.net1.accept_ra_rt_info_max_plen
+            value: "64"
+          - name: net.ipv6.conf.net1.forwarding
+            value: "1"
 
     controllers:
       matter-server:
