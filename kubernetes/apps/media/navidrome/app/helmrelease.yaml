@@ -73,7 +73,7 @@ spec:
         globalMounts:
           - path: /config/plugins
         server: ds.hayden.moe
-        path: /volume1/applicaions/navidrome/plugins
+        path: /volume1/media/apps/navidrome/plugins
       media:
         type: nfs
         server: ds.hayden.moe
