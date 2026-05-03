@@ -1,0 +1,62 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: picard
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  interval: 30m
+  values:
+    controllers:
+      navidrome:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: aandree5/picard-web
+              tag: full-v1.6.1
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                memory: 1Gi
+
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      app:
+        ports:
+          http:
+            port: 5000
+
+    route:
+      app:
+        hostnames:
+          - '{{ .Release.Name }}.hayden.moe'
+        parentRefs:
+          - name: internal
+            namespace: network
+
+    persistence:
+      config:
+        existingClaim: '{{ .Release.Name }}'
+        globalMounts:
+          - path: /picard-web
+      media:
+        type: nfs
+        server: ds.hayden.moe
+        path: /volume1/media
+        globalMounts:
+          - path: /music
+            subPath: music
