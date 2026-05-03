@@ -21,7 +21,7 @@ spec:
               tag: 0.61.2
             env:
               ND_ENABLEINSIGHTSCOLLECTOR: "false"
-              ND_DATAFOLDER: /data
+              ND_DATAFOLDER: /config
               ND_ENABLEDOWNLOADS: "true"
               ND_LOGLEVEL: info
               ND_MUSICFOLDER: /media/music
@@ -29,7 +29,7 @@ spec:
               ND_SCANSCHEDULE: 30m
               ND_PROMETHEUS_ENABLED: "true"
               ND_REVERSEPROXYWHITELIST: 172.18.0.0/16,10.80.0.0/24
-              ND_PLUGINS_FOLDER: /data/plugins
+              ND_PLUGINS_FOLDER: /config/plugins
               ND_BASEURL: https://navidrome.hayden.moe
             envFrom:
               - secretRef:
