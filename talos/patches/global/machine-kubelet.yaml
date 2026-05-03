@@ -13,6 +13,8 @@ machine:
       featureGates:
         ResourceHealthStatus: true
       serializeImagePulls: false
+      allowedUnsafeSysctls:
+        - 'net.ipv6.conf.net1.*'  # needed for matter/thread
       maxPods: 256
     nodeIP:
       validSubnets:
