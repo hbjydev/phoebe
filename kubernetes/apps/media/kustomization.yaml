@@ -8,3 +8,4 @@ components:
 resources:
   - dispatcharr/ks.yaml
   - navidrome/ks.yaml
+  - plex/ks.yaml
