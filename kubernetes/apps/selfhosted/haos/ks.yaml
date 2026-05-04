@@ -13,7 +13,7 @@ spec:
     - name: rook-ceph-cluster
       namespace: rook-ceph
   interval: 1h
-  path: ./kubernetes/apps/selfhosted/haos/app
+  path: ./kubernetes/apps/selfhosted/haos/vm
   postBuild:
     substitute:
       APP: *app
