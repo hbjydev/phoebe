@@ -6,4 +6,7 @@ namespace: downloads
 components:
   - ../../components/common
 resources:
+  - qbittorrent/ks.yaml
+  - qui/ks.yaml
+  - sabnzbd/ks.yaml
   - slskd/ks.yaml
