@@ -6,10 +6,6 @@ metadata:
   namespace: kubevirt
 spec:
   configuration:
-    developerConfiguration:
-      featureGates:
-        - LiveMigration
-        - NetworkBindingPlugins
     smbios:
       sku: "TalosCloud"
       version: "v0.1.0"
