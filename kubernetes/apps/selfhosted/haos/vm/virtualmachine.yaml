@@ -6,13 +6,13 @@ metadata:
   namespace: selfhosted
 
 spec:
-  running: false
+  runStrategy: Always
   template:
     metadata:
       labels:
         kubevirt.io/vm: haos
       annotations:
-        kubevirt.io/allow-pod-bridge-network-live-migration: "true"
+        kubevirt.io/allow-pod-bridge-network-live-migration: "false"
 
     spec:
       evictionStrategy: LiveMigrate
