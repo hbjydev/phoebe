@@ -22,6 +22,7 @@ spec:
         resources:
           requests:
             memory: 4G
+
         devices:
           disks:
             - name: haos-pvc
@@ -30,13 +31,15 @@ spec:
             - name: cloudinitdisk
               disk:
                 bus: virtio
+
           interfaces:
-          - name: iot
-            bridge: {}
+            - name: default
+              masquerade: {}
+
       networks:
-        - name: iot
-          multus:
-            networkName: kube-system/iot
+        - name: default
+          pod: {}
+
       volumes:
         - name: haos-pvc
           persistentVolumeClaim:
