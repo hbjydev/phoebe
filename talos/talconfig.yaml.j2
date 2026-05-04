@@ -31,6 +31,26 @@ nodes:
     machineSpec:
       secureBoot: true
     talosImageUrl: factory.talos.dev/installer-secureboot/{{ ENV.TALOS_SCHEMATIC }}
+    schematic:
+      customization:
+        extraKernelArgs:
+          - -init_on_alloc                        # less security, faster puter
+          - -selinux                              # less security, faster puter
+          - apparmor=0                            # less security, faster puter
+          - init_on_alloc=0                       # less security, faster puter
+          - init_on_free=0                        # less security, faster puter
+          - mitigations=off                       # less security, faster puter
+          - security=none                         # less security, faster puter
+          - talos.auditd.disabled=1               # less security, faster puter 
+          - amd_iommu=on                          # pci passthrough
+          - iommu=pt                              # pci passthrough
+          - pcie_aspm=off                         # disable pcie aspm
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/amdgpu
+            - siderolabs/amd-ucode
+            - siderolabs/nfsrahead
+            - siderolabs/tailscale
     nodeLabels:
       amd.feature.node.kubernetes.io/gpu: 'true'
     networkInterfaces:
@@ -51,6 +71,7 @@ nodes:
             mtu: 1500
 
 patches:
+  - '@{{ ENV.TALOS_DIR }}/manifests/global/tailscale.yaml'
   - '@{{ ENV.TALOS_DIR }}/manifests/global/watchdog.yaml'
   - '@{{ ENV.TALOS_DIR }}/patches/global/machine-files.yaml'
   - '@{{ ENV.TALOS_DIR }}/patches/global/machine-kubelet.yaml'

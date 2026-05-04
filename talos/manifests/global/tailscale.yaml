@@ -1,0 +1,6 @@
+apiVersion: v1alpha1
+kind: ExtensionServiceConfig
+name: tailscale
+environment:
+  - TS_AUTHKEY=tskey-auth-k7EkiiYh8121CNTRL-73ULEJBcAE39MUVEEefkD3ru4JEZW38j5
+  - TS_ROUTES=10.80.0.0/24,10.70.0.0/24,172.18.0.0/16,172.19.0.0/26
