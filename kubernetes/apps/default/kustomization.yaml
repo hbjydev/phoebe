@@ -12,7 +12,6 @@ resources:
   - ./jellyseerr/ks.yaml
   - ./keycloak/ks.yaml
   - ./lidarr/ks.yaml
-  - ./local-llms/ks.yaml
   - ./matrix/ks.yaml
   - ./plex/ks.yaml
   - ./prowlarr/ks.yaml
