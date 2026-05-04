@@ -22,7 +22,7 @@ machine:
 
   features:
     rbac: true
-    stableHostname: true
+    # stableHostname: true  # not needed as of talos 1.12
     apidCheckExtKeyUsage: true
     diskQuotaSupport: true
     kubePrism:
