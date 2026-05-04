@@ -7,6 +7,7 @@ components:
   - ../../components/common
 resources:
   - ./actual/ks.yaml
+  - ./haos/ks.yaml
   - ./immich/ks.yaml
   - ./netbox/ks.yaml
   - ./nextcloud/ks.yaml
