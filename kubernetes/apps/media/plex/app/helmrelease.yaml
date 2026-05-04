@@ -57,22 +57,31 @@ spec:
                 memory: 2Gi
               limits:
                 memory: 6Gi
+
     defaultPodOptions:
+      annotations:
+        k8s.v1.cni.cncf.io/networks: |-
+          [{
+            "name": "iot",
+            "namespace": "kube-system",
+            "ips": ["192.168.20.22/24"],
+            "mac": "c6:07:27:af:fb:55"
+          }]
+
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
+
     service:
       app:
-        type: LoadBalancer
-        annotations:
-          lbipam.cilium.io/ips: 10.80.0.40
-        externalTrafficPolicy: Local
+        type: ClusterIP
         ports:
           http:
             port: *port
+
     route:
       app:
         annotations:
