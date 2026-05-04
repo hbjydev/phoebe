@@ -80,4 +80,4 @@ spec:
         storageClassName: ceph-block
       source:
         http:
-          url: https://github.com/home-assistant/operating-system/releases/download/17.2/haos_generic-x86-64-17.2.img.xz
+          url: https://github.com/home-assistant/operating-system/releases/download/17.2/haos_ova-17.2.qcow2.xz
