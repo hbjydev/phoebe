@@ -29,6 +29,10 @@ spec:
               POLLING_SCHEDULER: entry_frequency
               POLLING_FREQUENCY: '15'
               RUN_MIGRATIONS: '1'
+              DATABASE_URL:
+                secretKeyRef:
+                  name: miniflux-pg-app
+                  key: uri
             envFrom:
               - secretRef:
                   name: miniflux-secret
