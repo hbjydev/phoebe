@@ -9,6 +9,7 @@ resources:
   - ./actual/ks.yaml
   - ./haos/ks.yaml
   - ./immich/ks.yaml
+  - ./miniflux/ks.yaml
   - ./netbox/ks.yaml
   - ./nextcloud/ks.yaml
   - ./paperless/ks.yaml
