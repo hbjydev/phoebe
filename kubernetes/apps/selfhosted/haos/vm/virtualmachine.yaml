@@ -22,7 +22,10 @@ spec:
         resources:
           requests:
             memory: 4G
-
+        firmware:
+          bootloader:
+            efi:
+              secureBoot: false
         devices:
           disks:
             - name: haos-pvc
