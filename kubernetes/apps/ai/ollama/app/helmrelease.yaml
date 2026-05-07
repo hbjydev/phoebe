@@ -81,7 +81,7 @@ spec:
         rules:
           - backendRefs:
               - identifier: ollama
-                port: *port
+                port: 80
 
     persistence:
       data:

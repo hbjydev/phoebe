@@ -85,7 +85,7 @@ spec:
         rules:
           - backendRefs:
               - identifier: open-webui
-                port: *port
+                port: 80
 
     persistence:
       data:
