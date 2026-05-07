@@ -68,7 +68,7 @@ spec:
 
     service:
       open-webui:
-        controller: ollama
+        controller: open-webui
         ports:
           http:
             port: 80
