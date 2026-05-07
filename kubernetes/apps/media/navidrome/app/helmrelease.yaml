@@ -60,7 +60,7 @@ spec:
         hostnames:
           - navidrome.hayden.moe
         parentRefs:
-          - name: internal
+          - name: external
             namespace: network
 
     persistence:
