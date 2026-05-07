@@ -25,9 +25,10 @@ spec:
           main:
             image:
               repository: ollama/ollama
-              tag: 0.23.1-rocm@sha256:7f24cd9692b61595afc44fd94c02f4ea7197622781ab1d0dd2b3ab1cc1151cb7
+              tag: 0.23.1@sha256:6077dbbd6508dce8973f8b91c30d8026b1279ab0483e15f0dfad469dba676c2f
             env:
               TZ: Europe/London
+              OLLAMA_VULKAN: '1'
             probes:
               liveness: &probes
                 enabled: false
