@@ -39,7 +39,7 @@ spec:
     tolerations:
       - key: region
         operator: Equal
-        value: heztner
+        value: hetzner
         effect: NoSchedule
 
     resources:
