@@ -1,0 +1,27 @@
+---
+machine:
+  kubelet:
+    clusterDNS:
+      - 172.19.0.53
+    defaultRuntimeSeccompProfileEnabled: true
+    disableManifestsDirectory: true
+    extraConfig:
+      featureGates:
+        ResourceHealthStatus: true
+      serializeImagePulls: false
+      maxPods: 256
+    nodeIP:
+      validSubnets:
+        - 100.64.0.0/10  # tailscale CGNAT range
+
+  features:
+    rbac: true
+    apidCheckExtKeyUsage: true
+    diskQuotaSupport: true
+    kubePrism:
+      enabled: true
+      port: 7445
+    hostDNS:
+      enabled: true
+      resolveMemberNames: true
+      forwardKubeDNSToHost: true

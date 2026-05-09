@@ -70,6 +70,37 @@ nodes:
             dhcp: false
             mtu: 1500
 
+  - hostname: phoebe-k-wrkr-hzn-01
+    controlPlane: false
+    ipAddress: 100.85.234.84
+    installDiskSelector:
+      busPath: /pci0000:00/0000:00:02.5/0000:06:00.0/virtio5/host0/target0:0:0/0:0:0:0
+    schematic:
+      customization:
+        extraKernelArgs:
+          - -init_on_alloc                        # less security, faster puter
+          - -selinux                              # less security, faster puter
+          - apparmor=0                            # less security, faster puter
+          - init_on_alloc=0                       # less security, faster puter
+          - init_on_free=0                        # less security, faster puter
+          - mitigations=off                       # less security, faster puter
+          - security=none                         # less security, faster puter
+          - talos.auditd.disabled=1               # less security, faster puter 
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/amd-ucode
+            - siderolabs/nfsrahead
+            - siderolabs/tailscale
+    nodeLabels:
+      topology.kubernetes.io/region: eu-central
+      topology.kubernetes.io/zone: hetzner
+    networkInterfaces:
+      - interface: eth0
+        dhcp: true
+    patches:
+      - '@{{ ENV.TALOS_DIR }}/patches/hzn/machine-kubelet.yaml'
+      - '@{{ ENV.TALOS_DIR }}/patches/hzn/machine-network.yaml'
+
 patches:
   - '@{{ ENV.TALOS_DIR }}/manifests/global/tailscale.yaml'
   - '@{{ ENV.TALOS_DIR }}/manifests/global/watchdog.yaml'
