@@ -19,6 +19,7 @@ machine:
     nodeIP:
       validSubnets:
         - 10.70.0.0/24
+        - 100.64.0.0/10  # tailscale
 
   features:
     rbac: true
