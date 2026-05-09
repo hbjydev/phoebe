@@ -70,7 +70,7 @@ spec:
       - key: CriticalAddonsOnly
         operator: Exists
       - key: region
-        operator: Equals
+        operator: Equal
         value: hetzner
         effect: NoSchedule
       - key: node-role.kubernetes.io/control-plane
