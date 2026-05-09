@@ -36,6 +36,12 @@ spec:
       - message
       - msg
 
+    tolerations:
+      - key: region
+        operator: Equal
+        value: heztner
+        effect: NoSchedule
+
     resources:
       limits:
         cpu: 1000m
