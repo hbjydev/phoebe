@@ -17,8 +17,7 @@ spec:
     remediation:
       retries: 3
   values:
-    autoDirectNodeRoutes: false
-    tunnelProtocol: geneve
+    autoDirectNodeRoutes: true
     bandwidthManager:
       enabled: true
       bbr: true
@@ -36,7 +35,7 @@ spec:
       hostRoot: /sys/fs/cgroup
     cni:
       exclusive: false
-    devices: eth+ enp+
+    devices: enp+
     enableIPv4BIGTCP: false
     endpointRoutes:
       enabled: true
@@ -74,7 +73,7 @@ spec:
         enabled: true
         trustCRDsExist: true
     rollOutCiliumPods: true
-    routingMode: tunnel
+    routingMode: native
     securityContext:
       capabilities:
         ciliumAgent:
