@@ -17,7 +17,8 @@ spec:
     remediation:
       retries: 3
   values:
-    autoDirectNodeRoutes: true
+    autoDirectNodeRoutes: false
+    tunnelProtocol: geneve
     bandwidthManager:
       enabled: true
       bbr: true
@@ -73,7 +74,7 @@ spec:
         enabled: true
         trustCRDsExist: true
     rollOutCiliumPods: true
-    routingMode: native
+    routingMode: tunnel
     securityContext:
       capabilities:
         ciliumAgent:
