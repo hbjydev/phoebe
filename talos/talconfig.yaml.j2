@@ -69,6 +69,8 @@ nodes:
             vlanId: 90
             dhcp: false
             mtu: 1500
+    patches:
+      - '@{{ ENV.TALOS_DIR }}/manifests/global/tailscale.yaml'
 
   - hostname: phoebe-k-wrkr-hzn-01
     controlPlane: false
@@ -98,11 +100,11 @@ nodes:
       - interface: eth0
         dhcp: true
     patches:
+      - '@{{ ENV.TALOS_DIR }}/manifests/hzn/tailscale.yaml'
       - '@{{ ENV.TALOS_DIR }}/patches/hzn/machine-kubelet.yaml'
       - '@{{ ENV.TALOS_DIR }}/patches/hzn/machine-network.yaml'
 
 patches:
-  - '@{{ ENV.TALOS_DIR }}/manifests/global/tailscale.yaml'
   - '@{{ ENV.TALOS_DIR }}/manifests/global/watchdog.yaml'
   - '@{{ ENV.TALOS_DIR }}/patches/global/machine-files.yaml'
   - '@{{ ENV.TALOS_DIR }}/patches/global/machine-kubelet.yaml'
