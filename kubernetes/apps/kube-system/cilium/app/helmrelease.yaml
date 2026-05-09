@@ -37,7 +37,7 @@ spec:
     cni:
       exclusive: false
     devices: eth+ enp+
-    enableIPv4BIGTCP: true
+    enableIPv4BIGTCP: false
     endpointRoutes:
       enabled: true
     envoy:
