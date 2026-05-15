@@ -25,7 +25,7 @@ spec:
           main:
             image:
               repository: ollama/ollama
-              tag: 0.23.1@sha256:6077dbbd6508dce8973f8b91c30d8026b1279ab0483e15f0dfad469dba676c2f
+              tag: 0.24.0@sha256:a6149234667efc71d37766d61c1a16f24c33e4cd7a0bf4125c44a7e47e2419c4
             env:
               TZ: Europe/London
               OLLAMA_VULKAN: '1'
