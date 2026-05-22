@@ -19,7 +19,7 @@ spec:
     image:
       registry: ghcr.io
       repository: netbox-community/netbox
-      tag: v4.6.0@sha256:bd1f7c2b4ae4ca297e6d56a41ed7b8ae95283a14e5281a2229db72661c3dc9aa
+      tag: v4.6.1@sha256:0c798a266884b235b1f9df7ac57c94d98261748ec1ece4e152c3ad80db15e8dd
 
     allowedHosts:
       - ${APP}.hayden.moe
