@@ -28,7 +28,7 @@ spec:
               tag: 10.11.9@sha256:ef4d95143a5475d1ba4d9a6983342cac300044d676a30648b7d0e0688961712a
             env:
               TZ: Europe/London
-              JELLYFIN_PublishedServerUrl=: https://jellyfin.hayden.moe:443,http://192.168.20.29:8096
+              JELLYFIN_PublishedServerUrl: https://jellyfin.hayden.moe
               DOTNET_SYSTEM_IO_DISABLEFILELOCKING: true
             probes:
               liveness: &probes
