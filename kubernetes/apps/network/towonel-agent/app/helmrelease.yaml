@@ -35,9 +35,9 @@ spec:
               RUST_LOG: info
               TOWONEL_AGENT_SERVICES: |
                 [
-                  {"hostname":"*.hayden.moe","origin":"external.network.svc.cluster.local:443"},
-                  {"hostname":"*.roost.moe","origin":"external.network.svc.cluster.local:443"},
-                  {"hostname":"*.tactica.systems","origin":"external.network.svc.cluster.local:443"}
+                  {"hostname":"*.hayden.moe","origin":"external.network:443"},
+                  {"hostname":"*.roost.moe","origin":"external.network:443"},
+                  {"hostname":"*.tactica.systems","origin":"external.network:443"}
                 ]
               TOWONEL_AGENT_TCP_SERVICES: |
                 [
