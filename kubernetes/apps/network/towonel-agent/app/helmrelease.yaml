@@ -37,7 +37,7 @@ spec:
                 [
                   {"hostname":"*.hayden.moe","origin":"external.network.svc.cluster.local:443"},
                   {"hostname":"*.roost.moe","origin":"external.network.svc.cluster.local:443"},
-                  {"hostname":"*.tactica.systems","origin":"external.network.svc.cluster.local:443"},
+                  {"hostname":"*.tactica.systems","origin":"external.network.svc.cluster.local:443"}
                 ]
               TOWONEL_AGENT_TCP_SERVICES: |
                 [
