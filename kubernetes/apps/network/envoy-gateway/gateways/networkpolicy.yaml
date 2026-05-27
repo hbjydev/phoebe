@@ -32,6 +32,8 @@ kind: ClientTrafficPolicy
 metadata:
   name: envoy
 spec:
+  proxyProtocol:
+    optional: true
   clientIPDetection:
     xForwardedFor:
       numTrustedHops: 2
