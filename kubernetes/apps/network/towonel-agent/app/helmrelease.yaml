@@ -1,0 +1,108 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: towonel-agent
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: default
+  interval: 30m
+  values:
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+
+    controllers:
+      towonel-agent:
+        type: deployment
+        replicas: 2
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: registry.erwanleboucher.dev/erwanleboucher.dev/towonel/towonel-agent
+              tag: 0.1.14
+            env:
+              RUST_LOG: info
+              TOWONEL_AGENT_SERVICES: |
+                [
+                  {"hostname":"*.hayden.moe","origin":"external.network.svc.cluster.local:443"},
+                  {"hostname":"*.roost.moe","origin":"external.network.svc.cluster.local:443"},
+                  {"hostname":"*.tactica.systems","origin":"external.network.svc.cluster.local:443"},
+                ]
+              TOWONEL_AGENT_TCP_SERVICES: |
+                [
+                  {"name":"forgejo-ssh", "origin":"forgejo-ssh.selfhosted.svc.cluster.local:22", "listen_port":2468}
+                ]
+              TOWONEL_AGENT_HEALTH_LISTEN_ADDR: 0.0.0.0:9090
+              TOWONEL_INVITE_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: towonel-agent-secret
+                    key: TOWONEL_INVITE_TOKEN
+
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: 9090
+                  initialDelaySeconds: 10
+                  periodSeconds: 30
+                  timeoutSeconds: 3
+                  failureThreshold: 3
+
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: 9090
+                  initialDelaySeconds: 3
+                  periodSeconds: 10
+                  timeoutSeconds: 3
+                  failureThreshold: 3
+
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: 9090
+                  initialDelaySeconds: 2
+                  periodSeconds: 2
+                  failureThreshold: 30
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+
+            resources:
+              requests:
+                cpu: 50m
+                memory: 64Mi
+              limits:
+                cpu: 500m
+                memory: 64Mi
+
+    service:
+      app:
+        ports:
+          http:
+            port: 9090
