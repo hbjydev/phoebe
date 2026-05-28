@@ -38,7 +38,7 @@ spec:
     - secretKey: username
       remoteRef:
         key: app-forgejo-bot
-        property: username
+        property: user_name
 
     - secretKey: password
       remoteRef:
