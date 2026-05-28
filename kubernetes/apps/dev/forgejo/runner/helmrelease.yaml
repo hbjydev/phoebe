@@ -139,7 +139,7 @@ spec:
             image:
               repository: git.erwanleboucher.dev/eleboucher/runner
               # renovate: datasource=git-tags depName=https://git.erwanleboucher.dev/eleboucher/runner.git
-              tag: 12.10.1
+              tag: 12.10.2
             command:
               - sh
               - -ec
