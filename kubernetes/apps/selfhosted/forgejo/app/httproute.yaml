@@ -6,7 +6,7 @@ metadata:
   name: forgejo
 spec:
   hostnames:
-    - git.hayden.moe
+    - forgejo.hayden.moe
   parentRefs:
     - name: external
       namespace: network
