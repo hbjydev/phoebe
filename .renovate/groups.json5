@@ -47,10 +47,10 @@
       },
     },
     {
-      description: "Intel Device Plugins Group",
-      groupName: "Intel-Device-Plugins",
-      matchDatasources: ["docker"],
-      matchPackageNames: ["/intel-device-plugins-operator/", "/intel-device-plugins-gpu/"],
+      description: "eleboucher Runner Group",
+      groupName: "Eleboucher-Runner",
+      matchDatasources: ["git-tags"],
+      matchPackageNames: ["/eleboucher\/runner\.git/", "/eleboucher\/runner-k8s-plugin\.git/"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
