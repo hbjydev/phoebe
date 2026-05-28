@@ -21,6 +21,8 @@ spec:
       jellyfin:
         annotations:
           reloader.stakater.com/auto: "true"
+          gatus.home-operations.com/endpoint: |-
+            conditions: ["[STATUS] == 401"]
         containers:
           app:
             image:
