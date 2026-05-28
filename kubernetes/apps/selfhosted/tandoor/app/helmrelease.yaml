@@ -14,6 +14,8 @@ spec:
       tandoor:
         annotations:
           reloader.stakater.com/auto: "true"
+          gatus.home-operations.com/endpoint: |-
+            conditions: ["[STATUS] == 400"]
         containers:
           app:
             image:
