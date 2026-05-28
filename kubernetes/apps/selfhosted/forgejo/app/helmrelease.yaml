@@ -87,7 +87,7 @@ spec:
 
         session:
           PROVIDER: redis
-          PROVIDER_CONFIG: redis://forgejo-dragonfly:6379?pool_size=100&idle_timeout=180s
+          PROVIDER_CONFIG: *redis
           SESSION_LIFE_TIME: "1209600"
 
         webhook:
