@@ -1,15 +1,4 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cilium.io/ciliumloadbalancerippool_v2.json
-apiVersion: cilium.io/v2
-kind: CiliumLoadBalancerIPPool
-metadata:
-  name: pool
-spec:
-  allowFirstLastIPs: "No"
-  blocks:
-    - cidr: 10.80.0.0/24
-
----
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cilium.io/ciliumbgpadvertisement_v2.json
 apiVersion: cilium.io/v2
 kind: CiliumBGPAdvertisement
@@ -75,4 +64,7 @@ spec:
     k8s-app: kube-apiserver
     tier: control-plane
   ports:
-    - port: 6443
+    - name: https
+      port: 6443
+      protocol: TCP
+      targetPort: 6443
