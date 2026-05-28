@@ -89,14 +89,6 @@ jobs:
           cat diff.patch >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
 
-      - if: ${{ steps.diff.outputs.diff != '' }}
-        name: Generate Token
-        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
-        id: app-token
-        with:
-          app-id: ${{ secrets.BOT_APP_ID }}
-          private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
-
       - name: Add Comment
         if: ${{ steps.diff.outputs.diff != '' }}
         env:
