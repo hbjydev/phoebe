@@ -34,6 +34,11 @@ metadata:
 spec:
   proxyProtocol:
     optional: true
+  headers:
+    earlyRequestHeaders:
+      set:
+        - name: X-Real-Ip
+          value: "%DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT%"
   clientIPDetection:
     xForwardedFor:
       numTrustedHops: 2
