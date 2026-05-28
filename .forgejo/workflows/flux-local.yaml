@@ -90,13 +90,13 @@ jobs:
         run: |
           {
               echo 'diff<<EOF'
-              cat pull/diff.patch
+              cat diff.patch
               echo EOF
           } >> "${FORGEJO_OUTPUT}";
           {
               echo "## Flux ${{ matrix.resources }} diff"
               echo '```diff'
-              cat pull/diff.patch
+              cat diff.patch
               echo '```'
           } >> "${FORGEJO_STEP_SUMMARY}"
 
