@@ -75,7 +75,7 @@ jobs:
           flux-local diff ${{ matrix.resources }} \
             --unified 6 \
             --path kubernetes/flux/cluster \
-            --path-orig "${{ forgejo.workspace }}/default/kubernetes/flux/cluster \
+            --path-orig "${{ forgejo.workspace }}/default/kubernetes/flux/cluster" \
             --strip-attrs "helm.sh/chart,checksum/config,app.kubernetes.io/version,chart" \
             --limit-bytes 10000 \
             --all-namespaces \
