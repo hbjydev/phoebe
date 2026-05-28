@@ -52,10 +52,6 @@ spec:
     httpRoute:
       enabled: true
       hostnames: ["${APP}.hayden.moe"]
-      backendRefs:
-        - kind: Service
-          name: netbox-anubis
-          port: 80
       parentRefs:
         - name: internal
           namespace: network
