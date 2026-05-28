@@ -1,0 +1,46 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app kaniop
+spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/common
+  interval: 1h
+  path: ./kubernetes/apps/security/kaniop/app
+  prune: true
+  retryInterval: 5m
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  timeout: 5m
+  wait: false
+
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app kaniop-instance
+spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  dependsOn:
+    - name: kaniop
+  interval: 1h
+  path: ./kubernetes/apps/security/kaniop/instance
+  prune: true
+  retryInterval: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  timeout: 5m
+  wait: false

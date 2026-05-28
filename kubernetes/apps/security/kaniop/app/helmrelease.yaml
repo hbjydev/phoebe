@@ -1,0 +1,21 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app kaniop
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: *app
+  values:
+    deploymentAnnotations:
+      reloader.stakater.com/auto: "true"
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+      prometheusRules:
+        enabled: true
+      dashboards:
+        enabled: true
