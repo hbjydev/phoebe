@@ -21,6 +21,7 @@ spec:
     name: flux-system
     namespace: flux-system
   timeout: 5m
+  targetNamespace: security
   wait: false
 
 ---
@@ -43,4 +44,5 @@ spec:
     name: flux-system
     namespace: flux-system
   timeout: 5m
+  targetNamespace: security
   wait: false
