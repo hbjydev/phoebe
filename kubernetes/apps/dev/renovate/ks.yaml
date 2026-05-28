@@ -8,8 +8,14 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *name
+  components:
+    - ../../../../components/redis
   interval: 1h
   path: ./kubernetes/apps/dev/renovate/operator
+  postBuild:
+    substitute:
+      APP: *name
+      NAMESPACE: *namespace
   prune: true
   sourceRef:
     kind: GitRepository
