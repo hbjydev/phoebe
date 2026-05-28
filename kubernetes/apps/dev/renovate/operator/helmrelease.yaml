@@ -1,0 +1,44 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &name renovate-operator
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: *name
+  interval: 30m
+  values:
+    route:
+      enabled: true
+      hostnames: ["renovate.hayden.moe"]
+      parentRefs:
+        - name: internal
+          namespace: network
+
+    config:
+      globalParallelismLimit: 3
+
+    valkey:
+      existingSecret: renovate-redis-cache
+
+    webhook:
+      enabled: true
+      route:
+        enabled: true
+        hostnames: ["renovate-webhook.hayden.moe"]
+        parentRefs:
+          - name: external
+            namespace: network
+
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+      dashboard:
+        enabled: true
+        grafanaDashboard:
+          allowCrossNamespaceImport: true
+          instanceSelector:
+            matchLabels:
+              grafana.internal/instance: grafana
