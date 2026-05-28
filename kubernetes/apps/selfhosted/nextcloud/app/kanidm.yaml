@@ -1,0 +1,101 @@
+---
+apiVersion: kaniop.rs/v1beta1
+kind: KanidmOAuth2Client
+metadata:
+  name: nextcloud
+spec:
+  displayname: nextcloud
+  image:
+    url: https://cdn.jsdelivr.net/gh/selfhst/icons@main/svg/nextcloud.svg
+  kanidmRef:
+    name: kanidm
+    namespace: security
+  origin: https://drive.hayden.moe/
+  redirectUrl:
+    - https://drive.hayden.moe/*
+  scopeMap:
+    - group: nextcloud_users
+      scopes:
+        - openid
+        - profile
+        - email
+        - groups
+
+---
+apiVersion: kaniop.rs/v1beta1
+kind: KanidmGroup
+metadata:
+  name: nextcloud-users
+spec:
+  kanidmRef:
+    name: kanidm
+    namespace: security
+  kanidmName: nextcloud_users
+  accountPolicy:
+    authSessionExpiry: 2678400
+  members:
+    - hayden
+
+---
+apiVersion: kaniop.rs/v1beta1
+kind: KanidmGroup
+metadata:
+  name: nextcloud-admins
+spec:
+  kanidmRef:
+    name: kanidm
+    namespace: security
+  kanidmName: nextcloud_admins
+  accountPolicy:
+    authSessionExpiry: 2678400
+  members:
+    - hayden
+
+---
+apiVersion: external-secrets.io/v1alpha1
+kind: PushSecret
+metadata:
+  name: nextcloud-kanidm-oidc
+spec:
+  refreshInterval: 5m
+  deletionPolicy: Delete
+  updatePolicy: Replace
+  secretStoreRefs:
+    - name: onepassword
+      kind: ClusterSecretStore
+  selector:
+    secret:
+      name: nextcloud-kanidm-oauth2-credentials
+  data:
+    - match:
+        secretKey: CLIENT_ID
+        remoteRef:
+          remoteKey: app-nextcloud-kanidm-oidc
+          property: key
+    - match:
+        secretKey: CLIENT_SECRET
+        remoteRef:
+          remoteKey: app-nextcloud-kanidm-oidc
+          property: secret
+
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: nextcloud-kanidm-oidc
+spec:
+  refreshInterval: 5m
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword
+  target:
+    name: nextcloud-kanidm-oidc
+  data:
+    - secretKey: key
+      remoteRef:
+        key: app-nextcloud-kanidm-oidc
+        property: key
+    - secretKey: secret
+      remoteRef:
+        key: app-nextcloud-kanidm-oidc
+        property: secret
