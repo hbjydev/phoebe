@@ -65,7 +65,7 @@ spec:
       kind: ClusterSecretStore
   selector:
     secret:
-      name: forgejo-app-kanidm-oauth2-credentials
+      name: forgejo-kanidm-oauth2-credentials
   data:
     - match:
         secretKey: CLIENT_ID
