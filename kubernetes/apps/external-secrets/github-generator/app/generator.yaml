@@ -12,5 +12,6 @@ spec:
       auth:
         privateKey:
           secretRef:
+            namespace: external-secrets
             name: eso-github-app-pem
             key: key
