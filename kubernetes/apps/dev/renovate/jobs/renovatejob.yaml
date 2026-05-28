@@ -42,3 +42,14 @@ spec:
       secretRef:
         name: renovate-webhook
         key: webhook
+    forgejo:
+      sync:
+        enabled: true
+        webhookURL: https://renovate-webhook.hayden.moe/webhook/v1/forgejo
+        topic: renovate
+        tokenSecretRef:
+          name: forgejo-renovate
+          key: RENOVATE_TOKEN
+        authTokenSecretRef:
+          name: renovate-webhook
+          key: webhook
