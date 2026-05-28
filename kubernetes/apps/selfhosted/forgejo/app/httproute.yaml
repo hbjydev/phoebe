@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/gateway.networking.k8s.io/httproute_v1.json
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: forgejo
+spec:
+  hostnames:
+    - git.hayden.moe
+  parentRefs:
+    - name: external
+      namespace: network
+  rules:
+    - backendRefs:
+        - name: forgejo-anubis
+          port: 8080
+      timeouts:
+        request: 300s

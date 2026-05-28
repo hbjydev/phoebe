@@ -6,6 +6,7 @@ namespace: selfhosted
 components:
   - ../../components/common
 resources:
+  - ./forgejo/ks.yaml
   - ./immich/ks.yaml
   - ./miniflux/ks.yaml
   - ./netbox/ks.yaml
