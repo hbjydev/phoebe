@@ -63,7 +63,7 @@ spec:
           MERGES: pubkey
 
         security:
-          REVERSE_PROXY_TRUSTED_PROXIES: 10.42.0.0/16
+          REVERSE_PROXY_TRUSTED_PROXIES: 172.18.0.0/16
 
         server:
           APP_DATA_PATH: /data/gitea
