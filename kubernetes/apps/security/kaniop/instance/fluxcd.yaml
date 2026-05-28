@@ -1,0 +1,46 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: kanidm-git
+spec:
+  interval: 1h
+  url: https://forgejo.hayden.moe/hayden/kanidm-auth-objects
+  ref:
+    branch: main
+  secretRef:
+    name: kanidm-git-auth
+
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: kanidm-git
+spec:
+  interval: 1h
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: kanidm-git
+
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: kanidm-git-auth
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword
+  target:
+    name: kanidm-git-auth
+  data:
+    - secretKey: username
+      remoteRef:
+        key: app-forgejo-bot
+        property: username
+
+    - secretKey: password
+      remoteRef:
+        key: app-forgejo-bot
+        property: forgejoToken

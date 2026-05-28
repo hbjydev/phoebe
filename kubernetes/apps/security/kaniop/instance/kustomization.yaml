@@ -6,4 +6,5 @@ resources:
   - ./backendtlspolicy.yaml
   - ./certificate.yaml
   - ./kanidm.yaml
+  - ./fluxcd.yaml
   - ./httproute.yaml
