@@ -12,6 +12,8 @@ spec:
     - tactica/*
   # renovate: datasource=docker depName=renovate/renovate
   image: renovate/renovate:43.195.1
+  imagePullSecrets:
+    - name: imp-atcr
   parallelism: 2
   schedule: 0 */4 * * *
   secretRef: forgejo-renovate
