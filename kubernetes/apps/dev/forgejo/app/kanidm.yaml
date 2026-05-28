@@ -14,7 +14,7 @@ spec:
   redirectUrl:
     - https://forgejo.hayden.moe/user/oauth2/kanidm/callback
   scopeMap:
-    - group: forgejo
+    - group: forgejo_users
       scopes:
         - openid
         - profile
