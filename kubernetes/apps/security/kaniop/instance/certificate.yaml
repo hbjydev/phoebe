@@ -18,3 +18,4 @@ spec:
   secretName: sso-hayden-moe-tls
   usages:
     - digital signature
+    - key encipherment
