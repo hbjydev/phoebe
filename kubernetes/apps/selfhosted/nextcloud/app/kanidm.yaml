@@ -4,7 +4,7 @@ kind: KanidmOAuth2Client
 metadata:
   name: nextcloud
 spec:
-  displayname: nextcloud
+  displayname: Nextcloud
   image:
     url: https://cdn.jsdelivr.net/gh/selfhst/icons@main/svg/nextcloud.svg
   kanidmRef:
