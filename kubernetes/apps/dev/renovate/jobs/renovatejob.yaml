@@ -1,0 +1,42 @@
+---
+apiVersion: renovate-operator.mogenius.com/v1alpha1
+kind: RenovateJob
+metadata:
+  name: forgejo
+spec:
+  metadata:
+    annotations:
+      reloader.stakater.com/auto: "true"
+  discoveryFilters:
+    - hayden/*
+    - tactica/*
+  # renovate: datasource=docker depName=renovate/renovate
+  image: renovate/renovate:43.195.1
+  parallelism: 2
+  schedule: 0 */4 * * *
+  secretRef: forgejo-renovate
+  extraEnv:
+    - name: RENOVATE_ONBOARDING_CONFIG
+      value: |
+        {
+          "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+          "extends": [
+            'config:best-practices'
+          ]
+        }
+    - name: RENOVATE_ONBOARDING_CONFIG_FILE_NAME
+      value: renovate.json5
+    - name: RENOVATE_REBASE_WHEN
+      value: behind-base-branch
+    - name: RENOVATE_AUTOMERGE_STRATEGY
+      value: fast-forward
+  provider:
+    name: forgejo
+    endpoint: https://forgejo.hayden.moe/api/v1
+  webhook:
+    enabled: true
+    authentication:
+      enabled: true
+      secretRef:
+        name: renovate-webhook
+        key: webhook
