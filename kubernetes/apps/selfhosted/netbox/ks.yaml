@@ -10,6 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
+    - ../../../../components/anubis
     - ../../../../components/postgres
     - ../../../../components/redis
     - ../../../../components/volsync
@@ -23,6 +24,7 @@ spec:
       APP: *app
       NAMESPACE: *namespace
       VOLSYNC_CAPACITY: 5Gi
+      ANUBIS_TARGET: http://netbox:80
   prune: true
   retryInterval: 2m
   sourceRef:
