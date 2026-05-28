@@ -21,6 +21,7 @@ spec:
   postBuild:
     substitute:
       APP: *name
+      NAMESPACE: *namespace
       APP_UID: "1000"
       APP_GID: "1000"
       VOLSYNC_CAPACITY: 10Gi
