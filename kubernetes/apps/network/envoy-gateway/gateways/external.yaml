@@ -33,3 +33,11 @@ spec:
         certificateRefs:
           - kind: Secret
             name: hayden-moe-tls
+    - name: ssh
+      protocol: TCP
+      port: 22
+      allowedRoutes:
+        namespaces:
+          from: All
+        kinds:
+          - kind: TCPRoute

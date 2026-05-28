@@ -15,6 +15,9 @@ spec:
         username: ""
 
       config:
+        APP_NAME: "Hayden's Git"
+        APP_SLOGAN: "because sometimes it takes a man to be best girl"
+
         cache:
           ENABLED: true
           ADAPTER: redis
