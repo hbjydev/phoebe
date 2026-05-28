@@ -12,7 +12,7 @@ spec:
     namespace: security
   origin: https://drive.hayden.moe/
   redirectUrl:
-    - https://drive.hayden.moe/*
+    - https://drive.hayden.moe/apps/user_oidc/code
   scopeMap:
     - group: nextcloud_users
       scopes:
