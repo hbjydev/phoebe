@@ -1,0 +1,88 @@
+---
+apiVersion: kaniop.rs/v1beta1
+kind: KanidmOAuth2Client
+metadata:
+  name: immich
+spec:
+  displayname: Immich
+  image:
+    url: https://cdn.jsdelivr.net/gh/selfhst/icons@main/svg/immich.svg
+  kanidmRef:
+    name: kanidm
+    namespace: security
+  origin: https://photos.hayden.moe/
+  redirectUrl:
+    - app.immich://oauth-callback
+    - https://photos.hayden.moe/auth/login
+    - https://photos.hayden.moe/user-settings
+  scopeMap:
+    - group: immich_users
+      scopes:
+        - openid
+        - profile
+        - email
+        - groups
+
+---
+apiVersion: kaniop.rs/v1beta1
+kind: KanidmGroup
+metadata:
+  name: immich-users
+spec:
+  kanidmRef:
+    name: kanidm
+    namespace: security
+  kanidmName: immich_users
+  accountPolicy:
+    authSessionExpiry: 2678400
+  members:
+    - hayden
+
+---
+apiVersion: external-secrets.io/v1alpha1
+kind: PushSecret
+metadata:
+  name: immich-kanidm-oidc
+spec:
+  refreshInterval: 5m
+  deletionPolicy: Delete
+  updatePolicy: Replace
+  secretStoreRefs:
+    - name: onepassword
+      kind: ClusterSecretStore
+  selector:
+    secret:
+      name: immich-kanidm-oauth2-credentials
+  data:
+    - match:
+        secretKey: CLIENT_ID
+        remoteRef:
+          remoteKey: app-immich-kanidm-oidc
+          property: key
+    - match:
+        secretKey: CLIENT_SECRET
+        remoteRef:
+          remoteKey: app-immich-kanidm-oidc
+          property: secret
+
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: immich-kanidm-oidc
+spec:
+  refreshInterval: 5m
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword
+  target:
+    name: immich-kanidm-oidc
+  data:
+    - secretKey: key
+      remoteRef:
+        key: app-immich-kanidm-oidc
+        property: key
+    - secretKey: secret
+      remoteRef:
+        key: app-immich-kanidm-oidc
+        property: secret
