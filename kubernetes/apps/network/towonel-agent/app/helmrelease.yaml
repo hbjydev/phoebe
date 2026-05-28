@@ -34,15 +34,9 @@ spec:
             env:
               RUST_LOG: info
               TOWONEL_AGENT_SERVICES: |
-                [
-                  {"hostname":"*.hayden.moe","origin":"external.network:443"},
-                  {"hostname":"*.roost.moe","origin":"external.network:443"},
-                  {"hostname":"*.tactica.systems","origin":"external.network:443"}
-                ]
+                [ {"hostname":"*.hayden.moe","origin":"external.network:443"} ]
               TOWONEL_AGENT_TCP_SERVICES: |
-                [
-                  {"name":"forgejo-ssh", "origin":"forgejo-ssh.selfhosted:22", "listen_port":2468}
-                ]
+                [ {"name":"forgejo-ssh", "origin":"forgejo-ssh.selfhosted:22", "listen_port":2468} ]
               TOWONEL_AGENT_HEALTH_LISTEN_ADDR: 0.0.0.0:9090
               TOWONEL_INVITE_TOKEN:
                 valueFrom:

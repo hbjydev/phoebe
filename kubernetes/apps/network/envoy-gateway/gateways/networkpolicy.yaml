@@ -42,7 +42,7 @@ spec:
   clientIPDetection:
     xForwardedFor:
       numTrustedHops: 2
-  # http3: {}
+  http3: {}
   path:
     disableMergeSlashes: true
     escapedSlashesAction: KeepUnchanged

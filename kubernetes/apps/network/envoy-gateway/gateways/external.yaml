@@ -27,7 +27,6 @@ spec:
     - name: https
       protocol: HTTPS
       port: 443
-      hostname: "*.hayden.moe"
       allowedRoutes:
         namespaces:
           from: All
