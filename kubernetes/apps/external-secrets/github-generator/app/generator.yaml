@@ -1,0 +1,13 @@
+---
+apiVersion: generators.external-secrets.io/v1alpha1
+kind: GithubAccessToken
+metadata:
+  name: github-auth-token
+spec:
+  appID: '1354746'
+  installID: '69322391'
+  auth:
+    privateKey:
+      secretRef:
+        name: eso-github-app-pem
+        key: key
