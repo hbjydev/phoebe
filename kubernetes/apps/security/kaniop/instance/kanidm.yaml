@@ -9,6 +9,11 @@ spec:
   image: kanidm/server:1.10.3
   disableUpgradeChecks: true
 
+  domainAppearance:
+    displayName: Hayden's SSO
+    image:
+      url: https://cdn.bsky.app/img/avatar/plain/did:plc:puvaym5ytsvejx3rwjrnxhvb/bafkreig74yrxbvhrrgctb4qj6ojeotvgrcilcr6h7ptlcg3t4kd2ex4djq
+
   replicaGroups:
     - name: default
       replicas: 1
