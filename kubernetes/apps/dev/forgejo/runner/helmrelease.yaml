@@ -197,6 +197,14 @@ spec:
               verbs:
                 - list
                 - watch
+                - get
+            - apiGroups:
+                - batch
+              resources:
+                - jobs
+              verbs:
+                - list
+                - watch
                 - create
                 - get
                 - delete
