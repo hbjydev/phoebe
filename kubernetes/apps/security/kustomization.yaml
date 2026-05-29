@@ -6,5 +6,4 @@ namespace: security
 components:
   - ../../components/common
 resources:
-  - ./kanidm/ks.yaml
   - ./kaniop/ks.yaml
