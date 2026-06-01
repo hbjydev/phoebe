@@ -23,12 +23,22 @@ spec:
             args: [serve]
             env:
               TZ: Europe/London
+              NTFY_LISTEN_HTTP: ":8080"
               NTFY_BASE_URL: https://{{.Release.Name}}.hayden.moe
+
+              NTFY_UPSTREAM_BASE_URL: https://ntfy.sh
+
               NTFY_ENABLE_METRICS: true
               NTFY_METRICS_LISTEN_HTTP: ":9090"
-              NTFY_LISTEN_HTTP: ":8080"
+
               NTFY_CACHE_FILE: /var/cache/ntfy/cache.db
+              NTFY_ATTACHMENT_CACHE_DIR: /var/cache/ntfy/attachments
+              NTFY_ATTACHMENT_TOTAL_SIZE_LIMIT: 1G
+              NTFY_ATTACHMENT_FILE_SIZE_LIMIT: 15M
+
               NTFY_AUTH_FILE: /var/lib/ntfy/auth.db
+              NTFY_AUTH_DEFAULT_ACCESS: deny-all
+
               NTFY_BEHIND_PROXY: 'true'
             probes:
               liveness: &probes
