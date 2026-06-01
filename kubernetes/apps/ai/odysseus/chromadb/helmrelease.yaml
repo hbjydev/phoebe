@@ -47,7 +47,7 @@ spec:
       data:
         existingClaim: "{{ .Release.Name }}"
         globalMounts:
-          - path: /chroma/chroma
+          - path: /data
       tmpfs:
         type: emptyDir
         globalMounts:
