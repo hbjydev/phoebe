@@ -96,6 +96,7 @@ spec:
         size: 5Gi
         accessMode: ReadWriteOnce
         storageClass: ceph-block
+        volumeName: "{{ .Release.Name }}-cache"
         globalMounts:
           - path: /var/cache/ntfy
       tmpfs:
