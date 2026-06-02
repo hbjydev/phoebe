@@ -2,7 +2,7 @@
 apiVersion: kaniop.rs/v1beta1
 kind: KanidmOAuth2Client
 metadata:
-  name: open-webui
+  name: openwebui
 spec:
   displayname: Open WebUI
   image:
