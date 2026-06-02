@@ -35,6 +35,7 @@ spec:
               OAUTH_MERGE_ACCOUNTS_BY_EMAIL: true
               OAUTH_PROVIDER_NAME: Kanidm
               OPENID_PROVIDER_URL: https://sso.hayden.moe/oauth2/openid/openwebui/.well-known/openid-configuration
+              OAUTH_CODE_CHALLENGE_METHOD: S256
               OAUTH_SCOPES: openid email profile
               OPENID_REDIRECT_URI: https://chat.hayden.moe/oauth/oidc/callback
 
