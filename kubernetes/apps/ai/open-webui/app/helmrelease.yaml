@@ -28,8 +28,33 @@ spec:
               tag: v0.9.2@sha256:a7e4796ae894d1e2a0c1824860ade472f35c507608a01c3581377b5c19b0ed49
             env:
               TZ: Europe/London
+
+              # OAuth
+              ENABLE_OAUTH_SIGNUP: true
+              ENABLE_OAUTH_PERSISTENT_CONFIG: false
+              OAUTH_MERGE_ACCOUNTS_BY_EMAIL: true
+              OAUTH_PROVIDER_NAME: Kanidm
+              OPENID_PROVIDER_URL: Kanidm
+              OAUTH_SCOPES: openid email profile
+              OPENID_REDIRECT_URI: https://chat.hayden.moe/oauth/oidc/callback
+
+              # Features
+              ENABLE_LOGIN_FORM: false
               ENABLE_OLLAMA_API: true
               OLLAMA_BASE_URL: http://ollama
+              ENABLE_OPENAI_API: false
+              ENABLE_RAG_WEB_SEARCH: true
+              ENABLE_SEARCH_QUERY: true
+              ENABLE_SIGNUP: false
+
+              # Search
+              RAG_WEB_SEARCH_ENGINE: searxng
+              SEARXNG_QUERY_URL: http://searxng.selfhosted:8080/search?q=<query>
+
+              # Websockets
+              ENABLE_WEBSOCKET_SUPPORT: true
+              WEBSOCKET_MANAGER: redis
+              WEBSOCKET_REDIS_URL: redis://open-webui-redis:6379
             envFrom:
               - secretRef:
                   name: open-webui-secret
@@ -53,10 +78,8 @@ spec:
             resources:
               requests:
                 cpu: 100m
-                memory: 128Mi
               limits:
-                cpu: 500m
-                memory: 1Gi
+                memory: 2Gi
 
     defaultPodOptions:
       securityContext:
@@ -78,6 +101,7 @@ spec:
       openwebui:
         hostnames:
           - '{{ .Release.Name }}.hayden.moe'
+          - 'chat.hayden.moe'
         parentRefs:
           - name: internal
             namespace: network

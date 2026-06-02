@@ -1,0 +1,63 @@
+---
+apiVersion: kaniop.rs/v1beta1
+kind: KanidmOAuth2Client
+metadata:
+  name: open-webui
+spec:
+  displayname: Open WebUI
+  image:
+    url: https://cdn.jsdelivr.net/gh/selfhst/icons@main/svg/open-webui.svg
+  kanidmRef:
+    name: kanidm
+    namespace: security
+  origin: https://chat.hayden.moe/
+  redirectUrl:
+    - https://chat.hayden.moe/oauth/oidc/callback
+  scopeMap:
+    - group: openwebui_users
+      scopes:
+        - openid
+        - email
+        - profile
+
+---
+apiVersion: kaniop.rs/v1beta1
+kind: KanidmGroup
+metadata:
+  name: openwebui-users
+spec:
+  kanidmRef:
+    name: kanidm
+    namespace: security
+  kanidmName: openwebui_users
+  accountPolicy:
+    authSessionExpiry: 2678400
+  members:
+    - hayden
+
+---
+apiVersion: external-secrets.io/v1alpha1
+kind: PushSecret
+metadata:
+  name: openwebui-kanidm-oidc
+spec:
+  refreshInterval: 5m
+  deletionPolicy: Delete
+  updatePolicy: Replace
+  secretStoreRefs:
+    - name: onepassword
+      kind: ClusterSecretStore
+  selector:
+    secret:
+      name: openwebui-kanidm-oauth2-credentials
+  data:
+    - match:
+        secretKey: CLIENT_ID
+        remoteRef:
+          remoteKey: app-openwebui-kanidm-oidc
+          property: clientId
+    - match:
+        secretKey: CLIENT_SECRET
+        remoteRef:
+          remoteKey: app-openwebui-kanidm-oidc
+          property: clientSecret
