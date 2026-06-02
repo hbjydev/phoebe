@@ -35,6 +35,7 @@ spec:
     authSessionExpiry: 2678400
   members:
     - hayden
+    - invisible
 
 ---
 apiVersion: kaniop.rs/v1beta1

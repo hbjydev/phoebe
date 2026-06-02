@@ -46,6 +46,7 @@ spec:
     authSessionExpiry: 2678400
   members:
     - hayden
+    - invisible
 
 ---
 apiVersion: external-secrets.io/v1alpha1
