@@ -15,6 +15,15 @@ spec:
     - app.immich://oauth-callback
     - https://photos.hayden.moe/auth/login
     - https://photos.hayden.moe/user-settings
+
+  claimMap:
+    - name: immich_role
+      valuesMap:
+        - group: immich_users
+          values: [user]
+        - group: immich_admins
+          values: [admin]
+
   scopeMap:
     - group: immich_users
       scopes:
