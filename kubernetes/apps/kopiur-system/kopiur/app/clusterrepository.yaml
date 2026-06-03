@@ -1,0 +1,29 @@
+---
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: ClusterRepository
+metadata:
+  name: hetzner
+spec:
+  backend:
+    s3:
+      bucket: phoebe-backup
+      prefix: "kopiur"
+      endpoint: hel1.your-objectstorage.com
+      region: US
+      auth:
+        secretRef:
+          name: kopia-secret
+          namespace: kopiur-system
+
+  encryption:
+    passwordSecretRef:
+      name: kopia-secret
+      namespace: kopiur-system
+      key: KOPIA_PASSWORD
+
+  allowedNamespaces:
+    all: true
+
+  identityDefaults:
+    hostnameTemplate: "{{ .Namespace }}"
+    usernameTemplate: "{{ .Namespace }}-{{ .ConfigName }}"
