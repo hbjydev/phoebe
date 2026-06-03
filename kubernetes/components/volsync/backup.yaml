@@ -26,3 +26,16 @@ spec:
     cron: "H * * * *"
     jitter: 30m
     runOnCreate: false
+
+---
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: Restore
+metadata:
+  name: "${APP}-restore"
+spec:
+  source:
+    fromConfig:
+      name: "${APP}-backup"
+      offset: 0
+  policy:
+    onMissingSnapshot: Continue
