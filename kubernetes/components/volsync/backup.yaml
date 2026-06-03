@@ -33,6 +33,9 @@ kind: Restore
 metadata:
   name: "${APP}-restore"
 spec:
+  repository:
+    kind: ClusterRepository
+    name: hetzner
   source:
     fromConfig:
       name: "${APP}-backup"
