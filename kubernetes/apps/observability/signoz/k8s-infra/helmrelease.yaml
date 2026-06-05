@@ -23,6 +23,13 @@ spec:
     otelCollectorEndpoint: http://signoz-otel-collector:4318
     otelInsecure: true
 
+    otelAgent:
+      config:
+        processors:
+          batch:
+            send_batch_size: 15000
+            send_batch_max_size: 20000
+
     presets:
       otlphttpExporter:
         enabled: true
@@ -32,6 +39,13 @@ spec:
         blacklist:
           enabled: true
           signozLogs: true
+        operators:
+          - id: container-parser
+            type: container
+          - id: logfmt-parser
+            type: logfmt
+          - id: json-parser
+            type: json
 
       kubeletMetrics:
         enabled: true
