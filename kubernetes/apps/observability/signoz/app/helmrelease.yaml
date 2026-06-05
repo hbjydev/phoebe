@@ -5,9 +5,14 @@ kind: HelmRelease
 metadata:
   name: signoz
 spec:
-  chartRef:
-    kind: OCIRepository
-    name: signoz
+  chart:
+    spec:
+      chart: signoz
+      # renovate: datasource=github-releases depName=signoz/charts
+      version: 0.127.0
+      sourceRef:
+        kind: HelmRepository
+        name: signoz
   interval: 30m
   values:
     global:
