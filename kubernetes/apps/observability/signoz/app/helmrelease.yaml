@@ -34,5 +34,5 @@ spec:
 
       env:
         SIGNOZ_EMAILING_ENABLED: true
-        SIGNOZ_EMAILING_SMTP_ADDRESS: smtp-relay.selfhosted
+        SIGNOZ_EMAILING_SMTP_ADDRESS: smtp-relay.selfhosted:25
         SIGNOZ_EMAILING_SMTP_FROM: signoz@hayden.moe
