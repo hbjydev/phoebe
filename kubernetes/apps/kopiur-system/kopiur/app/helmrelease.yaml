@@ -22,3 +22,7 @@ spec:
       enabled: true
       serviceMonitor:
         enabled: true
+
+    logging:
+      level: info,kopia=debug
+      format: json
