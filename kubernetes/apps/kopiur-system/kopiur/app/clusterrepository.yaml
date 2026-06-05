@@ -15,6 +15,9 @@ spec:
           name: kopia-secret
           namespace: kopiur-system
 
+  create:
+    enabled: true
+
   encryption:
     passwordSecretRef:
       name: kopia-secret
