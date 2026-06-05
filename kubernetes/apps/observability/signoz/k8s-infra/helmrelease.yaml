@@ -39,13 +39,6 @@ spec:
         blacklist:
           enabled: true
           signozLogs: true
-        operators:
-          - id: container-parser
-            type: container
-          - id: logfmt-parser
-            type: logfmt
-          - id: json-parser
-            type: json
 
       kubeletMetrics:
         enabled: true
