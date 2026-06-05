@@ -6,8 +6,6 @@ namespace: default
 components:
   - ../../components/common
 resources:
-  - ./booklore/ks.yaml
-  - ./bookshelf/ks.yaml
   - ./home-assistant/ks.yaml
   - ./jellyseerr/ks.yaml
   - ./keycloak/ks.yaml
@@ -15,6 +13,5 @@ resources:
   - ./matrix/ks.yaml
   - ./prowlarr/ks.yaml
   - ./radarr/ks.yaml
-  - ./recyclarr/ks.yaml
   - ./sonarr/ks.yaml
   - ./starr-pg/ks.yaml

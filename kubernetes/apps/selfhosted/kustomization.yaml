@@ -7,12 +7,9 @@ components:
   - ../../components/common
 resources:
   - ./immich/ks.yaml
-  - ./miniflux/ks.yaml
-  - ./netbox/ks.yaml
   - ./nextcloud/ks.yaml
   - ./ntfy/ks.yaml
   - ./paperless/ks.yaml
   - ./searxng/ks.yaml
   - ./smtp-relay/ks.yaml
-  - ./tandoor/ks.yaml
   - ./tranquil/ks.yaml
