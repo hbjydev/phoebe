@@ -33,4 +33,6 @@ spec:
         tag: v0.127.0
 
       env:
-        signoz_emailing_enabled: true
+        SIGNOZ_EMAILING_ENABLED: true
+        SIGNOZ_EMAILING_SMTP_ADDRESS: smtp-relay.selfhosted
+        SIGNOZ_EMAILING_SMTP_FROM: signoz@hayden.moe
