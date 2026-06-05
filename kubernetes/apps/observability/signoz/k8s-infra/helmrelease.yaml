@@ -1,0 +1,99 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: signoz-k8s-infra
+spec:
+  chart:
+    spec:
+      chart: k8s-infra
+      # renovate: datasource=github-releases depName=signoz/charts
+      version: 0.127.0
+      sourceRef:
+        kind: HelmRepository
+        name: signoz
+  interval: 30m
+  values:
+    global:
+      cloud: others
+      clusterName: phoebe
+      deploymentEnvironment: production
+
+    otelCollectorEndpoint: http://signoz-otel-collector:4318
+    otelInsecure: true
+
+    presets:
+      otlphttpExporter:
+        enabled: true
+
+      logsCollection:
+        enabled: true
+        blacklist:
+          enabled: true
+          signozLogs: true
+
+      kubeletMetrics:
+        enabled: true
+        collectionInterval: 30s
+
+      kubernetesAttributes:
+        enabled: true
+        # passthrough: false
+        #
+        # extractMetadatas:
+        #   - k8s.namespace.name
+        #   - k8s.deployment.name
+        #   - k8s.statefulset.name
+        #   - k8s.pod.name
+        #   - k8s.node.name
+        #
+        # podAssociation:
+        #   - sources:
+        #       from: resource_attribute
+        #       name: k8s.pod.name
+        #   - sources:
+        #       from: resource_attribute
+        #       name: k8s.pod.uid
+        #   - sources:
+        #       from: connection
+        #
+        # extractLabels:
+        #   - tag_name: service.name
+        #     key: app.kubernetes.io/name
+        #     from: pod
+
+      clusterMetrics:
+        enabled: true
+        collectionInterval: 30s
+
+      k8sEvents:
+        enabled: true
+        authType: serviceAccount
+        namespaces: []
+
+      hostMetrics:
+        enabled: true
+        collectionInterval: 30s
+        scrapers:
+          cpu: {}
+          load: {}
+          memory: {}
+          disk:
+            exclude:
+              devices:
+                - ^rbd\d+$  # talos pod disks
+                - ^loop\d+$  # loop devices
+          filesystem:
+            exclude_fs_types:
+              fs_types:
+                - tmpfs
+                - squashfs
+                - overlay
+                - shm
+
+          network:
+            exclude:
+              interfaces:
+                - ^veth.*$  # virtual ethernet devices
+                - ^lxc.*$  # talos containers
