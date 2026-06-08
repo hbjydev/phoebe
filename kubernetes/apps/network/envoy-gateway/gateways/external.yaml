@@ -33,6 +33,8 @@ spec:
         certificateRefs:
           - kind: Secret
             name: hayden-moe-tls
+          - kind: Secret
+            name: tactica-systems-tls
     - name: ssh
       protocol: TCP
       port: 22
