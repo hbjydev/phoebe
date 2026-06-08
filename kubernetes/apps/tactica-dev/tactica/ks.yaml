@@ -1,0 +1,34 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &name tactica-dev
+  namespace: &namespace tactica-dev
+spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *name
+  components:
+    - ../../../../components/anubis
+    - ../../../../components/redis
+    - ../../../../components/postgres
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+  interval: 1h
+  path: "./kubernetes/apps/tactica-dev/tactica/app"
+  postBuild:
+    substitute:
+      APP: *name
+      NAMESPACE: *namespace
+      ANUBIS_TARGET: http://tactica-dev-server.tactica-dev.svc.cluster.local
+      ANUBIS_MEM_LIMIT: 384Mi
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: *namespace
+  timeout: 5m
+  wait: false
