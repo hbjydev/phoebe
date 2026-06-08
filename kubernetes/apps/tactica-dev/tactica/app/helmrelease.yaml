@@ -50,7 +50,7 @@ spec:
         containers:
           main:
             image:
-              tag: sha-fe0b83b932b10abc6b3280cda06f970fd91d040d@sha256:634ce12e01daf2c63d1c26a8015939739edc15f85aed04275ebd8c8a0e8a0d63
+              tag: latest@sha256:b9b1de296c95de84238b5c593fd2315660c659c87b2b71281ca5ef296bdc820a
 
     server:
       controllers:
