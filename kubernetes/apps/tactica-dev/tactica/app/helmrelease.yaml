@@ -17,7 +17,7 @@ spec:
           secretKey: appKey
 
       debug: true
-      domain: tactica.hayden.moe
+      domain: dev.tactica.systems
 
       logging:
         level: debug
