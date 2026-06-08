@@ -1,16 +1,17 @@
 customization:
   extraKernelArgs:
-    - -init_on_alloc                        # less security, faster puter
-    - -selinux                              # less security, faster puter
-    - apparmor=0                            # less security, faster puter
-    - init_on_alloc=0                       # less security, faster puter
-    - init_on_free=0                        # less security, faster puter
-    - mitigations=off                       # less security, faster puter
-    - security=none                         # less security, faster puter
-    - talos.auditd.disabled=1               # less security, faster puter 
-    - amd_iommu=on                          # pci passthrough
-    - iommu=pt                              # pci passthrough
-    - pcie_aspm=off                         # disable pcie aspm
+    - -init_on_alloc           # less security, faster puter
+    - -selinux                 # less security, faster puter
+    - apparmor=0               # less security, faster puter
+    - init_on_alloc=0          # less security, faster puter
+    - init_on_free=0           # less security, faster puter
+    - mitigations=off          # less security, faster puter
+    - security=none            # less security, faster puter
+    - talos.auditd.disabled=1  # less security, faster puter 
+    - amd_iommu=on             # pci passthrough
+    - iommu=pt                 # pci passthrough
+    - pcie_aspm=off            # disable pcie aspm
+    - page_table_check=off     # https://github.com/siderolabs/talos/issues/13496
   systemExtensions:
     officialExtensions:
       - siderolabs/amdgpu
