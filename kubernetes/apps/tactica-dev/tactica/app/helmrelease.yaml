@@ -1,0 +1,63 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.bjw-s.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tactica-dev
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: tactica
+  interval: 30m
+  values:
+    tactica:
+      appKey:
+        existingSecret:
+          name: tactica-dev-secret
+          secretKey: appKey
+
+      debug: true
+      domain: tactica.hayden.moe
+
+      logging:
+        level: debug
+
+      db:
+        host: tactica-dev-pg-rw
+        existingSecret:
+          name: tactica-dev-pg-app
+          databaseKey: 'dbname'
+          usernameKey: 'user'
+          passwordKey: 'password'
+
+      redis:
+        host: tactica-dev-redis
+        port: 6379
+
+      mail:
+        smtp:
+          host: 'smtp-relay.selfhosted'
+        from:
+          address: tactica@hayden.moe
+          name: Tactica (DEV!)
+
+    defaultPodOptions:
+      imagePullSecrets:
+        - name: imp-forgejo
+
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              tag: sha-fe0b83b932b10abc6b3280cda06f970fd91d040d@sha256:634ce12e01daf2c63d1c26a8015939739edc15f85aed04275ebd8c8a0e8a0d63
+
+    server:
+      controllers:
+        main:
+          replicas: 1
+
+    worker:
+      controllers:
+        main:
+          replicas: 1
