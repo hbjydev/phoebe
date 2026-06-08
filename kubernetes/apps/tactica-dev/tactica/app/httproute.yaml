@@ -13,6 +13,6 @@ spec:
       namespace: network
   rules:
     - backendRefs:
-        - name: tactica-dev
+        - name: tactica-dev-server
           namespace: tactica-dev
           port: 80
