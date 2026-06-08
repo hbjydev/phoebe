@@ -56,7 +56,7 @@ spec:
     sources: ["crd", "gateway-httproute"]
     txtOwnerId: default
     txtPrefix: k8s.
-    domainFilters: ["hayden.moe"]
+    domainFilters: ["hayden.moe", "tactica.systems"]
     serviceMonitor:
       enabled: true
     podAnnotations:
