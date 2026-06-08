@@ -16,4 +16,6 @@ spec:
               name: cloudflare-issuer-secret
               key: CLOUDFLARE_DNS_TOKEN
         selector:
-          dnsZones: ["hayden.moe"]
+          dnsZones: 
+            - hayden.moe
+            - tactica.systems

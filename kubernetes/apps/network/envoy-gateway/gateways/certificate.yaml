@@ -11,3 +11,21 @@ spec:
     kind: ClusterIssuer
   commonName: hayden.moe
   dnsNames: ["hayden.moe", "*.hayden.moe", "*.at.hayden.moe"]
+
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: tactica-systems
+spec:
+  secretName: tactica-systems-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: tactica.systems
+  dnsNames:
+    - tactica.systems
+    - '*.tactica.systems'
+    - '*.stg.tactica.systems'
+    - '*.dev.tactica.systems'
