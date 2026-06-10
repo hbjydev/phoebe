@@ -14,6 +14,7 @@ spec:
   image: renovate/renovate:43.195.1
   imagePullSecrets:
     - name: imp-atcr
+    - name: imp-forgejo
   parallelism: 2
   schedule: 0 */12 * * *
   secretRef: forgejo-renovate
