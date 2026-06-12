@@ -10,7 +10,7 @@ spec:
     name: kopiur
   interval: 30m
   values:
-    installCRDs: false  # installed by ../crds
+    installCRDs: true
 
     installScope: cluster
 
