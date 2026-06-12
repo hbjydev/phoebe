@@ -12,7 +12,7 @@ spec:
   components:
     - ../../../../components/redis
   dependsOn:
-    - name: ai-pg
+    - name: pg
   interval: 1h
   path: ./kubernetes/apps/ai/honcho/app
   postBuild:
