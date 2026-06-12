@@ -1,0 +1,27 @@
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: ai-pg
+spec:
+  configuration:
+    destinationPath: s3://haydenmoe-volsync-postgres/ai-pg
+    endpointURL: https://t9ag6.upcloudobjects.com
+    s3Credentials:
+      accessKeyId:
+        name: ai-pg-barman
+        key: ACCESS_KEY_ID
+      secretAccessKey:
+        name: ai-pg-barman
+        key: SECRET_ACCESS_KEY
+    wal:
+      compression: gzip
+
+  instanceSidecarConfiguration:
+    env:
+      - name: AWS_REQUEST_CHECKSUM_CALCULATION
+        value: when_required
+      - name: AWS_RESPONSE_CHECKSUM_VALIDATION
+        value: when_required
+
+  retentionPolicy: "14d"
