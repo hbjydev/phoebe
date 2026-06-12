@@ -2,7 +2,7 @@
 apiVersion: barmancloud.cnpg.io/v1
 kind: ObjectStore
 metadata:
-  name: ai-pg
+  name: ai-pg-barman-os
 spec:
   configuration:
     destinationPath: s3://haydenmoe-volsync-postgres/ai-pg
