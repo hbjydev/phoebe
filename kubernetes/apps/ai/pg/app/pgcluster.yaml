@@ -40,3 +40,5 @@ spec:
         comment: Honcho Memory
         login: true
         superuser: false
+        passwordSecret:
+          name: db-honcho
