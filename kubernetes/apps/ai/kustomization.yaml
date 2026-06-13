@@ -6,5 +6,6 @@ namespace: ai
 components:
   - ../../components/common
 resources:
+  - ./hermes/ks.yaml
   - ./honcho/ks.yaml
   - ./pg/ks.yaml
