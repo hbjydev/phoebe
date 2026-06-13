@@ -64,9 +64,12 @@ spec:
           dashboard:
             image: *image
             args:
-              - gateway
-              - run
-              - --no-supervise
+              - dashboard
+              - --host
+              - '0.0.0.0'
+            env:
+              TZ: Europe/London
+              GATEWAY_HEALTH_URL: http://localhost:8642
             envFrom: *envFrom
             resources:
               requests:
