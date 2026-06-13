@@ -1,0 +1,11 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: litellm
+spec:
+  cluster:
+    name: ai-pg
+
+  name: litellm
+  owner: litellm

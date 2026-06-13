@@ -10,6 +10,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   interval: 1h
+  components:
+    - ../../../../components/redis
   path: ./kubernetes/apps/ai/litellm/app
   prune: true
   sourceRef:

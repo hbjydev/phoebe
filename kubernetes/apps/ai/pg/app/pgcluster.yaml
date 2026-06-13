@@ -42,3 +42,11 @@ spec:
         superuser: false
         passwordSecret:
           name: db-honcho
+
+      - name: litellm
+        ensure: present
+        comment: LiteLLM Proxy
+        login: true
+        superuser: false
+        passwordSecret:
+          name: db-litellm
