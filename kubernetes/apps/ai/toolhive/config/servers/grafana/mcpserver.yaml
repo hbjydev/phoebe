@@ -3,7 +3,7 @@
 apiVersion: toolhive.stacklok.dev/v1beta1
 kind: MCPServer
 metadata:
-  name: mcps-grafana
+  name: grafana
 spec:
   groupRef:
     name: mcp-tools

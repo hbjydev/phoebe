@@ -2,7 +2,7 @@
 apiVersion: toolhive.stacklok.dev/v1beta1
 kind: MCPServerEntry
 metadata:
-  name: mcps-context7
+  name: context7
   namespace: ai
 spec:
   remoteUrl: https://mcp.context7.com/mcp
