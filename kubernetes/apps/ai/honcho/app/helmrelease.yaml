@@ -123,7 +123,7 @@ spec:
         hostnames:
           - "{{ .Release.Name }}.hayden.moe"
         parentRefs:
-          - name: external
+          - name: internal
             namespace: network
         rules:
           - backendRefs:
