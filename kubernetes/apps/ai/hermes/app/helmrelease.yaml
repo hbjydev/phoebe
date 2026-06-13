@@ -22,6 +22,19 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
 
+        initContainers:
+          copy-config:
+            image:
+              repository: docker.io/library/alpine
+              tag: "3.24"
+            command:
+              - sh
+              - -c
+              - |
+                set -euo pipefail
+                cp /tmp/config.yaml /opt/data/config.yaml
+                chown 10000:10000 /opt/data/config.yaml
+
         containers:
           app:
             image:
@@ -110,8 +123,5 @@ spec:
       config:
         type: configMap
         name: '{{ .Release.Name }}-config'
-        globalMounts:
-          - path: /opt/data/config.yaml
-            subPath: config.yaml
       tmp:
         type: emptyDir
