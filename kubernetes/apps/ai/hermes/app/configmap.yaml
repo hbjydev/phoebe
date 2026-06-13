@@ -43,5 +43,4 @@ data:
       require_mention: true
       auto_thread: true
       reactions: true
-      free_response_channels: 1515084851848548535,1515119754602352791
       allowed_channels: "*"
