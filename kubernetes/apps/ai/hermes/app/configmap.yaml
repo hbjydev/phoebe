@@ -41,6 +41,6 @@ data:
 
     discord:
       require_mention: true
-      auto_thread: true
+      auto_thread: false
       reactions: true
       allowed_channels: "*"
