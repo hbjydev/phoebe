@@ -6,6 +6,7 @@ namespace: ai
 components:
   - ../../components/common
 resources:
+  - ./grafana-mcp/ks.yaml
   - ./hermes/ks.yaml
   - ./honcho/ks.yaml
   - ./pg/ks.yaml

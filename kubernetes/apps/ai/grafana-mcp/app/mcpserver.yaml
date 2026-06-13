@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/toolhive.stacklok.dev/mcpserver_v1beta1.json
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: MCPServer
+metadata:
+  name: grafana-mcp
+spec:
+  groupRef:
+    name: mcp-tools
+  # renovate: datasource=github-releases depName=grafana/mcp-grafana
+  image: grafana/mcp-grafana:0.15.2
+  transport: streamable-http
+  env:
+    - name: GRAFANA_URL
+      value: http://grafana-service.observability.svc.cluster.local:3000
+  secrets:
+    - name: grafana-mcp-secret
+      key: GRAFANA_SERVICE_ACCOUNT_TOKEN
+  podTemplateSpec:
+    spec:
+      containers:
+        - name: mcp
+          args:
+            - "-t"
+            - "streamable-http"
+            - "--address"
+            - "0.0.0.0:8080"
+          ports:
+            - containerPort: 8080
+              name: mcp
