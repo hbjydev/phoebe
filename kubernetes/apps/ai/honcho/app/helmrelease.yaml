@@ -24,7 +24,11 @@ spec:
           TZ: Europe/London
 
           EMBEDDING_MODEL_CONFIG__MODEL: 'openai/text-embedding-3-small'
+          EMBEDDING_MODEL_CONFIG__OVERRIDES__BASE_URL: https://openrouter.ai/api/v1
+
           DERIVER_MODEL_CONFIG__MODEL: 'deepseek/deepseek-v4-flash'
+          DERIVER_MODEL_CONFIG__OVERRIDES__BASE_URL: https://openrouter.ai/api/v1
+
           DIALECTIC_LEVELS__minimal__MODEL_CONFIG__MODEL: deepseek/deepseek-v4-flash
           DIALECTIC_LEVELS__low__MODEL_CONFIG__MODEL: deepseek/deepseek-v4-flash
           DIALECTIC_LEVELS__medium__MODEL_CONFIG__MODEL: deepseek/deepseek-v4-flash
