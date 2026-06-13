@@ -6,4 +6,4 @@ resources:
   - ./externalsecret.yaml
   - ./configmap.yaml
   - ./kanidm.yaml
-  # - ./helmrelease.yaml
+  - ./helmrelease.yaml
