@@ -45,7 +45,3 @@ data:
       reactions: true
       free_response_channels: 1515084851848548535,1515119754602352791
       allowed_channels: "*"
-
-    homeassistant:
-      url: https://hass.hayden.moe
-      token: $${HASS_TOKEN}
