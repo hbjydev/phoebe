@@ -8,5 +8,6 @@ components:
 resources:
   - ./hermes/ks.yaml
   - ./honcho/ks.yaml
+  - ./litellm/ks.yaml
   - ./pg/ks.yaml
   - ./toolhive/ks.yaml
