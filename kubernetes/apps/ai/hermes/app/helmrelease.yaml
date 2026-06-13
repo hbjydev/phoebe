@@ -36,38 +36,19 @@ spec:
                 cp /config/config.yaml /opt/data/config.yaml
 
         containers:
-          app:
-            image:
+          gateway:
+            image: &image
               repository: nousresearch/hermes-agent
               tag: v2026.6.5@sha256:9ad3b04ec916ea2c2da22358fd43b024c788d74073210695af88bfc2e63869b4
             args:
               - gateway
               - run
-            envFrom:
+              - --no-supervise
+            env:
+              HOME: /opt/data
+            envFrom: &envFrom
               - secretRef:
                   name: hermes-config-env
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /health
-                    port: &port 8642
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
-              startup:
-                enabled: true
-                spec:
-                  failureThreshold: 30
-                  periodSeconds: 10
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: {drop: ["ALL"]}
             resources:
               requests:
                 cpu: 100m
@@ -75,23 +56,45 @@ spec:
               limits:
                 cpu: 2000m
                 memory: 4Gi
+            ports:
+              - containerPort: &gatewayPort 8642
+                name: http
+                protocol: TCP
+
+          dashboard:
+            image: *image
+            args:
+              - gateway
+              - run
+              - --no-supervise
+            envFrom: *envFrom
+            resources:
+              requests:
+                cpu: 500m
+              limits:
+                memory: 1Gi
+            ports:
+              - containerPort: &dashboardPort 9119
+                name: http
+                protocol: TCP
 
     defaultPodOptions:
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        fsGroup: 10000
         fsGroupChangePolicy: OnRootMismatch
 
     service:
-      app:
+      gateway:
         type: ClusterIP
         ports:
-          api-http:
-            port: *port
-          dashboard-http:
-            port: &dashboardPort 9119
+          http:
+            port: *gatewayPort
+
+      dashboard:
+        type: ClusterIP
+        ports:
+          http:
+            port: *dashboardPort
 
     route:
       app:
@@ -102,18 +105,8 @@ spec:
             namespace: network
         rules:
           - backendRefs:
-              - identifier: app
-                port: *port
-      dashboard:
-        hostnames:
-          - "{{ .Release.Name }}-dash.hayden.moe"
-        parentRefs:
-          - name: internal
-            namespace: network
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: *dashboardPort
+              - identifier: dashboard
+                port: http
 
     persistence:
       data:
@@ -123,5 +116,6 @@ spec:
       config:
         type: configMap
         name: '{{ .Release.Name }}-config'
+        defaultMode: 0755
       tmp:
         type: emptyDir
