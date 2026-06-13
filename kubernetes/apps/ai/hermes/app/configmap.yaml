@@ -6,8 +6,8 @@ metadata:
 data:
   config.yaml: |-
     model:
-      default: deepseek-v4-flash
-      provider: opencode-go
+      default: oc-deepseek-v4-flash
+      provider: custom:litellm
 
     security:
       redact_secrets: true
@@ -20,15 +20,11 @@ data:
       show_token_analytics: true
       public_url: https://hermes.hayden.moe
 
-    fallback_providers:
-      - provider: opencode-zen
-        model: deepseek-v4-flash
-
-    providers:
-      opencode-go:
-        api_key: $${OPENCODE_API_KEY}
-      opencode-zen:
-        api_key: $${OPENCODE_API_KEY}
+    custom_providers:
+      - name: litellm
+        key_env: LITELLM_API_KEY
+        base_url: http://litellm.ai:4000
+        api_mode: chat_completions
 
     timezone: 'Europe/London'
 
