@@ -4,8 +4,7 @@ kind: ConfigMap
 metadata:
   name: hermes-config
 data:
-  config.yaml: |
-    ---
+  config.yaml: |-
     model:
       default: deepseek-v4-flash
       provider: opencode-go

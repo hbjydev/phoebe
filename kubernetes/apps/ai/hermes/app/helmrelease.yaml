@@ -109,7 +109,7 @@ spec:
           - path: /opt/data
       config:
         type: configMap
-        name: hermes-config
+        name: '{{ .Release.Name }}-config'
         globalMounts:
           - path: /opt/data/config.yaml
             subPath: config.yaml
