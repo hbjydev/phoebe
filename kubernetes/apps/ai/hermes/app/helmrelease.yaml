@@ -109,8 +109,9 @@ spec:
           - path: /opt/data
       config:
         type: configMap
-        name: hermes-config-yaml
+        name: hermes-config
         globalMounts:
           - path: /opt/data/config.yaml
+            subPath: config.yaml
       tmp:
         type: emptyDir
