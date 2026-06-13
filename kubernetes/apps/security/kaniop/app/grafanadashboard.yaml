@@ -7,7 +7,7 @@ spec:
   allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:
-      instance: grafana
+      grafana.internal/instance: grafana
   configMapRef:
     name: kaniop
     key: "kaniop.json"
