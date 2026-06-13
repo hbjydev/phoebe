@@ -9,6 +9,12 @@ data:
       default: deepseek-v4-flash
       provider: opencode-go
 
+    security:
+      redact_secrets: true
+
+    privacy:
+      redact_pii: true
+
     dashboard:
       theme: default
       show_token_analytics: true
@@ -26,8 +32,18 @@ data:
 
     timezone: 'Europe/London'
 
+    terminal:
+      backend: local
+      cwd: /opt/data/workspace
+      timeout: 180
+      persistent_shell: true
+
     toolsets:
       - hermes-cli
+
+    mcp_servers:
+      homelab:
+        url: http://vmcp-mcp-gateway.ai.svc.cluster.local:4483/mcp
 
     memory:
       memory_enabled: true
