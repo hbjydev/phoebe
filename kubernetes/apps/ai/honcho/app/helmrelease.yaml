@@ -54,7 +54,8 @@ spec:
               - -c
               - alembic upgrade head
             envFrom:
-              - configMap: name
+              - configMapRef:
+                  identifier: config
               - secretRef:
                   name: honcho-secret
             securityContext:
@@ -66,7 +67,8 @@ spec:
           app:
             image: *image
             envFrom:
-              - configMap: config
+              - configMapRef:
+                  identifier: config
               - secretRef:
                   name: honcho-secret
             probes:
