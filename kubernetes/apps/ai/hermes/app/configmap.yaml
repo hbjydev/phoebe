@@ -12,7 +12,7 @@ data:
     dashboard:
       theme: default
       show_token_analytics: true
-      public_url: https://hermes-dash.hayden.moe
+      public_url: https://hermes.hayden.moe
 
     fallback_providers:
       - provider: opencode-zen
