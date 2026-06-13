@@ -17,26 +17,56 @@ spec:
     remediation:
       retries: 3
   values:
+    configMaps:
+      config:
+        suffix: config
+        data:
+          TZ: Europe/London
+
+          EMBEDDING_MODEL_CONFIG__MODEL: 'openai/text-embedding-3-small'
+          DERIVER_MODEL_CONFIG__MODEL: 'deepseek/deepseek-v4-flash'
+          DIALECTIC_LEVELS__minimal__MODEL_CONFIG__MODEL: deepseek/deepseek-v4-flash
+          DIALECTIC_LEVELS__low__MODEL_CONFIG__MODEL: deepseek/deepseek-v4-flash
+          DIALECTIC_LEVELS__medium__MODEL_CONFIG__MODEL: deepseek/deepseek-v4-flash
+          DIALECTIC_LEVELS__high__MODEL_CONFIG__MODEL: deepseek/deepseek-v4-pro
+          DIALECTIC_LEVELS__max__MODEL_CONFIG__MODEL: deepseek/deepseek-v4-pro
+
+          CACHE_URL: redis://{{ .Release.Name }}-redis:6379/0?suppress=true
+          CACHE_ENABLED: 'true'
+
+          METRICS_ENABLED: 'true'
+          METRICS_NAMESPACE: honcho
+
+          CORS_ORIGINS: '["http://honcho", "http://honcho.ai", "https://honcho.hayden.moe"]'
+
     controllers:
       honcho:
         annotations:
           reloader.stakater.com/auto: "true"
-        containers:
-          app:
-            image:
+
+        initContainers:
+          migrate:
+            image: &image
               repository: ghcr.io/plastic-labs/honcho
               tag: v3.0.9@sha256:32a831e303fa4053bf82af3b65cea019b80a7b491cfcdef3b5cb81c8cef635bf
-            env:
-              TZ: Europe/London
-
-              CACHE_URL: redis://{{ .Release.Name }}-redis:6379/0?suppress=true
-              CACHE_ENABLED: true
-
-              METRICS_ENABLED: true
-              METRICS_NAMESPACE: honcho
-
-              CORS_ORIGINS: '["http://honcho", "http://honcho.ai", "https://honcho.hayden.moe"]'
+            command:
+              - /bin/sh
+              - -c
+              - alembic upgrade head
             envFrom:
+              - configMap: name
+              - secretRef:
+                  name: honcho-secret
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
+
+        containers:
+          app:
+            image: *image
+            envFrom:
+              - configMap: config
               - secretRef:
                   name: honcho-secret
             probes:
