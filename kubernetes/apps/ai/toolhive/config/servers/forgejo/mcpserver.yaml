@@ -21,12 +21,14 @@ spec:
       containers:
         - name: mcp
           args:
-            - "-t"
+            - "--transport"
             - "http"
             - "--http-port"
             - "8080"
             - "--url"
-            - "http://forgejo-http.dev.svc.cluster.local:3000"
+            - "$FORGEJO_URL"
+            - "--token"
+            - "$FORGEJO_TOKEN"
           ports:
             - containerPort: 8080
               name: mcp
