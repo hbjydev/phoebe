@@ -39,7 +39,7 @@ spec:
           gateway:
             image: &image
               repository: forgejo.hayden.moe/hayden/containers/hermes
-              tag: v2026.6.5-1bffd50@sha256:353d7fce31ac051e3ea28afbebf5c73d3ff7effb26c16b67f123772412d22c11
+              tag: v2026.6.5-8a6586e@sha256:743f9d8f7c332edd87c1bd51bff03ed43e7ee918ecef951cd1519147ef4c53bd
             args:
               - gateway
               - run
