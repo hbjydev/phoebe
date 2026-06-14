@@ -50,7 +50,7 @@
     {
       description: "Kopiur Group",
       groupName: "Kopiur",
-      matchDatasources: ["docker"],
+      matchDatasources: ["docker", "github-releases"],
       matchPackageNames: ["/kopiur/", "/home-operations\/kopiur/"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
