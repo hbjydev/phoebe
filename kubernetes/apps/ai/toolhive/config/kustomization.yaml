@@ -6,6 +6,7 @@ resources:
   - ./servers
   - ./mcpgroup.yaml
   - ./mcptelemetryconfig.yaml
+  - ./kanidm.yaml
   - ./virtualmcpserver.yaml
   - ./externalsecret.yaml
   - ./httproute.yaml

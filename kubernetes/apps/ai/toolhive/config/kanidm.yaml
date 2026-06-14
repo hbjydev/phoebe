@@ -1,0 +1,38 @@
+---
+apiVersion: kaniop.rs/v1beta1
+kind: KanidmOAuth2Client
+metadata:
+  name: toolhive
+spec:
+  displayname: Toolhive
+  image:
+    url: https://docs.stacklok.com/img/logos/toolhive-symbol-white.svg
+  kanidmRef:
+    name: kanidm
+    namespace: security
+  origin: https://mcp.hayden.moe
+  redirectUrl:
+    - https://mcp.hayden.moe/oauth/callback
+  preferShortUsername: true
+  scopeMap:
+    - group: toolhive_users
+      scopes:
+        - openid
+        - profile
+        - email
+        - groups
+
+---
+apiVersion: kaniop.rs/v1beta1
+kind: KanidmGroup
+metadata:
+  name: toolhive-users
+spec:
+  kanidmRef:
+    name: kanidm
+    namespace: security
+  kanidmName: toolhive_users
+  accountPolicy:
+    authSessionExpiry: 2678400
+  members:
+    - hayden
