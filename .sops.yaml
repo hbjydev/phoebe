@@ -6,10 +6,6 @@ creation_rules:
     mac_only_encrypted: true
     age:
       - age16c45zxayen5nnfzd020wqz75wrca5mhkgdk95d5pwaazwzqed5asc8z4xw
-  - path_regex: ansible/inventory/.+\.sops\.yaml
-    mac_only_encrypted: true
-    age:
-      - age16c45zxayen5nnfzd020wqz75wrca5mhkgdk95d5pwaazwzqed5asc8z4xw
   - path_regex: talos/.+\.yaml
     encrypted_regex: ^environment$
     mac_only_encrypted: true
