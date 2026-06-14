@@ -42,3 +42,7 @@ spec:
           instanceSelector:
             matchLabels:
               grafana.internal/instance: grafana
+
+            datasources:
+              - datasourceName: prometheus
+                inputName: datasource
