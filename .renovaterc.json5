@@ -1,23 +1,9 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: [
-    "config:recommended",
-    "docker:enableMajor",
-    "helpers:pinGitHubActionDigests",
-    "local>hayden/phoebe//.renovate/customManagers.json5",
+    "local>hayden/renovate-config"
     "local>hayden/phoebe//.renovate/groups.json5",
     "local>hayden/phoebe//.renovate/autoMerge.json5",
-    "local>hayden/phoebe//.renovate/labels.json5",
-    "local>hayden/phoebe//.renovate/semanticCommits.json5",
-    ":automergeBranch",
-    ":dependencyDashboard",
-    ":semanticCommits",
-    ":timezone(Europe/London)",
-  ],
-  dependencyDashboardTitle: "Renovate Dashboard 🤖",
-  suppressNotifications: [
-    "prEditedNotification",
-    "prIgnoreNotification",
   ],
   ignorePaths: [
     "**/*.sops.*",
