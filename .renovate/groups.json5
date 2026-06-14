@@ -51,10 +51,11 @@
       description: "Kopiur Group",
       groupName: "Kopiur",
       matchDatasources: ["docker"],
-      matchPackageNames: ["/kopiur/"],
+      matchPackageNames: ["/kopiur/", "/home-operations\/kopiur/"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
+      minimumGroupSize: 2,
     },
     {
       description: "Flux Operator Group",
