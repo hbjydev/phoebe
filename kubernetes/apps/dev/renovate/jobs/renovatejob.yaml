@@ -22,9 +22,9 @@ spec:
     - name: RENOVATE_ONBOARDING_CONFIG
       value: |
         {
-          "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-          "extends": [
-            'config:best-practices'
+          $schema: "https://docs.renovatebot.com/renovate-schema.json",
+          extends: [
+            "local>hayden/renovate-config",
           ]
         }
     - name: RENOVATE_ONBOARDING_CONFIG_FILE_NAME
