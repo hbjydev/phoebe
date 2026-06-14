@@ -24,7 +24,7 @@ spec:
       NAMESPACE: *namespace
       APP_UID: "1000"
       APP_GID: "1000"
-      VOLSYNC_CAPACITY: 10Gi
+      VOLSYNC_CAPACITY: 50Gi
       ANUBIS_TARGET: http://forgejo-http.dev.svc.cluster.local:3000
       ANUBIS_MEM_LIMIT: 384Mi
   prune: true
