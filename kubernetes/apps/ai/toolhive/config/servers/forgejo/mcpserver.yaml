@@ -8,7 +8,7 @@ spec:
   groupRef:
     name: mcp-tools
   # renovate: datasource=codeberg-releases depName=goern/forgejo-mcp
-  image: codeberg.org/goern/forgejo-mcp:2.29.0
+  image: codeberg.org/goern/forgejo-mcp:v2.29.0
   transport: streamable-http
   env:
     - name: FORGEJO_URL
