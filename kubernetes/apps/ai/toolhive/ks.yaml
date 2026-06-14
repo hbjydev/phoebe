@@ -53,6 +53,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/redis
   dependsOn:
     - name: toolhive-operator
   interval: 1h

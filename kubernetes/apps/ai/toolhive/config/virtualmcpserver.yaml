@@ -3,10 +3,82 @@
 apiVersion: toolhive.stacklok.dev/v1beta1
 kind: VirtualMCPServer
 metadata:
+  name: mcp-gateway-ext
+spec:
+  authServerConfig:
+    issuer: https://mcp.hayden.moe
+    signingKeySecretRefs:
+      - name: vmcp-auth-server-secret
+        key: signing-key
+    hmacSecretRefs:
+      - name: vmcp-auth-server-secret
+        key: hmac-key
+    tokenLifespans:
+      accessTokenLifespan: 1h
+      refreshTokenLifespan: 168h
+      authCodeLifespan: 10m
+    upstreamProviders:
+      - name: kanidm
+        type: oidc
+        oidcConfig:
+          issuerUrl: https://sso.hayden.moe/oauth2/openid/toolhive
+          clientId: toolhive
+          clientSecretRef:
+            name: toolhive-kanidm-oauth2-credentials
+            key: CLIENT_SECRET
+          redirectUri: https://mcp.hayden.moe/oauth/callback
+          scopes:
+            - openid
+            - profile
+            - email
+            - groups
+  groupRef:
+    name: mcp-tools
+  config:
+    aggregation:
+      conflictResolution: prefix
+      conflictResolutionConfig:
+        prefixFormat: "{workload}_"
+    operational:
+      failureHandling:
+        healthCheckInterval: 5m
+        statusReportingInterval: 5m
+  incomingAuth:
+    type: oidc
+    oidcConfigRef:
+      name: external-oidc
+      audience: https://mcp.hayden.moe/mcp
+      resourceUrl: https://mcp.hayden.moe/mcp
+      scopes:
+        - openid
+        - profile
+        - email
+        - groups
+        - offline_access
+  outgoingAuth:
+    source: discovered
+  sessionStorage:
+    provider: redis
+    address: toolhive-vmcp-redis:6379
+  podTemplateSpec:
+    spec:
+      containers:
+        - name: vmcp
+          env:
+            - name: INSECURE_DISABLE_URL_VALIDATION
+              value: "true"
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/toolhive.stacklok.dev/virtualmcpserver_v1beta1.json
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: VirtualMCPServer
+metadata:
   name: mcp-gateway
 spec:
   groupRef:
     name: mcp-tools
+  telemetryConfigRef:
+    name: prometheus
   config:
     aggregation:
       conflictResolution: prefix
@@ -16,5 +88,17 @@ spec:
     type: anonymous
   outgoingAuth:
     source: discovered
-  telemetryConfigRef:
-    name: prometheus
+  sessionStorage:
+    provider: redis
+    address: toolhive-vmcp-redis:6379
+    keyPrefix: "mcp-gateway-internal:"
+  podTemplateSpec:
+    spec:
+      containers:
+        - name: vmcp
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              memory: 1536Mi
