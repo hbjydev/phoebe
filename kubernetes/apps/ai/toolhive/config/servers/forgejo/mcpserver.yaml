@@ -1,0 +1,29 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/toolhive.stacklok.dev/mcpserver_v1beta1.json
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: MCPServer
+metadata:
+  name: forgejo
+spec:
+  groupRef:
+    name: mcp-tools
+  # renovate: datasource=codeberg-releases depName=goern/forgejo-mcp
+  image: codeberg.org/goern/forgejo-mcp:2.29.0
+  transport: streamable-http
+  env:
+    - name: FORGEJO_URL
+      value: http://forgejo-http.dev.svc.cluster.local:3000
+  podTemplateSpec:
+    spec:
+      containers:
+        - name: mcp
+          args:
+            - "-t"
+            - "http"
+            - "--http-port"
+            - "8080"
+            - "--url"
+            - "http://forgejo-http.dev.svc.cluster.local:3000"
+          ports:
+            - containerPort: 8080
+              name: mcp
