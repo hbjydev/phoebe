@@ -13,6 +13,9 @@ spec:
   env:
     - name: FORGEJO_URL
       value: http://forgejo-http.dev.svc.cluster.local:3000
+  secrets:
+    - name: toolhive-servers
+      key: FORGEJO_TOKEN
   podTemplateSpec:
     spec:
       containers:
