@@ -30,7 +30,7 @@ spec:
         - notification-controller
       sync:
         kind: GitRepository
-        url: https://forgejo.hayden.moe/hayden/phoebe.git
+        url: http://forgejo-http.dev.svc.cluster.local:3000/hayden/phoebe.git
         ref: refs/heads/main
         path: kubernetes/flux/cluster
         interval: 1h
