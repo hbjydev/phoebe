@@ -21,6 +21,8 @@ spec:
       hermes:
         annotations:
           reloader.stakater.com/auto: "true"
+        serviceAccount:
+          identifier: hermes
 
         initContainers:
           copy-config:
