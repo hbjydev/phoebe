@@ -10,12 +10,10 @@ spec:
   # renovate: datasource=codeberg-releases depName=goern/forgejo-mcp
   image: codeberg.org/goern/forgejo-mcp:v2.29.0
   transport: streamable-http
-  env:
-    - name: FORGEJO_URL
-      value: http://forgejo-http.dev.svc.cluster.local:3000
   secrets:
     - name: toolhive-servers
       key: FORGEJO_TOKEN
+      targetEnvName: FORGEJO_ACCESS_TOKEN
   podTemplateSpec:
     spec:
       containers:
@@ -26,9 +24,7 @@ spec:
             - "--http-port"
             - "8080"
             - "--url"
-            - "$FORGEJO_URL"
-            - "--token"
-            - "$FORGEJO_TOKEN"
+            - "http://forgejo-http.dev.svc.cluster.local:3000"
           ports:
             - containerPort: 8080
               name: mcp
