@@ -59,6 +59,10 @@ spec:
     - name: toolhive-operator
   interval: 1h
   path: ./kubernetes/apps/ai/toolhive/config
+  postBuild:
+    substitute:
+      APP: *app
+      NAMESPACE: *namespace
   prune: true
   sourceRef:
     kind: GitRepository
