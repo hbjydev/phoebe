@@ -7,6 +7,7 @@ resources:
   - ./mcpgroup.yaml
   - ./mcptelemetryconfig.yaml
   - ./virtualmcpserver.yaml
+  - ./externalsecret.yaml
   - ./httproute.yaml
   - ./podmonitor.yaml
   - ./grafanadashboard.yaml
