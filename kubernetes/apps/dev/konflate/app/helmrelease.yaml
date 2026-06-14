@@ -33,5 +33,5 @@ spec:
         cpu: 50m
         memory: 256Mi
       limits:
-        cput: 2000m
+        cpu: 2000m
         memory: 2Gi
