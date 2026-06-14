@@ -38,8 +38,8 @@ spec:
         containers:
           gateway:
             image: &image
-              repository: nousresearch/hermes-agent
-              tag: v2026.6.5@sha256:9ad3b04ec916ea2c2da22358fd43b024c788d74073210695af88bfc2e63869b4
+              repository: forgejo.hayden.moe/hayden/containers/hermes
+              tag: v2026.6.5-1bffd50@sha256:353d7fce31ac051e3ea28afbebf5c73d3ff7effb26c16b67f123772412d22c11
             args:
               - gateway
               - run
@@ -82,6 +82,8 @@ spec:
                 protocol: TCP
 
     defaultPodOptions:
+      imagePullSecrets:
+        - name: imp-forgejo
       securityContext:
         fsGroup: 10000
         fsGroupChangePolicy: OnRootMismatch
