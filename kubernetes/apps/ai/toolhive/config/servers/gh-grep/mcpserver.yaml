@@ -1,0 +1,11 @@
+---
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: MCPServerEntry
+metadata:
+  name: gh-grep
+  namespace: ai
+spec:
+  remoteUrl: https://mcp.grep.app
+  transport: streamable-http
+  groupRef:
+    name: mcp-tools
