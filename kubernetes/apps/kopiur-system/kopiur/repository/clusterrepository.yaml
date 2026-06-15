@@ -28,5 +28,17 @@ spec:
     all: true
 
   identityDefaults:
-    hostnameTemplate: "{{ .Namespace }}"
-    usernameTemplate: "{{ .Namespace }}-{{ .ConfigName }}"
+    hostnameExpr: namespace
+    usernameExpr: namespace + '-' + policyName
+
+  moverDefaults:
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+    podSecurityContext:
+      fsGroup: 1000
+      fsGroupChangePolicy: OnRootMismatch
+    ttlSecondsAfterFinished: 86400
+
+  maintenance:
+    namespace: kopiur-system
