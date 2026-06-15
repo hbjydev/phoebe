@@ -6,6 +6,6 @@ metadata:
   name: forgejo-status
 spec:
   type: gitea
-  address: http://forgejo-http.dev.svc.cluster.local:3000
+  address: http://forgejo-http.dev.svc.cluster.local:3000/hayden/phoebe
   secretRef:
     name: forgejo-status-token-secret
