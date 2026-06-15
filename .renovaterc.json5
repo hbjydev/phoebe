@@ -5,7 +5,6 @@
     "local>hayden/phoebe//.renovate/groups.json5",
     "local>hayden/phoebe//.renovate/autoMerge.json5",
   ],
-  fetchReleaseNotes: false,
   ignorePaths: [
     "**/*.sops.*",
     "**/resources/**",
