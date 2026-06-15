@@ -54,6 +54,9 @@ spec:
 
         repository.pull-request:
           DEFAULT_MERGE_STYLE: squash
+          DEFAULT_MERGE_MESSAGE_SIZE: 2048
+          POPULATE_SQUASH_COMMENT_WITH_COMMIT_MESSAGES: false
+          POPULATE_SQUASH_COMMENT_WITH_COMMIT_MESSAGES_FOOTER: false
 
         repository.signing:
           FORMAT: ssh
