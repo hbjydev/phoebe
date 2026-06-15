@@ -12,7 +12,7 @@ spec:
       region: US
       auth:
         secretRef:
-          name: kopia-secret
+          name: kopia-hetzner-secret
           namespace: kopiur-system
 
   create:
@@ -20,7 +20,7 @@ spec:
 
   encryption:
     passwordSecretRef:
-      name: kopia-secret
+      name: kopia-hetzner-secret
       namespace: kopiur-system
       key: KOPIA_PASSWORD
 
