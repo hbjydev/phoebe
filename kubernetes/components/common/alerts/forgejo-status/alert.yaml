@@ -3,10 +3,10 @@
 apiVersion: notification.toolkit.fluxcd.io/v1beta3
 kind: Alert
 metadata:
-  name: github-status
+  name: forgejo-status
 spec:
   providerRef:
-    name: github-status
+    name: forgejo-status
   eventSources:
     - kind: Kustomization
       name: "*"

@@ -3,9 +3,9 @@
 apiVersion: notification.toolkit.fluxcd.io/v1beta3
 kind: Provider
 metadata:
-  name: github-status
+  name: forgejo-status
 spec:
-  type: github
-  address: https://github.com/hbjydev/phoebe
+  type: gitea
+  address: http://forgejo-http.dev.svc.cluster.local:3000
   secretRef:
-    name: github-status-token-secret
+    name: forgejo-status-token-secret
