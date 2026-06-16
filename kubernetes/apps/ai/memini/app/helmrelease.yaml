@@ -17,6 +17,9 @@ spec:
     remediation:
       retries: 3
   values:
+    global:
+      fullnameOverride: memini
+
     controllers:
       main:
         annotations:
@@ -73,31 +76,30 @@ spec:
       data:
         existingClaim: memini
 
-    route:
-      main:
-        enabled: true
-        hostnames:
-          - memini.hayden.moe
-        parentRefs:
-          - name: external
-            namespace: network
-            sectionName: https
-
-      ui:
-        enabled: true
-        annotations:
-          gatus.home-operations.com/enabled: 'false'
-        hostnames:
-          - memini.hayden.moe
-        parentRefs:
-          - name: internal
-            namespace: network
-            sectionName: https
-
     serviceMonitor:
       main:
         enabled: true
 
     grafanaDashboards:
       enabled: true
-      folder: ai
+
+    route:
+      main:
+        enabled: true
+        parentRefs:
+          - name: external
+            namespace: network
+            sectionName: https
+        hostnames:
+          - memini.hayden.moe
+
+      ui:
+        enabled: true
+        annotations:
+          gatus.home-operations.com/enabled: 'false'
+        parentRefs:
+          - name: internal
+            namespace: network
+            sectionName: https
+        hostnames:
+          - memini.hayden.moe
