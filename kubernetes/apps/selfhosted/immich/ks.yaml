@@ -29,6 +29,7 @@ spec:
           { name: vector },
           { name: vchord },
           { name: earthdistance },
+          { name: cube },
         ]
   prune: true
   retryInterval: 2m
