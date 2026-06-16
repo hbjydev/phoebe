@@ -21,10 +21,6 @@ spec:
     size: 16Gi
     storageClass: ceph-block
 
-  bootstrap:
-    recovery:
-      source: &src source
-
   plugins:
     - name: &plugin barman-cloud.cloudnative-pg.io
       isWALArchiver: true
@@ -32,12 +28,12 @@ spec:
         barmanObjectName: &store barman-upcloud
 
   externalClusters:
-    - name: *src
+    - name: &src source
       plugin:
         name: *plugin
         parameters:
           barmanObjectName: *store
-          serverName: postgres
+          serverName: hayden-postgres
 
   monitoring:
     enablePodMonitor: true
