@@ -10,19 +10,32 @@ spec:
     name: kopiur
   interval: 30m
   values:
-    installCRDs: true
-
     installScope: cluster
-
     webhook:
       certManager:
         enabled: true
-
     metrics:
       enabled: true
       serviceMonitor:
         enabled: true
-
+      prometheusRule:
+        enabled: true
+    grafanaDashboard:
+      enabled: true
+      grafanaOperator:
+        enabled: true
+        matchLabels:
+          grafana.internal/instance: grafana
+    podSecurityContext:
+      fsGroup: 1000
+      fsGroupChangePolicy: OnRootMismatch
+      runAsGroup: 1000
+      runAsNonRoot: true
+      runAsUser: 1000
+      seccompProfile:
+        type: RuntimeDefault
+    secretProjection:
+      enabled: true
     logging:
       level: info,kopia=debug
       format: json
