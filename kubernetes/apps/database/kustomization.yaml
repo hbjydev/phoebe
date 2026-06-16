@@ -5,4 +5,5 @@ kind: Kustomization
 namespace: database
 components:
   - ../../components/common
-resources: []
+resources:
+  - ./postgres/ks.yaml
