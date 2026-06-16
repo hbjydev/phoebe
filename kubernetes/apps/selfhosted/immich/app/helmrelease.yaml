@@ -42,23 +42,24 @@ spec:
               DB_PASSWORD:
                 valueFrom:
                   secretKeyRef:
-                    name: immich-pg-app
+                    name: immich-postgres
                     key: password
               DB_USERNAME:
                 valueFrom:
                   secretKeyRef:
-                    name: immich-pg-app
+                    name: immich-postgres
                     key: username
               DB_DATABASE_NAME:
                 valueFrom:
                   secretKeyRef:
-                    name: immich-pg-app
-                    key: dbname
+                    name: immich-postgres
+                    key: database
               DB_HOSTNAME:
                 valueFrom:
                   secretKeyRef:
-                    name: immich-pg-app
+                    name: immich-postgres
                     key: host
+
               REDIS_HOSTNAME: immich-redis
 
     immich:
