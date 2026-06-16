@@ -7,7 +7,6 @@ metadata:
 spec:
   groupRef:
     name: mcp-tools
-  # renovate: datasource=codeberg-releases depName=goern/forgejo-mcp
   image: codeberg.org/goern/forgejo-mcp:v2.29.0
   transport: streamable-http
   secrets:
