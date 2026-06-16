@@ -18,13 +18,6 @@ spec:
         APP_NAME: "Hayden's Git"
         APP_SLOGAN: "because sometimes it takes a man to be best girl"
 
-        database:
-          DB_TYPE: postgres
-          HOST: pooler-rw.postgres.svc:5432
-          USER: forgejo
-          NAME: forgejo
-          SSL_MODE: verify-full
-
         cache:
           ENABLED: true
           ADAPTER: redis
@@ -115,48 +108,17 @@ spec:
           provider: openidConnect
           scopes: profile email groups
 
-    deployment:
-      env:
-        - name: PGSSLROOTCERT
-          value: /var/run/secrets/root-ca/ca.crt
-        - name: PGSSLCERT
-          value: /var/run/secrets/postgresql/tls.crt
-        - name: PGSSLKEY
-          value: /var/run/secrets/postgresql/tls.key
-
-    valkey-cluster:
-      enabled: false
-    postgresql-ha:
-      enabled: false
-
     extraContainerVolumeMounts:
-      - name: postgres-forgejo
-        mountPath: "/var/run/secrets/postgresql"
-      - name: root-ca
-        mountPath: "/var/run/secrets/root-ca"
       - name: signing-key
         mountPath: /data/signing
         readOnly: true
 
     extraInitVolumeMounts:
-      - name: postgres-forgejo
-        mountPath: "/var/run/secrets/postgresql"
-      - name: root-ca
-        mountPath: "/var/run/secrets/root-ca"
       - name: signing-key
         mountPath: /data/signing
         readOnly: true
 
     extraVolumes:
-      - name: postgres-forgejo
-        secret:
-          defaultMode: 0o600
-          secretName: postgres-forgejo-cert
-      - name: root-ca
-        secret:
-          defaultMode: 0o600
-          secretName: root-ca
-
       - name: signing-key
         secret:
           secretName: forgejo-signing-key
