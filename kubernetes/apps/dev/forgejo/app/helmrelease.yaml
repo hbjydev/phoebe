@@ -20,7 +20,7 @@ spec:
 
         database:
           DB_TYPE: postgres
-          HOST: pooler-rw.postgres.svc:5432
+          HOST: pooler-rw.database.svc:5432
           USER: forgejo
           NAME: forgejo
           SSL_MODE: verify-full
