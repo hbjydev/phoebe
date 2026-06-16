@@ -11,5 +11,6 @@ resources:
   - ./ksgate/ks.yaml
   - ./metrics-server/ks.yaml
   - ./multus/ks.yaml
-  - ./snapshot-controller/ks.yaml
+  - ./reflector/ks.yaml
   - ./reloader/ks.yaml
+  - ./snapshot-controller/ks.yaml
