@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/barmancloud.cnpg.io/objectstore_v1.json
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: barman-upcloud
+spec:
+  configuration:
+    destinationPath: s3://haydenmoe-volsync-postgres/postgres
+    endpointURL: https://t9ag6.upcloudobjects.com
+    s3Credentials:
+      accessKeyId:
+        name: barman-upcloud
+        key: ACCESS_KEY_ID
+      secretAccessKey:
+        name: barman-upcloud
+        key: SECRET_ACCESS_KEY
+    wal:
+      compression: zstd
+    data:
+      compression: gzip
+
+  instanceSidecarConfiguration:
+    env:
+      - name: AWS_REQUEST_CHECKSUM_CALCULATION
+        value: when_required
+      - name: AWS_RESPONSE_CHECKSUM_VALIDATION
+        value: when_required
+
+  retentionPolicy: "14d"
