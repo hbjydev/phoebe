@@ -8,6 +8,7 @@ components:
 resources:
   - ./cilium/ks.yaml
   - ./coredns/ks.yaml
+  - ./ksgate/ks.yaml
   - ./metrics-server/ks.yaml
   - ./multus/ks.yaml
   - ./snapshot-controller/ks.yaml
