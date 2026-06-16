@@ -8,7 +8,7 @@ spec:
   groupRef:
     name: mcp-tools
   # renovate: datasource=github-releases depName=grafana/mcp-grafana
-  image: v0.16.0
+  image: grafana/mcp-grafana:0.15.2
   transport: streamable-http
   env:
     - name: GRAFANA_URL
