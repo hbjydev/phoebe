@@ -30,7 +30,7 @@ spec:
           app:
             image:
               repository: registry.erwanleboucher.dev/erwanleboucher.dev/towonel/towonel-agent
-              tag: 0.2.1
+              tag: 0.2.2
             env:
               RUST_LOG: info
               TOWONEL_AGENT_SERVICES: |
