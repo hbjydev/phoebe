@@ -38,11 +38,6 @@ spec:
       path: ./kubernetes/apps/database/postgres/cluster
       prune: true
       retryInterval: 2m
-      postBuild:
-        substituteFrom:
-          - kind: Secret
-            name: barman-ovh
-            optional: true
       sourceRef:
         kind: GitRepository
         name: flux-system
