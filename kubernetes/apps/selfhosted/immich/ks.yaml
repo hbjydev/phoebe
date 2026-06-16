@@ -28,6 +28,7 @@ spec:
         [
           { name: vector },
           { name: vchord },
+          { name: earthdistance },
         ]
   prune: true
   retryInterval: 2m
