@@ -10,6 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
+    - ../../../../components/postgres/pass
     - ../../../../components/redis
     - ../../../../components/volsync
   dependsOn:
@@ -23,6 +24,10 @@ spec:
       NAMESPACE: *namespace
       VOLSYNC_CAPACITY: 32Gi
       PG_SIZE: 10Gi
+      DATABASE_EXTENSIONS: |
+        [
+          { name: vchord }
+        ]
   prune: true
   retryInterval: 2m
   sourceRef:
