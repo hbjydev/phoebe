@@ -26,7 +26,8 @@ spec:
       PG_SIZE: 10Gi
       DATABASE_EXTENSIONS: |
         [
-          { name: vchord }
+          { name: vector },
+          { name: vchord },
         ]
   prune: true
   retryInterval: 2m
