@@ -49,9 +49,9 @@ spec:
               MEMINI_DEMOTE_AFTER: 1440h
               MEMINI_TOMBSTONE_TTL: 720h
               MEMINI_LOG_FORMAT: json
-              MEMINI_EMBED_BASE_URL: http://litellm.ai:4000/v1
+              MEMINI_EMBED_BASE_URL: http://text-embeddings-inference.ai.svc.cluster.local:8080/v1
               MEMINI_EMBED_DIMS: '384'
-              MEMINI_EMBED_MODEL: or-text-embedding-3-small
+              MEMINI_EMBED_MODEL: all-MiniLM-L6-v2
               MEMINI_RERANK: http://litellm.ai:4000/v1
               MEMINI_RERANK_MODEL: oc-deepseek-v4-flash
               MEMINI_RERANK_TOP_N: '20'
