@@ -11,4 +11,5 @@ resources:
   - ./memini/ks.yaml
   - ./litellm/ks.yaml
   - ./pg/ks.yaml
+  - ./text-embeddings-inference/ks.yaml
   - ./toolhive/ks.yaml
