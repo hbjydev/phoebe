@@ -17,8 +17,8 @@ data:
         ;;
     esac
 
-    repo="$${ref%:*}"
-    quant="$${ref##*:}"
+    repo="${ref%:*}"
+    quant="${ref##*:}"
 
     echo ">> $repo  quant=$quant"
     snap=$(hf download "$repo" --include "*$${quant}*.gguf" --format quiet)

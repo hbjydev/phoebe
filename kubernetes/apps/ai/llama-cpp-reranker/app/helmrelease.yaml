@@ -34,8 +34,20 @@ spec:
               - /bin/sh
               - -ec
               - |
-                uv pip install --system --no-cache huggingface_hub
-                download-model Voodisss/Qwen3-Reranker-0.6B-GGUF-llama_cpp:Q4_K_M
+                set -euo pipefail
+
+                if [ ! -s /models/Qwen3-Reranker-0.6B/qwen3-reranker-0.6b-q8_0.gguf ]; then
+                  uv pip install --system --no-cache huggingface_hub[hf_xet]
+                  mkdir -p /models/Qwen3-Reranker-0.6B
+                  rm -rf /models/Qwen3-Reranker-0.6B/.cache/huggingface/download/qwen3-reranker-0.6b-q8_0.ggufflock
+                  hf download \
+                    ggml-org/Qwen3-Reranker-0.6B-Q8_0-GGUF \
+                    qwen3-reranker-0.6b-q8_0.gguf \
+                    --local-dir /models/Qwen3-Reranker-0.6B
+                  echo "Qwen3-Reranker-0.6B download complete"
+                else
+                  echo "Qwen3-Reranker-0.6B already downloaded, skipping"
+                fi
             env:
               HUGGINGFACE_HUB_CACHE: /models
 
@@ -48,7 +60,7 @@ spec:
             args:
               - --metrics
               - --model
-              - /models/models--Voodisss--Qwen3-Reranker-0.6B-GGUF-llama_cpp/model.gguf
+              - /models/Qwen3-Reranker-0.6B/qwen3-reranker-0.6b-q8_0.gguf
               # Qwen3-Reranker needs rank pooling; --reranking + --pooling rank
               # exposes the Cohere-style /v1/rerank endpoint memini calls.
               - --reranking
