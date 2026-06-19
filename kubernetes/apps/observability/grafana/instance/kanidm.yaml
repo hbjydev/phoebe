@@ -20,7 +20,7 @@ spec:
         - openid
         - profile
         - email
-        - groups
+        - groups_name
 
 ---
 apiVersion: kaniop.rs/v1beta1
