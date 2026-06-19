@@ -11,10 +11,11 @@ spec:
   interval: 30m
   values:
     installScope: cluster
+    installCRDs: false
 
     webhook:
       tls:
-        mode: self
+        mode: cert-manager
       serviceMonitor:
         enabled: true
 
