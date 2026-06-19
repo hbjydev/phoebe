@@ -11,8 +11,6 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/volsync
-  dependsOn:
-    - name: honcho
   interval: 1h
   path: ./kubernetes/apps/ai/hermes/app
   postBuild:
