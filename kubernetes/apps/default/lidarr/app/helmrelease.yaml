@@ -39,19 +39,16 @@ spec:
               LIDARR__POSTGRES__MAINDB: lidarr
               LIDARR__POSTGRES__HOST:
                 secretKeyRef:
-                  name: starr-pg-app
+                  name: lidarr-postgres
                   key: host
-              LIDARR__POSTGRES__PORT:
-                secretKeyRef:
-                  name: starr-pg-app
-                  key: port
+              LIDARR__POSTGRES__PORT: '5432'
               LIDARR__POSTGRES__USER:
                 secretKeyRef:
-                  name: starr-pg-app
+                  name: lidarr-postgres
                   key: username
               LIDARR__POSTGRES__PASSWORD:
                 secretKeyRef:
-                  name: starr-pg-app
+                  name: lidarr-postgres
                   key: password
 
               TZ: Europe/London

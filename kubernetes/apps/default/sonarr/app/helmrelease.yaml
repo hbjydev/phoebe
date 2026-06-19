@@ -39,19 +39,16 @@ spec:
               SONARR__POSTGRES__MAINDB: sonarr
               SONARR__POSTGRES__HOST:
                 secretKeyRef:
-                  name: starr-pg-app
+                  name: sonarr-postgres
                   key: host
-              SONARR__POSTGRES__PORT:
-                secretKeyRef:
-                  name: starr-pg-app
-                  key: port
+              SONARR__POSTGRES__PORT: '5432'
               SONARR__POSTGRES__USER:
                 secretKeyRef:
-                  name: starr-pg-app
+                  name: sonarr-postgres
                   key: username
               SONARR__POSTGRES__PASSWORD:
                 secretKeyRef:
-                  name: starr-pg-app
+                  name: sonarr-postgres
                   key: password
 
               TZ: Europe/London

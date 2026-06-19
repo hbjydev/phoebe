@@ -39,19 +39,16 @@ spec:
               RADARR__POSTGRES__MAINDB: radarr
               RADARR__POSTGRES__HOST:
                 secretKeyRef:
-                  name: starr-pg-app
+                  name: radarr-postgres
                   key: host
-              RADARR__POSTGRES__PORT:
-                secretKeyRef:
-                  name: starr-pg-app
-                  key: port
+              RADARR__POSTGRES__PORT: '5432'
               RADARR__POSTGRES__USER:
                 secretKeyRef:
-                  name: starr-pg-app
+                  name: radarr-postgres
                   key: username
               RADARR__POSTGRES__PASSWORD:
                 secretKeyRef:
-                  name: starr-pg-app
+                  name: radarr-postgres
                   key: password
 
               TZ: Europe/London
