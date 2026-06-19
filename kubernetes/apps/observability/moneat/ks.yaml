@@ -13,6 +13,7 @@ spec:
     - ../../../../components/postgres/pass
     - ../../../../components/clickhouse/pass
     - ../../../../components/redis
+    - ../../../../components/volsync
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
