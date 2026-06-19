@@ -25,7 +25,7 @@ kind: KeeperCluster
 metadata:
   name: keeper
 spec:
-  replicas: 2
+  replicas: 1
   dataVolumeClaimSpec:
     resources:
       requests:
