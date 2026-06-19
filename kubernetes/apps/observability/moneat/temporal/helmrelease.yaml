@@ -1,0 +1,89 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: moneat-temporal
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      temporal:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        serviceAccount:
+          identifier: hermes
+
+        containers:
+          main:
+            image:
+              repository: temporalio/auto-setup
+              tag: 1.27.4
+            env:
+              DB: postgres12
+              DB_PORT: 5432
+              SKIP_DB_CREATE: 'true'
+              DEFAULT_NAMESPACE: default
+              POSTGRES_USER:
+                secretKeyRef:
+                  name: moneat-temporal-postgres
+                  key: username
+              POSTGRES_PWD:
+                secretKeyRef:
+                  name: moneat-temporal-postgres
+                  key: password
+              POSTGRES_SEEDS:
+                secretKeyRef:
+                  name: moneat-temporal-postgres
+                  key: host
+              DBNAME:
+                secretKeyRef:
+                  name: moneat-temporal-postgres
+                  key: database
+              VISIBILITY_DBNAME: moneat-temporal-visibility
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              limits:
+                cpu: 1000m
+                memory: 2Gi
+            probes:
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: [temporal, operator, cluster, health, --address, 'localhost:7233']
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            ports:
+              - containerPort: &grpcPort 7233
+                name: grpc
+                protocol: TCP
+
+    defaultPodOptions:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 10000
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      grpc:
+        type: ClusterIP
+        ports:
+          http:
+            port: *grpcPort
