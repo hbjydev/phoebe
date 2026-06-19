@@ -12,7 +12,7 @@ spec:
   components:
     - ../../../../components/postgres/pass
     - ../../../../components/redis
-    - ../../../../components/volsync
+    - ../../../../components/kopiur
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -22,7 +22,7 @@ spec:
     substitute:
       APP: *app
       NAMESPACE: *namespace
-      VOLSYNC_CAPACITY: 32Gi
+      KOPIUR_CAPACITY: 32Gi
       PG_SIZE: 10Gi
       DATABASE_EXTENSIONS: |
         [
