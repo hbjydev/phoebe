@@ -10,6 +10,5 @@ resources:
   - ./memini/ks.yaml
   - ./litellm/ks.yaml
   - ./llama-cpp-reranker/ks.yaml
-  - ./pg/ks.yaml
   - ./text-embeddings-inference/ks.yaml
   - ./toolhive/ks.yaml
