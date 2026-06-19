@@ -8,7 +8,7 @@ metadata:
     fluxcd.controlplane.io/reconcile: "enabled"
     fluxcd.controlplane.io/reconcileEvery: "5m"
   labels:
-    postgresql.cnpg.io/role: "true"
+    clickhouse.hayden.moe/role: "true"
 spec:
   type: Static
   defaultValues:
