@@ -1,0 +1,16 @@
+---
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: SnapshotSchedule
+metadata:
+  name: "${APP}"
+  labels:
+    kustomize.toolkit.fluxcd.io/ssa: IfNotPresent
+spec:
+  policyRef:
+    name: "${APP}"
+
+  schedule:
+    concurrencyPolicy: Forbid
+    cron: "${KOPIUR_SCHEDULE:=H */12 * * *}"
+    jitter: 10m
+    runOnCreate: false

@@ -1,0 +1,26 @@
+---
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: SnapshotPolicy
+metadata:
+  name: "kopiur-${APP}"
+  labels:
+    kustomize.toolkit.fluxcd.io/ssa: IfNotPresent
+spec:
+  copyMethod: Snapshot
+
+  credentialProjection:
+    enabled: true
+
+  repository:
+    kind: ClusterRepository
+    name: ${KOPIUR_REPOSITORY:=hetzner}
+
+  retention:
+    keepHourly: ${KOPIUR_KEEP_HOURLY:-8}
+    keepDaily: ${KOPIUR_KEEP_DAILY:-7}
+
+  sources:
+    - pvc:
+        name: "${KOPIUR_PVC:=${APP}}"
+
+  volumeSnapshotClassName: "${KOPIUR_SNAPSHOTCLASS:=csi-ceph-blockpool}"
