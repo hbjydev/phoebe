@@ -28,7 +28,7 @@ spec:
               repository: ghcr.io/moneat-io/moneat-backend
               tag: 2.0.1
             env:
-              DATABASE_URL: jdbc:postgresql://pooler-rw.database:5432/moneat
+              DATABASE_URL: jdbc:postgresql://postgres-rw.database:5432/moneat
               DATABASE_USER:
                 secretKeyRef:
                   name: moneat-postgres
