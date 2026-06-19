@@ -34,7 +34,7 @@ spec:
 
     tls:
       enabled: true
-      required: true
+      required: false
       serverCertSecret:
         name: clickhouse-server-cert
 
