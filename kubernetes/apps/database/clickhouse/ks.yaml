@@ -46,7 +46,7 @@ spec:
         namespace: flux-system
       targetNamespace: *namespace
       timeout: 5m
-      patches: []
+      patches:
         - target:
             kind: ClickHouseCluster
             group: clickhouse.com
