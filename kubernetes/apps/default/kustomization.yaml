@@ -8,7 +8,6 @@ components:
 resources:
   - ./home-assistant/ks.yaml
   - ./jellyseerr/ks.yaml
-  - ./keycloak/ks.yaml
   - ./lidarr/ks.yaml
   - ./matrix/ks.yaml
   - ./prowlarr/ks.yaml
