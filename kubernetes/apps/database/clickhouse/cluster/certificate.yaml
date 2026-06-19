@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: &name clickhouse-server-cert
+spec:
+  commonName: clickhouse
+  dnsNames:
+    - "*.clickhouse-clickhouse-headless.database.svc"
+    - "*.clickhouse-clickhouse-headless.database.svc.cluster.local"
+    - localhost
+  subject:
+    countries:
+      - GB
+    organizations:
+      - hayden.moe
+  usages:
+    - server auth
+  duration: 720h # 1 month
+  privateKey:
+    algorithm: ECDSA
+    size: 384
+    encoding: PKCS8
+    rotationPolicy: Always
+  issuerRef:
+    name: clickhouse-server-ca
+    kind: Issuer
+    group: cert-manager.io
+  secretName: *name

@@ -1,0 +1,32 @@
+---
+apiVersion: clickhouse.com/v1alpha1
+kind: ClickHouseCluster
+metadata:
+  name: clickhouse
+spec:
+  replicas: 2
+  shards: 1
+  keeperClusterRef:
+    name: keeper
+  dataVolumeClaimSpec:
+    resources:
+      requests:
+        storage: 24Gi
+  settings:
+    tls:
+      enabled: true
+      required: true
+      serverCertSecret:
+        name: clickhouse-server-cert
+
+---
+apiVersion: clickhouse.com/v1alpha1
+kind: KeeperCluster
+metadata:
+  name: keeper
+spec:
+  replicas: 2
+  dataVolumeClaimSpec:
+    resources:
+      requests:
+        storage: 10Gi

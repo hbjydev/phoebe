@@ -1,0 +1,96 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/fluxcd.controlplane.io/resourceset_v1.json
+apiVersion: fluxcd.controlplane.io/v1
+kind: ResourceSet
+metadata:
+  name: clickhouse-cluster
+  annotations:
+    fluxcd.controlplane.io/reconcile: "enabled"
+    fluxcd.controlplane.io/reconcileEvery: "30m"
+    fluxcd.controlplane.io/reconcileTimeout: "5m"
+spec:
+  inputStrategy:
+    name: Permute
+  inputsFrom:
+    - apiVersion: fluxcd.controlplane.io/v1
+      kind: ResourceSetInputProvider
+      selector:
+        matchLabels:
+          clickhouse.hayden.moe/role: "true"
+  resourcesTemplate: |-
+    apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    metadata:
+      name: &app clickhouse-cluster
+      namespace: &namespace database
+    spec:
+      commonMetadata:
+        labels:
+          app.kubernetes.io/name: *app
+      healthChecks:
+        - apiVersion: clickhouse.com/v1alpha1
+          kind: ClickHouseCluster
+          name: clickhouse
+          namespace: database
+      interval: 1h
+      path: ./kubernetes/apps/database/clickhouse/cluster
+      prune: true
+      retryInterval: 2m
+      sourceRef:
+        kind: GitRepository
+        name: flux-system
+        namespace: flux-system
+      targetNamespace: *namespace
+      timeout: 5m
+      patches: []
+        # - target:
+        #     kind: ClickHouseCluster
+        #     group: clickhouse.com
+        #     version: v1alpha1
+        #   patch: |-
+        #     apiVersion: postgresql.cnpg.io/v1
+        #     kind: Cluster
+        #     metadata:
+        #       name: not-used
+        #     spec:
+        #       managed:
+        #         roles:
+        #           <<- $roleMap := dict >>
+        #           <<- range $k, $in := inputs >>
+        #           <<-   if kindIs "map" $in >>
+        #           <<-     $r := index $in "role" >>
+        #           <<-     if $r >>
+        #           <<-       $_ := set $roleMap $r $in >>
+        #           <<-     end >>
+        #           <<-   end >>
+        #           <<- end >>
+        #
+        #           <<- $roleNames := keys $roleMap | sortAlpha >>
+        #
+        #           <<- $roleObjs := list >>
+        #           <<- range $r := $roleNames >>
+        #           <<-   $in := index $roleMap $r >>
+        #
+        #           <<-   $disablePass := true >>
+        #           <<-   $dpVal := index $in "disablePassword" | toString | lower >>
+        #           <<-   if contains "false" $dpVal >>
+        #           <<-     $disablePass = false >>
+        #           <<-   end >>
+        #
+        #           <<-   $superuser := false >>
+        #           <<-   $suVal := index $in "superuser" | toString | lower >>
+        #           <<-   if contains "true" $suVal >>
+        #           <<-     $superuser = true >>
+        #           <<-   end >>
+        #
+        #           <<-   $role := dict "name" $r "ensure" "present" "login" true "superuser" $superuser "disablePassword" $disablePass >>
+        #
+        #           <<-   if not $disablePass >>
+        #           <<-     $app := index $in "app" >>
+        #           <<-     $_ := set $role "passwordSecret" (dict "name" (printf "%s-postgres" $app)) >>
+        #           <<-   end >>
+        #
+        #           <<-   $roleObjs = concat $roleObjs (list $role) >>
+        #           <<- end >>
+        #
+        #           <<- toYaml $roleObjs | nindent 18 >>

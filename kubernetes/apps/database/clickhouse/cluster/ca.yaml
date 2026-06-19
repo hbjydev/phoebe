@@ -1,0 +1,48 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: &name clickhouse-server-ca
+spec:
+  isCA: true
+  commonName: clickhouse-ca
+  subject:
+    countries:
+      - GB
+    organizations:
+      - hayden.moe
+    organizationalUnits:
+      - clickhouse
+  usages:
+    - cert sign
+    - crl sign
+  nameConstraints:
+    critical: true
+    permitted:
+      dnsDomains:
+        - .database.svc.cluster.local
+        - .database.svc
+        - clickhouse
+        - keeper
+  duration: 8766h # 1 year
+  privateKey:
+    algorithm: ECDSA
+    size: 384
+    encoding: PKCS8
+    rotationPolicy: Always
+  issuerRef:
+    name: cluster-ca
+    kind: ClusterIssuer
+    group: cert-manager.io
+  secretName: *name
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cert-manager.io/issuer_v1.json
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: &name clickhouse-server-ca
+spec:
+  ca:
+    secretName: *name
