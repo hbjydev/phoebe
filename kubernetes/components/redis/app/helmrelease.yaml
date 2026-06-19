@@ -17,6 +17,9 @@ spec:
     remediation:
       retries: 3
   values:
+    global:
+      fullnameOverride: "${APP}-redis"
+
     controllers:
       redis:
         containers:
