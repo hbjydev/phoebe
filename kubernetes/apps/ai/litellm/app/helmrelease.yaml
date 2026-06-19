@@ -31,7 +31,7 @@ spec:
               PROMETHEUS_MULTIPROC_DIR: /tmp/prometheus_multiproc_dir
               DATABASE_URL:
                 secretKeyRef:
-                  name: '{{ .Release.Name }}-postgres'
+                  name: 'litellm-postgres'
                   key: url
             envFrom:
               - secretRef:
