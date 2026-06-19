@@ -1,0 +1,29 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: "${APP}-clickhouse"
+  namespace: &namespace database
+spec:
+  dependsOn:
+    - name: clickhouse-operator
+      namespace: clickhouse-operator-system
+  interval: 1h
+  path: ./kubernetes/components/clickhouse/base/database
+  postBuild:
+    substitute:
+      APP: ${APP}
+      OWNER: ${DATABASE_OWNER:=${APP}}
+      CLICKHOUSE_PROFILE: ${q:='}${CLICKHOUSE_PROFILE}${q:='}
+      CLICKHOUSE_QUOTA: ${q:='}${CLICKHOUSE_QUOTA}${q:='}
+      emptyArray: "[]"
+  prune: true
+  retryInterval: 2m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: *namespace
+  timeout: 5m
+  wait: false
