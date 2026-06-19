@@ -1,0 +1,71 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: moneat-frontend
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      app:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        containers:
+          app:
+            image:
+              repository: ghcr.io/moneat-io/moneat-dashboard
+              tag: 2.0.1
+            env:
+              VITE_BACKEND_URL: https://moneat-api.hayden.moe
+              VITE_MONEAT_VERSION: '2.0.1'
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 500m
+                memory: 512Mi
+            ports:
+              - containerPort: &port 80
+                name: http
+                protocol: TCP
+
+    defaultPodOptions:
+      securityContext:
+        fsGroup: 10000
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      http:
+        type: ClusterIP
+        ports:
+          http:
+            port: *port
+
+    route:
+      app:
+        hostnames:
+          - "moneat.hayden.moe"
+        parentRefs:
+          - name: external
+            namespace: network
+        rules:
+          - backendRefs:
+              - identifier: http
+                port: http
+
+    persistence:
+      tmp:
+        type: emptyDir
