@@ -18,7 +18,7 @@ spec:
       retries: 3
   values:
     controllers:
-      main:
+      app:
         annotations:
           reloader.stakater.com/auto: "true"
 
@@ -102,7 +102,7 @@ spec:
             namespace: network
         rules:
           - backendRefs:
-              - identifier: dashboard
+              - identifier: http
                 port: http
 
     persistence:
