@@ -13,8 +13,6 @@ spec:
     name: Permute
   inputs:
     - user: internal
-      profile: readonly
-      quota: default
   inputsFrom:
     - apiVersion: fluxcd.controlplane.io/v1
       kind: ResourceSetInputProvider
@@ -73,6 +71,7 @@ spec:
                     <<- $userNames := keys $userMap | sortAlpha >>
 
                     <<- $userObjs := dict >>
+
                     <<- range $u := $userNames >>
                     <<-   $in := index $userMap $u >>
 
@@ -89,4 +88,4 @@ spec:
                     <<-   set $userObjs $u $user >>
                     <<- end >>
 
-                    <<- toYaml $userObjs | nindent 20 >>
+                    <<- toYaml $userObjs | nindent 22 >>
