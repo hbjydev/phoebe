@@ -29,6 +29,10 @@ spec:
             env:
               TZ: ${TIMEZONE}
               PROMETHEUS_MULTIPROC_DIR: /tmp/prometheus_multiproc_dir
+              DATABASE_URL:
+                secretKeyRef:
+                  name: '{{ .Release.Name }}-postgres'
+                  key: url
             envFrom:
               - secretRef:
                   name: litellm-secret
