@@ -85,3 +85,11 @@ spec:
         ports:
           http:
             port: *grpcPort
+
+    persistence:
+      config:
+        accessMode: ReadWriteOnce
+        storageClass: ceph-block
+        size: 2Gi
+        globalMounts:
+          - path: /etc/temporal/config
