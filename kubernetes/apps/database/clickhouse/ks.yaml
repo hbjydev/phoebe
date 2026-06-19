@@ -78,7 +78,7 @@ spec:
                   <<-   $userEnvs := concat $userEnvs (list $user) >>
                   <<- end >>
 
-                  <<- toYaml $userObjs | nindent 18 >>
+                  <<- toYaml $userEnvs | nindent 18 >>
 
               settings:
                 extraUsersConfig:
