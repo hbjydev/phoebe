@@ -12,6 +12,7 @@ spec:
   interval: 1h
   components:
     - ../../../../components/redis
+    - ../../../../components/postgres/pass
   path: ./kubernetes/apps/ai/litellm/app
   prune: true
   postBuild:
