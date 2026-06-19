@@ -67,11 +67,6 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: { drop: [ALL] }
 
-      fsck:
-        enabled: true
-        cronjob:
-          schedule: '0 5 * * *'
-
     persistence:
       data:
         existingClaim: memini
