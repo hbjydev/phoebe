@@ -63,21 +63,10 @@ spec:
                 spec:
                   exec:
                     command: [temporal, operator, cluster, health, --address, 'localhost:7233']
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
             ports:
               - containerPort: &grpcPort 7233
                 name: grpc
                 protocol: TCP
-
-    defaultPodOptions:
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 10000
-        fsGroupChangePolicy: OnRootMismatch
 
     service:
       grpc:
@@ -85,11 +74,3 @@ spec:
         ports:
           http:
             port: *grpcPort
-
-    persistence:
-      config:
-        accessMode: ReadWriteOnce
-        storageClass: ceph-block
-        size: 2Gi
-        globalMounts:
-          - path: /etc/temporal/config
