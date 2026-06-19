@@ -45,54 +45,54 @@ spec:
       targetNamespace: *namespace
       timeout: 5m
       patches: []
-        # - target:
-        #     kind: ClickHouseCluster
-        #     group: clickhouse.com
-        #     version: v1alpha1
-        #   patch: |-
-        #     apiVersion: postgresql.cnpg.io/v1
-        #     kind: Cluster
-        #     metadata:
-        #       name: not-used
-        #     spec:
-        #       managed:
-        #         roles:
-        #           <<- $roleMap := dict >>
-        #           <<- range $k, $in := inputs >>
-        #           <<-   if kindIs "map" $in >>
-        #           <<-     $r := index $in "role" >>
-        #           <<-     if $r >>
-        #           <<-       $_ := set $roleMap $r $in >>
-        #           <<-     end >>
-        #           <<-   end >>
-        #           <<- end >>
-        #
-        #           <<- $roleNames := keys $roleMap | sortAlpha >>
-        #
-        #           <<- $roleObjs := list >>
-        #           <<- range $r := $roleNames >>
-        #           <<-   $in := index $roleMap $r >>
-        #
-        #           <<-   $disablePass := true >>
-        #           <<-   $dpVal := index $in "disablePassword" | toString | lower >>
-        #           <<-   if contains "false" $dpVal >>
-        #           <<-     $disablePass = false >>
-        #           <<-   end >>
-        #
-        #           <<-   $superuser := false >>
-        #           <<-   $suVal := index $in "superuser" | toString | lower >>
-        #           <<-   if contains "true" $suVal >>
-        #           <<-     $superuser = true >>
-        #           <<-   end >>
-        #
-        #           <<-   $role := dict "name" $r "ensure" "present" "login" true "superuser" $superuser "disablePassword" $disablePass >>
-        #
-        #           <<-   if not $disablePass >>
-        #           <<-     $app := index $in "app" >>
-        #           <<-     $_ := set $role "passwordSecret" (dict "name" (printf "%s-postgres" $app)) >>
-        #           <<-   end >>
-        #
-        #           <<-   $roleObjs = concat $roleObjs (list $role) >>
-        #           <<- end >>
-        #
-        #           <<- toYaml $roleObjs | nindent 18 >>
+# - target:
+#     kind: ClickHouseCluster
+#     group: clickhouse.com
+#     version: v1alpha1
+#   patch: |-
+#     apiVersion: postgresql.cnpg.io/v1
+#     kind: Cluster
+#     metadata:
+#       name: not-used
+#     spec:
+#       managed:
+#         roles:
+#           <<- $roleMap := dict >>
+#           <<- range $k, $in := inputs >>
+#           <<-   if kindIs "map" $in >>
+#           <<-     $r := index $in "role" >>
+#           <<-     if $r >>
+#           <<-       $_ := set $roleMap $r $in >>
+#           <<-     end >>
+#           <<-   end >>
+#           <<- end >>
+#
+#           <<- $roleNames := keys $roleMap | sortAlpha >>
+#
+#           <<- $roleObjs := list >>
+#           <<- range $r := $roleNames >>
+#           <<-   $in := index $roleMap $r >>
+#
+#           <<-   $disablePass := true >>
+#           <<-   $dpVal := index $in "disablePassword" | toString | lower >>
+#           <<-   if contains "false" $dpVal >>
+#           <<-     $disablePass = false >>
+#           <<-   end >>
+#
+#           <<-   $superuser := false >>
+#           <<-   $suVal := index $in "superuser" | toString | lower >>
+#           <<-   if contains "true" $suVal >>
+#           <<-     $superuser = true >>
+#           <<-   end >>
+#
+#           <<-   $role := dict "name" $r "ensure" "present" "login" true "superuser" $superuser "disablePassword" $disablePass >>
+#
+#           <<-   if not $disablePass >>
+#           <<-     $app := index $in "app" >>
+#           <<-     $_ := set $role "passwordSecret" (dict "name" (printf "%s-postgres" $app)) >>
+#           <<-   end >>
+#
+#           <<-   $roleObjs = concat $roleObjs (list $role) >>
+#           <<- end >>
+#
+#           <<- toYaml $roleObjs | nindent 18 >>
