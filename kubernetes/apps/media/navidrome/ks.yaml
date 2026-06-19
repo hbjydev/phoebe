@@ -9,7 +9,7 @@ spec:
     labels:
       app.kubernetes.io/name: navidrome
   components:
-    - ../../../../components/volsync
+    - ../../../../components/kopiur
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -18,7 +18,7 @@ spec:
   postBuild:
     substitute:
       APP: navidrome
-      VOLSYNC_CAPACITY: 32Gi
+      KOPIUR_CAPACITY: 32Gi
   prune: true
   sourceRef:
     kind: GitRepository
@@ -38,7 +38,7 @@ spec:
     labels:
       app.kubernetes.io/name: picard
   components:
-    - ../../../../components/volsync
+    - ../../../../components/kopiur
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -47,7 +47,7 @@ spec:
   postBuild:
     substitute:
       APP: picard
-      VOLSYNC_CAPACITY: 5Gi
+      KOPIUR_CAPACITY: 5Gi
   prune: true
   sourceRef:
     kind: GitRepository

@@ -9,7 +9,7 @@ spec:
     labels:
       app.kubernetes.io/name: dispatcharr
   components:
-    - ../../../../components/volsync
+    - ../../../../components/kopiur
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -18,7 +18,7 @@ spec:
   postBuild:
     substitute:
       APP: dispatcharr
-      VOLSYNC_CAPACITY: 32Gi
+      KOPIUR_CAPACITY: 32Gi
   prune: true
   sourceRef:
     kind: GitRepository
