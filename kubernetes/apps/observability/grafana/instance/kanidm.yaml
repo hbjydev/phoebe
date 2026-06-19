@@ -41,6 +41,20 @@ spec:
 apiVersion: kaniop.rs/v1beta1
 kind: KanidmGroup
 metadata:
+  name: grafana-editors
+spec:
+  kanidmRef:
+    name: kanidm
+    namespace: security
+  kanidmName: grafana_editors
+  accountPolicy:
+    authSessionExpiry: 2678400
+  members: []
+
+---
+apiVersion: kaniop.rs/v1beta1
+kind: KanidmGroup
+metadata:
   name: grafana-admins
 spec:
   kanidmRef:
