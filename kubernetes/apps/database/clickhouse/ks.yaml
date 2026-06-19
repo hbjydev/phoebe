@@ -55,6 +55,31 @@ spec:
             metadata:
               name: not-used
             spec:
+              containerTemplate:
+                env:
+                  <<- $userMap := dict >>
+                  <<- range $k, $in := inputs >>
+                  <<-   if kindIs "map" $in >>
+                  <<-     $u := index $in "user" >>
+                  <<-     if $u >>
+                  <<-       $_ := set $userMap $u $in >>
+                  <<-     end >>
+                  <<-   end >>
+                  <<- end >>
+
+                  <<- $userNames := keys $userMap | sortAlpha >>
+
+                  <<- $userEnvs := list >>
+
+                  <<- range $u := $userNames >>
+                  <<-   $in := index $userMap $u >>
+                  <<-   $env := print ($u | upper) "_PASSWORD" >>
+                  <<-   $user := dict "name" $env "valueFrom" (dict "secretKeyRef" (dict "name" (print $u "-clickhouse") "key" "password")) >>
+                  <<-   $userEnvs := concat $userEnvs (list $user) >>
+                  <<- end >>
+
+                  <<- toYaml $userObjs | nindent 18 >>
+
               settings:
                 extraUsersConfig:
                   <<- $userMap := dict >>
