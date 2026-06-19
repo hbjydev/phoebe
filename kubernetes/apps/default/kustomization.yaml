@@ -13,4 +13,3 @@ resources:
   - ./prowlarr/ks.yaml
   - ./radarr/ks.yaml
   - ./sonarr/ks.yaml
-  - ./starr-pg/ks.yaml
