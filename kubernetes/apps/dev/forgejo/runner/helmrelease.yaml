@@ -37,7 +37,7 @@ spec:
                   namespace: dev
                   poll_timeout: 10m
             runner:
-              capacity: 6
+              capacity: 3
               labels:
                 - ubuntu-latest:k8s:/config/podspec-default.yaml
                 - default:k8s:/config/podspec-default.yaml
