@@ -15,7 +15,7 @@ spec:
   path: ./kubernetes/components/redis/app
   postBuild:
     substitute:
-      APP: ${REDIS_APP:-${APP}-redis}
+      REDIS_APP: ${REDIS_APP:-${APP}-redis}
       REDIS_CAPACITY: ${REDIS_CAPACITY:-2Gi}
   prune: true
   retryInterval: 2m

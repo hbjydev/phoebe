@@ -19,7 +19,6 @@ spec:
     substitute:
       APP: *app
       NAMESPACE: *namespace
-      REDIS_APP: litellm-redis
   sourceRef:
     kind: GitRepository
     name: flux-system
