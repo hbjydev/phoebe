@@ -68,16 +68,13 @@ spec:
                   <<- end >>
 
                   <<- $userNames := keys $userMap | sortAlpha >>
-
                   <<- $userEnvs := list >>
-
                   <<- range $u := $userNames >>
                   <<-   $in := index $userMap $u >>
                   <<-   $env := print ($u | upper) "_PASSWORD" >>
                   <<-   $user := dict "name" $env "valueFrom" (dict "secretKeyRef" (dict "name" (print $u "-clickhouse") "key" "password")) >>
-                  <<-   $userEnvs := concat $userEnvs (list $user) >>
+                  <<-   $userEnvs = concat $userEnvs (list $user) >>
                   <<- end >>
-
                   <<- toYaml $userEnvs | nindent 18 >>
 
               settings:
