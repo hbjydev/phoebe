@@ -6,12 +6,15 @@ metadata:
 spec:
   replicas: 2
   shards: 1
+
   keeperClusterRef:
     name: keeper
+
   dataVolumeClaimSpec:
     resources:
       requests:
         storage: 24Gi
+
   settings:
     extraUsersConfig:
       users: {}

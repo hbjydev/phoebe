@@ -72,7 +72,7 @@ spec:
 
                     <<- $userNames := keys $userMap | sortAlpha >>
 
-                    <<- $userObjs := list >>
+                    <<- $userObjs := dict >>
                     <<- range $u := $userNames >>
                     <<-   $in := index $userMap $u >>
 
@@ -86,7 +86,7 @@ spec:
 
                     <<-   $user := dict "profile" $profile "quota" $quota "password" $password >>
 
-                    <<-   $userObjs = concat $userObjs (list $user) >>
+                    <<-   $userObjs = merge $userObjs (dict "user" $user) >>
                     <<- end >>
 
                     <<- toYaml $userObjs | nindent 20 >>
