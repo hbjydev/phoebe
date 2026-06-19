@@ -49,7 +49,7 @@ spec:
             kind: ClickHouseCluster
             group: clickhouse.com
             version: v1alpha1
-          patch: |
+          patch: |-
             apiVersion: clickhouse.com/v1alpha1
             kind: ClickHouseCluster
             metadata:
@@ -84,7 +84,7 @@ spec:
 
                   <<-   $user := dict "profile" $profile "quota" $quota "password" $password >>
 
-                  <<-   set $userObjs $u $user >>
+                  <<-   $_ := set $userObjs $u $user >>
                   <<- end >>
 
                   <<- toYaml (dict "users" $userObjs) | nindent 18 >>
