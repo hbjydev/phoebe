@@ -18,3 +18,7 @@ spec:
       retries: 3
   values:
     fullnameOverride: clickhouse-operator
+    manager:
+      resources:
+        limits:
+          memory: 512Mi
