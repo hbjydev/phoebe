@@ -49,6 +49,7 @@ spec:
                   name: moneat-temporal-postgres
                   key: database
               VISIBILITY_DBNAME: moneat-temporal-visibility
+              BIND_ON_IP: 0.0.0.0
             resources:
               requests:
                 cpu: 100m
