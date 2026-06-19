@@ -1,0 +1,117 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: hermes
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      main:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        containers:
+          app:
+            image: &image
+              repository: ghcr.io/moneat-io/moneat-backend
+              tag: 2.0.1
+            env:
+              DATABASE_URL: jdbc:postgresql://pooler-rw.database:5432/moneat
+              DATABASE_USER:
+                secretKeyRef:
+                  name: moneat-postgres
+                  key: username
+              DATABASE_PASSWORD:
+                secretKeyRef:
+                  name: moneat-postgres
+                  key: password
+              CLICKHOUSE_URL: http://clickhouse-clickhouse-headless.database:8123
+              CLICKHOUSE_USER:
+                secretKeyRef:
+                  name: moneat-clickhouse
+                  key: username
+              CLICKHOUSE_PASSWORD:
+                secretKeyRef:
+                  name: moneat-clickhouse
+                  key: password
+              REDIS_URL: redis://moneat-redis:6379
+              TEMPORAL_TARGET: moneat-temporal:7233
+              TEMPORAL_NAMESPACE: default
+              FRONTEND_URL: https://moneat.hayden.moe
+              BACKEND_URL: https://moneat-api.hayden.moe
+              TRUSTED_PROXIES: '172.18.0.0/16'
+              STRIPE_ENABLED: false
+              SELF_HOSTED: true
+
+              # Email
+              EMAIL_FROM: moneat@hayden.moe
+              SMTP_HOST: smtp-relay.selfhosted
+              SMTP_PORT: 25
+              SMTP_AUTH: 'false'
+              SMTP_STARTTLS: 'false'
+
+              TELEMETRY_ENABLED: 'false'
+
+              PROFILE_STORAGE_PATH: '/var/lib/moneat/profiles'
+              PROFILE_MAX_PAYLOAD_BYTES: 10485760
+            envFrom:
+              - secretRef:
+                  name: moneat-secret
+            resources:
+              requests:
+                cpu: 100m
+                memory: 1Gi
+              limits:
+                cpu: 2000m
+                memory: 4Gi
+            ports:
+              - containerPort: &port 8080
+                name: http
+                protocol: TCP
+
+    defaultPodOptions:
+      securityContext:
+        fsGroup: 10000
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      http:
+        type: ClusterIP
+        ports:
+          http:
+            port: *port
+
+    route:
+      app:
+        hostnames:
+          - "moneat-api.hayden.moe"
+        parentRefs:
+          - name: external
+            namespace: network
+        rules:
+          - backendRefs:
+              - identifier: dashboard
+                port: http
+
+    persistence:
+      data:
+        existingClaim: '{{ .Release.Name }}'
+        globalMounts:
+          - path: /app/storage
+            subPath: storage
+          - path: /var/lib/moneat/profiles
+            subPath: profiles
+      tmp:
+        type: emptyDir
