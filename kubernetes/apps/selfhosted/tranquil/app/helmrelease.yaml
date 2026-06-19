@@ -31,8 +31,8 @@ spec:
               MAIL_FROM_NAME: Hayden's PDS
               DATABASE_URL:
                 secretKeyRef:
-                  name: tranquil-pg-app
-                  key: uri
+                  name: tranquil-postgres
+                  key: url
               CRAWLERS: https://bsky.network,https://relay.upcloud.world
             envFrom:
               - secretRef:
