@@ -11,6 +11,8 @@ metadata:
 spec:
   inputStrategy:
     name: Permute
+  inputs:
+    - role: test
   inputsFrom:
     - apiVersion: fluxcd.controlplane.io/v1
       kind: ResourceSetInputProvider
