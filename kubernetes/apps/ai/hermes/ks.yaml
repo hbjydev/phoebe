@@ -17,6 +17,8 @@ spec:
     substitute:
       APP: *app
       NAMESPACE: *namespace
+      KOPIUR_UID: "10000"
+      KOPIUR_GID: "10000"
   prune: true
   sourceRef:
     kind: GitRepository
