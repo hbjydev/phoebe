@@ -52,8 +52,8 @@ spec:
             group: clickhouse.com
             version: v1alpha1
           patch: |-
-            apiVersion: postgresql.cnpg.io/v1
-            kind: Cluster
+            apiVersion: clickhouse.com/v1alpha1
+            kind: ClickHouseCluster
             metadata:
               name: not-used
             spec:
