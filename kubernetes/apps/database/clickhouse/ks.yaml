@@ -57,35 +57,34 @@ spec:
             spec:
               settings:
                 extraUsersConfig:
-                  users:
-                    <<- $userMap := dict >>
-                    <<- range $k, $in := inputs >>
-                    <<-   if kindIs "map" $in >>
-                    <<-     $u := index $in "user" >>
-                    <<-     if $u >>
-                    <<-       $_ := set $userMap $u $in >>
-                    <<-     end >>
-                    <<-   end >>
-                    <<- end >>
+                  <<- $userMap := dict >>
+                  <<- range $k, $in := inputs >>
+                  <<-   if kindIs "map" $in >>
+                  <<-     $u := index $in "user" >>
+                  <<-     if $u >>
+                  <<-       $_ := set $userMap $u $in >>
+                  <<-     end >>
+                  <<-   end >>
+                  <<- end >>
 
-                    <<- $userNames := keys $userMap | sortAlpha >>
+                  <<- $userNames := keys $userMap | sortAlpha >>
 
-                    <<- $userObjs := dict >>
+                  <<- $userObjs := dict >>
 
-                    <<- range $u := $userNames >>
-                    <<-   $in := index $userMap $u >>
+                  <<- range $u := $userNames >>
+                  <<-   $in := index $userMap $u >>
 
-                    <<-   $password := (list (dict "@from_env" (print ($u | upper) "_PASSWORD"))) >>
+                  <<-   $password := (list (dict "@from_env" (print ($u | upper) "_PASSWORD"))) >>
 
-                    <<-   $profile := "readwrite" >>
-                    <<-   $pVal := index $in "profile" | toString | lower >>
+                  <<-   $profile := "readwrite" >>
+                  <<-   $pVal := index $in "profile" | toString | lower >>
 
-                    <<-   $quota := "default" >>
-                    <<-   $qVal := index $in "quota" | toString | lower >>
+                  <<-   $quota := "default" >>
+                  <<-   $qVal := index $in "quota" | toString | lower >>
 
-                    <<-   $user := dict "profile" $profile "quota" $quota "password" $password >>
+                  <<-   $user := dict "profile" $profile "quota" $quota "password" $password >>
 
-                    <<-   set $userObjs $u $user >>
-                    <<- end >>
+                  <<-   set $userObjs $u $user >>
+                  <<- end >>
 
-                    <<- toYaml $userObjs | nindent 22 >>
+                  <<- toYaml (dict "users" $userObjs) | nindent 18 >>
