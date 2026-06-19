@@ -10,8 +10,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
-    - ../../../components/postgres/pass
-    - ../../../components/clickhouse/pass
+    - ../../../../components/postgres/pass
+    - ../../../../components/clickhouse/pass
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
