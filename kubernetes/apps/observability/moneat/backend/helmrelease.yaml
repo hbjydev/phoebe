@@ -37,7 +37,7 @@ spec:
                 secretKeyRef:
                   name: moneat-postgres
                   key: password
-              CLICKHOUSE_URL: http://clickhouse-clickhouse-headless.database:8123
+              CLICKHOUSE_URL: http://clickhouse-clickhouse-headless.database.svc:8123
               CLICKHOUSE_USER:
                 secretKeyRef:
                   name: moneat-clickhouse
