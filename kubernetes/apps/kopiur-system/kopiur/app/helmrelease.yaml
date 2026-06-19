@@ -11,21 +11,30 @@ spec:
   interval: 30m
   values:
     installScope: cluster
+
     webhook:
-      certManager:
+      tls:
+        mode: self
+      serviceMonitor:
         enabled: true
+
+    features:
+      credentialProjection:
+        enabled: true
+
     metrics:
-      enabled: true
       serviceMonitor:
         enabled: true
       prometheusRule:
         enabled: true
+
     grafanaDashboard:
       enabled: true
       grafanaOperator:
         enabled: true
         matchLabels:
           grafana.internal/instance: grafana
+
     podSecurityContext:
       fsGroup: 1000
       fsGroupChangePolicy: OnRootMismatch
@@ -34,8 +43,7 @@ spec:
       runAsUser: 1000
       seccompProfile:
         type: RuntimeDefault
-    secretProjection:
-      enabled: true
+
     logging:
       level: info,kopia=debug
       format: json
