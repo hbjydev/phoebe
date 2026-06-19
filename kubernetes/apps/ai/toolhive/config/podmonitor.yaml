@@ -3,12 +3,27 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
-  name: mcp-gateway
+  name: mcp-gateway-int
 spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: virtualmcpserver
-      app.kubernetes.io/instance: mcp-gateway
+      app.kubernetes.io/instance: mcp-gateway-int
+  podMetricsEndpoints:
+    - port: http
+      path: /metrics
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/monitoring.coreos.com/podmonitor_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: mcp-gateway-ext
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: virtualmcpserver
+      app.kubernetes.io/instance: mcp-gateway-ext
   podMetricsEndpoints:
     - port: http
       path: /metrics

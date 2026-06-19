@@ -39,7 +39,7 @@ data:
 
     mcp_servers:
       homelab:
-        url: http://vmcp-mcp-gateway.ai.svc.cluster.local:4483/mcp
+        url: http://vmcp-mcp-gateway-int.ai.svc.cluster.local:4483/mcp
 
     memory:
       memory_enabled: true
