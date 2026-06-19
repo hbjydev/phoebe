@@ -2,7 +2,7 @@
 apiVersion: kopiur.home-operations.com/v1alpha1
 kind: SnapshotPolicy
 metadata:
-  name: "kopiur-${APP}"
+  name: "${APP}"
   labels:
     kustomize.toolkit.fluxcd.io/ssa: IfNotPresent
 spec:
