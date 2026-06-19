@@ -80,6 +80,18 @@ spec:
       namespace: *namespace
   interval: 1h
   path: ./kubernetes/apps/observability/moneat/temporal
+
+  patches:
+    - patch: |
+        - op: replace
+          path: /metadata/namespace
+          value: database
+      target:
+        group: postgresql.cnpg.io
+        version: v1
+        kind: Database
+        name: postgres-moneat-temporal-visibility
+
   prune: true
   postBuild:
     substitute:
