@@ -65,7 +65,6 @@ spec:
               TELEMETRY_ENABLED: 'false'
 
               PROFILE_STORAGE_PATH: '/var/lib/moneat/profiles'
-              PROFILE_MAX_PAYLOAD_BYTES: 10485760
             envFrom:
               - secretRef:
                   name: moneat-secret
