@@ -57,12 +57,14 @@ spec:
                 cpu: 1000m
                 memory: 2Gi
             probes:
-              startup:
+              startup: &probes
                 enabled: true
                 custom: true
                 spec:
                   exec:
                     command: [temporal, operator, cluster, health, --address, 'localhost:7233']
+              liveness: *probes
+              readiness: *probes
             ports:
               - containerPort: &grpcPort 7233
                 name: grpc
