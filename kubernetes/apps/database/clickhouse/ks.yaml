@@ -86,7 +86,7 @@ spec:
 
                     <<-   $user := dict "profile" $profile "quota" $quota "password" $password >>
 
-                    <<-   $userObjs = merge $userObjs (dict "user" $user) >>
+                    <<-   set $userObjs $u $user >>
                     <<- end >>
 
                     <<- toYaml $userObjs | nindent 20 >>
