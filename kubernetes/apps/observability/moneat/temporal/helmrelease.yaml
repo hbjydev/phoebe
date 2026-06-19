@@ -21,8 +21,6 @@ spec:
       temporal:
         annotations:
           reloader.stakater.com/auto: "true"
-        serviceAccount:
-          identifier: hermes
 
         containers:
           main:
