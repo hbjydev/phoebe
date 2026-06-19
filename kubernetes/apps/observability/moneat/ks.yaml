@@ -17,6 +17,10 @@ spec:
       kind: HelmRelease
       name: *app
       namespace: *namespace
+  postBuild:
+    substitute:
+      APP: *app
+      NAMESPACE: *namespace
   interval: 1h
   path: ./kubernetes/apps/observability/moneat/app
   prune: true
