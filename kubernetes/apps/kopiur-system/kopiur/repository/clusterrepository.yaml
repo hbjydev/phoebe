@@ -15,6 +15,9 @@ spec:
           name: kopia-hetzner-secret
           namespace: kopiur-system
 
+  credentialProjection:
+    allowed: true
+
   create:
     enabled: true
 
