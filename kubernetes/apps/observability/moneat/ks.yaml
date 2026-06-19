@@ -65,8 +65,8 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app moneat-temporal-visibility-db
-  namespace: &namespace observability
+  name: moneat-temporal-visibility-db
+  namespace: observability
 spec:
   commonMetadata:
     labels:
