@@ -4,7 +4,7 @@ kind: ClickHouseCluster
 metadata:
   name: clickhouse
 spec:
-  replicas: 2
+  replicas: 1
   shards: 1
 
   keeperClusterRef:
