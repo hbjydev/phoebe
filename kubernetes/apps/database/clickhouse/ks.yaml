@@ -12,7 +12,9 @@ spec:
   inputStrategy:
     name: Permute
   inputs:
-    - role: test
+    - user: internal
+      profile: readonly
+      quota: default
   inputsFrom:
     - apiVersion: fluxcd.controlplane.io/v1
       kind: ResourceSetInputProvider
@@ -45,54 +47,46 @@ spec:
       targetNamespace: *namespace
       timeout: 5m
       patches: []
-# - target:
-#     kind: ClickHouseCluster
-#     group: clickhouse.com
-#     version: v1alpha1
-#   patch: |-
-#     apiVersion: postgresql.cnpg.io/v1
-#     kind: Cluster
-#     metadata:
-#       name: not-used
-#     spec:
-#       managed:
-#         roles:
-#           <<- $roleMap := dict >>
-#           <<- range $k, $in := inputs >>
-#           <<-   if kindIs "map" $in >>
-#           <<-     $r := index $in "role" >>
-#           <<-     if $r >>
-#           <<-       $_ := set $roleMap $r $in >>
-#           <<-     end >>
-#           <<-   end >>
-#           <<- end >>
-#
-#           <<- $roleNames := keys $roleMap | sortAlpha >>
-#
-#           <<- $roleObjs := list >>
-#           <<- range $r := $roleNames >>
-#           <<-   $in := index $roleMap $r >>
-#
-#           <<-   $disablePass := true >>
-#           <<-   $dpVal := index $in "disablePassword" | toString | lower >>
-#           <<-   if contains "false" $dpVal >>
-#           <<-     $disablePass = false >>
-#           <<-   end >>
-#
-#           <<-   $superuser := false >>
-#           <<-   $suVal := index $in "superuser" | toString | lower >>
-#           <<-   if contains "true" $suVal >>
-#           <<-     $superuser = true >>
-#           <<-   end >>
-#
-#           <<-   $role := dict "name" $r "ensure" "present" "login" true "superuser" $superuser "disablePassword" $disablePass >>
-#
-#           <<-   if not $disablePass >>
-#           <<-     $app := index $in "app" >>
-#           <<-     $_ := set $role "passwordSecret" (dict "name" (printf "%s-postgres" $app)) >>
-#           <<-   end >>
-#
-#           <<-   $roleObjs = concat $roleObjs (list $role) >>
-#           <<- end >>
-#
-#           <<- toYaml $roleObjs | nindent 18 >>
+        - target:
+            kind: ClickHouseCluster
+            group: clickhouse.com
+            version: v1alpha1
+          patch: |-
+            apiVersion: postgresql.cnpg.io/v1
+            kind: Cluster
+            metadata:
+              name: not-used
+            spec:
+              settings:
+                extraUsersConfig:
+                  users:
+                    <<- $userMap := dict >>
+                    <<- range $k, $in := inputs >>
+                    <<-   if kindIs "map" $in >>
+                    <<-     $u := index $in "user" >>
+                    <<-     if $u >>
+                    <<-       $_ := set $userMap $u $in >>
+                    <<-     end >>
+                    <<-   end >>
+                    <<- end >>
+
+                    <<- $userNames := keys $userMap | sortAlpha >>
+
+                    <<- $userObjs := list >>
+                    <<- range $u := $userNames >>
+                    <<-   $in := index $userMap $u >>
+
+                    <<-   $password := (list (dict "@from_env" (concat ($u | upper) "_PASSWORD"))) >>
+
+                    <<-   $profile := "readwrite" >>
+                    <<-   $pVal := index $in "profile" | toString | lower >>
+
+                    <<-   $quota := "default" >>
+                    <<-   $qVal := index $in "quota" | toString | lower >>
+
+                    <<-   $user := dict "profile" $profile "quota" $quota "password" $password >>
+
+                    <<-   $userObjs = concat $userObjs (list $user) >>
+                    <<- end >>
+
+                    <<- toYaml $userObjs | nindent 20 >>

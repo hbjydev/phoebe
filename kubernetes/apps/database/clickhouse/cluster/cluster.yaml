@@ -13,6 +13,22 @@ spec:
       requests:
         storage: 24Gi
   settings:
+    extraUsersConfig:
+      users: {}
+      profiles:
+        readwrite:
+          readonly: 0
+          max_memory_usage: 10000000000
+        readonly:
+          readonly: 1
+          max_memory_usage: 10000000000
+      quotas:
+        default:
+          interval:
+            duration: 3600
+            queries: 1000
+            errors: 100
+
     tls:
       enabled: true
       required: true
