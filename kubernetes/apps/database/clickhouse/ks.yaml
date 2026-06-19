@@ -76,7 +76,7 @@ spec:
                     <<- range $u := $userNames >>
                     <<-   $in := index $userMap $u >>
 
-                    <<-   $password := (list (dict "@from_env" (concat ($u | upper) "_PASSWORD"))) >>
+                    <<-   $password := (list (dict "@from_env" (print ($u | upper) "_PASSWORD"))) >>
 
                     <<-   $profile := "readwrite" >>
                     <<-   $pVal := index $in "profile" | toString | lower >>
