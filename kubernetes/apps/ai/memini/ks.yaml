@@ -11,7 +11,7 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/postgres/pass
-    - ../../../../components/volsync
+    - ../../../../components/kopiur
   interval: 1h
   path: ./kubernetes/apps/ai/memini/app
   postBuild:
