@@ -154,7 +154,7 @@ spec:
 
       config:
         type: configMap
-        name: 'hermes-configmap'
+        name: 'hermes-config'
         defaultMode: 0o755
         advancedMounts:
           hermes:
