@@ -28,12 +28,11 @@ spec:
 
   mover:
     privilegedMode: "${KOPIUR_PRIVILEGED_MODE:=false}"
+    podSecurityContext:
+      fsGroup: "${KOPIUR_GID:=1000}"
+      fsGroupChangePolicy: OnRootMismatch
     securityContext:
       runAsUser: "${KOPIUR_UID:=1000}" # the UID that owns the data
       runAsGroup: "${KOPIUR_GID:=1000}" # the GID that owns the data
       runAsNonRoot: "${KOPIUR_RUN_AS_NON_ROOT:=true}" # keep the unprivileged guarantee
-      allowPrivilegeEscalation: false
-      capabilities:
-        drop: ["ALL"]
-      seccompProfile:
-        type: RuntimeDefault
+      privileged: "${KOPIUR_PRIVILEGED_MODE:=false}"
