@@ -22,54 +22,85 @@ data:
           model: zai/glm-5.2
           api_base: https://opencode.ai/zen/go/v1
           api_key: os.environ/OPENCODE_API_KEY
+        model_info:
+          input_cost_per_token: 0.0000014
+          output_cost_per_token: 0.0000044
 
       - model_name: oc-glm-5.1
         litellm_params:
           model: zai/glm-5.1
           api_base: https://opencode.ai/zen/go/v1
           api_key: os.environ/OPENCODE_API_KEY
+        model_info:
+          input_cost_per_token: 0.0000014
+          output_cost_per_token: 0.0000044
 
       - model_name: oc-kimi-k2.7
         litellm_params:
           model: moonshot/kimi-k2.7
           api_base: https://opencode.ai/zen/go/v1
           api_key: os.environ/OPENCODE_API_KEY
+        model_info:
+          input_cost_per_token: 0.00000095
+          output_cost_per_token: 0.000004
 
       - model_name: oc-kimi-k2.6
         litellm_params:
           model: moonshot/kimi-k2.6
           api_base: https://opencode.ai/zen/go/v1
           api_key: os.environ/OPENCODE_API_KEY
+        model_info:
+          input_cost_per_token: 0.00000095
+          output_cost_per_token: 0.000004
 
       - model_name: oc-qwen-3.6-plus
         litellm_params:
           model: dashscope/qwen3.6-plus
           api_base: https://opencode.ai/zen/go/v1
           api_key: os.environ/OPENCODE_API_KEY
+        model_info:
+          input_cost_per_token: 0.0000005
+          output_cost_per_token: 0.000003
+          input_cost_per_token_above_200k_tokens: 0.000002
+          output_cost_per_token_above_200k_tokens: 0.000006
 
       - model_name: oc-qwen-3.7-plus
         litellm_params:
           model: dashscope/qwen3.7-plus
           api_base: https://opencode.ai/zen/go/v1
           api_key: os.environ/OPENCODE_API_KEY
+        model_info:
+          input_cost_per_token: 0.0000004
+          output_cost_per_token: 0.0000016
+          input_cost_per_token_above_200k_tokens: 0.0000012
+          output_cost_per_token_above_200k_tokens: 0.0000048
 
       - model_name: oc-qwen-3.7-max
         litellm_params:
           model: dashscope/qwen3.7-max
           api_base: https://opencode.ai/zen/go/v1
           api_key: os.environ/OPENCODE_API_KEY
+        model_info:
+          input_cost_per_token: 0.0000025
+          output_cost_per_token: 0.0000075
 
       - model_name: oc-deepseek-v4-flash
         litellm_params:
           model: deepseek/deepseek-v4-flash
           api_base: https://opencode.ai/zen/go/v1
           api_key: os.environ/OPENCODE_API_KEY
+        model_info:
+          input_cost_per_token: 0.00000014
+          output_cost_per_token: 0.00000028
 
       - model_name: oc-deepseek-v4-pro
         litellm_params:
           model: deepseek/deepseek-v4-pro
           api_base: https://opencode.ai/zen/go/v1
           api_key: os.environ/OPENCODE_API_KEY
+        model_info:
+          input_cost_per_token: 0.00000174
+          output_cost_per_token: 0.00000348
 
       - model_name: or-text-embedding-3-small
         litellm_params:
