@@ -20,6 +20,7 @@ spec:
       KOPIUR_UID: "0"
       KOPIUR_GID: "0"
       KOPIUR_RUN_AS_NON_ROOT: "false"
+      KOPIUR_PRIVILEGED_MODE: "false"
   prune: true
   sourceRef:
     kind: GitRepository

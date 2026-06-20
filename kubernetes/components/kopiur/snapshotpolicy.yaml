@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotpolicy_v1alpha1.json
 apiVersion: kopiur.home-operations.com/v1alpha1
 kind: SnapshotPolicy
 metadata:
@@ -26,6 +27,7 @@ spec:
   volumeSnapshotClassName: "${KOPIUR_SNAPSHOTCLASS:=csi-ceph-blockpool}"
 
   mover:
+    privilegedMode: "${KOPIUR_PRIVILEGED_MODE:=false}"
     securityContext:
       runAsUser: "${KOPIUR_UID:=1000}" # the UID that owns the data
       runAsGroup: "${KOPIUR_GID:=1000}" # the GID that owns the data
