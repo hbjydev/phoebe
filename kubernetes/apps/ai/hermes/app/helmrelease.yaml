@@ -21,11 +21,15 @@ spec:
       hermes:
         annotations:
           reloader.stakater.com/auto: "true"
+        replicas: 1
+        strategy: Recreate
+        type: deployment
+
         serviceAccount:
           identifier: hermes
 
         initContainers:
-          copy-config:
+          init:
             image:
               repository: docker.io/library/alpine
               tag: "3.24"
@@ -34,11 +38,16 @@ spec:
               - -c
               - |
                 set -euo pipefail
-                rm -rf /opt/data/config.yaml
+                rm -rf /opt/data/config.yaml*
                 cp /config/config.yaml /opt/data/config.yaml
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities: { drop: [ALL] }
+              runAsGroup: 10000
+              runAsUser: 10000
 
         containers:
-          gateway:
+          app:
             image: &image
               repository: forgejo.hayden.moe/hayden/containers/hermes
               tag: v2026.6.5-8a6586e@sha256:743f9d8f7c332edd87c1bd51bff03ed43e7ee918ecef951cd1519147ef4c53bd
@@ -47,6 +56,27 @@ spec:
               - run
               - --no-supervise
             env:
+              TZ: Europe/London
+
+              API_SERVER_ENABLED: "true"
+              API_SERVER_HOST: "0.0.0.0"
+              API_SERVER_CORS_ORIGINS: '*'
+
+              HERMES_UID: "10000"
+              HERMES_GID: "10000"
+              HERMES_HOME: "/opt/data"
+              HERMES_CRON_TIMEOUT: 0
+
+              HERMES_DASHBOARD: "1"
+              HERMES_DASHBOARD_OIDC_ISSUER: https://sso.hayden.moe/oauth2/openid/hermes
+              HERMES_DASHBOARD_OIDC_CLIENT_ID: hermes
+
+              MEMINI_URL: http://memini.ai.svc.cluster.local:8080
+              MEMINI_NAMESPACE: hermes
+
+              SEERR_URL: http://jellyseerr.default
+              HASS_URL: 'https://hass.hayden.moe'
+
               HOME: /opt/data
             envFrom: &envFrom
               - secretRef:
@@ -60,28 +90,27 @@ spec:
                 memory: 4Gi
             ports:
               - containerPort: &gatewayPort 8642
-                name: http
+                name: gateway
                 protocol: TCP
-
-          dashboard:
-            image: *image
-            args:
-              - dashboard
-              - --host
-              - '0.0.0.0'
-            env:
-              TZ: Europe/London
-              GATEWAY_HEALTH_URL: http://localhost:8642
-            envFrom: *envFrom
-            resources:
-              requests:
-                cpu: 500m
-              limits:
-                memory: 1Gi
-            ports:
               - containerPort: &dashboardPort 9119
-                name: http
+                name: dashboard
                 protocol: TCP
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                add:
+                  - CHOWN
+                  - DAC_OVERRIDE
+                  - FOWNER
+                  - FSETID
+                  - SETGID
+                  - SETUID
+                drop:
+                  - ALL
+              readOnlyRootFilesystem: false
+              runAsUser: 0
+              runAsGroup: 0
+              runAsNonRoot: false
 
     defaultPodOptions:
       imagePullSecrets:
@@ -89,18 +118,20 @@ spec:
       securityContext:
         fsGroup: 10000
         fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 10000
+        runAsUser: 10000
+        seccompProfile:
+          type: RuntimeDefault
 
     service:
-      gateway:
-        type: ClusterIP
+      app:
+        controller: hermes
+        ipFamilies:
+          - IPv4
         ports:
-          http:
+          gateway:
             port: *gatewayPort
-
-      dashboard:
-        type: ClusterIP
-        ports:
-          http:
+          dashboard:
             port: *dashboardPort
 
     route:
@@ -112,20 +143,36 @@ spec:
             namespace: network
         rules:
           - backendRefs:
-              - identifier: dashboard
-                port: http
+              - identifier: app
+                port: dashboard
 
     persistence:
       data:
         existingClaim: '{{ .Release.Name }}'
         globalMounts:
           - path: /opt/data
+
       config:
         type: configMap
-        name: '{{ .Release.Name }}-config'
-        defaultMode: 0755
+        name: 'hermes-configmap'
+        defaultMode: 0o755
+        advancedMounts:
+          hermes:
+            init:
+              - path: /run/config/config.yaml
+                subPath: config.yaml
+
+      run:
+        type: emptyDir
+        advancedMounts:
+          hermes:
+            app:
+              - path: /run
+
       tmp:
         type: emptyDir
+        globalMounts:
+          - path: /tmp
 
     serviceAccount:
       hermes: {}
