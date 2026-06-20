@@ -19,6 +19,10 @@ spec:
     substitute:
       APP: navidrome
       KOPIUR_CAPACITY: 32Gi
+      KOPIUR_UID: "0"
+      KOPIUR_GID: "0"
+      KOPIUR_PRIVILEGED_MODE: "true"
+      KOPIUR_RUN_AS_NON_ROOT: "false"
   prune: true
   sourceRef:
     kind: GitRepository
