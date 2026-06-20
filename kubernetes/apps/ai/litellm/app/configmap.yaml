@@ -17,21 +17,45 @@ data:
       drop_params: true
 
     model_list:
-      - model_name: oc-qwen-3.6
+      - model_name: oc-glm-5.2
         litellm_params:
-          model: dashscope/qwen-3.6-plus
+          model: z-ai/glm-5.2
+          api_base: https://opencode.ai/zen/go/v1
+          api_key: os.environ/OPENCODE_API_KEY
+
+      - model_name: oc-glm-5.1
+        litellm_params:
+          model: z-ai/glm-5.1
+          api_base: https://opencode.ai/zen/go/v1
+          api_key: os.environ/OPENCODE_API_KEY
+
+      - model_name: oc-kimi-k2.7
+        litellm_params:
+          model: moonshotai/kimi-k2.7
+          api_base: https://opencode.ai/zen/go/v1
+          api_key: os.environ/OPENCODE_API_KEY
+
+      - model_name: oc-kimi-k2.6
+        litellm_params:
+          model: moonshotai/kimi-k2.6
+          api_base: https://opencode.ai/zen/go/v1
+          api_key: os.environ/OPENCODE_API_KEY
+
+      - model_name: oc-qwen-3.6-plus
+        litellm_params:
+          model: dashscope/qwen3.6-plus
           api_base: https://opencode.ai/zen/go/v1
           api_key: os.environ/OPENCODE_API_KEY
 
       - model_name: oc-qwen-3.7-plus
         litellm_params:
-          model: dashscope/qwen-3.7-plus
+          model: dashscope/qwen3.7-plus
           api_base: https://opencode.ai/zen/go/v1
           api_key: os.environ/OPENCODE_API_KEY
 
       - model_name: oc-qwen-3.7-max
         litellm_params:
-          model: dashscope/qwen-3.7-max
+          model: dashscope/qwen3.7-max
           api_base: https://opencode.ai/zen/go/v1
           api_key: os.environ/OPENCODE_API_KEY
 
