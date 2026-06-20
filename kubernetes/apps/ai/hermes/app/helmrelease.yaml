@@ -39,7 +39,7 @@ spec:
               - |
                 set -euo pipefail
                 rm -rf /opt/data/config.yaml*
-                cp /config/config.yaml /opt/data/config.yaml
+                cp /run/config/config.yaml /opt/data/config.yaml
             securityContext:
               allowPrivilegeEscalation: false
               capabilities: { drop: [ALL] }
