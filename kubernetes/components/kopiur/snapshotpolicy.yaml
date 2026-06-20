@@ -29,7 +29,7 @@ spec:
     securityContext:
       runAsUser: "${KOPIUR_UID:=1000}" # the UID that owns the data
       runAsGroup: "${KOPIUR_GID:=1000}" # the GID that owns the data
-      runAsNonRoot: true # keep the unprivileged guarantee
+      runAsNonRoot: "${KOPIUR_RUN_AS_NON_ROOT:=true}" # keep the unprivileged guarantee
       allowPrivilegeEscalation: false
       capabilities:
         drop: ["ALL"]
