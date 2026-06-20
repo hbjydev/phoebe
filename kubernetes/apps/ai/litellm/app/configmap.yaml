@@ -19,25 +19,25 @@ data:
     model_list:
       - model_name: oc-glm-5.2
         litellm_params:
-          model: z-ai/glm-5.2
+          model: zai/glm-5.2
           api_base: https://opencode.ai/zen/go/v1
           api_key: os.environ/OPENCODE_API_KEY
 
       - model_name: oc-glm-5.1
         litellm_params:
-          model: z-ai/glm-5.1
+          model: zai/glm-5.1
           api_base: https://opencode.ai/zen/go/v1
           api_key: os.environ/OPENCODE_API_KEY
 
       - model_name: oc-kimi-k2.7
         litellm_params:
-          model: moonshotai/kimi-k2.7
+          model: moonshot/kimi-k2.7
           api_base: https://opencode.ai/zen/go/v1
           api_key: os.environ/OPENCODE_API_KEY
 
       - model_name: oc-kimi-k2.6
         litellm_params:
-          model: moonshotai/kimi-k2.6
+          model: moonshot/kimi-k2.6
           api_base: https://opencode.ai/zen/go/v1
           api_key: os.environ/OPENCODE_API_KEY
 
