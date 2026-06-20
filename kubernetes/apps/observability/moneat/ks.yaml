@@ -23,6 +23,10 @@ spec:
     substitute:
       APP: *app
       NAMESPACE: *namespace
+      KOPIUR_UID: "0"
+      KOPIUR_GID: "0"
+      KOPIUR_PRIVILEGED_MODE: "true"
+      KOPIUR_RUN_AS_NON_ROOT: "false"
   interval: 1h
   path: ./kubernetes/apps/observability/moneat/backend
   prune: true
