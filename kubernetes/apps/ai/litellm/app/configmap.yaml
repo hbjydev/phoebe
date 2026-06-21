@@ -17,6 +17,15 @@ data:
       drop_params: true
 
     model_list:
+      - model_name: nw-glm-5.2
+        litellm_params:
+          model: zai/glm-5.2
+          api_base: https://api.neuralwatt.com/v1
+          api_key: os.environ/NEURALWATT_API_KEY
+        model_info:
+          input_cost_per_token: 0.00000145
+          output_cost_per_token: 0.0000045
+
       - model_name: oc-glm-5.2
         litellm_params:
           model: zai/glm-5.2
