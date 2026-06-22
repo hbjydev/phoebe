@@ -48,16 +48,6 @@
       },
     },
     {
-      description: "Kopiur Group",
-      groupName: "Kopiur",
-      matchDatasources: ["docker", "github-releases"],
-      matchPackageNames: ["/kopiur/", "/home-operations\/kopiur/"],
-      group: {
-        commitMessageTopic: "{{{groupName}}} group",
-      },
-      minimumGroupSize: 2,
-    },
-    {
       description: "Flux Operator Group",
       groupName: "Flux Operator",
       matchDatasources: ["docker"],
