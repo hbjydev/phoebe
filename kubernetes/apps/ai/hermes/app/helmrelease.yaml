@@ -109,6 +109,7 @@ spec:
             command:
               - hermes
               - dashboard
+              - --host=0.0.0.0
             resources:
               requests:
                 cpu: 100m
