@@ -43,14 +43,14 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               capabilities: { drop: [ALL] }
-              runAsGroup: 10000
-              runAsUser: 10000
+              runAsGroup: 1000
+              runAsUser: 1000
 
         containers:
           app:
             image: &image
               repository: forgejo.hayden.moe/hayden/containers/hermes
-              tag: v2026.6.5-8a6586e@sha256:743f9d8f7c332edd87c1bd51bff03ed43e7ee918ecef951cd1519147ef4c53bd
+              tag: v2026.6.19-37c70fc@sha256:9e3100d691c477b0d4ae6300e7247d9f0092702e4ec5af99d69e296ca568fec2
             args:
               - gateway
               - run
@@ -62,9 +62,9 @@ spec:
               API_SERVER_HOST: "0.0.0.0"
               API_SERVER_CORS_ORIGINS: '*'
 
-              HERMES_UID: "10000"
-              HERMES_GID: "10000"
-              HERMES_HOME: "/opt/data"
+              HERMES_UID: "1000"
+              HERMES_GID: "1000"
+              HERMES_HOME: "/data"
               HERMES_CRON_TIMEOUT: 0
 
               HERMES_DASHBOARD: "1"
@@ -77,7 +77,7 @@ spec:
               SEERR_URL: http://jellyseerr.default
               HASS_URL: 'https://hass.hayden.moe'
 
-              HOME: /opt/data
+              HOME: /data
             envFrom: &envFrom
               - secretRef:
                   name: hermes-config-env
@@ -107,19 +107,17 @@ spec:
                   - SETUID
                 drop:
                   - ALL
-              readOnlyRootFilesystem: false
-              runAsUser: 0
-              runAsGroup: 0
-              runAsNonRoot: false
+              readOnlyRootFilesystem: true
 
     defaultPodOptions:
       imagePullSecrets:
         - name: imp-forgejo
       securityContext:
-        fsGroup: 10000
+        fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
-        runAsGroup: 10000
-        runAsUser: 10000
+        runAsGroup: 1000
+        runAsUser: 1000
+        runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
 
@@ -149,8 +147,6 @@ spec:
     persistence:
       data:
         existingClaim: '{{ .Release.Name }}'
-        globalMounts:
-          - path: /opt/data
 
       config:
         type: configMap
