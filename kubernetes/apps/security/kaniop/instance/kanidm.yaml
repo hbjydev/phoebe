@@ -6,7 +6,7 @@ metadata:
 spec:
   domain: sso.hayden.moe
   ldapPortName: ldaps
-  image: kanidm/server:1.10.3
+  image: kanidm/server:1.10.4
   disableUpgradeChecks: true
 
   domainAppearance:
