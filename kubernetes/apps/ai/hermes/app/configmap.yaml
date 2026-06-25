@@ -30,7 +30,7 @@ data:
 
     terminal:
       backend: local
-      cwd: /opt/data/workspace
+      cwd: /data/workspace
       timeout: 180
       persistent_shell: true
 
