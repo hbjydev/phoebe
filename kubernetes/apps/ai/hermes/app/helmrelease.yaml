@@ -51,7 +51,7 @@ spec:
             image: &image
               repository: forgejo.hayden.moe/hayden/containers/hermes
               tag: v2026.6.19-5fd6acf@sha256:33dd42191b35a4ce2fc3e71580e9251ae6ba75d0995fc873652083d1adf68c29
-            env:
+            env: &env
               TZ: Europe/London
 
               API_SERVER_ENABLED: "true"
@@ -88,10 +88,7 @@ spec:
               - containerPort: &gatewayPort 8642
                 name: gateway
                 protocol: TCP
-              - containerPort: &dashboardPort 9119
-                name: dashboard
-                protocol: TCP
-            securityContext:
+            securityContext: &secCtx
               allowPrivilegeEscalation: false
               capabilities:
                 add:
@@ -104,6 +101,26 @@ spec:
                 drop:
                   - ALL
               readOnlyRootFilesystem: true
+
+          dashboard:
+            image: *image
+            env: *env
+            envFrom: *envFrom
+            command:
+              - hermes
+              - dashboard
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                cpu: 1000m
+                memory: 1Gi
+            ports:
+              - containerPort: &dashboardPort 9119
+                name: dashboard
+                protocol: TCP
+            securityContext: *secCtx
 
     defaultPodOptions:
       imagePullSecrets:
