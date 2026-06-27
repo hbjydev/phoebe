@@ -16,9 +16,9 @@ spec:
       cronjob:
         successfulJobsHistoryLimit: 1
         securityContext:
-          runAsGroup: 1022
+          runAsGroup: 1000
           runAsNonRoot: true
-          runAsUser: 1022
+          runAsUser: 1000
     image:
       flavor: fpm-alpine
     nginx:
@@ -34,9 +34,9 @@ spec:
       mail:
         enabled: false
       securityContext:
-        runAsGroup: 1022
+        runAsGroup: 1000
         runAsNonRoot: true
-        runAsUser: 1022
+        runAsUser: 1000
       configs:
         proxy.config.php: |-
           <?php
