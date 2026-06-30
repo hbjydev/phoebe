@@ -46,7 +46,7 @@ data:
 
       - model_name: ms-kimi-k2.7
         litellm_params:
-          model: kimi-for-coding
+          model: openai/kimi-for-coding
           api_base: https://api.kimi.com/coding/v1
           api_key: os.environ/MOONSHOT_API_KEY
 
