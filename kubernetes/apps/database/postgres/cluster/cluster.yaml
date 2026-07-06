@@ -25,7 +25,7 @@ spec:
     - name: &plugin barman-cloud.cloudnative-pg.io
       isWALArchiver: true
       parameters:
-        barmanObjectName: &store barman-upcloud
+        barmanObjectName: &store barman-hetzner
 
   externalClusters:
     - name: &src source

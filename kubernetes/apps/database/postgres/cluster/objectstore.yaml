@@ -3,17 +3,17 @@
 apiVersion: barmancloud.cnpg.io/v1
 kind: ObjectStore
 metadata:
-  name: barman-upcloud
+  name: barman-hetzner
 spec:
   configuration:
-    destinationPath: s3://haydenmoe-volsync-postgres/postgres
-    endpointURL: https://t9ag6.upcloudobjects.com
+    destinationPath: s3://phoebe-postgres
+    endpointURL: https://hel1.your-objectstorage.com
     s3Credentials:
       accessKeyId:
-        name: barman-upcloud
+        name: barman-hetzner
         key: ACCESS_KEY_ID
       secretAccessKey:
-        name: barman-upcloud
+        name: barman-hetzner
         key: SECRET_ACCESS_KEY
     wal:
       compression: zstd
