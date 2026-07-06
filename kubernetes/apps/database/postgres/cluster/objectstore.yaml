@@ -10,10 +10,10 @@ spec:
     endpointURL: https://hel1.your-objectstorage.com
     s3Credentials:
       accessKeyId:
-        name: barman-hetzner
+        name: barman-hetzner-secret
         key: ACCESS_KEY_ID
       secretAccessKey:
-        name: barman-hetzner
+        name: barman-hetzner-secret
         key: SECRET_ACCESS_KEY
     wal:
       compression: zstd
