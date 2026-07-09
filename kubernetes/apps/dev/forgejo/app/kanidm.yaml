@@ -5,14 +5,19 @@ metadata:
   name: forgejo
 spec:
   displayname: Forgejo
+
   image:
     url: https://cdn.jsdelivr.net/gh/selfhst/icons@main/svg/forgejo.svg
+
   kanidmRef:
     name: kanidm
     namespace: security
+
   origin: https://forgejo.hayden.moe/
+
   redirectUrl:
     - https://forgejo.hayden.moe/user/oauth2/kanidm/callback
+
   scopeMap:
     - group: forgejo_users
       scopes:
@@ -20,6 +25,14 @@ spec:
         - profile
         - email
         - groups
+
+  secretRotation:
+    enabled: true
+    periodDays: 90
+
+  secretKeyAliases:
+    clientId: [key]
+    clientSecret: [secret]
 
 ---
 apiVersion: kaniop.rs/v1beta1
@@ -50,52 +63,3 @@ spec:
     authSessionExpiry: 2678400
   members:
     - hayden
-
----
-apiVersion: external-secrets.io/v1alpha1
-kind: PushSecret
-metadata:
-  name: forgejo-kanidm-oidc
-spec:
-  refreshInterval: 5m
-  deletionPolicy: Delete
-  updatePolicy: Replace
-  secretStoreRefs:
-    - name: onepassword
-      kind: ClusterSecretStore
-  selector:
-    secret:
-      name: forgejo-kanidm-oauth2-credentials
-  data:
-    - match:
-        secretKey: CLIENT_ID
-        remoteRef:
-          remoteKey: app-forgejo-kanidm-oidc
-          property: key
-    - match:
-        secretKey: CLIENT_SECRET
-        remoteRef:
-          remoteKey: app-forgejo-kanidm-oidc
-          property: secret
-
----
-apiVersion: external-secrets.io/v1
-kind: ExternalSecret
-metadata:
-  name: forgejo-kanidm-oidc
-spec:
-  refreshInterval: 5m
-  secretStoreRef:
-    kind: ClusterSecretStore
-    name: onepassword
-  target:
-    name: forgejo-kanidm-oidc
-  data:
-    - secretKey: key
-      remoteRef:
-        key: app-forgejo-kanidm-oidc
-        property: key
-    - secretKey: secret
-      remoteRef:
-        key: app-forgejo-kanidm-oidc
-        property: secret

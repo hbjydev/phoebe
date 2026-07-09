@@ -110,7 +110,7 @@ spec:
         - name: kanidm
           adminGroup: forgejo_admins@sso.hayden.moe
           autoDiscoverUrl: https://sso.hayden.moe/oauth2/openid/forgejo/.well-known/openid-configuration
-          existingSecret: forgejo-kanidm-oidc
+          existingSecret: forgejo-kanidm-oauth2-credentials
           groupClaimName: groups
           provider: openidConnect
           scopes: profile email groups
