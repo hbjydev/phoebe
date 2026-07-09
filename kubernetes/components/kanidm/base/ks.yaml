@@ -55,6 +55,7 @@ spec:
   postBuild:
     substitute:
       APP: ${APP}
+      OIDC_ORIGIN: ${q:='}${OIDC_ORIGIN}${q:='}
       OIDC_SECRET_ROTATION_ENABLED: ${q:='}${OIDC_SECRET_ROTATION_ENABLED:=true}${q:='}
       OIDC_SECRET_ROTATION_PERIOD_DAYS: ${q:='}${OIDC_SECRET_ROTATION_PERIOD_DAYS:=90}${q:='}
       emptyArray: "[]"

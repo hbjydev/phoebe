@@ -7,7 +7,7 @@ spec:
   displayname: ${OIDC_DISPLAY_NAME:-${APP}}
 
   image:
-    url: ${OIDC_URL:-https://cdn.jsdelivr.net/gh/selfhst/icons@main/svg/${APP}.svg}
+    url: ${OIDC_IMAGE_URL:-https://cdn.jsdelivr.net/gh/selfhst/icons@main/svg/${APP}.svg}
 
   kanidmRef:
     name: kanidm
