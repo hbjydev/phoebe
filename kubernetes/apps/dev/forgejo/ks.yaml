@@ -11,6 +11,7 @@ spec:
       app.kubernetes.io/name: *name
   components:
     - ../../../../components/postgres/cert
+    - ../../../../components/kanidm/private
     - ../../../../components/anubis
     - ../../../../components/redis
     - ../../../../components/kopiur
@@ -23,11 +24,20 @@ spec:
     substitute:
       APP: *name
       NAMESPACE: *namespace
+
       APP_UID: "1000"
       APP_GID: "1000"
       KOPIUR_CAPACITY: 50Gi
+
       ANUBIS_TARGET: http://forgejo-http.dev.svc.cluster.local:3000
       ANUBIS_MEM_LIMIT: 384Mi
+
+      OIDC_DISPLAY_NAME: Forgejo
+      OIDC_ORIGIN: https://forgejo.hayden.moe/
+      OIDC_REDIRECT_URLS: '["https://forgejo.hayden.moe/user/oauth2/kanidm/callback"]'
+      OIDC_SECRET_KEY_ALIASES: '{clientId: [key], clientSecret: [secret]}'
+      OIDC_USERS_GROUP_MEMBERS: '[hayden]'
+      OIDC_ADMIN_GROUP_MEMBERS: '[hayden]'
   prune: true
   sourceRef:
     kind: GitRepository

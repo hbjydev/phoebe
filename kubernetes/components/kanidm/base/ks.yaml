@@ -23,6 +23,8 @@ spec:
   postBuild:
     substitute:
       APP: ${APP}
+      OIDC_USERS_GROUP_MEMBERS: ${q:='}${OIDC_USERS_GROUP_MEMBERS}${q:='}
+      OIDC_ADMINS_GROUP_MEMBERS: ${q:='}${OIDC_ADMINS_GROUP_MEMBERS}${q:='}
       emptyArray: "[]"
   prune: true
   retryInterval: 2m
