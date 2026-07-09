@@ -11,7 +11,6 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/kopiur
-    - ../../../../components/kanidm/private
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -21,13 +20,6 @@ spec:
     substitute:
       APP: *app
       NAMESPACE: *namespace
-      OIDC_DISPLAY_NAME: NTFY!
-      OIDC_IMAGE_URL: https://picsum.photos/256/256
-      OIDC_ORIGIN: https://ntfy.hayden.moe
-      OIDC_REDIRECT_URLS: '["https://ntfy.hayden.moe"]'
-      OIDC_SECRET_ROTATION_ENABLED: 'false'
-      OIDC_SECRET_ROTATION_PERIOD_DAYS: '30'
-      OIDC_SECRET_KEY_ALIASES: '{clientId: [key], clientSecret: [clientSec]}'
   prune: true
   retryInterval: 2m
   sourceRef:
