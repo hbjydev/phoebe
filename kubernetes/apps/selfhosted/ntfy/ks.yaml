@@ -27,9 +27,7 @@ spec:
       OIDC_REDIRECT_URLS: '["https://ntfy.hayden.moe"]'
       OIDC_SECRET_ROTATION_ENABLED: 'false'
       OIDC_SECRET_ROTATION_PERIOD_DAYS: '30'
-      OIDC_SECRET_KEY_ALIASES: |
-        clientId: [key]
-        clientSecret: [clientSec]
+      OIDC_SECRET_KEY_ALIASES: '{clientId: [key], clientSecret: [clientSec]}'
   prune: true
   retryInterval: 2m
   sourceRef:
