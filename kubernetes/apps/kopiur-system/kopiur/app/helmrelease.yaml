@@ -23,18 +23,17 @@ spec:
       credentialProjection:
         enabled: true
 
-    metrics:
+    monitoring:
       serviceMonitor:
         enabled: true
       prometheusRule:
         enabled: true
-
-    grafanaDashboard:
-      enabled: true
-      grafanaOperator:
+      dashboards:
         enabled: true
-        matchLabels:
-          grafana.internal/instance: grafana
+        grafanaOperator:
+          enabled: true
+          matchLabels:
+            grafana.internal/instance: grafana
 
     podSecurityContext:
       fsGroup: 1000
@@ -46,5 +45,5 @@ spec:
         type: RuntimeDefault
 
     logging:
-      level: info,kopia=debug
+      level: info
       format: json
