@@ -21,6 +21,8 @@ spec:
     substitute:
       APP: *app
       NAMESPACE: *namespace
+      OIDC_ORIGIN: https://ntfy.hayden.moe
+      OIDC_REDIRECT_URLS: '["https://ntfy.hayden.moe"]'
   prune: true
   retryInterval: 2m
   sourceRef:
