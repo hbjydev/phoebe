@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - ../base/ks.yaml
+patches:
+  - target:
+      kind: KanidmOAuth2Client
+      group: kaniop.rs
+      version: v1beta1
+    patch: |-
+      apiVersion: kaniop.rs/v1beta1
+      kind: KanidmOAuth2Client
+      metadata:
+        name: not-used
+      spec:
+        public: true

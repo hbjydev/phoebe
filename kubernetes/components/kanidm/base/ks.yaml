@@ -1,0 +1,70 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: "${APP}-kanidm-groups"
+  namespace: "${NAMESPACE}"
+spec:
+  dependsOn:
+    - name: kaniop-instance
+      namespace: security
+  healthChecks:
+    - apiVersion: kaniop.rs/v1beta1
+      kind: KanidmGroup
+      name: ${APP}-users
+      namespace: ${NAMESPACE}
+    - apiVersion: kaniop.rs/v1beta1
+      kind: KanidmGroup
+      name: ${APP}-admins
+      namespace: ${NAMESPACE}
+  interval: 1h
+  path: ./kubernetes/components/kanidm/base/groups
+  postBuild:
+    substitute:
+      APP: ${APP}
+      emptyArray: "[]"
+  prune: true
+  retryInterval: 2m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: ${NAMESPACE}
+  timeout: 5m
+  wait: false
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: "${APP}-kanidm"
+  namespace: "${NAMESPACE}"
+spec:
+  dependsOn:
+    - name: kaniop-instance
+      namespace: security
+  healthChecks:
+    - apiVersion: kaniop.rs/v1beta1
+      kind: KanidmOAuth2Client
+      name: ${APP}
+      namespace: ${NAMESPACE}
+  interval: 1h
+  path: ./kubernetes/components/kanidm/base/client
+  postBuild:
+    substitute:
+      APP: ${APP}
+      OIDC_SECRET_ROTATION_ENABLED: ${OIDC_SECRET_ROTATION_ENABLED:=true}
+      OIDC_SECRET_ROTATION_PERIOD_DAYS: ${OIDC_SECRET_ROTATION_PERIOD_DAYS:=90}
+      emptyArray: "[]"
+      emptyDict: "{}"
+  prune: true
+  retryInterval: 2m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: ${NAMESPACE}
+  timeout: 5m
+  wait: false
