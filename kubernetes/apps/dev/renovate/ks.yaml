@@ -10,12 +10,20 @@ spec:
       app.kubernetes.io/name: *name
   components:
     - ../../../../components/redis
+    - ../../../../components/kanidm/private
   interval: 1h
   path: ./kubernetes/apps/dev/renovate/operator
   postBuild:
     substitute:
       APP: *name
       NAMESPACE: *namespace
+
+      OIDC_DISPLAY_NAME: Renovate
+      OIDC_ORIGIN: https://renovate.hayden.moe/
+      OIDC_REDIRECT_URLS: '["https://renovate.hayden.moe/auth/callback"]'
+      OIDC_GROUP_PREFIX: renovate
+      OIDC_USERS_GROUP_MEMBERS: '[hayden]'
+      OIDC_ADMIN_GROUP_MEMBERS: '[hayden]'
   prune: true
   sourceRef:
     kind: GitRepository

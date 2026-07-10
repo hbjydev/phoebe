@@ -11,6 +11,16 @@ spec:
   values:
     fullnameOverride: *name
 
+    auth:
+      oidc:
+        enabled: true
+        issuerUrl: https://sso.hayden.moe/oauth2/openid/renovate-operator
+        clientId: renovate-operator
+        existingSecret: renovate-operator-kanidm-oauth2-credentials
+        secretKey: CLIENT_SECRET
+        allowedGroupPrefix: "renovate_"
+        additionalScopes: ["groups"]
+
     route:
       enabled: true
       hostnames: ["renovate.hayden.moe"]
