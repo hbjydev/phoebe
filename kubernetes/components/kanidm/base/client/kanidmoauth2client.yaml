@@ -18,7 +18,7 @@ spec:
   redirectUrl: ${OIDC_REDIRECT_URLS:=${emptyArray}}
 
   scopeMap:
-    - group: ${APP}_users
+    - group: ${OIDC_USERS_GROUP_NAME}
       scopes:
         - openid
         - profile
