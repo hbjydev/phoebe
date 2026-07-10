@@ -9,6 +9,8 @@ spec:
     name: *name
   interval: 30m
   values:
+    fullnameOverride: *name
+
     route:
       enabled: true
       hostnames: ["renovate.hayden.moe"]
