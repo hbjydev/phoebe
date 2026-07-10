@@ -7,7 +7,7 @@ spec:
   kanidmRef:
     name: kanidm
     namespace: security
-  kanidmName: ${OIDC_ADMIN_GROUP_NAME}_users
+  kanidmName: ${OIDC_USERS_GROUP_NAME}
   accountPolicy:
     authSessionExpiry: 2678400
   members: ${OIDC_USERS_GROUP_MEMBERS:=${emptyArray}}
