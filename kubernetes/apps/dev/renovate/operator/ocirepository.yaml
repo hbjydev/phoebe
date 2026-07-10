@@ -10,4 +10,4 @@ spec:
     operation: copy
   url: oci://ghcr.io/mogenius/helm-charts/renovate-operator
   ref:
-    tag: 5.0.1
+    tag: 5.1.0
