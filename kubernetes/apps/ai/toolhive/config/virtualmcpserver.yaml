@@ -31,7 +31,6 @@ spec:
             - openid
             - profile
             - email
-            - groups
   groupRef:
     name: mcp-tools
   config:
@@ -53,7 +52,6 @@ spec:
         - openid
         - profile
         - email
-        - groups
         - offline_access
   outgoingAuth:
     source: discovered
