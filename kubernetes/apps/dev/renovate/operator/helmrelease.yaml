@@ -18,6 +18,7 @@ spec:
         clientId: renovate-operator
         existingSecret: renovate-operator-kanidm-oauth2-credentials
         secretKey: CLIENT_SECRET
+        redirectScheme: https
         allowedGroupPrefix: "renovate_"
         additionalScopes: ["groups"]
 
