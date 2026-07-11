@@ -30,3 +30,4 @@ patches:
                 name: not-used
               spec:
                 secretRotation: null
+                secretKeyAliases: null
