@@ -11,7 +11,7 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/kopiur
-    - ../../../../components/kanidm/private
+    - ../../../../components/kanidm/public
   interval: 1h
   path: ./kubernetes/apps/ai/mimi/app
   postBuild:
@@ -22,8 +22,6 @@ spec:
       OIDC_DISPLAY_NAME: Mimi Dashboard
       OIDC_IMAGE_URL: 'https://cdn.discordapp.com/avatars/1522274117813014802/6f8f834b655989a6c704313515563e57?size=256'
       OIDC_ORIGIN: https://mimi.hayden.moe
-      OIDC_SECRET_ROTATION_ENABLED: 'false'
-      OIDC_PUBLIC: 'true'
       OIDC_REDIRECT_URLS: '[https://mimi.hayden.moe/auth/callback]'
       OIDC_USERS_GROUP_MEMBERS: '[hayden]'
   prune: true
