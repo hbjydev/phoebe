@@ -7,8 +7,6 @@ resources:
 patches:
   - target:
       kind: KanidmOAuth2Client
-      group: kaniop.rs
-      version: v1beta1
     patch: |-
       apiVersion: kaniop.rs/v1beta1
       kind: KanidmOAuth2Client
