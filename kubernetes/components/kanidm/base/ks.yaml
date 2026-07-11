@@ -63,6 +63,7 @@ spec:
       OIDC_DISPLAY_NAME: ${q:='}${OIDC_DISPLAY_NAME}${q:='}
       OIDC_IMAGE_URL: ${q:='}${OIDC_IMAGE_URL}${q:='}
       OIDC_ORIGIN: ${q:='}${OIDC_ORIGIN}${q:='}
+      OIDC_PUBLIC: ${q:='}${OIDC_PUBLIC:=false}${q:='}
       OIDC_REDIRECT_URLS: ${q:='}${OIDC_REDIRECT_URLS}${q:='}
       OIDC_SECRET_ROTATION_ENABLED: ${q:='}${OIDC_SECRET_ROTATION_ENABLED:=true}${q:='}
       OIDC_SECRET_ROTATION_PERIOD_DAYS: ${q:='}${OIDC_SECRET_ROTATION_PERIOD_DAYS:=90}${q:='}
