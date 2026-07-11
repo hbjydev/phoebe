@@ -18,4 +18,15 @@ patches:
         postBuild:
           substitute:
             OIDC_PUBLIC: "true"
-            OIDC_SECRET_ROTATION_ENABLED: "false"
+        patches:
+          - target:
+              group: kaniop.rs
+              kind: KanidmOAuth2Client
+              version: v1beta1
+            patch: |-
+              apiVersion: kaniop.rs/v1beta1
+              kind: KanidmOAuth2Client
+              metadata:
+                name: not-used
+              spec:
+                secretRotation: null
