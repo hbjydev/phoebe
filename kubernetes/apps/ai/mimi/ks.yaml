@@ -11,7 +11,7 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/kopiur
-    - ../../../../components/kanidm/base
+    - ../../../../components/kanidm/private
   interval: 1h
   path: ./kubernetes/apps/ai/mimi/app
   postBuild:
