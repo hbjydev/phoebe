@@ -1,0 +1,50 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mimi-config
+data:
+  config.yaml: |-
+    model:
+      default: kimi-for-coding
+      provider: kimi-coding
+
+    security:
+      redact_secrets: true
+
+    privacy:
+      redact_pii: true
+
+    dashboard:
+      theme: default
+      show_token_analytics: true
+      public_url: https://mimi.hayden.moe
+
+    timezone: 'Europe/London'
+
+    terminal:
+      backend: local
+      cwd: /data/workspace
+      timeout: 180
+      persistent_shell: true
+
+    toolsets: []
+
+    memory:
+      memory_enabled: true
+      user_profile_enabled: true
+      memory_char_limit: 2200
+      user_char_limit: 1375
+      provider: memini
+
+    approvals:
+      mode: ask
+
+    platform_toolsets:
+      discord: []
+
+    discord:
+      require_mention: false
+      auto_thread: false
+      reactions: false
+      allowed_channels: "*"
