@@ -163,7 +163,7 @@ spec:
         name: 'mimi-config'
         defaultMode: 0o755
         advancedMounts:
-          hermes:
+          mimi:
             init:
               - path: /run/config/config.yaml
                 subPath: config.yaml
@@ -171,7 +171,7 @@ spec:
       run:
         type: emptyDir
         advancedMounts:
-          hermes:
+          mimi:
             app:
               - path: /run
 
