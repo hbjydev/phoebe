@@ -8,7 +8,6 @@ components:
 resources:
   - ./hermes/ks.yaml
   - ./memini/ks.yaml
-  - ./mimi/ks.yaml
   - ./litellm/ks.yaml
   - ./llama-cpp-reranker/ks.yaml
   - ./text-embeddings-inference/ks.yaml
