@@ -5,5 +5,4 @@ kind: Kustomization
 resources:
   - ./externalsecret.yaml
   - ./configmap.yaml
-  - ./kanidm.yaml
   - ./helmrelease.yaml
