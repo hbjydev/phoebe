@@ -39,7 +39,7 @@ spec:
   dependsOn:
     - name: victoria-metrics-operator
   healthChecks:
-    - apiVersion: operator.victoriametrics.com/v1
+    - apiVersion: operator.victoriametrics.com/v1beta1
       kind: VMSingle
       name: victoria-metrics
       namespace: *namespace
