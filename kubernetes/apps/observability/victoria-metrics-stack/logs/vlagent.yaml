@@ -20,7 +20,8 @@ spec:
 
   storage:
     volumeClaimTemplate:
-      storageClass: ceph-block
-      resources:
-        requests:
-          storage: 20Gi
+      spec:
+        storageClass: ceph-block
+        resources:
+          requests:
+            storage: 20Gi
