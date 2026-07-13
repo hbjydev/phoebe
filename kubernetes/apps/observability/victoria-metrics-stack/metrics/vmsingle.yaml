@@ -1,0 +1,26 @@
+---
+apiVersion: operator.victoriametrics.com/v1
+kind: VMSingle
+metadata:
+  name: victoria-metrics
+spec:
+  image:
+    repository: victoriametrics/victoria-metrics
+    tag: v1.147.0
+    pullPolicy: Always
+
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "250m"
+    limits:
+      memory: "128Mi"
+      cpu: "500m"
+
+  retentionPeriod: "12"
+
+  storage:
+    storageClassName: ceph-block
+    resources:
+      requests:
+        storage: 50Gi

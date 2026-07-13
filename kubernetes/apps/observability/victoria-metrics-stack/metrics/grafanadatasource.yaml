@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/grafana.integreatly.org/grafanadatasource_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: victoria-metrics
+spec:
+  instanceSelector:
+    matchLabels:
+      grafana.internal/instance: grafana
+  datasource:
+    type: prometheus
+    name: VictoriaMetrics
+    access: proxy
+    isDefault: true
+    url: http://vmsingle-victoria-metrics:8428/select/0/prometheus
