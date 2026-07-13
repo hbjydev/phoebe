@@ -19,6 +19,9 @@ spec:
   values:
     fullnameOverride: victoria-metrics-operator
 
+    operator:
+      enable_converter_ownership: true
+
     admissionWebhooks:
       enabled: true
       certManager:
