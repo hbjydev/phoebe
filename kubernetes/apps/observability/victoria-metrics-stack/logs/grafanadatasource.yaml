@@ -10,7 +10,7 @@ spec:
       grafana.internal/instance: grafana
   datasource:
     type: victoriametrics-logs-datasource
-    name: VictoriaLogs 2
+    name: VictoriaLogs
     access: proxy
     isDefault: true
     url: http://vlsingle-victoria-logs.observability.svc:9428
