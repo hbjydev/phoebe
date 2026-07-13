@@ -11,11 +11,9 @@ spec:
     enabled: true
     ignoreFields:
       - kubernetes.container_id
-      - kubernetes.pod_annotations*
-      - kubernetes.node_labels*
       - kubernetes.namespace_labels*
-      - kubernetes.pod_labels*
     includePodLabels: true
+    includePodAnnotations: true
     includeNodeLabels: true
     msgFields: [message.msg, message, msg]
     timeFields: [time, ts, timestamp]
