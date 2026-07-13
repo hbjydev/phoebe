@@ -139,7 +139,7 @@ spec:
             image:
               repository: git.erwanleboucher.dev/eleboucher/runner
               # renovate: datasource=git-tags depName=https://git.erwanleboucher.dev/eleboucher/runner.git
-              tag: 12.10.2
+              tag: 12.13.0
             command:
               - sh
               - -ec
@@ -165,7 +165,7 @@ spec:
             image:
               repository: git.erwanleboucher.dev/eleboucher/runner-k8s-plugin
               # renovate: datasource=git-tags depName=https://git.erwanleboucher.dev/eleboucher/runner-k8s-plugin.git
-              tag: 12.10.6
+              tag: 12.10.9
             args:
               - --listen
               - unix:///plugin/forgejo-runner-k8s.sock
