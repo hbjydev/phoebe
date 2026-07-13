@@ -13,7 +13,7 @@ spec:
     name: VictoriaMetrics
     access: proxy
     isDefault: true
-    url: http://vmsingle-victoria-metrics.observability.svc:8428/select/0/prometheus
+    url: http://vmsingle-victoria-metrics.observability.svc:8428
     jsonData:
       prometheusType: Prometheus
       prometheusVersion: 2.50.1
