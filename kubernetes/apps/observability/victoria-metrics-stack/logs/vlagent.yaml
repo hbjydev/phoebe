@@ -4,6 +4,9 @@ kind: VLAgent
 metadata:
   name: logs-agent
 spec:
+  remoteWrite:
+    - url: "http://vlsingle-victoria-logs:9428/internal/insert"
+
   k8sCollector:
     enabled: true
 
