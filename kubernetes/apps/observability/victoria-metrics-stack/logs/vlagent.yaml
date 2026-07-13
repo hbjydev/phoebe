@@ -14,7 +14,7 @@ spec:
       - kubernetes.namespace_labels*
     includePodLabels: true
     includePodAnnotations: true
-    includeNodeLabels: true
+    includeNodeLabels: false
     msgFields: [message.msg, message, msg]
     timeFields: [time, ts, timestamp]
 
