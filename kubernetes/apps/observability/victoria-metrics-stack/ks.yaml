@@ -39,9 +39,9 @@ spec:
   dependsOn:
     - name: victoria-metrics-operator
   healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: *app
+    - apiVersion: operator.victoriametrics.com/v1
+      kind: VTSingle
+      name: victoria-traces
       namespace: *namespace
   interval: 1h
   path: ./kubernetes/apps/observability/victoria-metrics-stack/traces
