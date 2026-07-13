@@ -14,3 +14,6 @@ spec:
     access: proxy
     isDefault: true
     url: http://vmsingle-victoria-metrics.observability.svc:8428/select/0/prometheus
+    jsonData:
+      prometheusType: Prometheus
+      prometheusVersion: 2.24.x
