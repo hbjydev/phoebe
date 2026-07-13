@@ -35,8 +35,8 @@ spec:
               LIVVI_MEMINI_NAMESPACE: mimi
               LIVVI_OPENAI_API_URL: http://litellm.ai:4000
               LIVVI_OPENAI_MODEL_NAME: deepseek-v4-flash
-              LIVVI_DATABASE_URL: sqlite:/app/livvi.db?mode=rwc
-              LIVVI_LCM_DATABASE_URL: sqlite:/app/lcm.db?mode=rwc
+              LIVVI_DATABASE_URL: sqlite:/data/livvi.db?mode=rwc
+              LIVVI_LCM_DATABASE_URL: sqlite:/data/lcm.db?mode=rwc
             envFrom:
               - secretRef:
                   name: mimi-secret
@@ -63,8 +63,6 @@ spec:
     persistence:
       data:
         existingClaim: '{{ .Release.Name }}'
-        globalMounts:
-          - path: /app
 
       tmpfs:
         type: emptyDir
