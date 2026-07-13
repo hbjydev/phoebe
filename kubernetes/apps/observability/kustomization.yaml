@@ -10,5 +10,4 @@ resources:
   - ./grafana/ks.yaml
   - ./kube-prometheus-stack/ks.yaml
   - ./unpoller/ks.yaml
-  - ./victoria-logs/ks.yaml
   - ./victoria-metrics-stack/ks.yaml
