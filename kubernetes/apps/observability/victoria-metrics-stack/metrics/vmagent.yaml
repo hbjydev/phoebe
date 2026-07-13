@@ -9,7 +9,7 @@ spec:
   scrapeInterval: 30s
   scrapeTimeout: 10s
   externalLabels:
-    cluster: my-cluster
+    cluster: phoebe
 
   remoteWrite:
     - url: "http://vmsingle-victoria-metrics.observability.svc:8428/api/v1/write"
