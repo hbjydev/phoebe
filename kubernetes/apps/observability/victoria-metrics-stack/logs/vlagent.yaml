@@ -9,6 +9,14 @@ spec:
 
   k8sCollector:
     enabled: true
+    ignoreFields:
+      - kubernetes.container_id
+      - kubernetes.pod_annotations*
+      - kubernetes.node_labels*
+      - kubernetes.namespace_labels*
+      - kubernetes.pod_labels*
+    msgFields: [message.msg, message, msg]
+    timeFields: [time, ts, timestamp]
 
   resources:
     requests:
