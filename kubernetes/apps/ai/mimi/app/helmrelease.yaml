@@ -1,0 +1,70 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: mimi
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  interval: 1h
+  values:
+    controllers:
+      llama-cpp-reranker:
+        pod:
+          securityContext:
+            supplementalGroups:
+              - 44
+              - 992
+
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        replicas: 1
+        strategy: Recreate
+        type: deployment
+
+        containers:
+          mimi:
+            image:
+              repository: ghcr.io/hbjydev/livvi
+              tag: v0.1.0@sha256:c22fb4f98af1cc16f245a936e187ebb4813db4eb8b552e387f6475f4e526b2b6
+            env:
+              LIVVI_MEMINI_BASE_URL: http://memini.ai:8080
+              LIVVI_MEMINI_NAMESPACE: mimi
+              LIVVI_OPENAI_API_URL: http://litellm.ai:4000
+              LIVVI_OPENAI_MODEL_NAME: deepseek-v4-flash
+            envFrom:
+              - secretRef:
+                  name: mimi-secret
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 1Gi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
+
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
+    persistence:
+      data:
+        existingClaim: '{{ .Release.Name }}'
+        globalMounts:
+          - path: /app
+
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
