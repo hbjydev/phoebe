@@ -28,6 +28,22 @@ spec:
   targetNamespace: *namespace
   timeout: 5m
 
+  patches:
+    - target:
+        group: grafana.integreatly.org
+        version: v1beta1
+        kind: GrafanaDashboard
+        name: kopiur-dashboard
+      patch: |
+        apiVersion: grafana.integreatly.org/v1beta1
+        kind: GrafanaDashboard
+        metadata:
+          name: _
+        spec:
+          datasources:
+            - datasourceName: VictoriaMetrics
+              inputName: datasource
+
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
