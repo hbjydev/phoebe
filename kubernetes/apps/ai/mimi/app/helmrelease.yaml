@@ -28,7 +28,7 @@ spec:
               LIVVI_MEMINI_BASE_URL: http://memini.ai:8080
               LIVVI_MEMINI_NAMESPACE: mimi
               LIVVI_OPENAI_API_URL: http://litellm.ai:4000
-              LIVVI_OPENAI_MODEL_NAME: deepseek-v4-flash
+              LIVVI_OPENAI_MODEL_NAME: oc-kimi-k2.7
               LIVVI_DATABASE_URL: sqlite:/data/livvi.db?mode=rwc
               LIVVI_LCM_DATABASE_URL: sqlite:/data/lcm.db?mode=rwc
             envFrom:
