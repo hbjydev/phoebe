@@ -10,8 +10,8 @@ spec:
     matchLabels:
       grafana.internal/instance: grafana
   datasources:
-    - datasourceName: prometheus
-      inputName: DS_PROMETHEUS
+    - datasourceName: VictoriaMetrics
+      inputName: datasource
   configMapRef:
     name: grafana-operator-dashboard
     key: grafana-operator.json
