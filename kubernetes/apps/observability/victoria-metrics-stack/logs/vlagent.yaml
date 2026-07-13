@@ -17,7 +17,7 @@ spec:
     includePodLabels: true
     includePodAnnotations: true
     includeNodeLabels: false
-    msgFields: [message.msg, message, msg]
+    msgFields: [message.msg, message, msg, record.msg]
     timeFields: [time, ts, timestamp]
 
   resources:
