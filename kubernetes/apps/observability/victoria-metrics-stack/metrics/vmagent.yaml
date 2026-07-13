@@ -1,0 +1,23 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAgent
+metadata:
+  name: metrics-agent
+spec:
+  selectAllByDefault: true
+  replicaCount: 1
+  scrapeInterval: 30s
+  scrapeTimeout: 10s
+  externalLabels:
+    cluster: my-cluster
+
+  remoteWrite:
+    - url: "http://vmsingle-victoria-metrics.observability.svc:8428/api/v1/write"
+
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "250m"
+    limits:
+      memory: "128Mi"
+      cpu: "500m"
