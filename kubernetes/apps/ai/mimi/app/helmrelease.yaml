@@ -11,13 +11,7 @@ spec:
   interval: 1h
   values:
     controllers:
-      llama-cpp-reranker:
-        pod:
-          securityContext:
-            supplementalGroups:
-              - 44
-              - 992
-
+      mimi:
         annotations:
           reloader.stakater.com/auto: "true"
 
@@ -58,7 +52,7 @@ spec:
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
-        fsGroupChangePolicy: OnRootMismatch
+        fsGroupChangePolicy: Always
 
     persistence:
       data:
