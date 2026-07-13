@@ -13,4 +13,4 @@ spec:
     name: VictoriaMetrics
     access: proxy
     isDefault: true
-    url: http://vmsingle-victoria-metrics:8428/select/0/prometheus
+    url: http://vmsingle-victoria-metrics.observability.svc:8428/select/0/prometheus

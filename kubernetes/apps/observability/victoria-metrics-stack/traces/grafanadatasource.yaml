@@ -13,4 +13,4 @@ spec:
     name: VictoriaTraces
     access: proxy
     isDefault: true
-    url: http://vtsingle-victoria-traces:10428/select/tempo
+    url: http://vtsingle-victoria-traces.observability.svc:10428/select/tempo
