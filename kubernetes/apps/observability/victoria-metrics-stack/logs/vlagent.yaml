@@ -12,6 +12,8 @@ spec:
     ignoreFields:
       - kubernetes.container_id
       - kubernetes.namespace_labels*
+      - kubernetes.pod_annotations.k8s.v1.cni.cncf.io/network-status
+      - kubernetes.pod_labels.controller-revision-hash
     includePodLabels: true
     includePodAnnotations: true
     includeNodeLabels: false
