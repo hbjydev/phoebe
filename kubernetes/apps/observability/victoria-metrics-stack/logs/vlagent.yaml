@@ -15,6 +15,8 @@ spec:
       - kubernetes.node_labels*
       - kubernetes.namespace_labels*
       - kubernetes.pod_labels*
+    includePodLabels: true
+    includeNodeLabels: true
     msgFields: [message.msg, message, msg]
     timeFields: [time, ts, timestamp]
 
