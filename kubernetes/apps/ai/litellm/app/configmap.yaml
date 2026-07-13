@@ -52,7 +52,7 @@ data:
 
       - model_name: oc-kimi-k2.7
         litellm_params:
-          model: moonshot/kimi-k2.7
+          model: moonshot/kimi-k2.7-code
           api_base: https://opencode.ai/zen/go/v1
           api_key: os.environ/OPENCODE_API_KEY
         model_info:
