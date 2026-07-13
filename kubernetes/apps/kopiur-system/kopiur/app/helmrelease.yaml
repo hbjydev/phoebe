@@ -9,6 +9,25 @@ spec:
     kind: OCIRepository
     name: kopiur
   interval: 30m
+
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              group: grafana.integreatly.org
+              version: v1beta1
+              kind: GrafanaDashboard
+              name: kopiur-dashboard
+            patch: |
+              apiVersion: grafana.integreatly.org/v1beta1
+              kind: GrafanaDashboard
+              metadata:
+                name: _
+              spec:
+                datasources:
+                  - datasourceName: VictoriaMetrics
+                    inputName: datasource
+
   values:
     installScope: cluster
     installCRDs: false
