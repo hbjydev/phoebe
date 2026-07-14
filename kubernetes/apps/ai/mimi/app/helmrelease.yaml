@@ -23,7 +23,7 @@ spec:
           mimi:
             image:
               repository: ghcr.io/hbjydev/livvi
-              tag: v0.1.1@sha256:3f9ecd7cb350bd4fe10816e7f20e52127065d4c65e040a7386ca88d93513045d
+              tag: v0.2.0@sha256:f9d26cdcea4255596ff3a7bb4393de89d82da2b412afddaa9081003e762a0b94
             env:
               RUST_LOG: info
               LIVVI_MEMINI_BASE_URL: http://memini.ai:8080
@@ -32,6 +32,11 @@ spec:
               LIVVI_OPENAI_MODEL_NAME: ms-kimi-k2.7
               LIVVI_DATABASE_URL: sqlite:/data/livvi.db?mode=rwc
               LIVVI_LCM_DATABASE_URL: sqlite:/data/lcm.db?mode=rwc
+
+              OTEL_TRACES_SAMPLER: traceidratio
+              OTEL_TRACES_SAMPLER_ARG: '0.5'
+              OTEL_EXPORTER_OTLP_METRICS_ENDPOINT: 'http://vmsingle-victoria-metrics.observability.svc:8428/opentelemetry/v1/metrics'
+              OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: 'http://vtsingle-victoria-traces.observability.svc:10428/insert/opentelemetry/v1/traces'
             envFrom:
               - secretRef:
                   name: mimi-secret
