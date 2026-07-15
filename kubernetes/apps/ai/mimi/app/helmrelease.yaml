@@ -33,6 +33,7 @@ spec:
               LIVVI_OPENAI_MODEL_NAME: ms-kimi-k2.7
               LIVVI_DATABASE_URL: sqlite:/data/livvi.db?mode=rwc
               LIVVI_LCM_DATABASE_URL: sqlite:/data/lcm.db?mode=rwc
+              LIVVI_SEARXNG_URL: http://searxng.selfhosted.svc:8080
 
               OTEL_TRACES_SAMPLER: traceidratio
               OTEL_TRACES_SAMPLER_ARG: '0.5'
