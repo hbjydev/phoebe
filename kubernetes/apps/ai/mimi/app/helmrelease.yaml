@@ -23,18 +23,31 @@ spec:
           mimi:
             image:
               repository: ghcr.io/hbjydev/livvi
-              tag: ca3c61e@sha256:ea9ca2b304803355c46fde8f2be7bb3ad95c409d546174d59477155aadaaa2c7
+              tag: 1457962@sha256:4c352064e79bb2874f3c874ccc9c0f89507b9e673e1cb6b300bd68df920f161a
             env:
-              RUST_LOG: info
-              LIVVI_LOG_FORMAT: json
+              # Memories
               LIVVI_MEMINI_BASE_URL: http://memini.ai:8080
               LIVVI_MEMINI_NAMESPACE: mimi
+
+              # Model Provider
               LIVVI_OPENAI_API_URL: http://litellm.ai:4000
               LIVVI_OPENAI_MODEL_NAME: ms-kimi-k2.7
+
+              # Store
               LIVVI_DATABASE_URL: sqlite:/data/livvi.db?mode=rwc
+
+              # Lossless Context
               LIVVI_LCM_DATABASE_URL: sqlite:/data/lcm.db?mode=rwc
+
+              # Web Tools
               LIVVI_SEARXNG_URL: http://searxng.selfhosted.svc:8080
 
+              # Discord
+              LIVVI_DISCORD_ALLOW_TOOL_USER_IDS: '508429235157729290'
+
+              # Telemetry
+              RUST_LOG: info
+              LIVVI_LOG_FORMAT: json
               OTEL_TRACES_SAMPLER: traceidratio
               OTEL_TRACES_SAMPLER_ARG: '0.5'
               OTEL_EXPORTER_OTLP_METRICS_ENDPOINT: 'http://vmsingle-victoria-metrics.observability.svc:8428/opentelemetry/v1/metrics'
