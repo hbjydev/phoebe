@@ -23,7 +23,7 @@ spec:
           mimi:
             image:
               repository: ghcr.io/hbjydev/livvi
-              tag: 23a276b@sha256:327138fe50159aeffc980643a25e2b036c1c1cf85dd4c8a24910d16d77b27b5b
+              tag: ca3c61e@sha256:ea9ca2b304803355c46fde8f2be7bb3ad95c409d546174d59477155aadaaa2c7
             env:
               RUST_LOG: info
               LIVVI_LOG_FORMAT: json
