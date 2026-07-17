@@ -23,7 +23,7 @@ spec:
           mimi:
             image:
               repository: ghcr.io/hbjydev/livvi
-              tag: 1457962@sha256:4c352064e79bb2874f3c874ccc9c0f89507b9e673e1cb6b300bd68df920f161a
+              tag: 629fa09@sha256:3290fe524cd08ab85c305d0ec029caf0126999abde26dbb35b42da474ebeaeef
             env:
               # Memories
               LIVVI_MEMINI_BASE_URL: http://memini.ai:8080
