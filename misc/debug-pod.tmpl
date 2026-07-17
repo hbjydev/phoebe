@@ -1,0 +1,20 @@
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: volume-debugger-{{ ENV.NAME }}
+  namespace: "{{ ENV.NAMESPACE }}"
+spec:
+  volumes:
+    - name: volume-to-debug
+      persistentVolumeClaim:
+       claimName: "{{ ENV.NAME }}"
+  containers:
+    - name: debugger
+      image: rockylinux/rockylinux:10-ubi
+      command: ['sleep', '3600']
+      volumeMounts:
+        - mountPath: "/data"
+          name: volume-to-debug
+
+# vim:ft=yaml

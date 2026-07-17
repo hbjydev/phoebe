@@ -2,6 +2,7 @@ set quiet := true
 set shell := ['bash', '-euo', 'pipefail', '-c']
 
 kubernetes_dir := justfile_dir() + "/kubernetes"
+misc_dir := justfile_dir() + "/misc"
 
 [private]
 default:
@@ -47,6 +48,10 @@ snap-pvs:
   kubectl get snapshotpolicies --no-headers -A | while read -r ns name _; do \
     kubectl kopiur snapshot now -n "$ns" --policy "$name" --tag "reason=manual-justfile"; \
   done
+
+debug-pvc name='' namespace='':
+  NAME={{ name }} NAMESPACE={{ namespace }} just template {{ misc_dir / "debug-pod.tmpl" }} | kubectl create -f -
+  kubectl exec -it volume-debugger-{{ name }} -n {{ namespace }} -- sh
 
 [private]
 render-local-ks dir ks="*":
