@@ -12,25 +12,7 @@ spec:
   values:
     cleanPrometheusOperatorObjectNames: true
     alertmanager:
-      route:
-        main:
-          enabled: true
-          hostnames:
-            - alertmanager.hayden.moe
-          parentRefs:
-            - name: internal
-              namespace: network
-      alertmanagerSpec:
-        alertmanagerConfiguration:
-          name: alertmanager
-        externalUrl: https://alertmanager.hayden.moe
-        storage:
-          volumeClaimTemplate:
-            spec:
-              storageClassName: ceph-block
-              resources:
-                requests:
-                  storage: 1Gi
+      enabled: false
     kubeEtcd:
       service:
         selector:
