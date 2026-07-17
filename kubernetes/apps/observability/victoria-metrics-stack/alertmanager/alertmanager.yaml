@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/operator.victoriametrics.com/vmalertmanager_v1beta1.json
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAlertmanager
+metadata:
+  name: alertmanager
+spec:
+  replicaCount: 2
+  selectAllByDefault: true
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/operator.victoriametrics.com/vmalertmanagerconfig_v1beta1.json
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAlertmanagerConfig
+metadata:
+  name: alertmanager
+spec:
+  route:
+    receiver: blackhole
+    repeat_interval: 12h
+    routes:
+      - receiver: blackhole
+        matchers:
+          - name: alertname
+            value: InfoInhibitor
+            matchType: =
+    group_by:
+      - alertname
+      - cluster
+      - job
+    group_interval: 5m
+    group_wait: 1m
+
+  receivers:
+    - name: blackhole
