@@ -15,7 +15,8 @@ spec:
   path: "./kubernetes/apps/huly/huly/app"
   postBuild:
     substitute:
-      APP: huly
+      APP: *app
+      NAMESPACE: *namespace
 
       OIDC_DISPLAY_NAME: Huly
       OIDC_ORIGIN: https://huly.hayden.moe/
