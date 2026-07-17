@@ -42,6 +42,12 @@ sync-es:
     kubectl -n "$ns" annotate --overwrite externalsecret "$name" force-sync="$(date +%s)"; \
   done
 
+# Snapshot all PVCs
+snap-pvs:
+  kubectl get snapshotpolicies --no-headers -A | while read -r ns name _; do \
+    kubectl kopiur snapshot now -n "$ns" --policy "$name" --tag "reason=manual-justfile"; \
+  done
+
 [private]
 render-local-ks dir ks="*":
   flux-local build ks --all-namespaces --path "{{ kubernetes_dir }}/apps/{{ dir }}" {{ if ks != "*" { ks } else { "" } }}
