@@ -112,6 +112,9 @@ spec:
                   path:
                     type: ReplaceFullPath
                     replaceFullPath: /
+          - backendRefs:
+              - identifier: app
+                port: *port
 
     persistence:
       config:
