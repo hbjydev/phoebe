@@ -21,10 +21,10 @@ spec:
       containers:
         - name: mcp
           args:
-            - "-t"
+            - "--transport"
             - "streamable-http"
             - "--address"
-            - "0.0.0.0:8080"
+            - ":8080"
           ports:
             - containerPort: 8080
               name: mcp
