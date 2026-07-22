@@ -37,6 +37,7 @@ spec:
               LIVVI_DATABASE_URL: sqlite:/data/livvi.db?mode=rwc
 
               # Lossless Context
+              LIVVI_LCM_ENABLE: '1'
               LIVVI_LCM_DATABASE_URL: sqlite:/data/lcm.db?mode=rwc
 
               # Web Tools
