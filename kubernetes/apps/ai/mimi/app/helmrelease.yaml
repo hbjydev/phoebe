@@ -31,7 +31,7 @@ spec:
 
               # Model Provider
               LIVVI_OPENAI_API_URL: http://litellm.ai:4000
-              LIVVI_OPENAI_MODEL_NAME: ms-kimi-k2.7
+              LIVVI_OPENAI_MODEL_NAME: ms-kimi-k3
 
               # Store
               LIVVI_DATABASE_URL: sqlite:/data/livvi.db?mode=rwc
