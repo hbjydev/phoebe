@@ -104,7 +104,7 @@ spec:
         rules:
           - matches:
             - path:
-                type: Exact
+                type: PathPrefix
                 value: /metrics
             filters:
               - type: URLRewrite
