@@ -25,6 +25,10 @@ spec:
             - "streamable-http"
             - "--address"
             - ":8080"
+            - "--allowed-hosts"
+            - "*"
+            - "--endpoint-path"
+            - "/mcp"
           ports:
             - containerPort: 8080
               name: mcp
