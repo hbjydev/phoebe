@@ -44,6 +44,12 @@ data:
           input_cost_per_token: 0.0000014
           output_cost_per_token: 0.0000044
 
+      - model_name: ms-kimi-k3
+        litellm_params:
+          model: moonshot/k3
+          api_base: https://api.kimi.com/coding/v1
+          api_key: os.environ/MOONSHOT_API_KEY
+
       - model_name: ms-kimi-k2.7
         litellm_params:
           model: moonshot/kimi-for-coding
