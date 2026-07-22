@@ -78,6 +78,14 @@ spec:
                 cpu: 2
                 memory: 2Gi
 
+    serviceMonitor:
+      app:
+        enabled: true
+        endpoints:
+          - port: http
+            interval: 30s # Unifi API only polls at 2m intervals
+            scrapeTimeout: 10s
+
     service:
       app:
         controller: app
