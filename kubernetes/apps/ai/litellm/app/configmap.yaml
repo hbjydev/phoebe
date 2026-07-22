@@ -15,6 +15,7 @@ data:
         port: 6379
         namespace: litellm
       drop_params: true
+      require_auth_for_metrics_endpoint: false
 
     model_list:
       - model_name: nw-glm-5.2
