@@ -101,6 +101,18 @@ spec:
             namespace: network
             sectionName: https
 
+        rules:
+          - matches:
+            - path:
+                type: Exact
+                value: /metrics
+            filters:
+              - type: URLRewrite
+                urlRewrite:
+                  path:
+                    type: ReplaceFullPath
+                    replaceFullPath: /
+
     persistence:
       config:
         type: configMap
