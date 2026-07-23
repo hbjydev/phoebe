@@ -18,6 +18,12 @@ spec:
     substitute:
       APP: *app
       NAMESPACE: *namespace
+      OIDC_DISPLAY_NAME: Hermes Agent
+      OIDC_ORIGIN: https://hermes.hayden.moe/
+      OIDC_REDIRECT_URLS: '["https://hermes.hayden.moe/auth/callback"]'
+      OIDC_GROUP_PREFIX: hermes
+      OIDC_USERS_GROUP_MEMBERS: '[hayden]'
+      OIDC_ADMIN_GROUP_MEMBERS: '[hayden]'
   prune: true
   sourceRef:
     kind: GitRepository
