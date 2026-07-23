@@ -18,6 +18,24 @@ data:
       require_auth_for_metrics_endpoint: false
 
     model_list:
+      - model_name: chatgpt/gpt-5.6-luna
+        model_info:
+          mode: responses
+        litellm_params:
+          model: chatgpt/gpt-5.6-terra
+
+      - model_name: chatgpt/gpt-5.6-terra
+        model_info:
+          mode: responses
+        litellm_params:
+          model: chatgpt/gpt-5.6-terra
+
+      - model_name: chatgpt/gpt-5.6-sol
+        model_info:
+          mode: responses
+        litellm_params:
+          model: chatgpt/gpt-5.6-sol
+
       - model_name: nw-glm-5.2
         litellm_params:
           model: zai/glm-5.2
