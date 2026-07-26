@@ -35,8 +35,8 @@ spec:
           [{
             "name": "vpn",
             "namespace": "kube-system",
-            "ips": ["10.90.0.22/24"],
-            "mac": "d6:67:45:f6:29:e9"
+            "ips": ["10.90.0.69/24"],
+            "mac": "9f:88:42:38:43:0d"
           }]
       securityContext:
         fsGroup: 0
