@@ -29,6 +29,7 @@ spec:
             env:
               TZ: ${TIMEZONE}
               PROMETHEUS_MULTIPROC_DIR: /tmp/prometheus_multiproc_dir
+              LITELLM_HOME: /cache
               DATABASE_URL:
                 secretKeyRef:
                   name: 'litellm-postgres'
@@ -124,6 +125,8 @@ spec:
           - path: /config/config.yaml
             subPath: config.yaml
             readOnly: true
+      cache:
+        existingClaim: "{{ .Release.Name }}"
       tmp:
         type: emptyDir
         globalMounts:
