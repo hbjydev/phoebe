@@ -6,7 +6,7 @@ metadata:
   name: kanidm-git
 spec:
   interval: 1h
-  url: https://forgejo.hayden.moe/hayden/kanidm-auth-objects
+  url: http://forgejo-http.dev.svc.cluster.local:3000/hayden/kanidm-auth-objects
   ref:
     name: refs/heads/main
   secretRef:
