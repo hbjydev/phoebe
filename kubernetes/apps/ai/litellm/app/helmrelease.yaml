@@ -30,6 +30,8 @@ spec:
               TZ: ${TIMEZONE}
               PROMETHEUS_MULTIPROC_DIR: /tmp/prometheus_multiproc_dir
               LITELLM_HOME: /cache
+              HOME: /cache
+              XDG_CONFIG_HOME: /cache/.config
               DATABASE_URL:
                 secretKeyRef:
                   name: 'litellm-postgres'
