@@ -21,3 +21,9 @@ variable "wif_pool_id" {
   type        = string
   sensitive   = true
 }
+
+variable "op_vault" {
+  description = "The Vault in 1Password to store generated secrets in."
+  type        = string
+  sensitive   = true
+}

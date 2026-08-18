@@ -1,5 +1,6 @@
 locals {
-  prefix = "sa-b-phoebe"
+  sa_prefix = "sa-b-phoebe"
+  op_prefix = "sa-gcp"
 
   wif_principal = "principal://iam.googleapis.com/projects/${var.project_id_numeric}/locations/global/workloadIdentityPools/${var.wif_pool_id}/subject"
 
@@ -48,13 +49,30 @@ locals {
   crossplane_k8s_principals = {
     for sa in local.crossplane_sas : sa.name => "${local.wif_principal}/system:serviceaccount:${local.crossplane_namespace}:${sa.kube}"
   }
+
+  crossplane_k8s_configs = {
+    for sa in local.crossplane_sas : sa.name => jsonencode({
+      universe_domain    = "googleapis.com"
+      type               = "external_account"
+      audience           = "iam.googleapis.com/projects/${var.project_id_numeric}/locations/global/workloadIdentityPools/${var.wif_pool_id}/providers/k8s-talos-phoebe"
+      subject_token_type = "urn:ietf:params:oauth:token-type:jwt"
+      token_url          = "https://sts.europe-west2.rep.googleapis.com/v1/token"
+      credential_source  = {
+        file = {
+          path = "/var/run/service-account/token"
+          format = { type = "text" }
+        }
+      }
+      service_account_impersonation_url = "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/${google_service_account.service_account[sa.name].email}:generateAccessToken"
+    })
+  }
 }
 
 resource "google_service_account" "service_account" {
   for_each = { for sa in local.crossplane_sas : sa.name => sa }
 
   project     = var.project_id
-  account_id  = "${local.prefix}-crossplane-${each.key}"
+  account_id  = "${local.sa_prefix}-crossplane-${each.key}"
   description = each.value.description
 }
 
@@ -72,4 +90,12 @@ resource "google_service_account_iam_member" "crossplane-k8s" {
   service_account_id = google_service_account.service_account[each.key].name
   role               = "roles/iam.workloadIdentityUser"
   member             = local.crossplane_k8s_principals[each.key]
+}
+
+resource "onepassword_item" "crossplane_k8s_config" {
+  for_each = { for sa in local.crossplane_sas : sa.name => sa }
+
+  vault    = var.op_vault
+  title    = "${local.op_prefix}-crossplane-${each.key}-k8s-config"
+  password = base64encode(local.crossplane_k8s_configs[each.key])
 }
