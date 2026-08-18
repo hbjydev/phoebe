@@ -4,6 +4,7 @@ kind: ProviderConfig
 metadata:
   name: gcp
 spec:
+  projectID: 'prj-b-seed-ahjd'
   credentials:
     source: Secret
     secretRef:
