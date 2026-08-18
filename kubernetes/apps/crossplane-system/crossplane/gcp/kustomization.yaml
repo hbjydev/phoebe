@@ -6,3 +6,4 @@ resources:
   - ./externalsecret.yaml
   - ./providerconfig.yaml
   - ./folder.yaml
+  - ./serviceaccounts.yaml
