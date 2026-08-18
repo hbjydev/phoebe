@@ -1,0 +1,9 @@
+---
+apiVersion: cloudplatform.gcp.upbound.io/v1beta1
+kind: Folder
+metadata:
+  name: fldr-phoebe
+spec:
+  forProvider:
+    displayName: "fldr-phoebe"
+    parent: "organizations/933264970796"
