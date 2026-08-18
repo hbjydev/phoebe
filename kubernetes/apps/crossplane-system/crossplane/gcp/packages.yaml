@@ -1,0 +1,23 @@
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-gcp-cloudplatform
+spec:
+  package: xpkg.upbound.io/upbound/provider-gcp-cloudplatform:v3.0.1
+
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-gcp-iam
+spec:
+  package: xpkg.upbound.io/upbound/provider-gcp-iam:v3.0.1
+
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-gcp-storage
+spec:
+  package: xpkg.upbound.io/upbound/provider-gcp-storage:v3.0.1
