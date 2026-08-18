@@ -1,10 +1,14 @@
 locals {
   prefix = "sa-b-phoebe"
 
+  wif_principal = "principal://iam.googleapis.com/projects/${var.project_id_numeric}/locations/global/workloadIdentityPools/${var.wif_pool_id}/subject"
+
+  crossplane_namespace = "crossplane-system"
   crossplane_sas = [
     {
       name = "stg"
       description = "Crossplane Service Account for Cloud Storage"
+      kube = "cp-gcp-storage"
       roles = [
         "roles/storage.admin",
       ]
@@ -13,12 +17,14 @@ locals {
     {
       name = "iam"
       description = "Crossplane Service Account for IAM"
+      kube = "cp-gcp-iam"
       roles = []
     },
 
     {
       name = "rm"
       description = "Crossplane Service Account for Resource Manager"
+      kube = "cp-gcp-cloudplatform"
       roles = [
         "roles/resourcemanager.folderAdmin",
         "roles/resourcemanager.projectCreator",
@@ -38,6 +44,10 @@ locals {
       ]
     ]) : binding.key => binding
   }
+
+  crossplane_k8s_principals = {
+    for sa in local.crossplane_sas : sa.name => "${local.wif_principal}/system:serviceaccount:${local.crossplane_namespace}:${sa.kube}"
+  }
 }
 
 resource "google_service_account" "service_account" {
@@ -56,26 +66,10 @@ resource "google_organization_iam_member" "crossplane" {
   member = google_service_account.service_account[each.value.sa_name].member
 }
 
-import {
-  to = google_service_account.service_account["rm"]
-  identity = {
-    project = "prj-b-seed-ahjd"
-    email = "sa-b-phoebe-crossplane-rm@prj-b-seed-ahjd.iam.gserviceaccount.com"
-  }
-}
+resource "google_service_account_iam_member" "crossplane-k8s" {
+  for_each = { for sa in local.crossplane_sas : sa.name => sa }
 
-import {
-  to = google_service_account.service_account["stg"]
-  identity = {
-    project = "prj-b-seed-ahjd"
-    email = "sa-b-phoebe-crossplane-storage@prj-b-seed-ahjd.iam.gserviceaccount.com"
-  }
-}
-
-import {
-  to = google_service_account.service_account["iam"]
-  identity = {
-    project = "prj-b-seed-ahjd"
-    email = "sa-b-phoebe-crossplane-iam@prj-b-seed-ahjd.iam.gserviceaccount.com"
-  }
+  service_account_id = google_service_account.service_account[each.key].name
+  role               = "roles/iam.workloadIdentityUser"
+  member             = local.crossplane_k8s_principals[each.key]
 }
