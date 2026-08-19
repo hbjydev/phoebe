@@ -1,4 +1,11 @@
 ---
+apiVersion: pkg.crossplane.io/v1alpha1
+kind: ControllerConfig
+metadata:
+  name: provider-gcp-cloudplatform
+spec:
+  serviceAccountName: cp-gcp-cloudplatform
+---
 apiVersion: gcp.upbound.io/v1beta1
 kind: ProviderConfig
 metadata:
@@ -6,12 +13,17 @@ metadata:
 spec:
   projectID: 'prj-b-seed-ahjd'
   credentials:
-    source: Secret
-    secretRef:
-      key: credential-configuration.json
-      name: cp-gcp-cloudplatform
-      namespace: crossplane-system
+    source: ImpersonateServiceAccount
+    impersonateServiceAccount:
+      name: sa-b-phoebe-crossplane-rm@prj-b-seed-ahjd.iam.gserviceaccount.com
 
+---
+apiVersion: pkg.crossplane.io/v1alpha1
+kind: ControllerConfig
+metadata:
+  name: provider-gcp-storage
+spec:
+  serviceAccountName: cp-gcp-storage
 ---
 apiVersion: gcp.upbound.io/v1beta1
 kind: ProviderConfig
@@ -20,12 +32,17 @@ metadata:
 spec:
   projectID: 'prj-b-seed-ahjd'
   credentials:
-    source: Secret
-    secretRef:
-      key: credential-configuration.json
-      name: cp-gcp-storage
-      namespace: crossplane-system
+    source: ImpersonateServiceAccount
+    impersonateServiceAccount:
+      name: sa-b-phoebe-crossplane-stg@prj-b-seed-ahjd.iam.gserviceaccount.com
 
+---
+apiVersion: pkg.crossplane.io/v1alpha1
+kind: ControllerConfig
+metadata:
+  name: provider-gcp-iam
+spec:
+  serviceAccountName: cp-gcp-iam
 ---
 apiVersion: gcp.upbound.io/v1beta1
 kind: ProviderConfig
@@ -34,8 +51,6 @@ metadata:
 spec:
   projectID: 'prj-b-seed-ahjd'
   credentials:
-    source: Secret
-    secretRef:
-      key: credential-configuration.json
-      name: cp-gcp-iam
-      namespace: crossplane-system
+    source: ImpersonateServiceAccount
+    impersonateServiceAccount:
+      name: sa-b-phoebe-crossplane-iam@prj-b-seed-ahjd.iam.gserviceaccount.com
