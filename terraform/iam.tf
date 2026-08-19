@@ -57,7 +57,7 @@ locals {
     subject_token_type = "urn:ietf:params:oauth:token-type:jwt"
     token_url          = "https://sts.europe-west2.rep.googleapis.com/v1/token"
     credential_source  = {
-      file = "/var/run/service-account/token"
+      file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
       format = { type = "text" }
     }
   })
