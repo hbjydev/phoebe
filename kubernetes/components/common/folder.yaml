@@ -1,0 +1,12 @@
+---
+apiVersion: cloudplatform.gcp.upbound.io/v1beta1
+kind: Folder
+metadata:
+  name: fldr-$(NAMESPACE)
+spec:
+  forProvider:
+    displayName: fldr-$(NAMESPACE)
+    parentRef:
+      name: fldr-phoebe
+  providerConfigRef:
+    name: gcp-cloudplatform
