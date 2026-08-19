@@ -62,11 +62,10 @@ spec:
                   variables:
                     - fromFieldPath: metadata.namespace
                     - fromFieldPath: metadata.name
-                transforms:
-                  - type: string
-                    string:
-                      type: Format
-                      fmt: "prj-phb-%s-%s"
+                  strategy: string
+                  string:
+                    type: Format
+                    fmt: "prj-phb-%s-%s"
 
     - step: automatically-detect-readiness
       functionRef:
