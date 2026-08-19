@@ -64,7 +64,6 @@ spec:
                     - fromFieldPath: metadata.name
                   strategy: string
                   string:
-                    type: Format
                     fmt: "prj-phb-%s-%s"
 
     - step: automatically-detect-readiness
