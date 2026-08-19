@@ -115,7 +115,6 @@ spec:
                 name: {{ printf "%s-s3-hmac" $name }}
             {{- if ne $.observed.resources nil }}
             {{- $hmac := index $.observed.resources "bucket-service-account-hmac-key" }}
-            
             {{- if and $hmac $hmac.connectionDetails }}
             ---
             apiVersion: v1
@@ -128,7 +127,7 @@ spec:
             type: Opaque
             data:
               AWS_ACCESS_KEY_ID: {{ $hmac.resource.status.atProvider.accessId | b64enc | quote }}
-              AWS_SECRET_ACCESS_KEY: {{ index $hmac.connectionDetails "secret" | quote }}
+              AWS_SECRET_ACCESS_KEY: {{ index $hmac.connectionDetails "attribute.secret" | quote }}
             {{- end }}
             {{- end }}
             {{ else }}
