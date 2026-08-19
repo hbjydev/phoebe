@@ -68,11 +68,7 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
-
-    serviceAccount:
-      app:
-        enabled: true
-        automountServiceAccountToken: true
+      automountServiceAccountToken: true
 
     serviceMonitor:
       app:
