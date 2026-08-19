@@ -126,6 +126,8 @@ spec:
                 gotemplating.fn.crossplane.io/composition-resource-name: bucket-s3-credentials
             type: Opaque
             data:
+              AWS_ENDPOINT_URL: 'https://storage.googleapis.com'
+              AWS_REGION: 'us-east-1'
               AWS_ACCESS_KEY_ID: {{ $hmac.resource.status.atProvider.accessId | b64enc | quote }}
               AWS_SECRET_ACCESS_KEY: {{ index $hmac.connectionDetails "attribute.secret" | quote }}
             {{- end }}
