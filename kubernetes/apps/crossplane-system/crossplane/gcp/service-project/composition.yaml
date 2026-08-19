@@ -38,7 +38,7 @@ spec:
               # Parent folder
               - type: FromCompositeFieldPath
                 fromFieldPath: metadata.namespace
-                toFieldPath: spec.forProvider.parentRef.name
+                toFieldPath: spec.forProvider.folderIdRef.name
                 transforms:
                   - type: string
                     string:
@@ -48,7 +48,7 @@ spec:
               # Parent folder namespace
               - type: FromCompositeFieldPath
                 fromFieldPath: metadata.namespace
-                toFieldPath: spec.forProvider.parentRef.namespace
+                toFieldPath: spec.forProvider.folderIdRef.namespace
                 transforms:
                   - type: string
                     string:
