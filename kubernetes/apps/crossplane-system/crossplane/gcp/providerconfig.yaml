@@ -2,12 +2,34 @@
 apiVersion: gcp.upbound.io/v1beta1
 kind: ProviderConfig
 metadata:
-  name: gcp
+  name: gcp-cloudplatform
 spec:
   projectID: 'prj-b-seed-ahjd'
   credentials:
-    source: Secret
-    secretRef:
-      namespace: crossplane-system
-      name: crossplane-gcp-secret
-      key: credentials.json
+    source: ImpersonateServiceAccount
+    impersonateServiceAccount:
+      name: sa-b-phoebe-crossplane-rm@prj-b-seed-ahjd.iam.gserviceaccount.com
+
+---
+apiVersion: gcp.upbound.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: gcp-storage
+spec:
+  projectID: 'prj-b-seed-ahjd'
+  credentials:
+    source: ImpersonateServiceAccount
+    impersonateServiceAccount:
+      name: sa-b-phoebe-crossplane-stg@prj-b-seed-ahjd.iam.gserviceaccount.com
+
+---
+apiVersion: gcp.upbound.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: gcp-iam
+spec:
+  projectID: 'prj-b-seed-ahjd'
+  credentials:
+    source: ImpersonateServiceAccount
+    impersonateServiceAccount:
+      name: sa-b-phoebe-crossplane-iam@prj-b-seed-ahjd.iam.gserviceaccount.com
