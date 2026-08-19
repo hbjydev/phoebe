@@ -112,7 +112,25 @@ spec:
                 kind: ClusterProviderConfig
                 name: gcp-storage
               writeConnectionSecretToRef:
-                name: {{ printf "%s-s3" $name }}
+                name: {{ printf "%s-s3-hmac" $name }}
+            {{- $hmac := getComposedResource . "bucket-service-account-hmac-key" }}
+            {{- $hmacConnection := getComposedConnectionDetails . "bucket-service-account-hmac-key" }}
+            ---
+            apiVersion: v1
+            kind: Secret
+            metadata:
+              name: {{ printf "%s-s3" $name | quote }}
+              namespace: {{ $namespace | quote }}
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: bucket-s3-credentials
+            type: Opaque
+            {{- if and $hmac $hmacConnection }}
+            data:
+              AWS_ACCESS_KEY_ID: {{ $hmac.status.atProvider.accessId | b64enc | quote }}
+              AWS_SECRET_ACCESS_KEY: {{ index $hmacConnection "secret" | quote }}
+            {{- else }}
+            data: {}
+            {{- end }}
             {{ else }}
             ---
             apiVersion: storage.gcp.m.upbound.io/v1beta1
