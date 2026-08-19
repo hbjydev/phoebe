@@ -53,3 +53,5 @@ spec:
       interval: 1m
     grafanaDashboard:
       enabled: true
+    genericTargets:
+      enabled: true
