@@ -66,7 +66,7 @@ spec:
                   string:
                     fmt: "prj-phb-%s-%s"
 
-              # Project naming with a stable suffix derived from the XR UID
+              # Project naming with a stable suffix, bounded to 30 characters
               - type: CombineFromComposite
                 toFieldPath: spec.forProvider.projectId
                 combine:
@@ -76,7 +76,7 @@ spec:
                     - fromFieldPath: metadata.uid
                   strategy: string
                   string:
-                    fmt: "prj-phb-%s-%s-%.8s"
+                    fmt: "prj-phb-%.6s-%.6s-%.8s"
 
     - step: automatically-detect-readiness
       functionRef:
