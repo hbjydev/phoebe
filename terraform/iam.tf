@@ -50,22 +50,19 @@ locals {
     for sa in local.crossplane_sas : sa.name => "${local.wif_principal}/system:serviceaccount:${local.crossplane_namespace}:${sa.kube}"
   }
 
-  crossplane_k8s_configs = {
-    for sa in local.crossplane_sas : sa.name => jsonencode({
-      universe_domain    = "googleapis.com"
-      type               = "external_account"
-      audience           = "iam.googleapis.com/projects/${var.project_id_numeric}/locations/global/workloadIdentityPools/${var.wif_pool_id}/providers/k8s-talos-phoebe"
-      subject_token_type = "urn:ietf:params:oauth:token-type:jwt"
-      token_url          = "https://sts.europe-west2.rep.googleapis.com/v1/token"
-      credential_source  = {
-        file = {
-          path = "/var/run/service-account/token"
-          format = { type = "text" }
-        }
+  crossplane_k8s_config = jsonencode({
+    universe_domain    = "googleapis.com"
+    type               = "external_account"
+    audience           = "iam.googleapis.com/projects/${var.project_id_numeric}/locations/global/workloadIdentityPools/${var.wif_pool_id}/providers/k8s-talos-phoebe"
+    subject_token_type = "urn:ietf:params:oauth:token-type:jwt"
+    token_url          = "https://sts.europe-west2.rep.googleapis.com/v1/token"
+    credential_source  = {
+      file = {
+        path = "/var/run/service-account/token"
+        format = { type = "text" }
       }
-      service_account_impersonation_url = "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/${google_service_account.service_account[sa.name].email}:generateAccessToken"
-    })
-  }
+    }
+  })
 }
 
 resource "google_service_account" "service_account" {
@@ -93,9 +90,7 @@ resource "google_service_account_iam_member" "crossplane-k8s" {
 }
 
 resource "onepassword_item" "crossplane_k8s_config" {
-  for_each = { for sa in local.crossplane_sas : sa.name => sa }
-
   vault    = var.op_vault
-  title    = "${local.op_prefix}-crossplane-${each.key}-k8s-config"
-  password = base64encode(local.crossplane_k8s_configs[each.key])
+  title    = "svc-crossplane-iam-k8s-config"
+  password = base64encode(local.crossplane_k8s_config)
 }

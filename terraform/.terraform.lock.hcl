@@ -6,6 +6,7 @@ provider "registry.terraform.io/1password/onepassword" {
   constraints = "3.3.1"
   hashes = [
     "h1:35PCpSNLVubReT1imwfC+FpIP5gQWx+rvG4njkXkZKM=",
+    "h1:Tg8bJ+ATy5pla6ZTn87lb3nIyiTJTgQHJdxOWQjFF9k=",
     "zh:02d93a7f520ec69ad8944a68dcbf512e2f9920a6696628b8d05e6ad408309f35",
     "zh:0f91a902da84470af95f0da4dc21127b84e23c856a431ff9ecfe45d9c6775ef0",
     "zh:161bc55c466214a5d425ba85753d74ed5078212db965f726e6650d2e1524d633",
@@ -22,6 +23,7 @@ provider "registry.terraform.io/hashicorp/google" {
   constraints = "7.45.0"
   hashes = [
     "h1:5bwzwKa/bvJmUkVMkrF18v9AfFeJ/wjR230oY+4LHrc=",
+    "h1:FGFsRBzfeyq56BUAcb/WT676NieMX3NRfR4DBj2eEqk=",
     "zh:0f33485d068e39b1661d4ad789dfac353134b99cb5746e463e7719c053d70c06",
     "zh:162335c448b15125924c3451dc0a411635138c00e36784d9586b9df61bc8a3d7",
     "zh:172c9e4902e9a01b1111bbbb9063a47804ec5f4207b2221df9c398239ff3b350",
