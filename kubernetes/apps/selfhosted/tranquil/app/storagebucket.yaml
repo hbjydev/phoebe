@@ -10,3 +10,5 @@ spec:
   location: EU
   serviceAccount: tranquil
   role: roles/storage.objectAdmin
+  interoperability:
+    enabled: true
