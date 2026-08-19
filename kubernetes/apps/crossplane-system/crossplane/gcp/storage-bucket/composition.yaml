@@ -77,6 +77,9 @@ spec:
               forProvider:
                 description: S3 Access interop SA for {{ printf "%s/%s" $namespace $name }}
                 project: {{ $projectID | quote }}
+              providerConfigRef:
+                kind: ClusterProviderConfig
+                name: gcp-cloudplatform
             ---
             apiVersion: storage.gcp.m.upbound.io/v1beta1
             kind: BucketIAMMember
