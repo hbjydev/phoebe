@@ -57,7 +57,7 @@ spec:
 
               # Project naming
               - type: CombineFromComposite
-                toFieldPath: spec.forProvider.displayName
+                toFieldPath: spec.forProvider.name
                 combine:
                   variables:
                     - fromFieldPath: metadata.namespace
