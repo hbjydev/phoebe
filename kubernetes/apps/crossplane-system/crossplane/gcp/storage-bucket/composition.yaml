@@ -91,7 +91,7 @@ spec:
               forProvider:
                 bucketSelector:
                   matchControllerRef: true
-                member: {{ printf "serviceAccount:sa-phb-%.6s-%.6s-s3" $namespace $name | quote }}
+                member: {{ printf "serviceAccount:sa-phb-%.6s-%.6s-s3@%s.iam.gserviceaccount.com" $namespace $name $projectID | quote }}
                 role: {{ $spec.role | quote }}
               providerConfigRef:
                 kind: ClusterProviderConfig
