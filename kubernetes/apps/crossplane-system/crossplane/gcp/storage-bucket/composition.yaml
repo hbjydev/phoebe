@@ -22,6 +22,7 @@ spec:
           template: |
             {{- $xr := .observed.composite.resource -}}
             {{- $spec := $xr.spec -}}
+            {{- $name := $xr.metadata.name -}}
             {{- $namespace := $xr.metadata.namespace -}}
             {{- $projectID := "" -}}
             {{- with .extraResources -}}
