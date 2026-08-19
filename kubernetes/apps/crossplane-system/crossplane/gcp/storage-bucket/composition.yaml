@@ -106,7 +106,7 @@ spec:
             spec:
               forProvider:
                 project: {{ $projectID | quote }}
-                serviceAccountEmail: {{ printf "serviceAccount:sa-phb-%.6s-%.6s-s3@%s.iam.gserviceaccount.com" $namespace $name $projectID | quote }}
+                serviceAccountEmail: {{ printf "sa-phb-%.6s-%.6s-s3@%s.iam.gserviceaccount.com" $namespace $name $projectID | quote }}
                 state: ACTIVE
               providerConfigRef:
                 kind: ClusterProviderConfig
