@@ -1,0 +1,6 @@
+---
+apiVersion: infra.hayden.moe/v1alpha1
+kind: ServiceProject
+metadata:
+  name: tranquil
+  namespace: selfhosted
