@@ -96,6 +96,23 @@ spec:
               providerConfigRef:
                 kind: ClusterProviderConfig
                 name: gcp-storage
+            ---
+            apiVersion: storage.gcp.m.upbound.io/v1beta1
+            kind: HMACKey
+            metadata:
+              namespace: {{ $namespace | quote }}
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: bucket-service-account-hmac-key
+            spec:
+              forProvider:
+                project: {{ $projectID | quote }}
+                serviceAccountEmail: {{ printf "serviceAccount:sa-phb-%.6s-%.6s-s3@%s.iam.gserviceaccount.com" $namespace $name $projectID | quote }}
+                state: ACTIVE
+              providerConfigRef:
+                kind: ClusterProviderConfig
+                name: gcp-storage
+              writeConnectionSecretToRef:
+                name: {{ printf "%s-s3" $name }}
             {{ else }}
             ---
             apiVersion: storage.gcp.m.upbound.io/v1beta1
