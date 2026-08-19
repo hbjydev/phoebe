@@ -6,9 +6,11 @@ metadata:
 spec:
   projectID: 'prj-b-seed-ahjd'
   credentials:
-    source: ImpersonateServiceAccount
-    impersonateServiceAccount:
-      name: sa-b-phoebe-crossplane-rm@prj-b-seed-ahjd.iam.gserviceaccount.com
+    source: Secret
+    secretRef:
+      key: credential-configuration.json
+      name: cp-gcp-iam
+      namespace: crossplane-system
 
 ---
 apiVersion: gcp.upbound.io/v1beta1
@@ -18,9 +20,11 @@ metadata:
 spec:
   projectID: 'prj-b-seed-ahjd'
   credentials:
-    source: ImpersonateServiceAccount
-    impersonateServiceAccount:
-      name: sa-b-phoebe-crossplane-stg@prj-b-seed-ahjd.iam.gserviceaccount.com
+    source: Secret
+    secretRef:
+      key: credential-configuration.json
+      name: cp-gcp-iam
+      namespace: crossplane-system
 
 ---
 apiVersion: gcp.upbound.io/v1beta1
@@ -30,6 +34,8 @@ metadata:
 spec:
   projectID: 'prj-b-seed-ahjd'
   credentials:
-    source: ImpersonateServiceAccount
-    impersonateServiceAccount:
-      name: sa-b-phoebe-crossplane-iam@prj-b-seed-ahjd.iam.gserviceaccount.com
+    source: Secret
+    secretRef:
+      key: credential-configuration.json
+      name: cp-gcp-iam
+      namespace: crossplane-system
