@@ -2,7 +2,7 @@
 apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
-  name: serviceproject.infra.hayden.moe
+  name: serviceprojects.infra.hayden.moe
 spec:
   scope: Namespaced
 
