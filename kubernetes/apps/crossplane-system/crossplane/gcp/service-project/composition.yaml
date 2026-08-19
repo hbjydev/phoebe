@@ -25,6 +25,8 @@ spec:
               apiVersion: cloudplatform.gcp.m.upbound.io/v1beta1
               kind: Project
               spec:
+                forProvider:
+                  billingAccount: 017336-A9FFB2-6A25BD
                 providerConfigRef:
                   kind: ClusterProviderConfig
                   name: gcp-cloudplatform
