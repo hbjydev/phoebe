@@ -1,5 +1,5 @@
 ---
-apiVersion: cloudplatform.gcp.upbound.io/v1beta1
+apiVersion: cloudplatform.gcp.m.upbound.io/v1beta1
 kind: Folder
 metadata:
   name: fldr-phoebe

@@ -5,6 +5,7 @@ kind: Component
 resources:
   - ./namespace.yaml
   - ./secrets.yaml
+  - ./folder.yaml
   - ./alerts
   - ./repos
   - ./sops

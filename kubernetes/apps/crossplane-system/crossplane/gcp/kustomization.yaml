@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - ./providerconfig.yaml
   - ./folder.yaml
+  - ./namespace-folder

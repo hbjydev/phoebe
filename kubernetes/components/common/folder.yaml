@@ -1,0 +1,6 @@
+---
+apiVersion: infra.hayden.moe/v1alpha1
+kind: NamespaceFolder
+metadata:
+  name: folder
+spec: {}

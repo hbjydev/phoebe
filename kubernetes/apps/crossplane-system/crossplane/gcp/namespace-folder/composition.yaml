@@ -1,0 +1,62 @@
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: namespace-folder-gcp
+spec:
+  compositeTypeRef:
+    apiVersion: infra.hayden.moe/v1alpha1
+    kind: NamespaceFolder
+
+  mode: Pipeline
+  pipeline:
+    - step: create-folder
+      functionRef:
+        name: function-patch-and-transform
+      input:
+        apiVersion: pt.fn.crossplane.io/v1beta1
+        kind: Resources
+        resources:
+          - name: folder
+            base:
+              apiVersion: cloudplatform.gcp.m.upbound.io/v1beta1
+              kind: Folder
+              spec:
+                forProvider:
+                  parentRef:
+                    name: fldr-phoebe
+                    namespace: crossplane-system
+
+                providerConfigRef:
+                  kind: ClusterProviderConfig
+                  name: gcp-cloudplatform
+
+            patches:
+              # Put the composed Folder beside the XR.
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.namespace
+                toFieldPath: metadata.namespace
+
+              # dev -> fldr-dev
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.namespace
+                toFieldPath: metadata.name
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "fldr-%s"
+
+              # dev -> fldr-dev
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.namespace
+                toFieldPath: spec.forProvider.displayName
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "fldr-%s"
+
+    - step: automatically-detect-readiness
+      functionRef:
+        name: function-auto-ready
