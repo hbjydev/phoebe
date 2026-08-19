@@ -7,3 +7,4 @@ resources:
   - ./folder.yaml
   - ./namespace-folder
   - ./service-project
+  - ./storage-bucket

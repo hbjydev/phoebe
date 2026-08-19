@@ -77,6 +77,11 @@ spec:
                   strategy: string
                   string:
                     fmt: "prj-phb-%.6s-%.6s-%.8s"
+              - type: ToCompositeFieldPath
+                fromFieldPath: status.atProvider.projectId
+                toFieldPath: status.projectId
+                policy:
+                  fromFieldPath: Optional
 
     - step: automatically-detect-readiness
       functionRef:

@@ -1,0 +1,86 @@
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: storage-bucket-gcp
+spec:
+  compositeTypeRef:
+    apiVersion: infra.hayden.moe/v1alpha1
+    kind: StorageBucket
+
+  mode: Pipeline
+
+  pipeline:
+    - step: render-bucket
+      functionRef:
+        name: function-go-templating
+      input:
+        apiVersion: gotemplating.fn.crossplane.io/v1beta1
+        kind: GoTemplate
+        source: Inline
+        inline:
+          template: |
+            {{- $xr := .observed.composite.resource -}}
+            {{- $spec := $xr.spec -}}
+            {{- $namespace := $xr.metadata.namespace -}}
+            {{- $projectID := "" -}}
+            {{- with .extraResources -}}
+            {{- $projects := index . "service-project" -}}
+            {{- range $project := $projects.items -}}
+            {{- $projectID = default "" $project.resource.status.projectId -}}
+            {{- end -}}
+            {{- end -}}
+            ---
+            apiVersion: meta.gotemplating.fn.crossplane.io/v1alpha1
+            kind: ExtraResources
+            requirements:
+              service-project:
+                apiVersion: infra.hayden.moe/v1alpha1
+                kind: ServiceProject
+                matchName: {{ $spec.serviceProjectRef.name | quote }}
+                namespace: {{ $namespace | quote }}
+            {{ if not $projectID }}
+            ---
+            apiVersion: infra.hayden.moe/v1alpha1
+            kind: StorageBucket
+            metadata:
+              annotations:
+                gotemplating.fn.crossplane.io/ready: "False"
+            {{ end }}
+            {{ if $projectID }}
+            ---
+            apiVersion: storage.gcp.m.upbound.io/v1beta1
+            kind: Bucket
+            metadata:
+              name: {{ printf "bkt-phb-%s-%.6s" $xr.metadata.name $xr.metadata.uid | quote }}
+              namespace: {{ $namespace | quote }}
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: bucket
+            spec:
+              forProvider:
+                location: {{ $spec.location | quote }}
+                project: {{ $projectID | quote }}
+              providerConfigRef:
+                kind: ClusterProviderConfig
+                name: gcp-storage
+            ---
+            apiVersion: storage.gcp.m.upbound.io/v1beta1
+            kind: BucketIAMMember
+            metadata:
+              namespace: {{ $namespace | quote }}
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: bucket-iam-member
+            spec:
+              forProvider:
+                bucketSelector:
+                  matchControllerRef: true
+                member: {{ printf "principal://iam.googleapis.com/projects/754336396991/locations/global/workloadIdentityPools/kube-talos-phoebe/subject/system:serviceaccount:%s:%s" $namespace $spec.serviceAccount | quote }}
+                role: {{ $spec.role | quote }}
+              providerConfigRef:
+                kind: ClusterProviderConfig
+                name: gcp-storage
+            {{ end }}
+
+    - step: automatically-detect-readiness
+      functionRef:
+        name: function-auto-ready

@@ -27,3 +27,8 @@ spec:
             spec:
               type: object
               properties: {}
+            status:
+              type: object
+              properties:
+                projectId:
+                  type: string

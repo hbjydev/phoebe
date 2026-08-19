@@ -1,0 +1,47 @@
+---
+apiVersion: apiextensions.crossplane.io/v2
+kind: CompositeResourceDefinition
+metadata:
+  name: storagebuckets.infra.hayden.moe
+spec:
+  scope: Namespaced
+
+  group: infra.hayden.moe
+
+  names:
+    kind: StorageBucket
+    plural: storagebuckets
+    singular: storagebucket
+
+  enforcedCompositionRef:
+    name: storage-bucket-gcp
+
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              required:
+                - serviceProjectRef
+                - location
+                - serviceAccount
+                - role
+              properties:
+                location:
+                  type: string
+                role:
+                  type: string
+                serviceAccount:
+                  type: string
+                serviceProjectRef:
+                  type: object
+                  required:
+                    - name
+                  properties:
+                    name:
+                      type: string

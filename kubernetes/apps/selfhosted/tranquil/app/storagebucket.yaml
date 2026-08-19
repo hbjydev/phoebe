@@ -1,0 +1,13 @@
+---
+apiVersion: infra.hayden.moe/v1alpha1
+kind: StorageBucket
+metadata:
+  name: tranquil-media
+  namespace: selfhosted
+spec:
+  name: tranquil-media
+  serviceProjectRef:
+    name: tranquil
+  location: EU
+  serviceAccount: tranquil
+  role: roles/storage.objectAdmin
