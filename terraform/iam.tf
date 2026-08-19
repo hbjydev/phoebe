@@ -53,7 +53,7 @@ locals {
   crossplane_k8s_config = jsonencode({
     universe_domain    = "googleapis.com"
     type               = "external_account"
-    audience           = "iam.googleapis.com/projects/${var.project_id_numeric}/locations/global/workloadIdentityPools/${var.wif_pool_id}/providers/k8s-talos-phoebe"
+    audience           = "//iam.googleapis.com/projects/${var.project_id_numeric}/locations/global/workloadIdentityPools/${var.wif_pool_id}/providers/k8s-talos-phoebe"
     subject_token_type = "urn:ietf:params:oauth:token-type:jwt"
     token_url          = "https://sts.europe-west2.rep.googleapis.com/v1/token"
     credential_source  = {
