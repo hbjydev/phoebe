@@ -1,11 +1,4 @@
 ---
-apiVersion: pkg.crossplane.io/v1alpha1
-kind: ControllerConfig
-metadata:
-  name: provider-gcp-cloudplatform
-spec:
-  serviceAccountName: cp-gcp-cloudplatform
----
 apiVersion: gcp.upbound.io/v1beta1
 kind: ProviderConfig
 metadata:
@@ -18,13 +11,6 @@ spec:
       name: sa-b-phoebe-crossplane-rm@prj-b-seed-ahjd.iam.gserviceaccount.com
 
 ---
-apiVersion: pkg.crossplane.io/v1alpha1
-kind: ControllerConfig
-metadata:
-  name: provider-gcp-storage
-spec:
-  serviceAccountName: cp-gcp-storage
----
 apiVersion: gcp.upbound.io/v1beta1
 kind: ProviderConfig
 metadata:
@@ -36,13 +22,6 @@ spec:
     impersonateServiceAccount:
       name: sa-b-phoebe-crossplane-stg@prj-b-seed-ahjd.iam.gserviceaccount.com
 
----
-apiVersion: pkg.crossplane.io/v1alpha1
-kind: ControllerConfig
-metadata:
-  name: provider-gcp-iam
-spec:
-  serviceAccountName: cp-gcp-iam
 ---
 apiVersion: gcp.upbound.io/v1beta1
 kind: ProviderConfig
