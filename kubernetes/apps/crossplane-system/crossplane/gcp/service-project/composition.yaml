@@ -1,0 +1,73 @@
+---
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: service-project-gcp
+spec:
+  compositeTypeRef:
+    apiVersion: infra.hayden.moe/v1alpha1
+    kind: ServiceProject
+
+  mode: Pipeline
+
+  pipeline:
+    - step: patch-and-transform
+      functionRef:
+        name: function-patch-and-transform
+
+      input:
+        apiVersion: pt.fn.crossplane.io/v1beta1
+        kind: Resources
+        resources:
+
+          - name: project
+            base:
+              apiVersion: cloudplatform.gcp.m.upbound.io/v1beta1
+              kind: Project
+              spec:
+                providerConfigRef:
+                  kind: ClusterProviderConfig
+                  name: gcp-cloudplatform
+
+            patches:
+              # Put the composed Folder beside the XR.
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.namespace
+                toFieldPath: metadata.namespace
+
+              # Parent folder
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.namespace
+                toFieldPath: spec.forProvider.parentRef.name
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "fldr-%s"
+
+              # Parent folder namespace
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.namespace
+                toFieldPath: spec.forProvider.parentRef.namespace
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s"
+
+              # Project naming
+              - type: CombineFromComposite
+                toFieldPath: spec.forProvider.displayName
+                combine:
+                  variables:
+                    - fromFieldPath: metadata.namespace
+                    - fromFieldPath: metadata.name
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "prj-phb-%s-%s"
+
+    - step: automatically-detect-readiness
+      functionRef:
+        name: function-auto-ready

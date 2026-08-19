@@ -6,3 +6,4 @@ resources:
   - ./providerconfig.yaml
   - ./folder.yaml
   - ./namespace-folder
+  - ./service-project

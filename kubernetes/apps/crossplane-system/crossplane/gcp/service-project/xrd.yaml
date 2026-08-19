@@ -1,0 +1,29 @@
+---
+apiVersion: apiextensions.crossplane.io/v2
+kind: CompositeResourceDefinition
+metadata:
+  name: serviceproject.infra.hayden.moe
+spec:
+  scope: Namespaced
+
+  group: infra.hayden.moe
+
+  names:
+    kind: ServiceProject
+    plural: serviceprojects
+    singular: serviceproject
+
+  enforcedCompositionRef:
+    name: service-project-gcp
+
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties: {}
