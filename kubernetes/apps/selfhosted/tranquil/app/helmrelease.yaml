@@ -34,6 +34,25 @@ spec:
                   name: tranquil-postgres
                   key: url
               CRAWLERS: https://bsky.network,https://relay.upcloud.world
+
+              # Storage
+              BLOB_STORAGE_BACKEND: s3
+              S3_BUCKET:
+                secretKeyRef:
+                  name: tranquil-media-s3
+                  key: S3_BUCKET
+              S3_ENDPOINT:
+                secretKeyRef:
+                  name: tranquil-media-s3
+                  key: AWS_ENDPOINT_URL
+              AWS_ACCESS_KEY_ID:
+                secretKeyRef:
+                  name: tranquil-media-s3
+                  key: AWS_ACCESS_KEY_ID
+              AWS_SECRET_ACCESS_KEY:
+                secretKeyRef:
+                  name: tranquil-media-s3
+                  key: AWS_SECRET_ACCESS_KEY
             envFrom:
               - secretRef:
                   name: tranquil-secret
