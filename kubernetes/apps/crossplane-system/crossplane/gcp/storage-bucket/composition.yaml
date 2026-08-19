@@ -130,6 +130,7 @@ spec:
               AWS_REGION: 'us-east-1'
               AWS_ACCESS_KEY_ID: {{ $hmac.resource.status.atProvider.accessId | b64enc | quote }}
               AWS_SECRET_ACCESS_KEY: {{ index $hmac.connectionDetails "attribute.secret" | quote }}
+              S3_BUCKET: {{ printf "bkt-phb-%s-%.6s" $xr.metadata.name $xr.metadata.uid | quote }}
             {{- end }}
             {{- end }}
             {{ else }}
