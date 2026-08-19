@@ -4,3 +4,4 @@ kind: ServiceProject
 metadata:
   name: tranquil
   namespace: selfhosted
+spec: {}
