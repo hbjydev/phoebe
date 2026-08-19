@@ -9,7 +9,7 @@ spec:
     source: Secret
     secretRef:
       key: credential-configuration.json
-      name: cp-gcp-iam
+      name: cp-gcp-cloudplatform
       namespace: crossplane-system
 
 ---
@@ -23,7 +23,7 @@ spec:
     source: Secret
     secretRef:
       key: credential-configuration.json
-      name: cp-gcp-iam
+      name: cp-gcp-storage
       namespace: crossplane-system
 
 ---
