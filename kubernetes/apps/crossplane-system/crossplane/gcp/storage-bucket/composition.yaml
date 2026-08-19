@@ -63,13 +63,43 @@ spec:
               providerConfigRef:
                 kind: ClusterProviderConfig
                 name: gcp-storage
+            {{ if $spec.interoperability.enabled }}
+            ---
+            apiVersion: cloudplatform.gcp.m.upbound.io/v1beta1
+            kind: ServiceAccount
+            metadata:
+              name: {{ printf "sa-phb-%.6s-%.6s-s3" $namespace $name | quote }}
+              namespace: {{ $namespace | quote }}
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: bucket-service-account
+            spec:
+              forProvider:
+                description: S3 Access interop SA for {{ printf "%s/%s" $namespace $name }}
+                project: {{ $projectID | quote }}
             ---
             apiVersion: storage.gcp.m.upbound.io/v1beta1
             kind: BucketIAMMember
             metadata:
               namespace: {{ $namespace | quote }}
               annotations:
-                gotemplating.fn.crossplane.io/composition-resource-name: bucket-iam-member
+                gotemplating.fn.crossplane.io/composition-resource-name: bucket-service-account
+            spec:
+              forProvider:
+                bucketSelector:
+                  matchControllerRef: true
+                member: {{ printf "serviceAccount:sa-phb-%.6s-%.6s-s3" $namespace $name | quote }}
+                role: {{ $spec.role | quote }}
+              providerConfigRef:
+                kind: ClusterProviderConfig
+                name: gcp-storage
+            {{ else }}
+            ---
+            apiVersion: storage.gcp.m.upbound.io/v1beta1
+            kind: BucketIAMMember
+            metadata:
+              namespace: {{ $namespace | quote }}
+              annotations:
+                gotemplating.fn.crossplane.io/composition-resource-name: bucket-k8s-sa-iam-member
             spec:
               forProvider:
                 bucketSelector:
@@ -79,6 +109,7 @@ spec:
               providerConfigRef:
                 kind: ClusterProviderConfig
                 name: gcp-storage
+            {{ end }}
             {{ end }}
 
     - step: automatically-detect-readiness

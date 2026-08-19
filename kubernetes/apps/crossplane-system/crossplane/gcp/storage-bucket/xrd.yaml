@@ -45,3 +45,9 @@ spec:
                   properties:
                     name:
                       type: string
+                interoperability:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      default: true
