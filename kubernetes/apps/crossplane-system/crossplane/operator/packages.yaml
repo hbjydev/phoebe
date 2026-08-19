@@ -17,6 +17,28 @@ spec:
     metadata:
       name: cp-gcp-cloudplatform
 
+  deploymentTemplate:
+    spec:
+      selector: {}
+      template:
+        spec:
+          containers:
+            - name: package-runtime
+              env:
+                - name: GOOGLE_APPLICATION_CREDENTIALS
+                  value: /etc/gcp/credential-configuration.json
+              volumeMounts:
+                - name: gcp-wif-config
+                  mountPath: /etc/gcp
+                  readOnly: true
+          volumes:
+            - name: gcp-wif-config
+              secret:
+                secretName: crossplane-gcp-wif
+                items:
+                  - key: credential-configuration.json
+                    path: credential-configuration.json
+
 ---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
@@ -35,6 +57,27 @@ spec:
   serviceAccountTemplate:
     metadata:
       name: cp-gcp-iam
+  deploymentTemplate:
+    spec:
+      selector: {}
+      template:
+        spec:
+          containers:
+            - name: package-runtime
+              env:
+                - name: GOOGLE_APPLICATION_CREDENTIALS
+                  value: /etc/gcp/credential-configuration.json
+              volumeMounts:
+                - name: gcp-wif-config
+                  mountPath: /etc/gcp
+                  readOnly: true
+          volumes:
+            - name: gcp-wif-config
+              secret:
+                secretName: crossplane-gcp-wif
+                items:
+                  - key: credential-configuration.json
+                    path: credential-configuration.json
 
 ---
 apiVersion: pkg.crossplane.io/v1
@@ -54,3 +97,24 @@ spec:
   serviceAccountTemplate:
     metadata:
       name: cp-gcp-storage
+  deploymentTemplate:
+    spec:
+      selector: {}
+      template:
+        spec:
+          containers:
+            - name: package-runtime
+              env:
+                - name: GOOGLE_APPLICATION_CREDENTIALS
+                  value: /etc/gcp/credential-configuration.json
+              volumeMounts:
+                - name: gcp-wif-config
+                  mountPath: /etc/gcp
+                  readOnly: true
+          volumes:
+            - name: gcp-wif-config
+              secret:
+                secretName: crossplane-gcp-wif
+                items:
+                  - key: credential-configuration.json
+                    path: credential-configuration.json
