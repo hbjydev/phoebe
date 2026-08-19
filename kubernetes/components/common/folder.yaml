@@ -2,10 +2,10 @@
 apiVersion: cloudplatform.gcp.upbound.io/v1beta1
 kind: Folder
 metadata:
-  name: fldr-$(NAMESPACE)
+  name: fldr-$(BASE_NAMESPACE)
 spec:
   forProvider:
-    displayName: fldr-$(NAMESPACE)
+    displayName: fldr-$(BASE_NAMESPACE)
     parentRef:
       name: fldr-phoebe
   providerConfigRef:

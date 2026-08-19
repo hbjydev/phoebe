@@ -11,7 +11,7 @@ resources:
   - ./sops
 
 vars:
-  - name: NAMESPACE
+  - name: BASE_NAMESPACE
     objref:
       apiVersion: v1
       kind: Namespace
