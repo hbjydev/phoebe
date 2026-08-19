@@ -1,6 +1,6 @@
 ---
-apiVersion: gcp.upbound.io/v1beta1
-kind: ProviderConfig
+apiVersion: gcp.m.upbound.io/v1beta1
+kind: ClusterProviderConfig
 metadata:
   name: gcp-cloudplatform
 spec:
@@ -11,8 +11,8 @@ spec:
       name: sa-b-phoebe-crossplane-rm@prj-b-seed-ahjd.iam.gserviceaccount.com
 
 ---
-apiVersion: gcp.upbound.io/v1beta1
-kind: ProviderConfig
+apiVersion: gcp.m.upbound.io/v1beta1
+kind: ClusterProviderConfig
 metadata:
   name: gcp-storage
 spec:
@@ -23,8 +23,8 @@ spec:
       name: sa-b-phoebe-crossplane-stg@prj-b-seed-ahjd.iam.gserviceaccount.com
 
 ---
-apiVersion: gcp.upbound.io/v1beta1
-kind: ProviderConfig
+apiVersion: gcp.m.upbound.io/v1beta1
+kind: ClusterProviderConfig
 metadata:
   name: gcp-iam
 spec:
