@@ -66,6 +66,17 @@ spec:
                   string:
                     fmt: "prj-phb-%s-%s"
 
+              # Project naming
+              - type: CombineFromComposite
+                toFieldPath: spec.forProvider.projectId
+                combine:
+                  variables:
+                    - fromFieldPath: metadata.namespace
+                    - fromFieldPath: metadata.name
+                  strategy: string
+                  string:
+                    fmt: "prj-phb-%s-%s"
+
     - step: automatically-detect-readiness
       functionRef:
         name: function-auto-ready
