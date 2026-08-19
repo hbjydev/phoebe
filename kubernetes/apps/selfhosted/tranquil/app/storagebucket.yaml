@@ -5,7 +5,6 @@ metadata:
   name: tranquil-media
   namespace: selfhosted
 spec:
-  name: tranquil-media
   serviceProjectRef:
     name: tranquil
   location: EU
