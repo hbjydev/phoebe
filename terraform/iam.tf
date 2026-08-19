@@ -12,6 +12,7 @@ locals {
       kube = "cp-gcp-storage"
       roles = [
         "roles/storage.admin",
+        "roles/storage.hmacKeyAdmin"
       ]
     },
 
