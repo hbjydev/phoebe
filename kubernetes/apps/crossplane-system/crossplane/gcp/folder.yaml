@@ -7,3 +7,5 @@ spec:
   forProvider:
     displayName: "fldr-phoebe"
     parent: "organizations/933264970796"
+  providerConfigRef:
+    name: gcp-cloudplatform
