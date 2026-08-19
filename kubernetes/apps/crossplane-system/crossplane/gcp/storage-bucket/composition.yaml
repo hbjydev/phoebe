@@ -113,8 +113,10 @@ spec:
                 name: gcp-storage
               writeConnectionSecretToRef:
                 name: {{ printf "%s-s3-hmac" $name }}
-            {{- $hmac := getComposedResource . "bucket-service-account-hmac-key" }}
-            {{- $hmacConnection := getComposedConnectionDetails . "bucket-service-account-hmac-key" }}
+            {{- if ne $.observed.resources nil }}
+            {{- $hmac := index $.observed.resources "bucket-service-account-hmac-key" }}
+            
+            {{- if and $hmac $hmac.connectionDetails }}
             ---
             apiVersion: v1
             kind: Secret
@@ -124,12 +126,10 @@ spec:
               annotations:
                 gotemplating.fn.crossplane.io/composition-resource-name: bucket-s3-credentials
             type: Opaque
-            {{- if and $hmac $hmacConnection }}
             data:
-              AWS_ACCESS_KEY_ID: {{ $hmac.status.atProvider.accessId | b64enc | quote }}
-              AWS_SECRET_ACCESS_KEY: {{ index $hmacConnection "secret" | quote }}
-            {{- else }}
-            data: {}
+              AWS_ACCESS_KEY_ID: {{ $hmac.resource.status.atProvider.accessId | b64enc | quote }}
+              AWS_SECRET_ACCESS_KEY: {{ index $hmac.connectionDetails "secret" | quote }}
+            {{- end }}
             {{- end }}
             {{ else }}
             ---
