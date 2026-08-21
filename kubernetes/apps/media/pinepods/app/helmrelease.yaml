@@ -45,9 +45,6 @@ spec:
               VALKEY_PORT: 6379
               DEBUG_MODE: false
 
-              PUID: &uid 1000
-              PGID: &gid 1000
-
               TZ: Europe/London
             resources:
               requests:
@@ -61,11 +58,12 @@ spec:
         runAsNonRoot: false
         runAsUser: 0
         runAsGroup: 0
-        fsGroup: 1000
+        fsGroup: 0
         fsGroupChangePolicy: OnRootMismatch
 
     service:
       app:
+        controller: app
         ports:
           http:
             port: 8040
@@ -86,14 +84,8 @@ spec:
             subPath: downloads
           - path: /opt/pinepods/backups
             subPath: backups
-          - path: /opt/pinepods/local-media
-            subPath: local-media
       tmpfs:
         type: emptyDir
         globalMounts:
           - path: /tmp
             subPath: tmp
-          - path: /pinepods/cache
-            subPath: cache
-          - path: /opt/pinepods/certs
-            subPath: certs
