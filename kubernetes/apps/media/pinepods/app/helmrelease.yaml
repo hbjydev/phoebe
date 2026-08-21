@@ -93,3 +93,5 @@ spec:
             subPath: tmp
           - path: /pinepods/cache
             subPath: cache
+          - path: /opt/pinepods/certs
+            subPath: certs
