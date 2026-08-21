@@ -18,3 +18,15 @@ spec:
   secrets:
     - name: toolhive-servers
       key: MINIFLUX_API_KEY
+  podTemplateSpec:
+    spec:
+      securityContext:
+        runAsNonRoot: false
+        runAsUser: 0
+        runAsGroup: 0
+      containers:
+        - name: mcp
+          securityContext:
+            runAsNonRoot: false
+            runAsUser: 0
+            runAsGroup: 0
