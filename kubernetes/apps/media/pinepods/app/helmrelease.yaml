@@ -12,6 +12,24 @@ spec:
   values:
     controllers:
       app:
+        initContainers:
+          certs:
+            image:
+              repository: alpine
+              tag: 3.22
+            command:
+              - /bin/sh
+              - -ec
+              - |
+                apk add --no-cache ca-certificates
+
+                cp /tmp/postgres.crt /usr/local/share/ca-certificates/postgres.crt
+                cp /tmp/root-ca.crt /usr/local/share/ca-certificates/root-ca.crt
+
+                update-ca-certificates
+
+                cp /etc/ssl/certs/ca-certificates.crt /ca-bundle/ca-certificates.crt
+
         containers:
           app:
             image:
@@ -77,6 +95,40 @@ spec:
             namespace: network
 
     persistence:
+      postgresClient:
+        type: secret
+        name: postgres-client
+        items:
+          - key: ca.crt
+            path: postgres.crt
+        advancedMounts:
+          main:
+            install-ca-certificates:
+              - path: /tmp/postgres.crt
+                subPath: postgres.crt
+
+      rootCa:
+        type: secret
+        name: root-ca
+        items:
+          - key: ca.crt
+            path: root-ca.crt
+        advancedMounts:
+          main:
+            install-ca-certificates:
+              - path: /tmp/root-ca.crt
+                subPath: root-ca.crt
+
+      caBundle:
+        type: emptyDir
+        advancedMounts:
+          main:
+            install-ca-certificates:
+              - path: /ca-bundle
+            app:
+              - path: /etc/ssl/certs
+                readOnly: true
+
       downloads:
         existingClaim: pinepods
         globalMounts:
