@@ -43,7 +43,7 @@ spec:
 
               VALKEY_HOST: pinepods-redis
               VALKEY_PORT: 6379
-              DEBUG_MODE: false
+              DEBUG_MODE: true
 
               TZ: Europe/London
             resources:
