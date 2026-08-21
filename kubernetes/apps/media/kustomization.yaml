@@ -9,4 +9,5 @@ resources:
   - dispatcharr/ks.yaml
   - jellyfin/ks.yaml
   - navidrome/ks.yaml
+  - pinepods/ks.yaml
   - plex/ks.yaml
