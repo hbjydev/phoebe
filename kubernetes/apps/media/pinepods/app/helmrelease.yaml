@@ -86,6 +86,8 @@ spec:
             subPath: downloads
           - path: /opt/pinepods/backups
             subPath: backups
+          - path: /opt/pinepods/local-media
+            subPath: local-media
       tmpfs:
         type: emptyDir
         globalMounts:
