@@ -1,0 +1,20 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/toolhive.stacklok.dev/mcpserver_v1beta1.json
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: MCPServer
+metadata:
+  name: miniflux
+spec:
+  groupRef:
+    name: mcp-tools
+  # renovate: datasource=docker depName=jwonder/miniflux-mcp
+  image: jwonder/miniflux-mcp:0.4.0
+  transport: stdio
+  env:
+    - name: MINIFLUX_URL
+      value: http://miniflux.selfhosted.svc.cluster.local:8080
+    - name: MCP_TRANSPORT
+      value: stdio
+  secrets:
+    - name: toolhive-servers
+      key: MINIFLUX_API_KEY
