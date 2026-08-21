@@ -95,7 +95,7 @@ spec:
             namespace: network
 
     persistence:
-      postgresClient:
+      postgres-client:
         type: secret
         name: postgres-client
         items:
@@ -107,7 +107,7 @@ spec:
               - path: /tmp/postgres.crt
                 subPath: postgres.crt
 
-      rootCa:
+      root-ca:
         type: secret
         name: root-ca
         items:
@@ -119,7 +119,7 @@ spec:
               - path: /tmp/root-ca.crt
                 subPath: root-ca.crt
 
-      caBundle:
+      ca-bundle:
         type: emptyDir
         advancedMounts:
           app:
