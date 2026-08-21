@@ -27,10 +27,7 @@ spec:
                 secretKeyRef:
                   name: pinepods-postgres
                   key: host
-              DB_PORT:
-                secretKeyRef:
-                  name: pinepods-postgres
-                  key: port
+              DB_PORT: 5432
               DB_USER:
                 secretKeyRef:
                   name: pinepods-postgres
@@ -84,17 +81,13 @@ spec:
     persistence:
       downloads:
         existingClaim: pinepods
-        advancedMounts:
-          dispatcharr:
-            app:
-              - path: /opt/pinepods/downloads
-                subPath: downloads
-              - path: /opt/pinepods/backups
-                subPath: backups
+        globalMounts:
+          - path: /opt/pinepods/downloads
+            subPath: downloads
+          - path: /opt/pinepods/backups
+            subPath: backups
       tmpfs:
         type: emptyDir
-        advancedMounts:
-          dispatcharr:
-            app:
-              - path: /tmp
-                subPath: tmp
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
