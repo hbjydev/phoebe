@@ -91,3 +91,5 @@ spec:
         globalMounts:
           - path: /tmp
             subPath: tmp
+          - path: /pinepods/cache
+            subPath: cache
