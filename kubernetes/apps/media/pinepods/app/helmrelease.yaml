@@ -97,7 +97,7 @@ spec:
     persistence:
       postgres-client:
         type: secret
-        name: postgres-client
+        name: postgres-client-ca
         items:
           - key: ca.crt
             path: postgres.crt
