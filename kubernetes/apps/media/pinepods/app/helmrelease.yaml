@@ -102,7 +102,7 @@ spec:
           - key: ca.crt
             path: postgres.crt
         advancedMounts:
-          main:
+          app:
             install-ca-certificates:
               - path: /tmp/postgres.crt
                 subPath: postgres.crt
@@ -114,7 +114,7 @@ spec:
           - key: ca.crt
             path: root-ca.crt
         advancedMounts:
-          main:
+          app:
             install-ca-certificates:
               - path: /tmp/root-ca.crt
                 subPath: root-ca.crt
@@ -122,7 +122,7 @@ spec:
       caBundle:
         type: emptyDir
         advancedMounts:
-          main:
+          app:
             install-ca-certificates:
               - path: /ca-bundle
             app:
