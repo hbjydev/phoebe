@@ -48,6 +48,15 @@ spec:
     - name: REDIS_PORT
       value: "6379"
 
+  volumes:
+    - name: cache
+      persistentVolumeClaim:
+        claimName: litellm
+
+  volumeMounts:
+    - mountPath: /cache
+      name: cache
+
   resources:
     requests:
       cpu: 100m
