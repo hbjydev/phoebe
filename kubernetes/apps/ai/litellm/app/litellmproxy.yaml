@@ -1,0 +1,73 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/litellm.home-operations.com/litellmproxy_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMProxy
+metadata:
+  name: litellm-proxy
+spec:
+  # renovate: datasource=docker depName=ghcr.io/berriai/litellm
+  image: ghcr.io/berriai/litellm:v1.95.0-rc.2@sha256:210eda4b9e56beca0e31007b4b507ac77c05b48cd3526711b2f7baba2ac6ff73
+  replicas: 1
+
+  generalSettings:
+    health_check_endpoint: /v1/health
+
+  litellmSettings:
+    success_callback: ["prometheus"]
+    prometheus_adapter: true
+    cache: true
+    cache_params:
+      type: redis
+      host: os.environ/REDIS_HOST
+      port: os.environ/REDIS_PORT
+    drop_params: true
+    merge_reasoning_content_in_choices: true
+    set_verbose: false
+    require_auth_for_metrics_endpoint: false
+
+  envFrom:
+    - secretRef:
+        name: litellm-secret
+
+  env:
+    - name: LITELLM_HOME
+      value: /cache
+
+    - name: HOME
+      value: /cache
+
+    - name: XDG_CONFIG_HOME
+      value: /cache/.config
+
+    - name: LITELLM_LOG
+      value: INFO
+
+    - name: REDIS_HOST
+      value: dragonfly.database.svc
+
+    - name: REDIS_PORT
+      value: "6379"
+
+    - name: DATABASE_URL
+      valueFrom:
+        secretKeyRef:
+          name: 'litellm-postgres'
+          key: url
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      memory: 4Gi
+
+  service:
+    type: ClusterIP
+    port: 4000
+
+  route:
+    hostnames:
+      - llm.hayden.moe
+    parentRefs:
+      - name: external
+        namespace: network
