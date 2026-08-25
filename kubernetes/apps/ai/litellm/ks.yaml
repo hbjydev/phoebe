@@ -36,10 +36,10 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   interval: 1h
+  dependsOn:
+    - name: litellm-operator
   components:
-    - ../../../../components/redis
     - ../../../../components/kopiur
-    - ../../../../components/postgres/pass
   path: ./kubernetes/apps/ai/litellm/app
   prune: true
   postBuild:
