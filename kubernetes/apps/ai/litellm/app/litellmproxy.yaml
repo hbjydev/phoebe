@@ -48,12 +48,6 @@ spec:
     - name: REDIS_PORT
       value: "6379"
 
-    - name: DATABASE_URL
-      valueFrom:
-        secretKeyRef:
-          name: 'litellm-postgres'
-          key: url
-
   resources:
     requests:
       cpu: 100m
