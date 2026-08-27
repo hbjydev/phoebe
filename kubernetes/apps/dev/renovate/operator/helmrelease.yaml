@@ -23,6 +23,12 @@ spec:
         groupsClaim: groups
         additionalScopes: ["groups"]
 
+    authorization:
+      enabled: true
+      defaults:
+        readerGroups: [renovate_users@sso.hayden.moe]
+        adminGroups: [renovate_admins@sso.hayden.moe]
+
     route:
       enabled: true
       hostnames: ["renovate.hayden.moe"]

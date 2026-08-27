@@ -34,11 +34,6 @@ spec:
       value: behind-base-branch
     - name: RENOVATE_AUTOMERGE_STRATEGY
       value: fast-forward
-  access:
-    anonymousRead: true
-    anonymousReadLogs: false
-    adminGroups: [renovate_admins]
-    readerGroups: [renovate_users]
   provider:
     name: forgejo
     endpoint: https://forgejo.hayden.moe/api/v1
