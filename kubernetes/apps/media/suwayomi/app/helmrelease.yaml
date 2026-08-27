@@ -30,7 +30,7 @@ spec:
               TZ: Europe/London
 
               DATABASE_TYPE: POSTGRESQL
-              DATABASE_URL: postgresql://postgres.database.svc:5432/suwayomi
+              DATABASE_URL: postgresql://postgres-rw.database.svc:5432/suwayomi
               DATABASE_USERNAME:
                 secretKeyRef:
                   name: suwayomi-postgres
