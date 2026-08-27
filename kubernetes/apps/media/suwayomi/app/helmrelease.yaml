@@ -28,6 +28,18 @@ spec:
               tag: v2.3.2333@sha256:ddbe2ca6294a6f19fea094a2e372153adc6053ba34a361719fabcd1d10045bd8
             env:
               TZ: Europe/London
+
+              DATABASE_TYPE: POSTGRESQL
+              DATABASE_URL: postgresql://postgres.database.svc:5432/suwayomi
+              DATABASE_USERNAME:
+                secretKeyRef:
+                  name: suwayomi-postgres
+                  key: username
+              DATABASE_PASSWORD:
+                secretKeyRef:
+                  name: suwayomi-postgres
+                  key: password
+
               FLARESOLVERR_ENABLED: true
               FLARESOLVERR_URL: http://localhost:8191
             probes:
@@ -58,6 +70,23 @@ spec:
                 memory: 512Mi
               limits:
                 memory: 1Gi
+
+          flaresolverr:
+            image:
+              repository: ghcr.io/thephaseless/byparr
+              tag: 3.0.4@sha256:874f719518f617d03a60e03411fc5d090647e1a877041e81f8dc965927c7deb6
+            env:
+              TZ: Europe/London
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              limits:
+                memory: 512Mi
 
     defaultPodOptions:
       securityContext:
