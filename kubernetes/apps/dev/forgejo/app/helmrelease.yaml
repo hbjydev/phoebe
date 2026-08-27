@@ -169,7 +169,7 @@ spec:
       rootless: true
       registry: code.forgejo.org
       repository: forgejo/forgejo
-      tag: 15.0.4-rootless
+      tag: 16.0.3-rootless
 
     persistence:
       create: false
