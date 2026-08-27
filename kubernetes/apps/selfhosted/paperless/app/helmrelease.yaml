@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: ghcr.io/paperless-ngx/paperless-ngx
-              tag: 2.20.15
+              tag: 3.1.0
             env:
               PAPERLESS_URL: https://paperless.hayden.moe
               PAPERLESS_PORT: &port 8000
