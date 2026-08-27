@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/renovate-operator.mogenius.com/renovatejob_v1alpha1.json
 ---
 apiVersion: renovate-operator.mogenius.com/v1alpha1
 kind: RenovateJob
@@ -33,6 +34,11 @@ spec:
       value: behind-base-branch
     - name: RENOVATE_AUTOMERGE_STRATEGY
       value: fast-forward
+  access:
+    anonymousRead: true
+    anonymousReadLogs: false
+    adminGroups: [renovate_admins]
+    readerGroups: [renovate_users]
   provider:
     name: forgejo
     endpoint: https://forgejo.hayden.moe/api/v1
