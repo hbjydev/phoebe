@@ -56,7 +56,7 @@
       automerge: true,
       automergeType: "pr",
       ignoreTests: false,
-    }
+    },
     {
       description: "Auto-merge Grafana dashboards",
       matchDatasources: ["custom.grafana-dashboards"],
