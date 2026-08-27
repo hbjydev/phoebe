@@ -34,6 +34,8 @@ spec:
       value: behind-base-branch
     - name: RENOVATE_AUTOMERGE_STRATEGY
       value: fast-forward
+    - name: RENOVATE_GIT_IGNORED_AUTHORS
+      value: '["gitbot@hayden.moe"]'
   provider:
     name: forgejo
     endpoint: https://forgejo.hayden.moe/api/v1
