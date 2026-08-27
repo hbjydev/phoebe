@@ -11,3 +11,4 @@ resources:
   - navidrome/ks.yaml
   - pinepods/ks.yaml
   - plex/ks.yaml
+  - suwayomi/ks.yaml
