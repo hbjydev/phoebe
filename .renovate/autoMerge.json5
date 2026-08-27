@@ -53,7 +53,7 @@
         "ghcr.io/navidrome/navidrome",
       ],
       automerge: true,
-      automergeType: "branch",
+      automergeType: "pr",
       ignoreTests: false,
     },
     {
