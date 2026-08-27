@@ -29,6 +29,7 @@ spec:
             env:
               TZ: Europe/London
 
+              # Database
               DATABASE_TYPE: POSTGRESQL
               DATABASE_URL: postgresql://postgres-rw.database.svc:5432/suwayomi
               DATABASE_USERNAME:
@@ -40,8 +41,22 @@ spec:
                   name: suwayomi-postgres
                   key: password
 
+              # Cloudflare Bypass
               FLARESOLVERR_ENABLED: true
               FLARESOLVERR_URL: http://localhost:8191
+
+              # Authentication
+              AUTH_MODE: ui_login
+              AUTH_USERNAME:
+                secretKeyRef:
+                  name: suwayomi-auth
+                  key: username
+              AUTH_PASSWORD:
+                secretKeyRef:
+                  name: suwayomi-auth
+                  key: password
+
+              EXTENSION_STORES: '["https://github.com/keiyoushi/extensions/raw/repo/index.pb"]'
             probes:
               liveness: &probes
                 enabled: true
