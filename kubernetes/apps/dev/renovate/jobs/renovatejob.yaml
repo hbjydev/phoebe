@@ -35,7 +35,7 @@ spec:
     - name: RENOVATE_AUTOMERGE_STRATEGY
       value: fast-forward
     - name: RENOVATE_GIT_IGNORED_AUTHORS
-      value: '["gitbot@hayden.moe"]'
+      value: '["gitbot@hayden.moe", "214498265+phoebe-bot[bot]@users.noreply.github.com"]'
   provider:
     name: forgejo
     endpoint: https://forgejo.hayden.moe/api/v1
