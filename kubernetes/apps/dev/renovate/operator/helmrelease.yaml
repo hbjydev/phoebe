@@ -20,6 +20,7 @@ spec:
         secretKey: CLIENT_SECRET
         redirectScheme: https
         allowedGroupPrefix: "renovate_"
+        groupsClaim: groups
         additionalScopes: ["groups"]
 
     route:
