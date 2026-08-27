@@ -8,7 +8,6 @@
       matchPackagePrefixes: [
         "ghcr.io/home-operations",
         "ghcr.io/hbjydev",
-        "ghcr.io/hbjydev",
         "ghcr.io/bjw-s",
         "ghcr.io/bjw-s-labs",
       ],
@@ -54,7 +53,7 @@
         "ghcr.io/navidrome/navidrome",
       ],
       automerge: true,
-      automergeType: "pr",
+      automergeType: "branch",
       ignoreTests: false,
     },
     {
