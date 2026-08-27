@@ -16,7 +16,7 @@ spec:
           app:
             image:
               repository: collabora/code
-              tag: 26.04.2.1.1@sha256:fece3a479b4ca57e7186d0c715155526170e337deef55bbbbbc79ee93b0e72e1
+              tag: 26.04.3.1.1@sha256:6b70f91f0b6e9c76f75f162f58ef0a12cf9415d78e14713d33c0318ddc4a2cc0
             env:
               extra_params: --o:ssl.termination=true --o:ssl.enable=false --o:security.capabilities=false
               aliasgroup1: https://drive.hayden.moe:443
