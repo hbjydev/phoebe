@@ -10,6 +10,7 @@ spec:
 
   interval: 30s
   scrapeTimeout: 10s
+  max_scrape_size: 32MiB
 
   tlsConfig:
     insecureSkipVerify: true
