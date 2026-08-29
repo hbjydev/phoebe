@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/operator.victoriametrics.com/vmnodescrape_v1beta1.json
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMNodeScrape
+metadata:
+  name: kubelet-cadvisor
+spec:
+  path: /metrics/cadvisor
+  scheme: https
+
+  interval: 30s
+  scrapeTimeout: 10s
+
+  tlsConfig:
+    insecureSkipVerify: true
+    caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+  bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+
+  relabelConfigs:
+    - action: labelmap
+      regex: __meta_kubernetes_node_label_(.+)
+
+    - source_labels: [__metrics_path__]
+      target_label: metrics_path
+
+    - action: replace
+      target_label: job
+      replacement: kubelet
+
+  metricRelabelConfigs:
+    - action: labeldrop
+      regex: "^(uid|id|name)$"
+
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMNodeScrape
+metadata:
+  name: kubelet-metrics
+spec:
+  path: /metrics
+  scheme: https
+
+  interval: 30s
+  scrapeTimeout: 10s
+
+  tlsConfig:
+    insecureSkipVerify: true
+    caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+  bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+
+  relabelConfigs:
+    - action: labelmap
+      regex: __meta_kubernetes_node_label_(.+)
+
+    - source_labels: [__metrics_path__]
+      target_label: metrics_path
+
+    - action: replace
+      target_label: job
+      replacement: kubelet

@@ -5,4 +5,5 @@ kind: Kustomization
 resources:
   - ./vmsingle.yaml
   - ./vmagent.yaml
+  - ./vmnodescrape.yaml
   - ./grafanadatasource.yaml
