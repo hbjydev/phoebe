@@ -51,8 +51,9 @@ spec:
   bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
 
   relabelConfigs:
-    - action: labelmap
-      regex: __meta_kubernetes_node_label_(.+)
+    - sourceLabels:
+        - __meta_kubernetes_node_name
+      targetLabel: node
 
     - source_labels: [__metrics_path__]
       target_label: metrics_path
