@@ -19,6 +19,9 @@ spec:
           component: kube-apiserver # etcd runs on control plane nodes
     kubeProxy:
       enabled: false
+    kubelet:
+      serviceMonitor:
+        enabled: false
     prometheus:
       enabled: false
     prometheus-node-exporter:
