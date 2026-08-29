@@ -12,7 +12,7 @@ spec:
     namespace: security
   origin: https://photos.hayden.moe/
   redirectUrl:
-    - app.immich://oauth-callback
+    - app.immich:///oauth-callback
     - https://photos.hayden.moe/auth/login
     - https://photos.hayden.moe/user-settings
 
