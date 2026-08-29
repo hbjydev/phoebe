@@ -7,3 +7,4 @@ resources:
   - ./grafanadashboard.yaml
   - ./litellmproxy.yaml
   - ./litellmmodels.yaml
+  - ./servicemonitor.yaml
