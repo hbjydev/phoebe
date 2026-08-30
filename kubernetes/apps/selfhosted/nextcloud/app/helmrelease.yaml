@@ -41,13 +41,13 @@ spec:
           command:
             - /bin/sh
             - -c
-            - touch /php-confd/redis-session.ini
+            - touch /usr/local/etc/php/conf.d/redis-session.ini
           securityContext:
             runAsUser: 82
             runAsGroup: 82
           volumeMounts:
             - name: php-confd
-              mountPath: /php-confd
+              mountPath: /usr/local/etc/php/conf.d
       extraVolumes:
         - name: php-confd
           emptyDir: {}
