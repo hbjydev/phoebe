@@ -16,8 +16,9 @@ spec:
         strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
-        labels:
-          egress.policy.home.arpa/internet: "true"
+        pod:
+          labels:
+            egress.policy.home.arpa/internet: "true"
         containers:
           app:
             image:
