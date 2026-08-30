@@ -1,0 +1,20 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: searxng
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: searxng
+      app.kubernetes.io/instance: searxng
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: searxng-redis
+            app.kubernetes.io/instance: searxng-redis
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP
