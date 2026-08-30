@@ -14,9 +14,10 @@ spec:
       tandoor:
         annotations:
           reloader.stakater.com/auto: "true"
-        labels:
-          egress.policy.home.arpa/internet: "true"
-          egress.policy.home.arpa/postgres: "true"
+        pod:
+          labels:
+            egress.policy.home.arpa/internet: "true"
+            egress.policy.home.arpa/postgres: "true"
         strategy: RollingUpdate
         containers:
           app:
