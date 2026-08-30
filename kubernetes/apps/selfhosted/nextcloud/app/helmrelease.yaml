@@ -20,8 +20,8 @@ spec:
         successfulJobsHistoryLimit: 1
 
         securityContext:
-          runAsUser: 82
-          runAsGroup: 82
+          runAsUser: 1000
+          runAsGroup: 1000
           runAsNonRoot: true
 
     image:
@@ -43,8 +43,8 @@ spec:
             - -c
             - touch /php-confd/redis-session.ini
           securityContext:
-            runAsUser: 82
-            runAsGroup: 82
+            runAsUser: 1000
+            runAsGroup: 1000
           volumeMounts:
             - name: external-redis-php-confd
               mountPath: /php-confd
@@ -64,8 +64,8 @@ spec:
         enabled: false
 
       securityContext:
-        runAsUser: 82
-        runAsGroup: 82
+        runAsUser: 1000
+        runAsGroup: 1000
         runAsNonRoot: true
 
       configs:
