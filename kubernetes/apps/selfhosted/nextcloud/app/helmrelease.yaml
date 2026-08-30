@@ -33,6 +33,25 @@ spec:
     nextcloud:
       datadir: /var/www/data
 
+      # The image entrypoint writes this file whenever REDIS_HOST is set, but the
+      # external Redis path does not get the writable volume provided by the chart.
+      extraInitContainers:
+        - name: init-external-redis-session
+          image: docker.io/library/alpine:3.24
+          command:
+            - /bin/sh
+            - -c
+            - touch /php-confd/redis-session.ini
+          securityContext:
+            runAsUser: 82
+            runAsGroup: 82
+          volumeMounts:
+            - name: external-redis-php-confd
+              mountPath: /php-confd
+      extraVolumes:
+        - name: external-redis-php-confd
+          emptyDir: {}
+
       existingSecret:
         enabled: true
         secretName: nextcloud-secret
@@ -115,3 +134,9 @@ spec:
                 template:
                   spec:
                     hostUsers: false
+                    containers:
+                      - name: nextcloud
+                        volumeMounts:
+                          - name: external-redis-php-confd
+                            mountPath: /usr/local/etc/php/conf.d/redis-session.ini
+                            subPath: redis-session.ini
