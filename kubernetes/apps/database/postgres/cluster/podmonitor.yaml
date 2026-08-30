@@ -11,11 +11,4 @@ spec:
   jobLabel: postgres
   podMetricsEndpoints:
     - port: metrics
-      metricRelabelConfigs:
-        - action: replace
-          if: '{cluster!=""}'
-          sourceLabels:
-            - cluster
-          targetLabel: cnpg-cluster
-        - action: labeldrop
-          regex: cluster
+      honorLabels: true
