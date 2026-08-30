@@ -61,7 +61,7 @@ spec:
     substitute:
       APP: ${APP}
       OIDC_DISPLAY_NAME: ${q:='}${OIDC_DISPLAY_NAME}${q:='}
-      OIDC_IMAGE_URL: ${q:='}${OIDC_IMAGE_URL}${q:='}
+      OIDC_IMAGE_URL: ${q:='}${OIDC_IMAGE_URL:-https://cdn.jsdelivr.net/gh/selfhst/icons@main/svg/${APP}.svg}${q:='}
       OIDC_ORIGIN: ${q:='}${OIDC_ORIGIN}${q:='}
       OIDC_PUBLIC: ${q:='}${OIDC_PUBLIC:=false}${q:='}
       OIDC_REDIRECT_URLS: ${q:='}${OIDC_REDIRECT_URLS}${q:='}
