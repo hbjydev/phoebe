@@ -10,6 +10,10 @@ spec:
     name: nextcloud
   interval: 30m
   values:
+    podLabels:
+      egress.policy.home.arpa/internet: "true"
+      egress.policy.home.arpa/postgres: "true"
+
     cronjob:
       enabled: true
       type: cronjob

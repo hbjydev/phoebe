@@ -1,0 +1,28 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: nextcloud
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: nextcloud
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: nextcloud-collabora
+            app.kubernetes.io/instance: nextcloud-collabora
+      toPorts:
+        - ports:
+            - port: "9980"
+              protocol: TCP
+
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: redis
+            app.kubernetes.io/instance: nextcloud
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP
