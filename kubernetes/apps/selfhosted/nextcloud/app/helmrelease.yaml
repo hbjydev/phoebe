@@ -12,6 +12,7 @@ spec:
   values:
     podLabels:
       egress.policy.home.arpa/internet: "true"
+      egress.policy.home.arpa/postgres: "true"
 
     cronjob:
       enabled: true
