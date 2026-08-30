@@ -12,6 +12,9 @@ spec:
   values:
     controllers:
       dispatcharr:
+        pod:
+          labels:
+            egress.policy.home.arpa/internet: "true"
         containers:
           app:
             image:

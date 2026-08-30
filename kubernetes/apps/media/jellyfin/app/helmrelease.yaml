@@ -23,6 +23,9 @@ spec:
           reloader.stakater.com/auto: "true"
           gatus.home-operations.com/endpoint: |-
             conditions: ["[STATUS] == 401"]
+        pod:
+          labels:
+            egress.policy.home.arpa/internet: "true"
         containers:
           app:
             image:

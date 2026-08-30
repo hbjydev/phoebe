@@ -1,0 +1,19 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: pinepods
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: pinepods
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            app: pinepods-redis
+            app.kubernetes.io/name: dragonfly
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP

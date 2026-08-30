@@ -21,6 +21,10 @@ spec:
       plex:
         annotations:
           reloader.stakater.com/auto: "true"
+        pod:
+          labels:
+            egress.policy.home.arpa/internet: "true"
+            egress.policy.home.arpa/postgres: "true"
         containers:
           app:
             image:

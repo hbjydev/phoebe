@@ -12,6 +12,10 @@ spec:
   values:
     controllers:
       app:
+        pod:
+          labels:
+            egress.policy.home.arpa/internet: "true"
+            egress.policy.home.arpa/postgres: "true"
         containers:
           app:
             image:
