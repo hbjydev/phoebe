@@ -12,8 +12,8 @@ spec:
   egress:
     - toEndpoints:
         - matchLabels:
-            app.kubernetes.io/name: searxng-redis
-            app.kubernetes.io/instance: searxng-redis
+            app: searxng-redis
+            app.kubernetes.io/name: dragonfly
       toPorts:
         - ports:
             - port: "6379"

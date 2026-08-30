@@ -12,8 +12,8 @@ spec:
   egress:
     - toEndpoints:
         - matchLabels:
-            app.kubernetes.io/name: paperless-redis
-            app.kubernetes.io/instance: paperless-redis
+            app: paperless-redis
+            app.kubernetes.io/name: dragonfly
       toPorts:
         - ports:
             - port: "6379"

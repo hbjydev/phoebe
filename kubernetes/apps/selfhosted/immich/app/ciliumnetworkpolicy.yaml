@@ -11,8 +11,8 @@ spec:
   egress:
     - toEndpoints:
         - matchLabels:
-            app.kubernetes.io/name: immich-redis
-            app.kubernetes.io/instance: immich-redis
+            app: immich-redis
+            app.kubernetes.io/name: dragonfly
       toPorts:
         - ports:
             - port: "6379"
