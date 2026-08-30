@@ -19,6 +19,9 @@ spec:
   values:
     controllers:
       redis:
+        pod:
+          labels:
+            egress.policy.home.arpa/block-all: "true"
         containers:
           app:
             image:
