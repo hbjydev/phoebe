@@ -9,4 +9,5 @@ resources:
   - ./externalsecret.yaml
   - ./objectstore.yaml
   - ./pooler.yaml
+  - ./podmonitor.yaml
   - ./scheduledbackup.yaml

@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/operator.victoriametrics.com/vmpodscrape_v1beta1.json
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMPodScrape
+metadata:
+  name: cnpg-postgres
+spec:
+  selector:
+    matchLabels:
+      cnpg.io/cluster: postgres
+  jobLabel: postgres
+  podMetricsEndpoints:
+    - port: metrics
+      metricRelabelConfigs:
+        - action: replace
+          if: '{cluster!=""}'
+          sourceLabels:
+            - cluster
+          targetLabel: cnpg-cluster
+        - action: labeldrop
+          regex: cluster
