@@ -12,6 +12,7 @@ spec:
   values:
     podLabels:
       egress.policy.home.arpa/internet: "true"
+
     cronjob:
       enabled: true
       type: cronjob
@@ -21,10 +22,13 @@ spec:
           runAsGroup: 82
           runAsNonRoot: true
           runAsUser: 82
+
     image:
       flavor: fpm-alpine
+
     nginx:
       enabled: true
+
     nextcloud:
       datadir: /var/www/data
       # Allow the entrypoint (running as www-data) to write redis-session.ini
@@ -45,18 +49,23 @@ spec:
       extraVolumes:
         - name: php-confd
           emptyDir: {}
+
       existingSecret:
         enabled: true
         secretName: nextcloud-secret
         usernameKey: nextcloud-username
         passwordKey: nextcloud-password
+
       host: &host drive.hayden.moe
+
       mail:
         enabled: false
+
       securityContext:
         runAsGroup: 82
         runAsNonRoot: true
         runAsUser: 82
+
       configs:
         proxy.config.php: |-
           <?php
@@ -71,12 +80,14 @@ spec:
               1 => '10.244.0.0/16',
             ),
           ); ?>
+
         misc.config.php: |-
           <?php
           $CONFIG = array(
             'default_phone_region' => 'GB',
             'maintenance_window_start' => 2,
           ); ?>
+
     httpRoute:
       enabled: true
       hostnames:
@@ -95,12 +106,15 @@ spec:
                 add:
                   - name: strict-transport-security
                     value: max-age=31536000
+
     persistence:
       enabled: true
       existingClaim: nextcloud
+
     redis:
       enabled: true
       architecture: standalone
+
   postRenderers:
     - kustomize:
         patches:
