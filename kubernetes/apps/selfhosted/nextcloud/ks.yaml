@@ -21,6 +21,7 @@ spec:
       APP: nextcloud
       APP_UID: "1022"
       APP_GID: "1022"
+      NAMESPACE: selfhosted
       KOPIUR_CAPACITY: 15Gi
       KOPIUR_UID: "0"
       KOPIUR_GID: "0"
