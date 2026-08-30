@@ -19,6 +19,9 @@ spec:
   values:
     controllers:
       sabnzbd:
+        pod:
+          labels:
+            egress.policy.home.arpa/internet: "true"
         containers:
           app:
             image:
