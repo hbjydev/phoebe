@@ -114,8 +114,10 @@ spec:
       existingClaim: nextcloud
 
     redis:
+      enabled: false
+    externalRedis:
       enabled: true
-      architecture: standalone
+      host: nextcloud-redis
 
   postRenderers:
     - kustomize:

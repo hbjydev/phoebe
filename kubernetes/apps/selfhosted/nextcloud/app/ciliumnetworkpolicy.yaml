@@ -20,8 +20,8 @@ spec:
 
     - toEndpoints:
         - matchLabels:
-            app.kubernetes.io/name: redis
-            app.kubernetes.io/instance: nextcloud
+            app.kubernetes.io/name: nextcloud-redis
+            app.kubernetes.io/instance: nextcloud-redis
       toPorts:
         - ports:
             - port: "6379"
