@@ -3,7 +3,7 @@
 apiVersion: dragonflydb.io/v1alpha1
 kind: Dragonfly
 metadata:
-  name: "${REDIS_APP}-dragonfly"
+  name: "${REDIS_APP:-${APP}-redis}"
 spec:
   replicas: 1
   labels:
