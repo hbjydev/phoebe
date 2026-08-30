@@ -8,7 +8,6 @@ components:
 resources:
   - ./immich/ks.yaml
   - ./miniflux/ks.yaml
-  - ./nextcloud/ks.yaml
   - ./ntfy/ks.yaml
   - ./paperless/ks.yaml
   - ./searxng/ks.yaml
