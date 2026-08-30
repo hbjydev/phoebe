@@ -101,3 +101,24 @@ spec:
     redis:
       enabled: true
       architecture: standalone
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+              name: nextcloud
+            patch: |-
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: nextcloud
+              spec:
+                template:
+                  spec:
+                    hostUsers: false
+                    containers:
+                      - name: nextcloud
+                        volumeMounts:
+                          - name: php-confd
+                            mountPath: /usr/local/etc/php/conf.d/redis-session.ini
+                            subPath: redis-session.ini
