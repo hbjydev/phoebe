@@ -1,0 +1,55 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: allow-lan-egress
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/lan: "true"
+  egress:
+    - toCIDRSet:
+        - cidrGroupRef: lan
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: allow-infra-egress
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/infra: "true"
+  egress:
+    - toCIDRSet:
+        - cidrGroupRef: infra
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: allow-management-egress
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/management: "true"
+  egress:
+    - toCIDRSet:
+        - cidrGroupRef: management
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: allow-nas-egress
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/nas: "true"
+  egress:
+    - toCIDRSet:
+        - cidrGroupRef: nas

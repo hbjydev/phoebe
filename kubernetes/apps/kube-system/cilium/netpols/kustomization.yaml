@@ -7,5 +7,6 @@ resources:
   - ./allow-dns-egress.yaml
   - ./allow-internet-egress.yaml
   - ./allow-kube-api-egress.yaml
+  - ./allow-lan-egress.yaml
   - ./allow-postgres-egress.yaml
   - ./block-all-egress.yaml

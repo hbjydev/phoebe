@@ -1,0 +1,34 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumcidrgroup_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumCIDRGroup
+metadata:
+  name: lan
+spec:
+  externalCIDRs:
+    - 192.168.4.0/23
+    - 192.168.20.0/24
+    - 192.168.40.0/24
+    - 192.168.50.0/24
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumcidrgroup_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumCIDRGroup
+metadata:
+  name: infra
+spec:
+  externalCIDRs:
+    - 10.60.0.0/24
+    - 10.70.0.0/24
+    - 10.90.0.0/24
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumcidrgroup_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumCIDRGroup
+metadata:
+  name: management
+spec:
+  externalCIDRs:
+    - 10.99.0.0/24

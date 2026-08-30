@@ -6,4 +6,5 @@ resources:
   - ./l3.yaml
   - ./pool.yaml
   - ./cidrgroup-internet.yaml
+  - ./cidrgroup-lan.yaml
   - ./cidrgroup-nas.yaml
