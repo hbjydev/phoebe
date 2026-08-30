@@ -1,0 +1,20 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: home-assistant
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: home-assistant
+      app.kubernetes.io/instance: home-assistant
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: matter-server
+            app.kubernetes.io/instance: matter-server
+      toPorts:
+        - ports:
+            - port: "5580"
+              protocol: TCP

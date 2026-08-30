@@ -14,6 +14,10 @@ spec:
       home-assistant:
         annotations:
           reloader.stakater.com/auto: "true"
+        pod:
+          labels:
+            egress.policy.home.arpa/internet: "true"
+            egress.policy.home.arpa/lan: "true"
         containers:
           app:
             image:
