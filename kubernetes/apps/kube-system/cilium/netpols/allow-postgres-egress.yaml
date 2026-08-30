@@ -1,0 +1,32 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: allow-postgres-egress
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/postgres: "true"
+  egress:
+    - # Postgres Instances
+      toEndpoints:
+        - matchLabels:
+            cnpg.io/cluster: 'postgres'
+            cnpg.io/podRole: 'instance'
+            k8s:io.kubernetes.pod.namespace: database
+      toPorts:
+        - ports:
+            - protocol: TCP
+              port: "5432"
+
+    - # PgBouncer Instances
+      toEndpoints:
+        - matchLabels:
+            cnpg.io/cluster: 'postgres'
+            cnpg.io/podRole: 'pooler'
+            k8s:io.kubernetes.pod.namespace: database
+      toPorts:
+        - ports:
+            - protocol: TCP
+              port: "5432"
