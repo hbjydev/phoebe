@@ -35,10 +35,6 @@ spec:
       host: &host drive.hayden.moe
       mail:
         enabled: false
-      securityContext:
-        runAsGroup: 1000
-        runAsNonRoot: true
-        runAsUser: 1000
       configs:
         proxy.config.php: |-
           <?php
