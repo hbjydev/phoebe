@@ -18,10 +18,11 @@ spec:
       type: cronjob
       cronjob:
         successfulJobsHistoryLimit: 1
+
         securityContext:
+          runAsUser: 82
           runAsGroup: 82
           runAsNonRoot: true
-          runAsUser: 82
 
     image:
       flavor: fpm-alpine
@@ -31,6 +32,7 @@ spec:
 
     nextcloud:
       datadir: /var/www/data
+
       # Allow the entrypoint (running as www-data) to write redis-session.ini
       # by placing it on a writable volume, mirroring the chart's bundled-redis pattern
       extraInitContainers:
@@ -62,9 +64,9 @@ spec:
         enabled: false
 
       securityContext:
+        runAsUser: 82
         runAsGroup: 82
         runAsNonRoot: true
-        runAsUser: 82
 
       configs:
         proxy.config.php: |-
