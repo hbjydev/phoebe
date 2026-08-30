@@ -9,6 +9,9 @@ spec:
     matchLabels:
       app.kubernetes.io/instance: qui
   egress:
+    - toFQDNs:
+        - matchName: api.autobrr.com
+
     - toEndpoints:
         - matchLabels:
             app.kubernetes.io/name: qbittorrent
