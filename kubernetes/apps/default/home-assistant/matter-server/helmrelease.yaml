@@ -30,6 +30,10 @@ spec:
             egress.policy.home.arpa/lan: "true"
           securityContext:
             sysctls:
+              - name: net.ipv6.conf.all.forwarding
+                value: "0"
+              - name: net.ipv6.conf.net1.accept_ra
+                value: "2"
               - name: net.ipv6.conf.net1.accept_ra_rt_info_max_plen
                 value: "64"
             runAsUser: 1000
