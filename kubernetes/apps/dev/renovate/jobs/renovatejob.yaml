@@ -12,7 +12,7 @@ spec:
     - hayden/*
     - tactica/*
   # renovate: datasource=docker depName=renovate/renovate
-  image: renovate/renovate:44.56.3
+  image: renovate/renovate:44.56.4
   imagePullSecrets:
     - name: imp-atcr
     - name: imp-forgejo
