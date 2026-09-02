@@ -1,0 +1,109 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app openthread
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  driftDetection:
+    mode: enabled
+  values:
+    defaultPodOptions:
+      annotations:
+        k8s.v1.cni.cncf.io/networks: |-
+          [{
+            "name": "iot",
+            "namespace": "kube-system",
+            "ips": ["192.168.20.22/24"],
+            "mac": "c6:07:27:af:fb:56"
+          }]
+      securityContext:
+        runAsNonRoot: false # Must be run as root user
+        runAsUser: 0
+        runAsGroup: 0
+        fsGroup: 0
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups: [34]
+        sysctls:
+          - name: net.ipv6.conf.net1.accept_ra
+            value: "2"
+          - name: net.ipv6.conf.net1.accept_ra_rt_info_max_plen
+            value: "64"
+          - name: net.ipv6.conf.net1.forwarding
+            value: "1"
+          - name: net.ipv4.ip_forward
+            value: "1"
+
+    controllers:
+      otbr:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: openthread/border-router
+              tag: stable@sha256:7616b9d514dee5cc30f572066e05cb775a04c48e07d10f6c43916ce8be88a68f
+            env:
+              TZ: Europe/London
+              OT_RCP_DEVICE: spinel+hdlc+uart:///dev/ttyACM5?uart-baudrate=460800
+              OT_INFRA_IF: net1
+              OT_THREAD_IF: wpan0
+              OT_LOG_LEVEL: 7
+              OT_REST_LISTEN_ADDR: 0.0.0.0
+              OT_REST_LISTEN_PORT: &restPort 8981
+              OT_WEB_LISTEN_ADDR: 0.0.0.0
+              OT_WEB_LISTEN_PORT: &webPort 8980
+            resources:
+              requests:
+                cpu: 10m
+                memory: 50Mi
+              limits:
+                memory: 256Mi
+            securityContext:
+              privileged: true
+              capabilities:
+                add: [NET_ADMIN]
+
+    service:
+      app:
+        ports:
+          http-rest:
+            port: *restPort
+          http-web:
+            port: *webPort
+
+    routes:
+      app:
+        hostnames:
+          - otbr.hayden.moe
+        parentRefs:
+          - name: internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: http-web
+
+    persistence:
+      data:
+        existingClaim: "{{ .Release.Name }}"
+        globalMounts:
+          - path: /data
+
+      zbt2:
+        type: hostPath
+        hostPath: /dev/serial/by-id/usb-Nabu_Casa_ZBT-2_A4CB8FD15F5C-if00
+
+      dev-net-tun:
+        type: hostPath
+        hostPath: /dev/net/tun
+
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
