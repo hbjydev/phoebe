@@ -76,7 +76,7 @@ spec:
   path: ./kubernetes/apps/default/home-assistant/openthread
   postBuild:
     substitute:
-      APP: matter-server
+      APP: openthread
       KOPIUR_CAPACITY: 5Gi
       KOPIUR_UID: "0"
       KOPIUR_GID: "0"
