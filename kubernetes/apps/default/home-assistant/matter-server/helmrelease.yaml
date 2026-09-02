@@ -73,7 +73,7 @@ spec:
             port: *port
 
     routes:
-      app:
+      matter-server:
         hostnames:
           - matter.hayden.moe
         parentRefs:
