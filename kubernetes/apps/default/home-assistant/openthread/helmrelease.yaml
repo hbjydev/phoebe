@@ -75,7 +75,7 @@ spec:
             port: *webPort
 
     routes:
-      app:
+      otbr:
         hostnames:
           - otbr.hayden.moe
         parentRefs:
