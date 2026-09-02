@@ -29,9 +29,8 @@ spec:
               HASS_HTTP_TRUSTED_PROXY_1: 172.18.0.0/16
               HASS_HTTP_TRUSTED_PROXY_2: 10.80.0.0/24
             securityContext:
-              allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: {drop: ["ALL"]}
+              privileged: true
             resources:
               requests:
                 cpu: 10m
@@ -47,10 +46,10 @@ spec:
             "mac": "c6:07:27:af:fb:53"
           }]
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        runAsNonRoot: false
+        runAsUser: 0
+        runAsGroup: 0
+        fsGroup: 0
         fsGroupChangePolicy: OnRootMismatch
     service:
       app:
