@@ -47,18 +47,14 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/matter-js/python-matter-server
-              tag: stable@sha256:e9f5fc49d2ac4fec1a91fb3eb1bd4555b9e39ea63db1d55b30a1ab53170c79ac
+              repository: ghcr.io/matter-js/matterjs-server
+              tag: 1.4.0@sha256:54232d0d3e7dff5a54759469d2753399270412b4c30c55b31750a4595e4cb236
             env:
               TZ: Europe/London
-              MATTER_SERVER__INSTANCE_NAME: *app
-              MATTER_SERVER__PORT: &port 5580
-              MATTER_SERVER__LOG_LEVEL: info
-            args:
-              - --storage-path=/data
-              - --primary-interface=net1
-              - --log-level=debug
-              - --log-level-sdk=info
+              LISTEN_ADDRESS: 0.0.0.0:5580
+              PRIMARY_INTERFACE: net1
+              LOG_LEVEL: info
+              STORAGE_PATH: /data
             resources:
               requests:
                 cpu: 10m
@@ -70,7 +66,7 @@ spec:
       matter-server:
         ports:
           http:
-            port: *port
+            port: 5580
 
     routes:
       matter-server:
