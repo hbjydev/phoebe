@@ -25,9 +25,6 @@ spec:
                 "ips": ["192.168.20.21/24", "fd74:f571:d3bd:40:b8e3:4d10:fa62:93c1/64"],
                 "mac": "c6:07:27:af:fb:54"
               }]
-          labels:
-            egress.policy.home.arpa/internet: "true"
-            egress.policy.home.arpa/lan: "true"
           securityContext:
             sysctls:
               - name: net.ipv6.conf.all.forwarding
