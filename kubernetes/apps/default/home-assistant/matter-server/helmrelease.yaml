@@ -29,16 +29,15 @@ spec:
             egress.policy.home.arpa/internet: "true"
             egress.policy.home.arpa/lan: "true"
           securityContext:
-            runAsUser: 0
-            runAsGroup: 0
-            runAsNonRoot: false
             sysctls:
-              - name: net.ipv6.conf.net1.accept_ra
-                value: "2"
-              - name: net.ipv6.conf.all.forwarding
-                value: "1"
               - name: net.ipv6.conf.net1.accept_ra_rt_info_max_plen
                 value: "64"
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
+            runAsNonRoot: true
+            seccompProfile: {type: RuntimeDefault}
         containers:
           app:
             image:
@@ -47,25 +46,30 @@ spec:
             args:
               - --storage-path=/data
               - --primary-interface=net1
+              - --ota-provider-dir=/data/ota
               - --production-mode
             env:
               TZ: Europe/London
               LOG_LEVEL: info
-            securityContext:
-              privileged: true
             probes:
-              liveness:
-                enabled: false
-              readiness:
-                enabled: false
-              startup:
-                enabled: false
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: 5580
+              readiness: *probe
             resources:
               requests:
-                cpu: 10m
-                memory: 50Mi
+                cpu: 50m
+                memory: 100Mi
               limits:
-                memory: 256Mi
+                memory: 512Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: [ALL] }
 
     service:
       matter-server:
