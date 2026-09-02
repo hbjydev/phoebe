@@ -14,6 +14,7 @@ machine:
         ResourceHealthStatus: true
       serializeImagePulls: false
       allowedUnsafeSysctls:
+        - 'net.ipv6.conf.eth0.disable_ipv6'   # needed for matter/thread
         - 'net.ipv6.conf.net1.*'              # needed for matter/thread
         - 'net.ipv6.conf.all.forwarding'      # needed for matter/thread
         - 'net.ipv6.conf.default.forwarding'  # needed for matter/thread
