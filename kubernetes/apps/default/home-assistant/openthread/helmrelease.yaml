@@ -53,7 +53,7 @@ spec:
               BAUDRATE: 460800
               FIREWALL: 0
               NAT64: 1
-              NETWORK_DEVICE: /dev/ttyACM0
+              DEVICE: /dev/ttyACM0
               S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: 1
               S6_READ_ONLY_ROOT: 1
             resources:
