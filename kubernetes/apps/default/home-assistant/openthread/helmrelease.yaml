@@ -67,7 +67,7 @@ spec:
                 add: [NET_ADMIN]
 
     service:
-      app:
+      otbr:
         ports:
           http-rest:
             port: *restPort

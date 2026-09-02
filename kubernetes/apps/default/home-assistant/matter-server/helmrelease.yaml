@@ -67,7 +67,7 @@ spec:
                 memory: 256Mi
 
     service:
-      app:
+      matter-server:
         ports:
           http:
             port: *port
