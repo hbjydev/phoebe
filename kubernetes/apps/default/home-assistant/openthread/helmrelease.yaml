@@ -101,7 +101,7 @@ spec:
         type: hostPath
         hostPath: /dev/net/tun
 
-      dev-ttyACM0:
+      dev-tty:
         type: hostPath
         hostPath: /dev/ttyACM0
 
