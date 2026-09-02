@@ -45,24 +45,32 @@ spec:
         containers:
           app:
             image:
-              repository: openthread/border-router
-              tag: stable@sha256:7616b9d514dee5cc30f572066e05cb775a04c48e07d10f6c43916ce8be88a68f
+              repository: ghcr.io/wittdennis/homeassistant-otbr
+              tag: 4.2.3@sha256:1b53b0b3488e1ee0929c1b28a231552f81cdb0cbdc4bcd75a91c2711ab6967fc
             env:
               TZ: Europe/London
-              OT_RCP_DEVICE: spinel+hdlc+uart:///dev/ttyACM0?uart-baudrate=460800&uart-flow-control
-              OT_INFRA_IF: net1
-              OT_THREAD_IF: wpan0
-              OT_LOG_LEVEL: 7
-              OT_REST_LISTEN_ADDR: 0.0.0.0
-              OT_REST_LISTEN_PORT: &restPort 8981
-              OT_WEB_LISTEN_ADDR: 0.0.0.0
-              OT_WEB_LISTEN_PORT: &webPort 8980
+              BACKBONE_IF: net1
+              BAUDRATE: 460800
+              FIREWALL: 0
+              NAT64: 1
+              NETWORK_DEVICE: /dev/ttyACM0
+              S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: 1
+              S6_READ_ONLY_ROOT: 1
             resources:
               requests:
-                cpu: 10m
-                memory: 50Mi
+                cpu: 50m
+                memory: 64Mi
               limits:
-                memory: 256Mi
+                memory: 512Mi
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /node/state
+                    port: &port 8081
+              readiness: *probe
             securityContext:
               privileged: true
               capabilities:
@@ -71,23 +79,8 @@ spec:
     service:
       otbr:
         ports:
-          http-rest:
-            port: *restPort
-          http-web:
-            port: *webPort
-
-    routes:
-      otbr:
-        hostnames:
-          - otbr.hayden.moe
-        parentRefs:
-          - name: internal
-            namespace: network
-            sectionName: https
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: http-web
+          http:
+            port: *port
 
     persistence:
       data:
@@ -95,19 +88,20 @@ spec:
         globalMounts:
           - path: /data
 
-      zbt2:
-        type: hostPath
-        hostPath: /dev/serial/by-id/usb-Nabu_Casa_ZBT-2_A4CB8FD15F5C-if00
-
       dev-net-tun:
         type: hostPath
         hostPath: /dev/net/tun
+        hostPathType: CharDevice
+        globalMounts:
+          - path: /dev/net/tun
 
       dev-tty:
         type: hostPath
         hostPath: /dev/ttyACM0
+        hostPathType: CharDevice
 
-      tmp:
+      tmpfs:
         type: emptyDir
         globalMounts:
-          - path: /tmp
+          - path: /run
+            subPath: run
