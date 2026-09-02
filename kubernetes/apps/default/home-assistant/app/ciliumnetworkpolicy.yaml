@@ -25,5 +25,5 @@ spec:
             app.kubernetes.io/instance: openthread
       toPorts:
         - ports:
-            - port: "8981"
+            - port: "8081"
               protocol: TCP
