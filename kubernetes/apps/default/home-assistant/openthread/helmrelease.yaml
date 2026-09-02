@@ -31,6 +31,8 @@ spec:
         sysctls:
           - name: net.ipv6.conf.net1.accept_ra
             value: "2"
+          - name: net.ipv6.conf.net1.forwarding
+            value: "1"
           - name: net.ipv6.conf.net1.accept_ra_rt_info_max_plen
             value: "64"
           - name: net.ipv6.conf.all.forwarding
@@ -47,7 +49,7 @@ spec:
               tag: stable@sha256:7616b9d514dee5cc30f572066e05cb775a04c48e07d10f6c43916ce8be88a68f
             env:
               TZ: Europe/London
-              OT_RCP_DEVICE: spinel+hdlc+uart:///dev/ttyACM0?uart-baudrate=460800
+              OT_RCP_DEVICE: spinel+hdlc+uart:///dev/ttyACM0?uart-baudrate=460800&uart-flow-control
               OT_INFRA_IF: net1
               OT_THREAD_IF: wpan0
               OT_LOG_LEVEL: 7
