@@ -28,9 +28,11 @@ spec:
                   - datasourceName: VictoriaMetrics
                     inputName: datasource
 
+  install:
+    crds: CreateReplace
+
   values:
     installScope: cluster
-    installCRDs: false
 
     webhook:
       tls:
