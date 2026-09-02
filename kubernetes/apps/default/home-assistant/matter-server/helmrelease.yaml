@@ -12,54 +12,60 @@ spec:
   driftDetection:
     mode: enabled
   values:
-    defaultPodOptions:
-      annotations:
-        k8s.v1.cni.cncf.io/networks: |-
-          [{
-            "name": "iot",
-            "namespace": "kube-system",
-            "ips": ["192.168.20.21/24", "fd74:f571:d3bd:40:b8e3:4d10:fa62:93c1/64"],
-            "mac": "c6:07:27:af:fb:54"
-          }]
-      hostUsers: false
-      securityContext:
-        runAsUser: 0
-        runAsGroup: 0
-        runAsNonRoot: false
-        sysctls:
-          - name: net.ipv6.conf.net1.accept_ra
-            value: "2"
-          - name: net.ipv6.conf.net1.accept_ra_defrtr
-            value: "1"
-          - name: net.ipv6.conf.net1.accept_ra_rt_info_max_plen
-            value: "64"
-
     controllers:
       matter-server:
         annotations:
           reloader.stakater.com/auto: "true"
         pod:
+          annotations:
+            k8s.v1.cni.cncf.io/networks: |-
+              [{
+                "name": "iot",
+                "namespace": "kube-system",
+                "ips": ["192.168.20.21/24", "fd74:f571:d3bd:40:b8e3:4d10:fa62:93c1/64"],
+                "mac": "c6:07:27:af:fb:54"
+              }]
           labels:
             egress.policy.home.arpa/internet: "true"
             egress.policy.home.arpa/lan: "true"
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+            runAsNonRoot: false
+            sysctls:
+              - name: net.ipv6.conf.net1.accept_ra
+                value: "2"
+              - name: net.ipv6.conf.all.forwarding
+                value: "1"
+              - name: net.ipv6.conf.net1.accept_ra_rt_info_max_plen
+                value: "64"
         containers:
           app:
             image:
               repository: ghcr.io/matter-js/matterjs-server
               tag: 1.4.0@sha256:54232d0d3e7dff5a54759469d2753399270412b4c30c55b31750a4595e4cb236
+            args:
+              - --storage-path=/data
+              - --primary-interface=net1
+              - --production-mode
             env:
               TZ: Europe/London
-              PRIMARY_INTERFACE: net1
-              LOG_LEVEL: debug
-              STORAGE_PATH: /data
+              LOG_LEVEL: info
+            securityContext:
+              privileged: true
+            probes:
+              liveness:
+                enabled: false
+              readiness:
+                enabled: false
+              startup:
+                enabled: false
             resources:
               requests:
                 cpu: 10m
                 memory: 50Mi
               limits:
                 memory: 256Mi
-            securityContext:
-              privileged: true
 
     service:
       matter-server:
