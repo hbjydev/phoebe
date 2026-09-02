@@ -18,3 +18,12 @@ spec:
         - ports:
             - port: "5580"
               protocol: TCP
+
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: openthread
+            app.kubernetes.io/instance: openthread
+      toPorts:
+        - ports:
+            - port: "8981"
+              protocol: TCP
