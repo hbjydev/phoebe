@@ -47,7 +47,7 @@ spec:
               tag: stable@sha256:7616b9d514dee5cc30f572066e05cb775a04c48e07d10f6c43916ce8be88a68f
             env:
               TZ: Europe/London
-              OT_RCP_DEVICE: spinel+hdlc+uart:///dev/ttyACM5?uart-baudrate=460800
+              OT_RCP_DEVICE: spinel+hdlc+uart:///dev/ttyACM0?uart-baudrate=460800
               OT_INFRA_IF: net1
               OT_THREAD_IF: wpan0
               OT_LOG_LEVEL: 7
@@ -100,6 +100,10 @@ spec:
       dev-net-tun:
         type: hostPath
         hostPath: /dev/net/tun
+
+      dev-ttyACM0:
+        type: hostPath
+        hostPath: /dev/ttyACM0
 
       tmp:
         type: emptyDir
