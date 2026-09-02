@@ -15,8 +15,15 @@ spec:
           "master": "enp3s0.20",
           "mode": "bridge",
           "ipam": {
-            "type": "static"
+            "type": "static",
+            "routes": [
+              {"dst": "0.0.0.0/0", "gw": "192.168.20.1"}
+            ]
           }
+        },
+        {
+          "type": "sbr",
+          "addSourceHints": true
         }
       ]
     }
