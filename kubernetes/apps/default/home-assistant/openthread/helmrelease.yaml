@@ -35,8 +35,6 @@ spec:
             value: "64"
           - name: net.ipv6.conf.net1.forwarding
             value: "1"
-          - name: net.ipv4.ip_forward
-            value: "1"
 
     controllers:
       otbr:
