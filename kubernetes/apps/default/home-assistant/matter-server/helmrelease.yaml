@@ -39,6 +39,30 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
             runAsNonRoot: true
             seccompProfile: {type: RuntimeDefault}
+        # matter.js otherwise joins IPv4 mDNS on the default Cilium interface
+        # instead of net1, so OTBR's SRP-proxied operational records are missed.
+        initContainers:
+          mdns-route:
+            image:
+              repository: nicolaka/netshoot
+              tag: latest
+            command:
+              - ip
+            args:
+              - route
+              - add
+              - 224.0.0.0/4
+              - dev
+              - net1
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              runAsUser: 0
+              runAsGroup: 0
+              runAsNonRoot: false
+              capabilities:
+                drop: [ALL]
+                add: [NET_ADMIN]
         containers:
           app:
             image:
