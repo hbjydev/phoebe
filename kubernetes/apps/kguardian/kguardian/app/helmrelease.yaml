@@ -22,6 +22,17 @@ spec:
       excludedNamespaces:
         - kguardian
 
+    database:
+      enabled: false
+      user: kguardian
+      databaseName: kguardian
+      existingSecret: kguardian-postgres
+      passwordSecretKey: password
+      external:
+        host: postgres-rw.database.svc.cluster.local
+        port: 5432
+        sslMode: disable
+
     ai:
       enabled: true
       provider: openai
