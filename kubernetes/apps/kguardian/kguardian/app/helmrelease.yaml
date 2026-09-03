@@ -38,4 +38,4 @@ spec:
       provider: openai
       secret: kguardian-litellm
       baseUrl: http://litellm.ai.svc.cluster.local:4000
-      model: chatgpt/gpt-5.6-sol
+      model: chatgpt/gpt-5.6-luna
