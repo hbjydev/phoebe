@@ -21,7 +21,7 @@ spec:
   litellmSettings:
     success_callback: ["prometheus"]
     prometheus_adapter: true
-    cache: default_off
+    cache: false  # temp: remove once a fix is known
     cache_params:
       type: redis
       host: os.environ/REDIS_HOST
