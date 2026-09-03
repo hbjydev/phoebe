@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/litellm.home-operations.com/litellmvirtualkey_v1alpha1.json
+---
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: kguardian
+  namespace: ai
+spec:
+  proxyRef: litellm
+  secretName: kguardian-litellm
+  secretKey: api-key
+  keyAlias: kguardian
+  secretAnnotations:
+    reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+    reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: kguardian
+    reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
