@@ -34,7 +34,7 @@ spec:
         claimName: litellm
 
   volumeMounts:
-    - name: chatgpt-tokens
+    - name: data
       mountPath: /app/chatgpt_tokens
       subPath: chatgpt-tokens
 
