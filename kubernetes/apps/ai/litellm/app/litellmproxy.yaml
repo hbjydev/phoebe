@@ -25,19 +25,32 @@ spec:
     set_verbose: false
     require_auth_for_metrics_endpoint: false
 
+  podAnnotations:
+    reloader.stakater.com/auto: "true"
+
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: litellm
+
+  volumeMounts:
+    - name: chatgpt-tokens
+      mountPath: /app/chatgpt_tokens
+      subPath: chatgpt-tokens
+
   envFrom:
     - secretRef:
         name: litellm-secret
 
   env:
-    - name: LITELLM_HOME
-      value: /cache
+    - name: CHATGPT_TOKEN_DIR
+      value: /app/chatgpt_tokens
 
-    - name: HOME
-      value: /cache
-
-    - name: XDG_CONFIG_HOME
-      value: /cache/.config
+    - name: DATABASE_URL
+      valueFrom:
+        secretKeyRef:
+          key: litellm-postgres
+          name: url
 
     - name: LITELLM_LOG
       value: INFO
@@ -47,15 +60,6 @@ spec:
 
     - name: REDIS_PORT
       value: "6379"
-
-  volumes:
-    - name: cache
-      persistentVolumeClaim:
-        claimName: litellm
-
-  volumeMounts:
-    - mountPath: /cache
-      name: cache
 
   resources:
     requests:
