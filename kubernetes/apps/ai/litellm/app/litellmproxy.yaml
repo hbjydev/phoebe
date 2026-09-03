@@ -18,6 +18,10 @@ spec:
   generalSettings:
     health_check_endpoint: /v1/health
 
+  routerSettings:
+    default_litellm_params:
+      stream: true
+
   litellmSettings:
     success_callback: ["prometheus"]
     prometheus_adapter: true
