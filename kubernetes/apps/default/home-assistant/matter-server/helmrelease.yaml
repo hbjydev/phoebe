@@ -95,18 +95,6 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: [ALL] }
-          netshoot:
-            image:
-              repository: nicolaka/netshoot
-              tag: latest
-            command:
-              - sleep
-              - infinity
-            securityContext:
-              capabilities:
-                add:
-                  - NET_ADMIN
-                  - NET_RAW
 
     service:
       matter-server:
