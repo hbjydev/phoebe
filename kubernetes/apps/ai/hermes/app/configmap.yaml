@@ -6,7 +6,7 @@ metadata:
 data:
   config.yaml: |-
     model:
-      default: chatgpt/gpt-5.6-luna
+      default: chatgpt/gpt-6-astra
       provider: custom:litellm
 
     security:
