@@ -77,6 +77,8 @@ spec:
             envFrom: &envFrom
               - secretRef:
                   name: hermes-config-env
+              - secretRef:
+                  name: hermes-litellm
             resources:
               requests:
                 cpu: 100m
