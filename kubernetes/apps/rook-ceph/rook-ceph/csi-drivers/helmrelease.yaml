@@ -1,0 +1,94 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ceph-csi-drivers
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: ceph-csi-drivers
+  dependsOn:
+    - name: rook-ceph
+  interval: 1h
+  values:
+    # Rook 1.20 requires the CSI drivers chart separately from the operator.
+    operatorConfig:
+      namespace: rook-ceph
+      driverSpecDefaults:
+        clusterName: rook-ceph
+        imageSet:
+          name: rook-csi-operator-image-set-configmap
+        nodePlugin:
+          priorityClassName: system-node-critical
+          kubeletDirPath: /var/lib/kubelet
+        controllerPlugin:
+          priorityClassName: system-cluster-critical
+          hostNetwork: true
+          replicas: 1
+          deploymentStrategy:
+            type: Recreate
+    drivers:
+      rbd:
+        enabled: true
+        name: rook-ceph.rbd.csi.ceph.com
+        clusterName: rook-ceph
+        snapshotPolicy: volumeGroupSnapshot
+        imageSet:
+          name: rook-csi-operator-image-set-configmap
+        nodePlugin: &nodePlugin
+          priorityClassName: system-node-critical
+          kubeletDirPath: /var/lib/kubelet
+          enableSeLinuxHostMount: false
+          updateStrategy:
+            type: RollingUpdate
+          resources:
+            plugin:
+              limits:
+                memory: 1Gi
+              requests:
+                cpu: 250m
+                memory: 512Mi
+            registrar:
+              limits:
+                memory: 256Mi
+              requests:
+                cpu: 50m
+                memory: 128Mi
+        controllerPlugin: &controllerPlugin
+          priorityClassName: system-cluster-critical
+          hostNetwork: true
+          replicas: 1
+          deploymentStrategy:
+            type: Recreate
+          resources:
+            plugin:
+              limits:
+                memory: 1Gi
+              requests:
+                cpu: 250m
+                memory: 512Mi
+            attacher: &sidecarResources
+              limits:
+                memory: 256Mi
+              requests:
+                cpu: 100m
+                memory: 128Mi
+            provisioner: *sidecarResources
+            resizer: *sidecarResources
+            snapshotter: *sidecarResources
+      cephfs:
+        enabled: true
+        name: rook-ceph.cephfs.csi.ceph.com
+        clusterName: rook-ceph
+        snapshotPolicy: volumeGroupSnapshot
+        cephFsClientType: kernel
+        imageSet:
+          name: rook-csi-operator-image-set-configmap
+        kernelMountOptions:
+          ms_mode: prefer-crc
+        nodePlugin: *nodePlugin
+        controllerPlugin: *controllerPlugin
+      nfs:
+        enabled: false
+      nvmeof:
+        enabled: false
