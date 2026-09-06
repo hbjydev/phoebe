@@ -6,6 +6,8 @@ metadata:
   name: "${REDIS_APP:-${APP}-redis}"
 spec:
   replicas: 1
+  args:
+    - "--default_lua_flags=allow-undeclared-keys"
   labels:
     egress.policy.home.arpa/block-all: "true"
   resources:
