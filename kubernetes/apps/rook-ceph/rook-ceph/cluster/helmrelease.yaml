@@ -41,7 +41,7 @@ spec:
         enabled: true
         urlPrefix: /
         ssl: false
-        prometheusEndpoint: http://prometheus-operated.observability.svc.cluster.local:9090
+        prometheusEndpoint: http://vmsingle-victoria-metrics.observability.svc:8428
       mgr:
         count: 1
         modules:
