@@ -1,10 +1,11 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/envoyproxy/gateway/refs/heads/main/charts/gateway-helm/crds/generated/gateway.envoyproxy.io_envoyproxies.yaml
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/gateway.envoyproxy.io/envoyproxy_v1alpha1.json
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyProxy
 metadata:
   name: envoy
 spec:
+  ipFamily: IPv4
   logging:
     level:
       default: info
@@ -13,24 +14,59 @@ spec:
     kubernetes:
       envoyDeployment:
         replicas: 2
+        pod:
+          priorityClassName: cluster-critical
         container:
           image: mirror.gcr.io/envoyproxy/envoy:v1.39.1
           resources:
             requests:
               cpu: 100m
+              memory: 512Mi
             limits:
-              memory: 1Gi
+              memory: 512Mi
       envoyService:
-        externalTrafficPolicy: Cluster
+        externalTrafficPolicy: Local
   shutdown:
     drainTimeout: 180s
   telemetry:
     metrics:
       prometheus:
         compression:
-          type: Gzip
+          type: Zstd
+    accessLog:
+      settings:
+        - format:
+            type: JSON
+            json:
+              start_time: "%START_TIME%"
+              method: "%REQ(:METHOD)%"
+              path: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+              protocol: "%PROTOCOL%"
+              authority: "%REQ(:AUTHORITY)%"
+              requested_server_name: "%REQUESTED_SERVER_NAME%"
+              response_code: "%RESPONSE_CODE%"
+              response_flags: "%RESPONSE_FLAGS%"
+              response_code_details: "%RESPONSE_CODE_DETAILS%"
+              bytes_received: "%BYTES_RECEIVED%"
+              bytes_sent: "%BYTES_SENT%"
+              duration: "%DURATION%"
+              upstream_service_time: "%RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)%"
+              downstream_remote: "%DOWNSTREAM_REMOTE_ADDRESS%"
+              downstream_direct: "%DOWNSTREAM_DIRECT_REMOTE_ADDRESS%"
+              x_forwarded_for: "%REQ(X-FORWARDED-FOR)%"
+              user_agent: "%REQ(USER-AGENT)%"
+              upstream_host: "%UPSTREAM_HOST%"
+              upstream_cluster: "%UPSTREAM_CLUSTER%"
+              route_name: "%ROUTE_NAME%"
+          matches:
+            - "!(request.url_path in ['/healthz', '/readyz', '/livez', '/health', '/ping', '/metrics', '/-/healthy', '/-/ready'])"
+          sinks:
+            - type: File
+              file:
+                path: /dev/stdout
+
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/gateway.networking.k8s.io/gatewayclass_v1.json
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/gateway.networking.k8s.io/gatewayclass_v1.json
 apiVersion: gateway.networking.k8s.io/v1
 kind: GatewayClass
 metadata:
