@@ -1,0 +1,17 @@
+---
+apiVersion: infra.contrib.fluxcd.io/v1alpha2
+kind: Terraform
+metadata:
+  name: tailscale-policy
+spec:
+  interval: 1h
+  approvePlan: auto
+  destroyResourcesOnDeletion: false
+  path: ./kubernetes/apps/network/tailscale/policy/app/terraform
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  varsFrom:
+    - kind: Secret
+      name: tailscale-policy-tfvars

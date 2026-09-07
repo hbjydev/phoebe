@@ -1,0 +1,41 @@
+{
+  "grants": [
+    {
+      "src": ["autogroup:admin"],
+      "dst": [
+        "172.18.0.0/16",
+        "172.19.0.0/16",
+      ],
+      "via": ["tag:phoebe-gw"],
+      "ip":  ["*"],
+    },
+    {
+      "src": ["autogroup:member"],
+      "dst": ["autogroup:self"],
+      "ip":  ["*"],
+    },
+  ],
+
+  "tagOwners": {
+    "tag:k8s-operator": [],
+    "tag:k8s":          ["tag:k8s-operator"],
+    "tag:phoebe-gw":    ["tag:k8s-operator"],
+    "tag:server":       ["autogroup:admin"]
+  },
+
+  "ssh": [
+    {
+      "action": "check",
+      "src":    ["autogroup:member"],
+      "dst":    ["autogroup:self"],
+      "users":  ["autogroup:nonroot", "root"],
+    },
+
+    {
+      "action": "accept",
+      "src":    ["autogroup:admin"],
+      "dst":    ["tag:server"],
+      "users":  ["autogroup:nonroot"],
+    },
+  ],
+}
