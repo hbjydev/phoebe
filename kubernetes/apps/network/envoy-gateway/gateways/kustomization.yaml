@@ -7,5 +7,6 @@ resources:
   - ./external.yaml
   - ./grafanadashboard.yaml
   - ./internal.yaml
+  - ./monitoring.yaml
   - ./networkpolicy.yaml
   - ./redirect.yaml
