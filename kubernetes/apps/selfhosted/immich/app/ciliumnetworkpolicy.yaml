@@ -11,8 +11,9 @@ spec:
   egress:
     - toEndpoints:
         - matchLabels:
-            app: immich-redis
+            app: dragonfly
             app.kubernetes.io/name: dragonfly
+            k8s:io.kubernetes.pod.namespace: database
       toPorts:
         - ports:
             - port: "6379"
