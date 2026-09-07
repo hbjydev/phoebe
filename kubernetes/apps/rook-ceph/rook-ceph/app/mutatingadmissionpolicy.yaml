@@ -1,0 +1,67 @@
+---
+# Keeps `lvs` from opening /dev/rbd* inside Rook OSD pods.
+#
+# `ceph-volume raw activate` shells out to `lvs`, which opens every block
+# device on the host. While osd.0 is down, reading a mapped rbd device blocks
+# forever in the kernel (D state, folio_wait_writeback), because the OSD that
+# would serve that read is the one trying to start. Deadlock.
+#
+# Rook writes this exact filter itself, but only on the `lvm` code path
+# (CV_MODE=lvm). This cluster runs raw-mode OSDs, so the filter is never
+# applied and the deadlock is reachable on every OSD restart. Rook regenerates
+# the OSD Deployment on each reconcile, so patching the Deployment does not
+# survive; mutating at pod admission does.
+#
+# Remove once Rook applies the filter on the raw path too.
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: rook-osd-lvm-rbd-filter
+spec:
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["pods"]
+        operations: ["CREATE"]
+  matchConditions:
+    - name: has-unfiltered-activate-container
+      expression: >-
+        has(object.spec.initContainers) &&
+        object.spec.initContainers.exists(c,
+          c.name == "activate" &&
+          has(c.command) && c.command.size() == 3 &&
+          !c.command[2].contains("global_filter"))
+  mutations:
+    - patchType: JSONPatch
+      jsonPatch:
+        expression: |
+          [0, 1, 2, 3, 4, 5, 6, 7]
+            .filter(i,
+              i < object.spec.initContainers.size() &&
+              object.spec.initContainers[i].name == "activate" &&
+              has(object.spec.initContainers[i].command) &&
+              object.spec.initContainers[i].command.size() == 3 &&
+              !object.spec.initContainers[i].command[2].contains("global_filter"))
+            .map(i, JSONPatch{
+              op: "replace",
+              path: "/spec/initContainers/" + string(i) + "/command/2",
+              value: "echo 'devices { global_filter = [ \"r|^/dev/rbd|\", \"r|^/dev/nbd|\", \"r|^/dev/drbd|\", \"r|^/dev/zram|\" ] }' >> /etc/lvm/lvm.conf\n"
+                + object.spec.initContainers[i].command[2]
+            })
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: rook-osd-lvm-rbd-filter
+spec:
+  policyName: rook-osd-lvm-rbd-filter
+  matchResources:
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: rook-ceph
+    objectSelector:
+      matchLabels:
+        app: rook-ceph-osd

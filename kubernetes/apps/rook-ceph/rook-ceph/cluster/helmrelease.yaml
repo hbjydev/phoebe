@@ -23,6 +23,20 @@ spec:
         parentRefs:
           - name: internal
             namespace: network
+    # Pin the Ceph image explicitly. Left unset, the chart default decides it,
+    # and those defaults differ per chart revision (v1.19.2 -> v19.2.3,
+    # v1.20.7 -> v20.2.4). A failed Helm upgrade that rolls back to an older
+    # chart therefore silently proposes a Ceph *downgrade*. Rook refuses to
+    # reconcile at all in that state, which times out the next Helm upgrade,
+    # which rolls back again. That loop is what wedged this cluster.
+    #
+    # Must be >= the running version; Rook does not support downgrades. Note
+    # the chart renders cephVersion from this block, so do NOT also set
+    # cephClusterSpec.cephVersion or the CephCluster gets a duplicate key.
+    cephImage:
+      repository: quay.io/ceph/ceph
+      tag: v20.2.4
+      allowUnsupported: false
     cephClusterSpec:
       cephConfig:
         global:
@@ -71,7 +85,12 @@ spec:
         cephx:
           daemon:
             keyRotationPolicy: KeyGeneration
-            keyGeneration: 2
+            # Rook has already rotated daemon keys to generation 3 (see
+            # CephCluster status.cephx). The CRD rejects any decrease with
+            # "keyGeneration cannot be decreased", which fails the Helm
+            # upgrade, which triggers the rollback that downgrades Ceph.
+            # Only ever raise this number.
+            keyGeneration: 3
       storage:
         useAllNodes: true
         useAllDevices: false

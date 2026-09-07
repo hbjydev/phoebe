@@ -63,7 +63,16 @@ spec:
                     strategy:
                       name: RemediateOnFailure
                     remediation:
-                      remediateLastFailure: true
+                      # Never auto-rollback a failed upgrade. A Helm rollback
+                      # restores the previous chart *and* its values, so for
+                      # rook-ceph-cluster it silently downgraded Ceph and left
+                      # the mon crashlooping against a newer on-disk layout.
+                      # A failed upgrade should stay failed and visible.
+                      #
+                      # This must be set explicitly: Flux defaults it to true
+                      # whenever retries > 0, so removing the line would not
+                      # change the behaviour.
+                      remediateLastFailure: false
                       retries: 2
               target:
                 group: helm.toolkit.fluxcd.io
