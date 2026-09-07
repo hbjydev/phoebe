@@ -1,0 +1,49 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tofu-controller
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: tofu-controller
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    remediation:
+      strategy: rollback
+  values:
+    # Required so a Terraform CR in an app namespace (network) can reference the
+    # shared GitRepository in flux-system.
+    allowCrossNamespaceRefs: true
+    awsPackage:
+      install: false
+    image:
+      repository: ghcr.io/flux-iac/tofu-controller
+      tag: v0.16.5@sha256:1d6ee0e34ee56a22827541b1ef44e5a3d65ff21bdb870f79103c4c5d5e6d4cba
+    runner:
+      image:
+        repository: ghcr.io/flux-iac/tf-runner
+        tag: v0.16.5@sha256:7209171093907ec1d0559c682949fcee4b625205a6a058c16fe0ce0017af5f41
+      serviceAccount:
+        create: true
+        allowedNamespaces:
+          - flux-system
+          - network
+    rbac:
+      create: true
+    podSecurityContext:
+      fsGroup: 1337
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 65532
+      capabilities:
+        drop:
+          - ALL
+      seccompProfile:
+        type: RuntimeDefault
