@@ -64,7 +64,7 @@ spec:
                     name: immich-postgres
                     key: host
 
-              REDIS_HOSTNAME: immich-redis
+              REDIS_URL: ioredis://dragonfly.database.svc.cluster.local:6379/1
 
     immich:
       metrics:
