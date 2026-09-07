@@ -2,12 +2,13 @@
 apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
-  name: ts-cidrs
+  name: &name ts-srv-phoebe
 spec:
-  hostname: phoebe-cidrs
+  replicas: 1
+  hostnamePrefix: *name
   tags:
-    - "tag:hm-ag-k8s-phoebe"
+    - "tag:phoebe-gw"
   subnetRouter:
     advertiseRoutes:
       - "172.18.0.0/16"  # pods
-      - "172.19.0.0/16" # services
+      - "172.19.0.0/16"  # services

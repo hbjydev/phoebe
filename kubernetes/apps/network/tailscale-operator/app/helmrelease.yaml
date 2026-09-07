@@ -32,10 +32,13 @@ spec:
       retries: 3
   values:
     operatorConfig:
+      hostname: phoebe-operator
+      image:
+        repository: ghcr.io/tailscale/k8s-operator
       defaultTags:
-        - "tag:hm-ag-k8s-phoebe"
+        - "tag:k8s-operator"
     proxyConfig:
-      defaultTags: tag:hm-ag-k8s-phoebe
-    apiServerProxyConfig:
-      allowImpersonation: "true"
-      mode: "true"
+      image:
+        repository: ghcr.io/tailscale/tailscale
+    podAnnotations:
+      secret.reloader.stakater.com/reload: operator-oauth
