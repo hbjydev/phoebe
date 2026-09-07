@@ -72,6 +72,12 @@ spec:
       persistence:
         library:
           existingClaim: immich
+        dev-dri:
+          type: hostPath
+          hostPath: /dev/dri
+        dev-kfd:
+          type: hostPath
+          hostPath: /dev/kfd
 
     machine-learning:
       enabled: true
