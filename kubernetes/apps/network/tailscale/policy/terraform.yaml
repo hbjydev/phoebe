@@ -7,7 +7,7 @@ spec:
   interval: 1h
   approvePlan: auto
   destroyResourcesOnDeletion: false
-  path: ./kubernetes/apps/network/tailscale/policy/app/terraform
+  path: ./kubernetes/apps/network/tailscale/policy/terraform
   sourceRef:
     kind: GitRepository
     name: flux-system
