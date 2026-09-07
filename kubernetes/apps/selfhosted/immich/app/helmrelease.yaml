@@ -72,6 +72,9 @@ spec:
       persistence:
         library:
           existingClaim: immich
+
+    server:
+      persistence:
         dev-dri:
           type: hostPath
           hostPath: /dev/dri
