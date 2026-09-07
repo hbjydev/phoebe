@@ -23,16 +23,6 @@ spec:
         parentRefs:
           - name: internal
             namespace: network
-    # Pin the Ceph image explicitly. Left unset, the chart default decides it,
-    # and those defaults differ per chart revision (v1.19.2 -> v19.2.3,
-    # v1.20.7 -> v20.2.4). A failed Helm upgrade that rolls back to an older
-    # chart therefore silently proposes a Ceph *downgrade*. Rook refuses to
-    # reconcile at all in that state, which times out the next Helm upgrade,
-    # which rolls back again. That loop is what wedged this cluster.
-    #
-    # Must be >= the running version; Rook does not support downgrades. Note
-    # the chart renders cephVersion from this block, so do NOT also set
-    # cephClusterSpec.cephVersion or the CephCluster gets a duplicate key.
     cephImage:
       repository: quay.io/ceph/ceph
       tag: v20.2.4
@@ -45,7 +35,7 @@ spec:
           osd_class_update_on_start: "false"
           device_failure_prediction_mode: local
       cleanupPolicy:
-        wipeDevicesFromOtherClusters: true
+        wipeDevicesFromOtherClusters: false
       crashCollector:
         disable: false
       csi:
@@ -78,19 +68,34 @@ spec:
         connections:
           requireMsgr2: true
       resources:
+        mon:
+          requests:
+            cpu: 100m
+            memory: 1Gi
+          limits:
+            memory: 2Gi
+        mgr:
+          requests:
+            cpu: 100m
+            memory: 512Mi
+          limits:
+            memory: 1Gi
         osd:
+          requests:
+            cpu: 250m
+            memory: 4Gi
           limits:
             memory: 4Gi
       security:
         cephx:
           daemon:
             keyRotationPolicy: KeyGeneration
-            # Rook has already rotated daemon keys to generation 3 (see
-            # CephCluster status.cephx). The CRD rejects any decrease with
-            # "keyGeneration cannot be decreased", which fails the Helm
-            # upgrade, which triggers the rollback that downgrades Ceph.
-            # Only ever raise this number.
             keyGeneration: 3
+          csi:
+            keyGeneration: 2
+            keyRotationPolicy: KeyGeneration
+            keepPriorKeyCountMax: 1
+            keyType: aes
       storage:
         useAllNodes: true
         useAllDevices: false
