@@ -109,6 +109,11 @@
 
     - name: Allow ports
       ansible.posix.firewalld:
+        zone: "public"
+        port: "{{ item.port }}/{{ item.protocol | default('tcp') }}"
+        permanent: true
+        immediate: true
+        state: enabled
       loop:
         - name: SSH
           port: 22
