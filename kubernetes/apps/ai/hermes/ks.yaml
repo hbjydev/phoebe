@@ -19,6 +19,7 @@ spec:
       APP: *app
       NAMESPACE: *namespace
       OIDC_DISPLAY_NAME: Hermes Agent
+      OIDC_IMAGE_URL: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/hermes-agent.png
       OIDC_ORIGIN: https://hermes.hayden.moe/
       OIDC_REDIRECT_URLS: '["https://hermes.hayden.moe/auth/callback"]'
       OIDC_GROUP_PREFIX: hermes
