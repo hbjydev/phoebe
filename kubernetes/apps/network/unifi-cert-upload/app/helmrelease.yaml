@@ -39,7 +39,7 @@ spec:
                 cert_pem="$(cat /certs/tls.crt | awk '{printf "%s\\n", $0}')"
                 key_pem="$(cat /certs/tls.key | awk '{printf "%s\\n", $0}')"
 
-                date="$(date +%Y%m%d)"
+                date="$(date +%Y%m%d%H%M)"
 
                 token=""
                 csrf_token=""
