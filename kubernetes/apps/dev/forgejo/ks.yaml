@@ -36,6 +36,7 @@ spec:
       OIDC_ORIGIN: https://git.hayden.moe/
       OIDC_REDIRECT_URLS: '["https://git.hayden.moe/user/oauth2/kanidm/callback"]'
       OIDC_SECRET_KEY_ALIASES: '{clientId: [key], clientSecret: [secret]}'
+      OIDC_GROUP_PREFIX: forgejo
       OIDC_USERS_GROUP_MEMBERS: '[hayden]'
       OIDC_ADMIN_GROUP_MEMBERS: '[hayden]'
   prune: true
