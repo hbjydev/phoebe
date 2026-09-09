@@ -64,14 +64,17 @@ spec:
               HERMES_CRON_TIMEOUT: 0
 
               HERMES_DASHBOARD: "1"
+              HERMES_DASHBOARD_PUBLIC_URL: "https://hermes.hayden.moe"
               HERMES_DASHBOARD_OIDC_ISSUER: https://sso.hayden.moe/oauth2/openid/hermes
               HERMES_DASHBOARD_OIDC_CLIENT_ID: hermes
 
               MEMINI_URL: http://memini.ai.svc.cluster.local:8080
               MEMINI_NAMESPACE: hermes
 
-              SEERR_URL: http://jellyseerr.default
+              SEERR_URL: http://jellyseerr.default.svc.cluster.local
               HASS_URL: 'https://hass.hayden.moe'
+
+              SEARXNG_URL: http://searxng.selfhosted.svc.cluster.local:8080
 
               HOME: /data
             envFrom: &envFrom

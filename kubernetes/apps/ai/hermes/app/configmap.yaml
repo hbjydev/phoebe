@@ -5,51 +5,117 @@ metadata:
   name: hermes-config
 data:
   config.yaml: |-
-    model:
-      default: chatgpt/gpt-5.6-luna
-      provider: custom:litellm
-
-    security:
-      redact_secrets: true
-
-    privacy:
-      redact_pii: true
-
-    dashboard:
-      theme: default
-      show_token_analytics: true
-      public_url: https://hermes.hayden.moe
-
     custom_providers:
       - name: litellm
         key_env: LITELLM_API_KEY
         base_url: http://litellm.ai:4000
-        api_mode: chat_completions
+        models:
+          chatgpt/gpt-5.6-luna:
+            context_length: 272000
+          chatgpt/gpt-5.6-terra:
+            context_length: 272000
+          chatgpt/gpt-5.6-sol:
+            context_length: 272000
+          chatgpt/gpt-6-astra:
+            context_length: 272000
 
-    timezone: 'Europe/London'
+    model:
+      default: chatgpt/gpt-5.6-luna
+      provider: custom:litellm
+      context_length: 272000
+
+    model_aliases:
+      luna:
+        model: chatgpt/gpt-5.6-luna
+        provider: custom:litellm
+      terra:
+        model: chatgpt/gpt-5.6-terra
+        provider: custom:litellm
+      sol:
+        model: chatgpt/gpt-5.6-sol
+        provider: custom:litellm
+      astra:
+        model: chatgpt/gpt-6-astra
+        provider: custom:litellm
+
+    memory:
+      provider: memini
+
+    plugins:
+      enabled:
+        - memini
 
     terminal:
       backend: local
       cwd: /data/workspace
-      timeout: 180
+      timeout: 900
+      lifetime_seconds: 1800
       persistent_shell: true
 
-    toolsets:
-      - hermes-cli
+    timeouts:
+      tools:
+        concurrent_batch: 900
+
+    compression:
+      enabled: true
+      protect_last_n: 20
+      threshold: 0.5
+
+    streaming:
+      enabled: false
+
+    approvals:
+      mode: smart
+      timeout: 60
+      cron_mode: deny
+
+    security:
+      redact_secrets: true
+      webiste_blocklist:
+        enabled: true
+        domains:
+          - "169.254.169.254"
+          - "metadata.google.internal"
+
+    privacy:
+      redact_pii: true
+
+    agent:
+      max_turns: 150
+      gateway_timeout: 1800
+      gateway_timeout_warning: 900
+      restart_drain_timeout: 60
+      api_max_retries: 3
+      reasoning_effort: medium
+
+    delegation:
+      model: chatgpt/gpt-5.6-luna
+      max_concurrent_children: 6
+      max_spawn_depth: 2
+
+    moa:
+      default_preset: council
+      presets:
+        council:
+          enabled: true
+          reference_models:
+            - provider: custom:litellm
+              model: chatgpt/gpt-5.6-luna
+            - provider: custom:litellm
+              model: chatgpt/gpt-5.6-terra
+          aggregator:
+            provider: custom:litellm
+            model: chatgpt/gpt-5.6-terra
+          max_tokens: 8192
 
     mcp_servers:
       homelab:
-        url: http://vmcp-mcp-gateway-int.ai.svc.cluster.local:4483/mcp
+        url: http://litellm.ai.svc.cluster.local:4000/mcp
+        headers:
+          Authorization: "Bearer $${LITELLM_API_KEY}"
 
-    memory:
-      memory_enabled: true
-      user_profile_enabled: true
-      memory_char_limit: 2200
-      user_char_limit: 1375
-      provider: memini
-
-    approvals:
-      mode: ask
+    web:
+      search_backend: searxng
 
     discord:
       require_mention: true
