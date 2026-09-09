@@ -38,7 +38,7 @@ spec:
               CONTINUWUITY_ALLOW_FEDERATION: true
               CONTINUWUITY_ALLOW_PUBLIC_ROOM_DIRECTORY_OVER_FEDERATION: true
 
-              CONTINUWUITY_OAUTH__OIDC__DISCOVERY_URL: 'https://sso.hayden.moe/oauth2/openid/continuwuity'
+              CONTINUWUITY_OAUTH__OIDC__DISCOVERY_URL: 'https://sso.hayden.moe/oauth2/openid/matrix-continuwuity'
               CONTINUWUITY_OAUTH__OIDC__CLIENT_ID:
                 secretKeyRef:
                   name: matrix-continuwuity-kanidm-oauth2-credentials
