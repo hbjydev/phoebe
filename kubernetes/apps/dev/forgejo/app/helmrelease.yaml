@@ -116,6 +116,8 @@ spec:
           scopes: profile email groups
 
     deployment:
+      annotations:
+        reloader.stakater.com/auto: "true"
       env:
         - name: PGSSLROOTCERT
           value: /var/run/secrets/root-ca/ca.crt
