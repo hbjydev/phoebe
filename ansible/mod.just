@@ -15,8 +15,8 @@ run ip: install-collections
 [confirm('Trigger doco-cd deployment on ' + ip + ' [y|N] ?')]
 deploy ip:
     api_key=$(vals get "ref+op://cluster-phoebe/app-doco-cd/apiSecret") && \
-    ssh "{{ ip }}" "curl --silent --fail --request POST \
-      --url 'http://localhost:8080/v1/api/poll/run?wait=true' \
+    curl --silent --fail --request POST \
+      --url 'https://doco-cd.hayden.moe/v1/api/poll/run?wait=true' \
       --header 'content-type: application/json' \
       --header 'x-api-key: ${api_key}' \
-      --data '[{\"url\": \"https://git.hayden.moe/hayden/phoebe.git\"}]'"
+      --data '[{\"url\": \"https://git.hayden.moe/hayden/phoebe.git\"}]'

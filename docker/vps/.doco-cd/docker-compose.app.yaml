@@ -16,7 +16,7 @@ services:
       DEPLOY_CONFIG_BASE_DIR: ./docker/vps/
       LOG_LEVEL: info
       POLL_CONFIG: |-
-        - url: https://forgejo.hayden.moe/hayden/phoebe.git
+        - url: https://git.hayden.moe/hayden/phoebe.git
           reference: main
           interval: 3600
       SECRET_PROVIDER: 1password
