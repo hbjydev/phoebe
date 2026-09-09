@@ -9,5 +9,6 @@ resources:
   - ./gatus/ks.yaml
   - ./grafana/ks.yaml
   - ./kube-prometheus-stack/ks.yaml
+  - ./tsproxy/ks.yaml
   - ./unpoller/ks.yaml
   - ./victoria-metrics-stack/ks.yaml
