@@ -19,6 +19,7 @@ services:
       TOWONEL_HUB_ENABLED: "true"
       TOWONEL_HUB_ALLOW_PRIVILEGED_PORTS: "true"
       TOWONEL_INVITE_HASH_KEY: ${TOWONEL_INVITE_HASH_KEY}
+      TOWONEL_OPERATOR_KEY: ${TOWONEL_OPERATOR_KEY}
       TOWONEL_HUB_PUBLIC_URL: https://towonel.hayden.moe
       # Edge DNS differs from hub DNS, so override the derived default:
       TOWONEL_EDGE_ENABLED: "true"
