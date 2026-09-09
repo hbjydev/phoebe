@@ -19,6 +19,7 @@ spec:
   values:
     controllers:
       continuwuity:
+        type: statefulset
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
