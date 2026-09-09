@@ -8,4 +8,4 @@ spec:
     - dnsName: external.hayden.moe
       recordType: CNAME
       targets:
-        - edge-eu.towonel.dev
+        - towonel.hayden.moe
