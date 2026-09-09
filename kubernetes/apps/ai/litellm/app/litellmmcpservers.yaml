@@ -12,3 +12,31 @@ spec:
   authTokenRef:
     name: context7-api-key
     key: token
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: ha-mcp
+spec:
+  alias: hass
+  workload:
+    # renovate: datasource=docker depName=ghcr.io/homeassistant-ai/ha-mcp
+    image: ghcr.io/homeassistant-ai/ha-mcp:7.14.0
+    port: 8086
+    command: ["ha-mcp-web"]
+    env:
+      - name: HOMEASSISTANT_URL
+        value: https://hass.hayden.moe
+      - name: HOMEASSISTANT_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: homeassistant-token
+            key: token
+    volumes:
+      - name: tmp
+        emptyDir: {}
+    volumeMounts:
+      - name: tmp
+        mountPath: /tmp
