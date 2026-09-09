@@ -41,11 +41,11 @@ spec:
               CONTINUWUITY_OAUTH__OIDC__DISCOVERY_URL: 'https://sso.hayden.moe/oauth2/openid/continuwuity'
               CONTINUWUITY_OAUTH__OIDC__CLIENT_ID:
                 secretKeyRef:
-                  name: continuwuity-kanidm-oauth2-credentials
+                  name: matrix-continuwuity-kanidm-oauth2-credentials
                   key: CLIENT_ID
               CONTINUWUITY_OAUTH__OIDC__CLIENT_SECRET:
                 secretKeyRef:
-                  name: continuwuity-kanidm-oauth2-credentials
+                  name: matrix-continuwuity-kanidm-oauth2-credentials
                   key: CLIENT_SECRET
 
               TZ: Europe/London
