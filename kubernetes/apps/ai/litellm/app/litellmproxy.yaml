@@ -19,13 +19,18 @@ spec:
     health_check_endpoint: /v1/health
 
   routerSettings:
-    default_litellm_params:
-      stream: true
+    routing_strategy: simple-shuffle
+    redis_host: os.environ/REDIS_HOST
+    redis_port: os.environ/REDIS_PORT
+    num_retries: 3
+    timeout: 600
 
   litellmSettings:
+    callbacks:
+      - /opt/litellm-compat/chatgpt_stream_recovery.proxy_handler_instance
     success_callback: ["prometheus"]
     prometheus_adapter: true
-    cache: false  # temp: remove once a fix is known
+    cache: true
     cache_params:
       type: redis
       host: os.environ/REDIS_HOST
@@ -33,12 +38,14 @@ spec:
     drop_params: true
     merge_reasoning_content_in_choices: true
     set_verbose: false
-    require_auth_for_metrics_endpoint: false
 
   podAnnotations:
     reloader.stakater.com/auto: "true"
 
   volumes:
+    - configMap:
+        name: litellm-chatgpt-compat
+      name: chatgpt-compat
     - name: data
       persistentVolumeClaim:
         claimName: litellm
@@ -47,6 +54,9 @@ spec:
     - name: data
       mountPath: /app/chatgpt_tokens
       subPath: chatgpt-tokens
+    - name: chatgpt-compat
+      mountPath: /opt/litellm-compat
+      readOnly: true
 
   envFrom:
     - secretRef:
