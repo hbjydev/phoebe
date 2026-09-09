@@ -37,6 +37,7 @@ spec:
               CONTINUWUITY_ENCRYPTION_ENABLED_BY_DEFAULT_FOR_ROOM_TYPE: invite
               CONTINUWUITY_ALLOW_FEDERATION: true
               CONTINUWUITY_ALLOW_PUBLIC_ROOM_DIRECTORY_OVER_FEDERATION: true
+              CONTINUWUITY_WELL_KNOWN__CLIENT: 'https://matrix.hayden.moe/'
 
               CONTINUWUITY_OAUTH__OIDC__DISCOVERY_URL: 'https://sso.hayden.moe/oauth2/openid/matrix-continuwuity'
               CONTINUWUITY_OAUTH__OIDC__CLIENT_ID:
