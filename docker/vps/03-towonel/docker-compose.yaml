@@ -18,6 +18,7 @@ services:
       RUST_LOG: info
       TOWONEL_HUB_ENABLED: "true"
       TOWONEL_HUB_ALLOW_PRIVILEGED_PORTS: "true"
+      TOWONEL_HUB_RELAY_URL: https://relay.towonel.hayden.moe
       TOWONEL_INVITE_HASH_KEY: ${TOWONEL_INVITE_HASH_KEY}
       TOWONEL_OPERATOR_KEY: ${TOWONEL_OPERATOR_KEY}
       TOWONEL_HUB_PUBLIC_URL: https://towonel.hayden.moe
@@ -28,6 +29,7 @@ services:
       TOWONEL_EDGE_IROH_PORT: "51820"
       TOWONEL_EDGE_LISTEN_ADDR: 0.0.0.0:4443
       TOWONEL_EDGE_PROXY_PROTOCOL: "true"
+      TOWONEL_EDGE_RELAY_URL: https://relay.towonel.hayden.moe
     expose:
       - "4443"
       - "4480"
