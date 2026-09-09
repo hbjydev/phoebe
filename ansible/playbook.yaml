@@ -1,0 +1,115 @@
+---
+- name: Bootstrap doco-cd on VPS
+  hosts: all
+  become: true
+  gather_facts: false
+  vars:
+    ansible_user: hayden
+    network_interface: "eth0"
+
+  tasks:
+    - name: Ping
+      ansible.builtin.ping:
+
+    - name: Read secrets from 1Password
+      ansible.builtin.shell: "vals get 'ref+op://cluster-phoebe/{{ item.key }}' < /dev/null"
+      delegate_to: localhost
+      become: false
+      loop:
+        - { key: 'app-doco-cd/forgejoToken', var: 'forgejo_token' }
+        - { key: 'app-doco-cd/opSat', var: 'op_sa_token' }
+        - { key: 'app-doco-cd/apiSecret', var: 'api_secret' }
+        - { key: 'app-doco-cd/webhookSecret', var: 'webhook_secret' }
+      register: secrets_raw
+
+    - name: Set secret facts
+      ansible.builtin.set_fact:
+        forgejo_token: "{{ secrets_raw.results[0].stdout }}"
+        op_sa_token: "{{ secrets_raw.results[1].stdout }}"
+        api_secret: "{{ secrets_raw.results[2].stdout }}"
+        webhook_secret: "{{ secrets_raw.results[3].stdout }}"
+
+    - name: Install Docker
+      ansible.builtin.shell: curl -fsSL https://get.docker.com | sh
+      args:
+        executable: /bin/bash
+        creates: /usr/bin/docker
+
+    # Single public /128: containers reach v6 via NAT66 (ip6tables default on).
+    - name: network | Docker IPv6 NAT (daemon.json)
+      ansible.builtin.copy:
+        dest: /etc/docker/daemon.json
+        owner: root
+        group: root
+        mode: "0644"
+        content: |
+          {
+            "ipv6": true,
+            "fixed-cidr-v6": "fd00:d0c::/64",
+            "log-driver": "json-file",
+            "log-opts": {
+              "max-size": "50m",
+              "max-file": "3"
+            }
+          }
+      register: docker_daemon_json
+
+    - name: network | Restart Docker to apply daemon.json
+      ansible.builtin.service:
+        name: docker
+        state: restarted
+      when: docker_daemon_json.changed
+
+    - name: Create doco-cd directory
+      ansible.builtin.file:
+        path: /opt/doco-cd
+        state: directory
+        mode: "0700"
+
+    - name: doco-cd
+      vars:
+        dococd_config_dir: /opt/doco-cd
+      block:
+        - name: doco-cd | Copy docker-compose app file
+          ansible.builtin.copy:
+            src: ../docker/vps/.doco-cd/docker-compose.app.yaml
+            dest: "{{ dococd_config_dir }}/docker-compose.yaml"
+            owner: hayden
+            group: hayden
+            mode: "0644"
+          register: compose_file
+
+        - name: doco-cd | Create secrets
+          ansible.builtin.copy:
+            dest: "{{ dococd_config_dir }}/{{ item.name }}"
+            content: |
+              {{ item.content }}
+            owner: hayden
+            group: hayden
+            mode: "0600"
+          no_log: true
+          loop:
+            - name: 1pw_token
+              content: "{{ op_sa_token }}"
+            - name: api_secret
+              content: "{{ api_secret }}"
+            - name: webhook_secret
+              content: "{{ webhook_secret }}"
+
+        - name: doco-cd | Run docker-compose
+          community.docker.docker_compose_v2:
+            project_src: "{{ dococd_config_dir }}"
+            files:
+              - docker-compose.yaml
+            pull: always
+            state: present
+          when: not ansible_check_mode
+
+        - name: doco-cd | Wait for healthy
+          community.docker.docker_container_info:
+            name: doco-cd
+          register: dococd_info
+          until: dococd_info.container.State.Health.Status == "healthy"
+          retries: 30
+          delay: 10
+          when: not ansible_check_mode

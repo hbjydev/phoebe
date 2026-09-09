@@ -1,0 +1,9 @@
+---
+working_dir: ./docker/vps
+reconciliation:
+  enabled: true
+auto_discovery:
+  enabled: true
+  depth: 1
+  delete: true
+force_recreate: false
