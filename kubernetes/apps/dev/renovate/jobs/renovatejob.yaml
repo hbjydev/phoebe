@@ -38,7 +38,7 @@ spec:
       value: '["gitbot@hayden.moe", "214498265+phoebe-bot[bot]@users.noreply.github.com"]'
   provider:
     name: forgejo
-    endpoint: https://forgejo.hayden.moe/api/v1
+    endpoint: https://git.hayden.moe/api/v1
   webhook:
     enabled: true
     authentication:

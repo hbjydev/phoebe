@@ -11,7 +11,7 @@ spec:
   interval: 1h
   values:
     config:
-      repo: forgejo://forgejo.hayden.moe/hayden/phoebe
+      repo: forgejo://git.hayden.moe/hayden/phoebe
       statusChecks: true
       prComments: true
       publicUrl: https://konflate.hayden.moe
