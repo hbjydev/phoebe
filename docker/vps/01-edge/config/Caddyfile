@@ -69,7 +69,7 @@
 	}
 }
 
-doco-cd.erwanleboucher.dev {
+doco-cd.hayden.moe {
 	log
 	reverse_proxy doco-cd:80
 }
