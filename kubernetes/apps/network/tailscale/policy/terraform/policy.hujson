@@ -14,6 +14,21 @@
       "dst": ["autogroup:self"],
       "ip":  ["*"],
     },
+    {
+      "src": ["tag:server"],
+      "dst": ["svc:victoriametrics"],
+      "ip":  ["443"],
+    },
+    {
+      "src": ["tag:server"],
+      "dst": ["svc:victorialogs"],
+      "ip":  ["443"],
+    },
+    {
+      "src": ["tag:server"],
+      "dst": ["svc:victoriatraces"],
+      "ip":  ["443"],
+    },
   ],
 
   "tagOwners": {
