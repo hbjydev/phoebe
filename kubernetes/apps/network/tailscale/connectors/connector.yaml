@@ -3,6 +3,7 @@ apiVersion: tailscale.com/v1alpha1
 kind: Connector
 metadata:
   name: &name ts-srv-phoebe
+  namespace: network
 spec:
   replicas: 1
   hostnamePrefix: *name

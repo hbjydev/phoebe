@@ -1,0 +1,22 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vmsingle-ingress
+  annotations:
+    tailscale.com/proxy-group: ts-o11y-proxy
+spec:
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - victoriametrics
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: vmsingle-victoria-metrics
+            port:
+              number: 8429

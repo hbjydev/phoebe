@@ -6,4 +6,5 @@ resources:
   - ./vmsingle.yaml
   - ./vmagent.yaml
   - ./vmnodescrape.yaml
+  - ./tsproxy.yaml
   - ./grafanadatasource.yaml
