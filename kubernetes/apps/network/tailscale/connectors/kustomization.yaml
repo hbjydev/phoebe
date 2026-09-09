@@ -5,4 +5,3 @@ kind: Kustomization
 resources:
   - ./dnsconfig.yaml
   - ./connector.yaml
-  - ./proxygroup.yaml
