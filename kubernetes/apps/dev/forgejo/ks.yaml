@@ -33,8 +33,8 @@ spec:
       ANUBIS_MEM_LIMIT: 384Mi
 
       OIDC_DISPLAY_NAME: Forgejo
-      OIDC_ORIGIN: https://forgejo.hayden.moe/
-      OIDC_REDIRECT_URLS: '["https://forgejo.hayden.moe/user/oauth2/kanidm/callback"]'
+      OIDC_ORIGIN: https://git.hayden.moe/
+      OIDC_REDIRECT_URLS: '["https://git.hayden.moe/user/oauth2/kanidm/callback"]'
       OIDC_SECRET_KEY_ALIASES: '{clientId: [key], clientSecret: [secret]}'
       OIDC_USERS_GROUP_MEMBERS: '[hayden]'
       OIDC_ADMIN_GROUP_MEMBERS: '[hayden]'

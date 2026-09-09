@@ -68,8 +68,8 @@ spec:
         repository.signing:
           FORMAT: ssh
           SIGNING_KEY: /data/signing/ed25519.pub
-          SIGNING_NAME: forgejo.hayden.moe Instance
-          SIGNING_EMAIL: noreply@forgejo.hayden.moe
+          SIGNING_NAME: git.hayden.moe Instance
+          SIGNING_EMAIL: noreply@git.hayden.moe
           INITIAL_COMMIT: pubkey
           CRUD_ACTIONS: pubkey, parentsigned
           WIKI: never
@@ -80,8 +80,8 @@ spec:
 
         server:
           APP_DATA_PATH: /data/gitea
-          ROOT_URL: https://forgejo.hayden.moe
-          SSH_DOMAIN: forgejo.hayden.moe:2468
+          ROOT_URL: https://git.hayden.moe
+          SSH_DOMAIN: git.hayden.moe:2468
           SSH_PORT: &sshPort 22
           SSH_SERVER_HOST_KEYS: ssh/ssh_host_ed25519_key
 
