@@ -19,4 +19,4 @@ deploy:
       --url 'https://doco-cd.hayden.moe/v1/api/poll/run?wait=true' \
       --header 'content-type: application/json' \
       --header "x-api-key: ${api_key}" \
-      --data '[{\"url\": \"https://git.hayden.moe/hayden/phoebe.git\"}]'
+      --data '[{"url": "https://git.hayden.moe/hayden/phoebe.git"}]'
