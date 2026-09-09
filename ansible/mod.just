@@ -12,8 +12,8 @@ run ip: install-collections
   ansible-playbook -i "{{ ip }}," "{{ source_directory() / "playbook.yaml" }}"
 
 # Trigger a doco-cd deployment via the API
-[confirm('Trigger doco-cd deployment on ' + ip + ' [y|N] ?')]
-deploy ip:
+[confirm('Trigger doco-cd deployment [y|N] ?')]
+deploy:
     api_key=$(vals get "ref+op://cluster-phoebe/app-doco-cd/apiSecret") && \
     curl --silent --fail --request POST \
       --url 'https://doco-cd.hayden.moe/v1/api/poll/run?wait=true' \
