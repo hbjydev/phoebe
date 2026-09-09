@@ -29,11 +29,32 @@
         api_secret: "{{ secrets_raw.results[2].stdout }}"
         webhook_secret: "{{ secrets_raw.results[3].stdout }}"
 
-    - name: Install Docker
-      ansible.builtin.shell: curl -fsSL https://get.docker.com | sh
+    - name: Install DNF Plugins
+      ansible.builtin.dnf:
+        name: dnf-plugins-core
+        state: present
+
+    - name: Install Docker Repos
+      ansible.builtin.shell: dnf config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
       args:
         executable: /bin/bash
-        creates: /usr/bin/docker
+        creates: /etc/yum.repos.d/docker-ce.repo
+
+    - name: Install Docker
+      ansible.builtin.dnf:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+
+    - name: Enable Docker at startup
+      ansible.builtin.systemd:
+        name: docker
+        state: started
+        enabled: true
 
     # Single public /128: containers reach v6 via NAT66 (ip6tables default on).
     - name: network | Docker IPv6 NAT (daemon.json)
