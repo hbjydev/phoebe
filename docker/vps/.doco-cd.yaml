@@ -7,3 +7,5 @@ auto_discovery:
   depth: 1
   delete: true
 force_recreate: false
+external_secrets:
+  VPS_IP: "op://cluster-phoebe/app-towonel/ip"
