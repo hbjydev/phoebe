@@ -11,6 +11,7 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/kopiur
+    - ../../../../components/kanidm/private
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -20,6 +21,13 @@ spec:
     substitute:
       APP: *app
       KOPIUR_CAPACITY: 15Gi
+
+      OIDC_DISPLAY_NAME: Continuwuity
+      OIDC_ORIGIN: https://matrix.hayden.moe/
+      OIDC_REDIRECT_URLS: '["https://matrix.hayden.moe/_continuwuity/oidc/complete"]'
+      OIDC_GROUP_PREFIX: continuwuity
+      OIDC_USERS_GROUP_MEMBERS: '[hayden]'
+      OIDC_ADMIN_GROUP_MEMBERS: '[hayden]'
   prune: true
   retryInterval: 2m
   sourceRef:

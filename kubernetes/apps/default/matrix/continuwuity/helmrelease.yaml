@@ -37,6 +37,17 @@ spec:
               CONTINUWUITY_ENCRYPTION_ENABLED_BY_DEFAULT_FOR_ROOM_TYPE: invite
               CONTINUWUITY_ALLOW_FEDERATION: true
               CONTINUWUITY_ALLOW_PUBLIC_ROOM_DIRECTORY_OVER_FEDERATION: true
+
+              CONTINUWUITY_OAUTH__OIDC__DISCOVERY_URL: 'https://sso.hayden.moe/oauth2/openid/continuwuity'
+              CONTINUWUITY_OAUTH__OIDC__CLIENT_ID:
+                secretKeyRef:
+                  name: continuwuity-kanidm-oauth2-credentials
+                  key: CLIENT_ID
+              CONTINUWUITY_OAUTH__OIDC__CLIENT_SECRET:
+                secretKeyRef:
+                  name: continuwuity-kanidm-oauth2-credentials
+                  key: CLIENT_SECRET
+
               TZ: Europe/London
             envFrom:
               - secretRef:
