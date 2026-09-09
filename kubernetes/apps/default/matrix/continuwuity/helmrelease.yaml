@@ -20,6 +20,8 @@ spec:
     controllers:
       continuwuity:
         type: statefulset
+        statefulset:
+          podManagementPolicy: Parallel
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
