@@ -81,6 +81,54 @@
         state: restarted
       when: docker_daemon_json.changed
 
+    - name: ssh
+      block:
+        - name: ssh | Harden sshd_config
+          ansible.builtin.copy:
+            dest: /etc/ssh/sshd_config.d/99-hardening.conf
+            content: |
+              PermitRootLogin no
+              PasswordAuthentication no
+              MaxAuthTries 3
+              LoginGraceTime 20
+            owner: root
+            group: root
+            mode: "0644"
+          notify: Restart ssh.socket
+
+    - name: Install Firewalld
+      ansible.builtin.dnf:
+        name: firewalld
+        state: present
+
+    - name: Enable Firewalld at startup
+      ansible.builtin.systemd:
+        name: firewalld
+        state: started
+        enabled: true
+
+    - name: Allow ports
+      ansible.posix.firewalld:
+      loop:
+        - name: SSH
+          port: 22
+        - name: SSH-forgejo
+          port: 2222
+        - name: HTTP
+          port: 80
+        - name: HTTPS
+          port: 443
+        - name: towonel-iroh
+          port: 51820
+          protocol: udp
+
+    - name: Create edge docker network
+      community.docker.docker_network:
+        name: edge
+        driver: bridge
+        enable_ipv6: true
+        state: present
+
     - name: Create doco-cd directory
       ansible.builtin.file:
         path: /opt/doco-cd
@@ -134,3 +182,9 @@
           retries: 30
           delay: 10
           when: not ansible_check_mode
+
+  handlers:
+    - name: Restart ssh.socket
+      ansible.builtin.service:
+        name: ssh.socket
+        state: restarted

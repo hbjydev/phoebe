@@ -46,3 +46,8 @@ services:
 
 volumes:
   data: {}
+
+networks:
+  default:
+    name: edge
+    external: true
