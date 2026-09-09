@@ -18,4 +18,4 @@ configMapGenerator:
     options:
       annotations:
         kustomize.toolkit.fluxcd.io/substitute: disabled
-      disableNameSuffixHash: false
+      disableNameSuffixHash: true
