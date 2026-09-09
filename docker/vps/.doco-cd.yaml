@@ -9,3 +9,4 @@ auto_discovery:
 force_recreate: false
 external_secrets:
   VPS_IP: "op://cluster-phoebe/app-towonel/ip"
+  TOWONEL_ACME_EMAIL: "op://cluster-phoebe/app-towonel/acmeEmail"

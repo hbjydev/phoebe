@@ -10,3 +10,13 @@ install-collections:
 [confirm("Run playbook on " + ip + " [y|N]?")]
 run ip: install-collections
   ansible-playbook -i "{{ ip }}," "{{ source_directory() / "playbook.yaml" }}"
+
+# Trigger a doco-cd deployment via the API
+[confirm('Trigger doco-cd deployment on ' + ip + ' [y|N] ?')]
+deploy ip:
+    api_key=$(vals get "ref+op://cluster-phoebe/app-doco-cd/apiSecret") && \
+    ssh "{{ ip }}" "curl --silent --fail --request POST \
+      --url 'http://localhost:8080/v1/api/poll/run?wait=true' \
+      --header 'content-type: application/json' \
+      --header 'x-api-key: ${api_key}' \
+      --data '[{\"url\": \"https://git.hayden.moe/hayden/phoebe.git\"}]'"
