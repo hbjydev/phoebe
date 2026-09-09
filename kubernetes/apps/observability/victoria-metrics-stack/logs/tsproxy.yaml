@@ -19,4 +19,4 @@ spec:
           service:
             name: vlsingle-victoria-logs
             port:
-              number: 8428
+              number: 9428
