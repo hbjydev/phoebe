@@ -20,6 +20,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      NAMESPACE: *namespace
       KOPIUR_CAPACITY: 15Gi
 
       OIDC_DISPLAY_NAME: Continuwuity
