@@ -22,6 +22,7 @@ spec:
         pod:
           labels:
             egress.policy.home.arpa/infra: "true"
+            egress.policy.home.arpa/internet: "true"
         containers:
           app:
             image:
