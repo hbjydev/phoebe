@@ -107,8 +107,7 @@ spec:
               - secretRef:
                   name: unifi-cert-upload-secret
             securityContext:
-              readOnlyRootFilesystem: true
-              privileged: true
+              readOnlyRootFilesystem: false
             resources:
               requests:
                 cpu: 10m
