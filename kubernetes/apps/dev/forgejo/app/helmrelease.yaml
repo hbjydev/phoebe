@@ -118,6 +118,8 @@ spec:
     deployment:
       annotations:
         reloader.stakater.com/auto: "true"
+      labels:
+        db.policy.home.arpa/postgres: allow
       env:
         - name: PGSSLROOTCERT
           value: /var/run/secrets/root-ca/ca.crt
