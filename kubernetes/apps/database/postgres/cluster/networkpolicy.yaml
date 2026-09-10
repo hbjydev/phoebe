@@ -75,3 +75,19 @@ spec:
         - k8sService:
             serviceName: cnpg-webhook-service
             namespace: cnpg
+
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: pgpooler
+spec:
+  endpointSelector:
+    matchLabels:
+      cnpg.io/cluster: postgres
+      cnpg.io/podRole: pooler
+  egress:
+    # allow pooler pods to talk to the kube apiserver
+    - toEntities:
+        - kube-apiserver
