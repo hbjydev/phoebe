@@ -13,7 +13,10 @@ spec:
   pgbouncer:
     poolMode: session
 
-    authQuery: "SELECT $1, NULL"
+    authQuery: "SELECT usename, passwd FROM pg_catalog.pg_shadow WHERE usename = $1"
+    pg_hba:
+      - hostssl all all all cert
+      - host all all all scram-sha-256
     serverCASecret:
       name: pooler-server-cert
     serverTLSSecret:
@@ -25,7 +28,7 @@ spec:
 
     parameters:
       # server_tls_protocols: tlsv1.3
-      auth_type: cert
+      auth_type: hba
       server_tls_sslmode: verify-full
       client_tls_sslmode: allow
       max_client_conn: "1000"
