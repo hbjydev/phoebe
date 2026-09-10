@@ -111,6 +111,7 @@ spec:
                   key: CLIENT_SECRET
 
               # LiveKit Matrix RTC
+              CONTINUWUITY_MATRIX_RTC__FOCI: '[{ type = "livekit", livekit_service_url = "https://livekit.hayden.moe" }]'
               CONTINUWUITY_MATRIX_RTC__LIVEKIT__URL: wss://livekit.hayden.moe
               CONTINUWUITY_MATRIX_RTC__LIVEKIT__KEY:
                 secretKeyRef:
