@@ -42,6 +42,11 @@ spec:
   podAnnotations:
     reloader.stakater.com/auto: "true"
 
+  podLabels:
+    db.policy.home.arpa/postgres: allow
+    egress.policy.home.arpa/cluster: allow  # replace with redis rules later
+    egress.policy.home.arpa/internet-https: allow
+
   volumes:
     - configMap:
         name: litellm-chatgpt-compat
