@@ -24,7 +24,6 @@ spec:
         pod:
           labels:
             egress.policy.home.arpa/internet: "true"
-            ingress.policy.home.arpa/external: allow
         containers:
           app:
             image:
