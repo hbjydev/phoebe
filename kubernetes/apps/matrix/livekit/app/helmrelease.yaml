@@ -1,0 +1,87 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: livekit
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  interval: 1h
+  values:
+    controllers:
+      livekit:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: docker.io/livekit/livekit-server
+              tag: v1.13.6@sha256:e37d68f172556d02aa77968b9fc55ef481468c0315fa38e4fa6c56ce72e3a815
+            env:
+              LIVEKIT_CONFIG:
+                valueFrom:
+                  secretKeyRef:
+                    name: livekit-config
+                    key: config.yaml
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            resources:
+              requests:
+                cpu: 10m
+                memory: 150Mi
+              limits:
+                memory: 300Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        forceRename: livekit
+        controller: livekit
+        ports:
+          http:
+            port: 7880
+          rtc-tcp:
+            port: 7881
+          metrics:
+            port: 6789
+    route:
+      app:
+        annotations:
+          gatus.home-operations.com/enabled: "false"
+        hostnames:
+          - livekit.hayden.moe
+        parentRefs:
+          - name: internal
+            namespace: network
+          - name: external
+            namespace: network
+        rules:
+          - matches:
+              - path:
+                  value: /
+            backendRefs:
+              - name: livekit
+                port: 7880
+    serviceMonitor:
+      app:
+        service:
+          identifier: app
+        endpoints:
+          - port: metrics
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s
