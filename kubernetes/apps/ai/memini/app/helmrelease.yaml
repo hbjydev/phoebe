@@ -46,7 +46,7 @@ spec:
                 valueFrom:
                   secretKeyRef:
                     name: memini-postgres
-                    key: url
+                    key: poolurl
               MEMINI_DEFAULT_NAMESPACE: default
               MEMINI_DEMOTE_AFTER: 1440h
               MEMINI_TOMBSTONE_TTL: 720h
