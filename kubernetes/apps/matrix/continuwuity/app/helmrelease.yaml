@@ -22,7 +22,6 @@ spec:
         type: statefulset
         statefulset:
           podManagementPolicy: Parallel
-        replicas: 0
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
