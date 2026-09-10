@@ -36,7 +36,7 @@ spec:
         pod:
           labels:
             egress.policy.home.arpa/internet: "true"
-            egress.policy.home.arpa/postgres: "true"
+            db.policy.home.arpa/postgres: allow
         containers:
           main:
             image:
