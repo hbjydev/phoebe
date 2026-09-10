@@ -8,5 +8,6 @@ resources:
   - ./grafanadashboard.yaml
   - ./internal.yaml
   - ./monitoring.yaml
+  - ./netpol.yaml
   - ./networkpolicy.yaml
   - ./redirect.yaml
