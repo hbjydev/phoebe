@@ -100,7 +100,6 @@ spec:
               # the media store does not grow unbounded and fill the volume.
               CONTINUWUITY_ADMIN_EXECUTE: '["media delete-past-remote-media -b 30d"]'
               CONTINUWUITY_ADMIN_EXECUTE_ERRORS_IGNORE: true
-
               CONTINUWUITY_OAUTH__OIDC__DISCOVERY_URL: 'https://sso.hayden.moe/oauth2/openid/matrix-continuwuity'
               CONTINUWUITY_OAUTH__OIDC__CLIENT_ID:
                 secretKeyRef:

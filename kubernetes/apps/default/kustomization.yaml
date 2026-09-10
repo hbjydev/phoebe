@@ -9,7 +9,6 @@ resources:
   - ./home-assistant/ks.yaml
   - ./jellyseerr/ks.yaml
   - ./lidarr/ks.yaml
-  - ./matrix/ks.yaml
   - ./prowlarr/ks.yaml
   - ./radarr/ks.yaml
   - ./sonarr/ks.yaml
