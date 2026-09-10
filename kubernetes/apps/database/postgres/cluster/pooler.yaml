@@ -13,7 +13,7 @@ spec:
   pgbouncer:
     poolMode: session
 
-    authQuery: "SELECT usename, passwd FROM pg_catalog.pg_shadow WHERE usename = $1"
+    authQuery: "SELECT usename, passwd FROM public.user_search($1)"
     pg_hba:
       - hostssl all all all cert
       - host all all all scram-sha-256
