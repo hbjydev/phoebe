@@ -110,6 +110,18 @@ spec:
                   name: continuwuity-kanidm-oauth2-credentials
                   key: CLIENT_SECRET
 
+              # LiveKit Matrix RTC
+              CONTINUWUITY_MATRIX_RTC__LIVEKIT__URL: wss://livekit.hayden.moe
+              CONTINUWUITY_MATRIX_RTC__LIVEKIT__KEY:
+                secretKeyRef:
+                  name: livekit-keys
+                  key: LIVEKIT_KEY
+              CONTINUWUITY_MATRIX_RTC__LIVEKIT__SECRET:
+                secretKeyRef:
+                  name: livekit-keys
+                  key: LIVEKIT_SECRET
+              CONTINUWUITY_MATRIX_RTC__LIVEKIT__AUTO_CREATE: true
+
               TOKIO_WORKER_THREADS: "4"
               TZ: Europe/London
             envFrom:
