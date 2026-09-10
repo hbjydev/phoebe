@@ -40,7 +40,7 @@ spec:
               SONARR__POSTGRES__HOST:
                 secretKeyRef:
                   name: sonarr-postgres
-                  key: host
+                  key: poolhost
               SONARR__POSTGRES__PORT: '5432'
               SONARR__POSTGRES__USER:
                 secretKeyRef:

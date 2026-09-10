@@ -40,7 +40,7 @@ spec:
               RADARR__POSTGRES__HOST:
                 secretKeyRef:
                   name: radarr-postgres
-                  key: host
+                  key: poolhost
               RADARR__POSTGRES__PORT: '5432'
               RADARR__POSTGRES__USER:
                 secretKeyRef:

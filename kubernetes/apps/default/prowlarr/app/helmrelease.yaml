@@ -40,7 +40,7 @@ spec:
               PROWLARR__POSTGRES__HOST:
                 secretKeyRef:
                   name: prowlarr-postgres
-                  key: host
+                  key: poolhost
               PROWLARR__POSTGRES__PORT: '5432'
               PROWLARR__POSTGRES__USER:
                 secretKeyRef:

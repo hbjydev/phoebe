@@ -40,7 +40,7 @@ spec:
               LIDARR__POSTGRES__HOST:
                 secretKeyRef:
                   name: lidarr-postgres
-                  key: host
+                  key: poolhost
               LIDARR__POSTGRES__PORT: '5432'
               LIDARR__POSTGRES__USER:
                 secretKeyRef:
