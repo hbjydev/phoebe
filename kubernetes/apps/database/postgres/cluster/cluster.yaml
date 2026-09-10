@@ -53,6 +53,7 @@ spec:
     parameters:
       timescaledb.telemetry_level: "off"
       max_locks_per_transaction: "128"
+      max_connections: "200"
 
     extensions:
       - name: postgis
