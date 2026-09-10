@@ -8,4 +8,3 @@ components:
 resources:
   - ./continuwuity/ks.yaml
   - ./livekit/ks.yaml
-  - ./sable/ks.yaml
