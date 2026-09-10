@@ -58,6 +58,15 @@
       minimumGroupSize: 3,
     },
     {
+      description: "Towonel Group",
+      groupName: "Towonel",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/towonel\/towonel-node/", "/towonel\/charts\/towonel-agent/"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+    },
+    {
       description: "eleboucher Runner Group",
       groupName: "Eleboucher-Runner",
       matchDatasources: ["git-tags"],
