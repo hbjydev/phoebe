@@ -1,0 +1,77 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: "apps-to-pg"
+spec:
+  endpointSelector:
+    matchLabels:
+      db.policy.home.arpa/postgres: allow
+  egress:
+    - toEndpoints: &pg
+        - matchLabels:
+            cnpg.io/cluster: postgres
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+      toPorts:
+        - ports:
+            - port: "5432"
+    - toEndpoints: *pg
+      icmps: [{}]
+
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: pg
+spec:
+  endpointSelector: &cnpg
+    matchLabels:
+      cnpg.io/cluster: &name postgres
+  ingress:
+    # allow postgres pods to talk to each other
+    - fromEndpoints: [*cnpg]
+
+    # allow operator to connect
+    - fromEndpoints:
+        - matchLabels: &operator
+            io.kubernetes.pod.namespace: cnpg-system
+            app.kubernetes.io/name: cloudnative-pg
+
+    # allow labelled pods to connect to postgres only and ping with pg_health
+    - fromEndpoints: &pg
+        - matchLabels:
+            db.policy.home.arpa/postgres: allow
+          matchExpressions:
+            - &ns
+              key: io.kubernetes.pod.namespace
+              operator: Exists
+      toPorts:
+        - ports:
+            - port: "5432"
+    - fromEndpoints: *pg
+      icmps: [{}]
+  egress:
+    # allow postgres pods to talk to each other
+    - toEndpoints: [*cnpg]
+    
+    # connect to operator
+    - toEndpoints:
+        - matchLabels: *operator
+
+    # to hetzner for backups
+    - toFQDNs:
+        - matchPattern: '*.your-objectstorage.com'
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: ANY
+
+    # cnpg webhook
+    - toServices:
+        - k8sService:
+            serviceName: cnpg-webhook-service
+            namespace: cnpg

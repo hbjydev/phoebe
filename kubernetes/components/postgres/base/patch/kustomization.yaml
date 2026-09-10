@@ -39,6 +39,8 @@ patches:
                   "namespace": "database",
                   "expression": "resource.status.applied"
                 }
+            labels:
+              db.policy.home.arpa/postgres: allow
             schedulingGates:
               - name: k8s.ksgate.org/postgres-ready
               - name: k8s.ksgate.org/postgres-service
