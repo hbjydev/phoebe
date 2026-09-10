@@ -30,7 +30,7 @@ spec:
               DB_HOST:
                 secretKeyRef:
                   name: pinepods-postgres
-                  key: host
+                  key: poolhost
               DB_PORT: 5432
               DB_USER:
                 secretKeyRef:
