@@ -91,6 +91,9 @@ spec:
                   echo "${resp}"
                 }
 
+                echo "[INFO ] Installing JQ..."
+                dnf install -y jq
+
                 echo "[INFO ] Logging into UniFi"
                 login || fatal "Failed to log in"
                 echo "[INFO ] Uploading new certificate"
