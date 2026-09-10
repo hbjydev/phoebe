@@ -71,6 +71,16 @@ spec:
         rules:
           - matches:
               - path:
+                  value: /sfu/get
+              - path:
+                  value: /healthz
+              - path:
+                  value: /get_token
+            backendRefs:
+              - name: livekit-jwt-service
+                port: 8081
+          - matches:
+              - path:
                   value: /
             backendRefs:
               - name: livekit
