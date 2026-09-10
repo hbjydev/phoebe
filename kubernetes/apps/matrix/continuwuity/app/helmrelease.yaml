@@ -178,7 +178,7 @@ spec:
       data:
         enabled: true
         type: persistentVolumeClaim
-        existingClaim: matrix-continuwuity
+        existingClaim: "{{ .Release.Name }}"
         advancedMounts:
           continuwuity:
             app:
