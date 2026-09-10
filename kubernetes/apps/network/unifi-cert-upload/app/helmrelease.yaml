@@ -53,7 +53,7 @@ spec:
                 }
 
                 login() {
-                  resp="$(curl -s -k -X POST "${base_url}/api/auth/login" \
+                  resp="$(curl -k -X POST "${base_url}/api/auth/login" \
                     -H "Content-Type: application/json" \
                     -d "{\"username\":\"${username}\",\"password\":\"${password}\"}" \
                     -i)"
@@ -63,7 +63,7 @@ spec:
                 }
 
                 get() {
-                  resp="$(curl -s -k -X GET "${base_url}${1}" \
+                  resp="$(curl -k -X GET "${base_url}${1}" \
                     -H "Content-Type: application/json" \
                     -H "Cookie: TOKEN=${token}" \
                     -H "x-csrf-token: ${csrf_token}")"
@@ -72,7 +72,7 @@ spec:
                 }
 
                 post() {
-                  resp="$(curl -s -k -X POST "${base_url}${1}" \
+                  resp="$(curl -k -X POST "${base_url}${1}" \
                     -H "Content-Type: application/json" \
                     -H "Cookie: TOKEN=${token}" \
                     -H "x-csrf-token: ${csrf_token}" \
@@ -82,7 +82,7 @@ spec:
                 }
 
                 put() {
-                  resp="$(curl -s -k -X PUT "${base_url}${1}" \
+                  resp="$(curl -k -X PUT "${base_url}${1}" \
                     -H "Content-Type: application/json" \
                     -H "Cookie: TOKEN=${token}" \
                     -H "x-csrf-token: ${csrf_token}" \
