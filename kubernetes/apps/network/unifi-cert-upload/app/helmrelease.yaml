@@ -46,6 +46,12 @@ spec:
                 token=""
                 csrf_token=""
 
+                fatal() {
+                  local msg="${1}"
+                  echo "[FATAL] ${msg}"
+                  exit 1
+                }
+
                 login() {
                   resp="$(curl -s -k -X POST "${base_url}/api/auth/login" \
                     -H "Content-Type: application/json" \
@@ -85,9 +91,13 @@ spec:
                   echo "${resp}"
                 }
 
-                login
+                echo "[INFO ] Logging into UniFi"
+                login || fatal "Failed to log in"
+                echo "[INFO ] Uploading new certificate"
                 id=$(post /api/userCertificates '{"name":"le-'"${date}"'","cert":"'"${cert_pem}"'","key":"'"${key_pem}"'"}' | jq -r .id)
-                put "/api/userCertificates/${id}/status" '{"active":true}'
+                echo "[INFO ] Activating certificate"
+                put "/api/userCertificates/${id}/status" '{"active":true}' || fatal "Failed to activate new certificate"
+                echo "[INFO ] Complete"
             env:
               TZ: Europe/London
             envFrom:
