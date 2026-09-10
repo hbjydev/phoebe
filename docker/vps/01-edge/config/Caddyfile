@@ -105,5 +105,14 @@ hayden.moe {
 	reverse_proxy https://hayden-www.hel1.your-objectstorage.com {
 		header_up Host hayden-www.hel1.your-objectstorage.com
 		header_up X-Forwarded-Host {host}
+
+    @404 status 403 404
+    handle_response @404 {
+      rewrite * {path}/index.html
+      reverse_proxy https://hayden-www.hel1.your-objectstorage.com {
+				header_up Host hayden-www.hel1.your-objectstorage.com
+				header_up X-Forwarded-Host {host}
+      }
+    }
 	}
 }
