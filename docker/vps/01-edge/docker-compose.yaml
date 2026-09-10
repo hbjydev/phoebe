@@ -12,6 +12,8 @@ services:
       VPS_LOCAL_HOSTS: >-
         doco-cd.hayden.moe
         towonel.hayden.moe
+        www.hayden.moe
+        hayden.moe
     ports:
       - "${VPS_IP}:80:80"
       - "${VPS_IP}:443:443"

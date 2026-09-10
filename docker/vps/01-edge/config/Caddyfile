@@ -78,3 +78,32 @@ towonel.hayden.moe {
 	log
 	reverse_proxy towonel-hub:8443
 }
+
+www.hayden.moe {
+	log
+	redir https://hayden.moe{uri} permanent
+}
+
+hayden.moe {
+  log
+
+	# Matrix .well-known — proxy to the matrix subdomain (federation clients don't follow 3xx).
+	@matrix path /.well-known/matrix/*
+	handle @matrix {
+		reverse_proxy https://matrix.hayden.moe
+	}
+
+	# Everything else → anubis bot-challenge; anubis forwards non-challenge
+	# traffic back to caddy:8082 which passes it through to the S3 website.
+	reverse_proxy anubis:8083 {
+		header_up X-Real-Ip {client_ip}
+	}
+}
+
+:8082 {
+	log
+	reverse_proxy https://hayden-www.hel1.your-objectstorage.com {
+		header_up Host hayden-www.hel1.your-objectstorage.com
+		header_up X-Forwarded-Host {host}
+	}
+}
