@@ -62,7 +62,7 @@ spec:
                 valueFrom:
                   secretKeyRef:
                     name: immich-postgres
-                    key: host
+                    key: poolhost
 
               REDIS_HOSTNAME: dragonfly.database.svc.cluster.local
               REDIS_PORT: 6379
