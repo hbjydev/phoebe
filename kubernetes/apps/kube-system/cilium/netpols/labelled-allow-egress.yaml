@@ -1,0 +1,209 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-egress-world
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/world: allow
+  egress:
+    - toEntities:
+        - world
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-egress-apiserver
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/apiserver: allow
+  egress:
+    - toEntities:
+        - kube-apiserver
+    - toEntities:
+        - host
+      toPorts:
+        - ports:
+            - port: "6443"
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-egress-host
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/host: allow
+  egress:
+    - toEntities:
+        - host
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-egress-talos
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/talos: allow
+  egress:
+    - toEntities:
+        - host
+        - remote-node
+      toPorts:
+        - ports:
+            - port: "50000"
+            - port: "50001"
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-egress-world
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/world: allow
+  egress:
+    - toEntities:
+        - world
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-egress-internet
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/internet: allow
+  egress:
+    - toCIDRSet:
+        - cidr: "0.0.0.0/0"
+          except:
+            - "10.0.0.0/8"
+            - "172.16.0.0/12"
+            - "192.168.0.0/16"
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-egress-internet-https
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/internet-https: allow
+  egress:
+    - toCIDRSet:
+        - cidr: "0.0.0.0/0"
+          except:
+            - "10.0.0.0/8"
+            - "172.16.0.0/12"
+            - "192.168.0.0/16"
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: ANY
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-egress-world-https
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/world-https: allow
+  egress:
+    - toEntities:
+        - world
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+            - port: "443"
+              protocol: UDP
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-egress-lan
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/lan: allow
+  egress:
+    - toCIDRSet:
+        - cidrGroupRef: lan
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-egress-iot
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/iot: allow
+  egress:
+    - toCIDRSet:
+        - cidrGroupRef: iot
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-egress-management
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/management: allow
+  egress:
+    - toCIDRSet:
+        - cidrGroupRef: management
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-egress-infra
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/infra: allow
+  egress:
+    - toCIDRSet:
+        - cidrGroupRef: infra
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-egress-nas
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/nas: allow
+  egress:
+    - toCIDRSet:
+        - cidrGroupRef: nas

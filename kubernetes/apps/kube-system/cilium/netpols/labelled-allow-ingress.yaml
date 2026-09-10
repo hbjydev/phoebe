@@ -1,0 +1,143 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-ingress-world
+spec:
+  endpointSelector:
+    matchLabels:
+      ingress.policy.home.arpa/world: allow
+  ingress:
+    - fromEntities:
+        - world
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-ingress-cluster
+spec:
+  endpointSelector:
+    matchLabels:
+      ingress.policy.home.arpa/cluster: allow
+  ingress:
+    - fromEntities:
+        - cluster
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-ingress-internet
+spec:
+  endpointSelector:
+    matchLabels:
+      ingress.policy.home.arpa/internet: allow
+  ingress:
+    - fromCIDRSet:
+        - cidr: "0.0.0.0/0"
+          except:
+            - "10.0.0.0/8"
+            - "172.16.0.0/12"
+            - "192.168.0.0/16"
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-ingress-host
+spec:
+  endpointSelector:
+    matchLabels:
+      ingress.policy.home.arpa/host: allow
+  ingress:
+    - fromEntities:
+        - host
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-ingress-apiserver
+spec:
+  endpointSelector:
+    matchLabels:
+      ingress.policy.home.arpa/apiserver: allow
+  ingress:
+    - fromEntities:
+        - kube-apiserver
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-ingress-lan
+spec:
+  endpointSelector:
+    matchLabels:
+      ingress.policy.home.arpa/lan: allow
+  ingress:
+    - fromCIDRSet:
+        - cidrGroupRef: lan
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-ingress-management
+spec:
+  endpointSelector:
+    matchLabels:
+      ingress.policy.home.arpa/management: allow
+  ingress:
+    - fromCIDRSet:
+        - cidrGroupRef: management
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-ingress-iot
+spec:
+  endpointSelector:
+    matchLabels:
+      ingress.policy.home.arpa/iot: allow
+  ingress:
+    - fromCIDRSet:
+        - cidrGroupRef: iot
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-ingress-infra
+spec:
+  endpointSelector:
+    matchLabels:
+      ingress.policy.home.arpa/infra: allow
+  ingress:
+    - fromCIDRSet:
+        - cidrGroupRef: infra
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: labelled-allow-ingress-nas
+spec:
+  endpointSelector:
+    matchLabels:
+      ingress.policy.home.arpa/nas: allow
+  ingress:
+    - fromCIDRSet:
+        - cidrGroupRef: nas

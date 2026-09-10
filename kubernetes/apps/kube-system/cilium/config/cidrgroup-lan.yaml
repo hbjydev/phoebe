@@ -16,6 +16,16 @@ spec:
 apiVersion: cilium.io/v2
 kind: CiliumCIDRGroup
 metadata:
+  name: iot
+spec:
+  externalCIDRs:
+    - 192.168.20.0/24
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumcidrgroup_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumCIDRGroup
+metadata:
   name: infra
 spec:
   externalCIDRs:
