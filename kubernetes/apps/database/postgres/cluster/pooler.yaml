@@ -27,7 +27,7 @@ spec:
       # server_tls_protocols: tlsv1.3
       auth_type: cert
       server_tls_sslmode: verify-full
-      client_tls_sslmode: verify-full
+      client_tls_sslmode: allow
       max_client_conn: "1000"
       max_prepared_statements: "200"
       default_pool_size: "60"
