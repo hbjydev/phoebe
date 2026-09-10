@@ -14,7 +14,7 @@ spec:
       unifi-cert-upload:
         type: cronjob
         cronjob:
-          schedule: "0 * * * *"
+          schedule: "0 */4 * * *"
           failedJobsHistory: 3
           successfulJobsHistory: 1
         annotations:
