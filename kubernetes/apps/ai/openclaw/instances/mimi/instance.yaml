@@ -55,7 +55,7 @@ spec:
           export MISE_CONFIG_FILE=/tools/mise.toml
 
           # Install mise (using musl binary for Alpine compatibility)
-          curl -fsSL https://github.com/jdx/mise/releases/download/v2026.4.5/mise-v2026.4.5-linux-x64-musl > /tools/bin/mise
+          curl -fsSL https://github.com/jdx/mise/releases/download/v2026.9.5/mise-v2026.6.5-linux-x64-musl > /tools/bin/mise
           chmod +x /tools/bin/mise
 
           /tools/bin/mise install --yes
