@@ -36,7 +36,7 @@ spec:
               OIDC_SCOPES: openid,profile,email,groups
               OIDC_USER_ID_FIELD: /email
               OIDC_PROVIDER_NAME: Kanidm
-              OIDC_ALLOWED_ATTRIBUTES: /groups=mcp_auth_proxy_users
+              OIDC_ALLOWED_ATTRIBUTES: /groups=mcp_auth_proxy_users@sso.hayden.moe
               OIDC_CLIENT_ID:
                 valueFrom:
                   secretKeyRef:
