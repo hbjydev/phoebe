@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: ghcr.io/sigbit/mcp-auth-proxy
-              tag: v2.10.2@sha256:f92e0ccd22b2a7585bccedc366a3c872bbfa3500c7fa5e7443b40962bf248e8d
+              tag: v2.10.1@sha256:93beef5c036cb690c8621647279d181443dc6924b0edc95749a0ec8e4743599e
             args:
               - http://litellm.ai.svc.cluster.local:4000/mcp
             env:
