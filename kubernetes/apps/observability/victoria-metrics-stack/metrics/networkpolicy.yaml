@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: vmagent-to-app
+spec:
+  endpointSelector:
+    matchLabels:
+      prom.policy.home.arpa/kps: allow
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            managed-by: vm-operator
+            app.kubernetes.io/name: vmagent
+            app.kubernetes.io/instance: metrics-agent
