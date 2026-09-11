@@ -152,25 +152,5 @@ spec:
         globalMounts:
           - path: /tmp
 
-    networkpolicies:
-      app:
-        controller: openclaw
-        policyTypes: [Ingress, Egress]
-        rules:
-          egress:
-            - to:
-                - namespaceSelector:
-                    matchLabels:
-                      kubernetes.io/metadata.name: ai
-                - namespaceSelector:
-                    matchLabels:
-                      kubernetes.io/metadata.name: selfhosted
-                - podSelector:
-                    matchLabels:
-                      app.kubernetes.io/name: continuwuity
-                  namespaceSelector:
-                    matchLabels:
-                      kubernetes.io/metadata.name: matrix
-
     serviceAccount:
       openclaw: {}
