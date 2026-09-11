@@ -26,7 +26,7 @@ spec:
               repository: ghcr.io/sigbit/mcp-auth-proxy
               tag: v2.10.1@sha256:93beef5c036cb690c8621647279d181443dc6924b0edc95749a0ec8e4743599e
             args:
-              - http://litellm.ai.svc.cluster.local:4000/mcp
+              - http://litellm.ai.svc.cluster.local:4000
             env:
               EXTERNAL_URL: https://mcp.hayden.moe
               NO_AUTO_TLS: "true"
