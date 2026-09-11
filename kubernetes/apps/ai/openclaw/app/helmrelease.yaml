@@ -112,10 +112,7 @@ spec:
         controller: openclaw
         ports:
           gateway:
-            port: 80
-            targetPort: *port
-            protocol: HTTP
-            appProtocol: http
+            port: 8080
 
     route:
       app:
