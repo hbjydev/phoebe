@@ -18,6 +18,7 @@ spec:
         pod:
           labels:
             egress.policy.home.arpa/internet: "true"
+            prom.policy.home.arpa/kps: allow
         containers:
           app:
             image:
