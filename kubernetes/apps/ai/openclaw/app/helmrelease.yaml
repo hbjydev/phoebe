@@ -43,8 +43,9 @@ spec:
               AAA_HOME: &pvc /home/openclaw
               HOME: *pvc
               OPENCLAW_HOME: *pvc
+              GOPATH: "$(AAA_HOME)/go"
               OPENCLAW_GATEWAY_PORT: &port 8080
-              PATH: "$(AAA_HOME)/.local/bin:$(AAA_HOME)/.local/share/mise/shims:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+              PATH: "$(AAA_HOME)/.local/bin:$(AAA_HOME)/.local/share/mise/shims:$(AAA_HOME)/.local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
               TERM: xterm-256color
             envFrom: &envFrom
               - secretRef:
@@ -131,6 +132,18 @@ spec:
         globalMounts:
           - subPath: data
             path: *pvc
+
+      misc:
+        existingClaim: openclaw-misc
+        globalMounts:
+          - subPath: brew
+            path: /home/linuxbrew
+          - subPath: go
+            path: /home/openclaw/go
+          - subPath: go-local
+            path: /home/openclaw/.local/go
+          - subPath: mise
+            path: /home/openclaw/.local/share/mise
 
       tmp:
         type: emptyDir
