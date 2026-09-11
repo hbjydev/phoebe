@@ -8,6 +8,6 @@ spec:
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
-  url: oci://ghcr.io/pando85/helm-charts/kaniop
+  url: oci://ghcr.io/hbjydev/helm-charts/kaniop
   ref:
-    tag: 0.16.2
+    tag: 0.16.2-pr.1030
