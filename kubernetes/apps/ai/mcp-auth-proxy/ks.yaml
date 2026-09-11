@@ -27,6 +27,7 @@ spec:
       OIDC_SECRET_ROTATION_ENABLED: "false"
       OIDC_GROUP_PREFIX: mcp_auth_proxy
       OIDC_USERS_GROUP_MEMBERS: '[hayden]'
+      OIDC_ADMIN_GROUP_MEMBERS: '[]'
   prune: true
   sourceRef:
     kind: GitRepository
