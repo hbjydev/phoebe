@@ -9,6 +9,10 @@ metadata:
 spec:
   endpoints:
     - port: http
+      authorization:
+        credentials:
+          key: LITELLM_MASTER_KEY
+          name: litellm-secret
   selector:
     matchLabels:
       app.kubernetes.io/name: litellm
