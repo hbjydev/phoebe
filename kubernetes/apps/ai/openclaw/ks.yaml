@@ -42,7 +42,7 @@ spec:
   components:
     - ../../../../../components/kopiur
   interval: 30m
-  path: ./kubernetes/apps/ai/openclaw/instances/cortana
+  path: ./kubernetes/apps/ai/openclaw/instances/mimi
   postBuild:
     substitute:
       APP: *app
