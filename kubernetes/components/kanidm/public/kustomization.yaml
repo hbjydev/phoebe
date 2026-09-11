@@ -18,6 +18,7 @@ patches:
         postBuild:
           substitute:
             OIDC_PUBLIC: "true"
+            OIDC_ALLOW_INSECURE_CLIENT_DISABLE_PKCE: "false"
         patches:
           - target:
               group: kaniop.rs
