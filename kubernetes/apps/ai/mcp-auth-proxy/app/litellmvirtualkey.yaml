@@ -1,0 +1,9 @@
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: mcp-auth-proxy
+spec:
+  proxyRef: litellm
+  secretName: mcp-auth-proxy-litellm
+  secretKey: PROXY_BEARER_TOKEN
+  keyAlias: mcp-auth-proxy

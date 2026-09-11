@@ -17,6 +17,12 @@ spec:
 
   generalSettings:
     health_check_endpoint: /v1/health
+    # ChatGPT connects to LiteLLM's public MCP endpoint from outside the cluster.
+    mcp_internal_ip_ranges:
+      - 10.0.0.0/8
+      - 172.16.0.0/12
+      - 192.168.0.0/16
+      - 127.0.0.0/8
 
   routerSettings:
     routing_strategy: simple-shuffle
@@ -26,6 +32,10 @@ spec:
     timeout: 600
 
   litellmSettings:
+    public_mcp_servers:
+      - context7
+      - kguardian
+      - hass
     callbacks:
       - /opt/litellm-compat/chatgpt_stream_recovery.proxy_handler_instance
     success_callback: ["prometheus"]

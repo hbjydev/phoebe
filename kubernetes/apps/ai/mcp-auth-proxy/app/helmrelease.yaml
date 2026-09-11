@@ -1,0 +1,121 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: mcp-auth-proxy
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      app:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/sigbit/mcp-auth-proxy
+              tag: v2.10.2@sha256:f92e0ccd22b2a7585bccedc366a3c872bbfa3500c7fa5e7443b40962bf248e8d
+            args:
+              - http://litellm.ai.svc.cluster.local:4000/mcp
+            env:
+              EXTERNAL_URL: https://mcp.hayden.moe
+              NO_AUTO_TLS: "true"
+              LISTEN: :8080
+              HTTP_STREAMING_ONLY: "true"
+              OIDC_CONFIGURATION_URL: https://sso.hayden.moe/oauth2/openid/mcp-auth-proxy/.well-known/openid-configuration
+              OIDC_SCOPES: openid,profile,email,groups
+              OIDC_USER_ID_FIELD: /email
+              OIDC_PROVIDER_NAME: Kanidm
+              OIDC_ALLOWED_ATTRIBUTES: /groups=mcp_auth_proxy_users
+              OIDC_CLIENT_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: mcp-auth-proxy-oauth2-credentials
+                    key: CLIENT_ID
+              OIDC_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: mcp-auth-proxy-oauth2-credentials
+                    key: CLIENT_SECRET
+              PROXY_BEARER_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: mcp-auth-proxy-litellm
+                    key: PROXY_BEARER_TOKEN
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities:
+                drop: ["ALL"]
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: &port 8080
+                  initialDelaySeconds: 10
+                  periodSeconds: 30
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: *port
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+        pod:
+          securityContext:
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+
+    service:
+      app:
+        controller: app
+        ports:
+          http:
+            port: *port
+
+    route:
+      app:
+        annotations:
+          gatus.home-operations.com/endpoint: |-
+            conditions: ["[STATUS] == 401"]
+        hostnames:
+          - mcp.hayden.moe
+        parentRefs:
+          - name: external
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
+
+    persistence:
+      data:
+        type: persistentVolumeClaim
+        accessMode: ReadWriteOnce
+        size: 1Gi
+        storageClass: ceph-block
+        globalMounts:
+          - path: /data

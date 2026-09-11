@@ -8,6 +8,8 @@ spec:
   alias: context7
   url: https://mcp.context7.com/mcp
   transport: http
+  params:
+    available_on_public_internet: true
   authType: bearer_token
   authTokenRef:
     name: context7-api-key
@@ -23,6 +25,8 @@ spec:
   alias: kguardian
   url: http://kguardian-llm-bridge.kguardian.svc.cluster.local:8080/mcp
   transport: http
+  params:
+    available_on_public_internet: true
 
 ---
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
@@ -32,6 +36,8 @@ metadata:
   name: ha-mcp
 spec:
   alias: hass
+  params:
+    available_on_public_internet: true
   workload:
     # renovate: datasource=docker depName=ghcr.io/homeassistant-ai/ha-mcp
     image: ghcr.io/homeassistant-ai/ha-mcp:8.4.3
