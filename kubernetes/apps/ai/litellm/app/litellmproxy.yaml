@@ -45,6 +45,7 @@ spec:
   podLabels:
     db.policy.home.arpa/postgres: allow
     db.policy.home.arpa/df-litellm-redis: allow
+    egress.policy.home.arpa/cluster: allow
     egress.policy.home.arpa/internet-https: allow
 
   volumes:

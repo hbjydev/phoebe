@@ -22,6 +22,20 @@ spec:
 apiVersion: cilium.io/v2
 kind: CiliumClusterwideNetworkPolicy
 metadata:
+  name: labelled-allow-egress-cluster
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/cluster: allow
+  egress:
+    - toEntities:
+        - cluster
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
   name: labelled-allow-egress-host
 spec:
   endpointSelector:

@@ -18,6 +18,17 @@ spec:
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMMCPServer
 metadata:
+  name: kguardian
+spec:
+  alias: kguardian
+  url: http://kguardian-llm-bridge.kguardian.svc.cluster.local:8080/mcp
+  transport: http
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
   name: ha-mcp
 spec:
   alias: hass
