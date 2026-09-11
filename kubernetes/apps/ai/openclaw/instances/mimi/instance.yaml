@@ -82,9 +82,6 @@ spec:
   extraVolumeMounts:
     - name: tools
       mountPath: /tools
-    - name: talos-config
-      mountPath: /home/openclaw/.openclaw/talos/config
-      subPath: config
 
   storage:
     persistence:
