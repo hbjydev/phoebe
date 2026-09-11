@@ -24,7 +24,7 @@ spec:
         pod:
           labels:
             egress.policy.home.arpa/internet: "true"
-            db.policy.home.arpa/df-searxng-redis: allow
+            db.policy.home.arpa/df-paperless-redis: allow
         containers:
           app:
             image:
