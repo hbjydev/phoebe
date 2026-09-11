@@ -92,6 +92,9 @@ spec:
           settings.yml: |-
             use_default_settings: true
 
+            server:
+              enable_metrics: true
+
             redis:
               url: redis://searxng-redis:6379/0
 
