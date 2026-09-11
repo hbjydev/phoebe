@@ -36,7 +36,6 @@ spec:
     - toEndpoints:
         - matchLabels:
             app.kubernetes.io/name: memini
-            app.kubernetes.io/controller: memini
           matchExpressions:
             - key: io.kubernetes.pod.namespace
               operator: Exists
