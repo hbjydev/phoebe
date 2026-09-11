@@ -27,7 +27,7 @@ spec:
         pod:
           hostname: openclaw
           labels:
-            ingress.policy.home.arpa/envoy-internal: allow
+            ingress.policy.home.arpa/internal: allow
             egress.policy.home.arpa/internet: allow
             egress.policy.home.arpa/litellm: allow
         serviceAccount:
