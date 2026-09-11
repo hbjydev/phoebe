@@ -21,3 +21,25 @@ spec:
       toPorts:
         - ports:
             - port: "8080"
+
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: "apps-to-memini"
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/memini: allow
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: memini
+            app.kubernetes.io/controller: memini
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+      toPorts:
+        - ports:
+            - port: "8080"

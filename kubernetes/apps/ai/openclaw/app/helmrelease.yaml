@@ -30,6 +30,7 @@ spec:
             ingress.policy.home.arpa/internal: allow
             egress.policy.home.arpa/internet: allow
             egress.policy.home.arpa/litellm: allow
+            egress.policy.home.arpa/memini: allow
         serviceAccount:
           identifier: openclaw
         containers:
