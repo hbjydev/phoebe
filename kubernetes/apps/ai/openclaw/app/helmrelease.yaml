@@ -50,6 +50,7 @@ spec:
               OPENCLAW_GATEWAY_BIND: 0.0.0.0
               PATH: "$(AAA_HOME)/.local/bin:$(AAA_HOME)/.local/share/mise/shims:$(AAA_HOME)/.local/go/bin:/home/linuxbrew/.linuxbrew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
               TERM: xterm-256color
+              MEMINI_URL: http://memini.ai.svc.cluster.local:8080
             envFrom: &envFrom
               - secretRef:
                   name: openclaw-secret
