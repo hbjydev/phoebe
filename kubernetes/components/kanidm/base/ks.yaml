@@ -69,6 +69,7 @@ spec:
       OIDC_SECRET_ROTATION_PERIOD_DAYS: ${q:='}${OIDC_SECRET_ROTATION_PERIOD_DAYS:=90}${q:='}
       OIDC_SECRET_KEY_ALIASES: ${q:='}${OIDC_SECRET_KEY_ALIASES:=null}${q:='}
       OIDC_USERS_GROUP_NAME: ${q:='}${OIDC_GROUP_PREFIX:-${APP}}_users${q:='}
+      OIDC_ALLOW_INSECURE_CLIENT_DISABLE_PKCE: ${q:='}${OIDC_ALLOW_INSECURE_CLIENT_DISABLE_PKCE:=false}${q:='}
       emptyArray: "[]"
       emptyDict: "{}"
   prune: true
