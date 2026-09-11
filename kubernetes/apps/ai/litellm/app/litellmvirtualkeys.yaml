@@ -34,3 +34,22 @@ spec:
     - chatgpt/gpt-5.6-terra
     - chatgpt/gpt-5.6-sol
     - chatgpt/gpt-6-astra
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/litellm.home-operations.com/litellmvirtualkey_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: openclaw
+  namespace: ai
+spec:
+  proxyRef: litellm
+  secretName: openclaw-litellm
+  secretKey: LITELLM_API_KEY
+  keyAlias: openclaw
+  models:
+    - chatgpt/gpt-5.6-luna
+    - chatgpt/gpt-5.6-terra
+    - chatgpt/gpt-5.6-sol
+    - chatgpt/gpt-6-astra
+    - chatgpt/gpt-image-2
