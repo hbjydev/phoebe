@@ -29,6 +29,7 @@ spec:
           labels:
             ingress.policy.home.arpa/envoy-internal: allow
             egress.policy.home.arpa/internet: allow
+            egress.policy.home.arpa/litellm: allow
         serviceAccount:
           identifier: openclaw
         containers:
