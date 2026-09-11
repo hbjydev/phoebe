@@ -41,6 +41,13 @@ spec:
             io.kubernetes.pod.namespace: cnpg-system
             app.kubernetes.io/name: cloudnative-pg
 
+    # allow prometheus monitoring via vmagent
+    - fromEndpoints:
+        - matchLabels:
+            managed-by: vm-operator
+            app.kubernetes.io/name: vmagent
+            app.kubernetes.io/instance: metrics-agent
+
     # allow labelled pods to connect to postgres only and ping with pg_health
     - fromEndpoints: &pg
         - matchLabels:
