@@ -38,6 +38,5 @@ patches:
             labels:
               db.policy.home.arpa/df-${REDIS_APP:-${APP}-redis}: allow
             schedulingGates:
-              - name: k8s.ksgate.org/postgres-ready
-              - name: k8s.ksgate.org/postgres-service
-              - name: k8s.ksgate.org/database-applied
+              - name: k8s.ksgate.org/redis-ready
+              - name: k8s.ksgate.org/redis-service
