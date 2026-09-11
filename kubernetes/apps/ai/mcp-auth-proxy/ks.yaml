@@ -25,6 +25,7 @@ spec:
       OIDC_ORIGIN: https://mcp.hayden.moe
       OIDC_REDIRECT_URLS: '["https://mcp.hayden.moe/.auth/oidc/callback"]'
       OIDC_SECRET_ROTATION_ENABLED: "false"
+      OIDC_ALLOW_INSECURE_CLIENT_DISABLE_PKCE: "true"
       OIDC_GROUP_PREFIX: mcp_auth_proxy
       OIDC_USERS_GROUP_MEMBERS: '[hayden]'
       OIDC_ADMIN_GROUP_MEMBERS: '[]'

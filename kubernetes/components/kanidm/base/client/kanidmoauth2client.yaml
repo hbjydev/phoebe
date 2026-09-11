@@ -17,6 +17,8 @@ spec:
 
   public: ${OIDC_PUBLIC}
 
+  allowInsecureClientDisablePkce: ${OIDC_ALLOW_INSECURE_CLIENT_DISABLE_PKCE:=false}
+
   redirectUrl: ${OIDC_REDIRECT_URLS:=${emptyArray}}
 
   scopeMap:
