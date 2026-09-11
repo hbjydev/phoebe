@@ -11,7 +11,7 @@ spec:
     name: app-template
   values:
     controllers:
-      miniflux:
+      searxng:
         annotations:
           reloader.stakater.com/auto: "true"
         strategy: RollingUpdate
@@ -19,6 +19,7 @@ spec:
           labels:
             egress.policy.home.arpa/internet: "true"
             prom.policy.home.arpa/kps: allow
+            db.policy.home.arpa/df-searxng-redis: allow
         containers:
           app:
             image:
