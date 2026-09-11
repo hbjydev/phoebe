@@ -18,6 +18,7 @@ spec:
           labels:
             egress.policy.home.arpa/internet: "true"
             db.policy.home.arpa/postgres: allow
+            prom.policy.home.arpa/kps: allow
         strategy: RollingUpdate
         containers:
           app:
