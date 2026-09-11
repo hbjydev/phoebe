@@ -7,6 +7,11 @@ metadata:
 spec:
   replicas: 1
   args:
+    - "--admin_bind=::"
+    - --maxmemory=$(MAX_MEMORY)Mi
+    - --proactor_threads=2
+    - --cluster_mode=emulated
+    - --lock_on_hashtags
     - "--default_lua_flags=allow-undeclared-keys"
   labels:
     egress.policy.home.arpa/block-all: "true"
@@ -16,5 +21,10 @@ spec:
       cpu: 100m
       memory: 128Mi
     limits:
-      cpu: 1000m
-      memory: 512Mi
+      memory: ${REDIS_MEMORY:-512Mi}
+  env:
+    - name: MAX_MEMORY
+      valueFrom:
+        resourceFieldRef:
+          resource: limits.memory
+          divisor: 1Mi

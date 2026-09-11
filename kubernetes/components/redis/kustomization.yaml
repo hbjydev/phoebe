@@ -5,6 +5,7 @@ kind: Component
 resources:
   - ./dragonfly.yaml
   - ./networkpolicy.yaml
+  - ./podmonitor.yaml
 
 patches:
   - target:
