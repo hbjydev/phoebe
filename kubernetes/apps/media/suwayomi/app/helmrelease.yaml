@@ -26,7 +26,6 @@ spec:
             egress.policy.home.arpa/internet: "true"
             egress.policy.home.arpa/postgres: "true"
             db.policy.home.arpa/postgres: allow
-            db.policy.home.arpa/df-suwayomi-redis: allow
         containers:
           app:
             image:
