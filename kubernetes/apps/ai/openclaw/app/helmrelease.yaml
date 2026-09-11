@@ -82,9 +82,11 @@ spec:
               - sh
               - -c
               - |
-                while [ ! -z "$(pgrep node)" ] || [ ! -s $(AAA_HOME)/.openclaw/openclaw.json ]; do
-                  echo 'OpenClaw has not been setup, please exec to this container and run `openclaw setup` for the app to startup!';
-                  sleep 60;
+                done_file="${AAA_HOME}/.openclaw/.setup-complete"
+
+                while [ ! -f "${done_file}" ]; do
+                  echo 'OpenClaw setup is incomplete; exec to this container and run `openclaw setup && touch ${AAA_HOME}/.openclaw/.setup-complete`.';
+                  sleep 5;
                 done;
             env: *env
             envFrom: *envFrom
