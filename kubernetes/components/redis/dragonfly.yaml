@@ -10,6 +10,7 @@ spec:
     - "--default_lua_flags=allow-undeclared-keys"
   labels:
     egress.policy.home.arpa/block-all: "true"
+  networkPolicyEnabled: false
   resources:
     requests:
       cpu: 100m

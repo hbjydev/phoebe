@@ -120,6 +120,7 @@ spec:
         reloader.stakater.com/auto: "true"
       labels:
         db.policy.home.arpa/postgres: allow
+        db.policy.home.arpa/df-forgejo-redis: allow
       env:
         - name: PGSSLROOTCERT
           value: /var/run/secrets/root-ca/ca.crt

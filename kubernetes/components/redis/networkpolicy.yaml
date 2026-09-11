@@ -1,0 +1,75 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: "apps-to-dragonfly-${REDIS_APP:-${APP}-redis}"
+spec:
+  endpointSelector:
+    matchLabels:
+      db.policy.home.arpa/df-${REDIS_APP:-${APP}-redis}: allow
+  egress:
+    - toEndpoints: &df
+        - matchLabels:
+            app: "${REDIS_APP:-${APP}-redis}"
+            app.kubernetes.io/part-of: dragonfly
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+      toPorts:
+        - ports:
+            - port: "6379"
+    - toEndpoints: *df
+      icmps: [{}]
+
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: dragonfly-${REDIS_APP:-${APP}-redis}
+spec:
+  endpointSelector: &df
+    matchLabels:
+      app: "${REDIS_APP:-${APP}-redis}"
+      app.kubernetes.io/part-of: dragonfly
+  ingress:
+    # allow redis pods to talk to each other
+    - fromEndpoints: [*df]
+
+    # allow operator to connect
+    - fromEndpoints:
+        - matchLabels: &operator
+            io.kubernetes.pod.namespace: dragonfly-system
+            app.kubernetes.io/name: dragonfly-operator
+
+    # allow prometheus monitoring via vmagent
+    - fromEndpoints:
+        - matchLabels:
+            managed-by: vm-operator
+            app.kubernetes.io/name: vmagent
+            app.kubernetes.io/instance: metrics-agent
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+
+    # allow labelled pods to connect to redis only and ping
+    - fromEndpoints: &dfp
+        - matchLabels:
+            db.policy.home.arpa/df-${REDIS_APP:-${APP}-redis}: allow
+          matchExpressions:
+            - &ns
+              key: io.kubernetes.pod.namespace
+              operator: Exists
+      toPorts:
+        - ports:
+            - port: "6379"
+    - fromEndpoints: *dfp
+      icmps: [{}]
+  egress:
+    # allow redis pods to talk to each other
+    - toEndpoints: [*df]
+
+    # connect to operator
+    - toEndpoints:
+        - matchLabels: *operator
