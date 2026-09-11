@@ -49,3 +49,16 @@ spec:
     model: chatgpt/gpt-5.6-sol
   info:
     mode: responses
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/litellm.home-operations.com/litellmmodel_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: chatgpt-gpt-image-2
+spec:
+  modelName: chatgpt/gpt-image-2
+  params:
+    model: chatgpt/gpt-image-2
+  info:
+    mode: responses
