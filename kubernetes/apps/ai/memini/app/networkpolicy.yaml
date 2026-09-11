@@ -36,9 +36,7 @@ spec:
     - toEndpoints:
         - matchLabels:
             app.kubernetes.io/name: memini
-          matchExpressions:
-            - key: io.kubernetes.pod.namespace
-              operator: Exists
+            k8s:io.kubernetes.pod.namespace: ai
       toPorts:
         - ports:
             - port: "8080"
