@@ -12,6 +12,9 @@ spec:
   externalLabels:
     cluster: phoebe
 
+  extraArgs:
+    promscrape.maxScrapeSize: 64MiB
+
   remoteWrite:
     - url: "http://vmsingle-victoria-metrics.observability.svc:8428/api/v1/write"
 
