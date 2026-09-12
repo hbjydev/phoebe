@@ -50,7 +50,7 @@ spec:
           app:
             image: &image
               repository: forgejo.hayden.moe/hayden/containers/hermes
-              tag: v2026.9.7-2d691f4@sha256:b02bce269e8ded71b4a7543941761dcab79b6f5edbb7a6b18f0329ea66cdf40b
+              tag: v2026.9.7-15c3ac5@sha256:22822b8a782598a7dbbd224cb202882fc062d4b74a6f8ac6986984135707c7f2
             env: &env
               TZ: Europe/London
 
@@ -67,9 +67,6 @@ spec:
               HERMES_DASHBOARD_PUBLIC_URL: "https://hermes.hayden.moe"
               HERMES_DASHBOARD_OIDC_ISSUER: https://sso.hayden.moe/oauth2/openid/hermes
               HERMES_DASHBOARD_OIDC_CLIENT_ID: hermes
-
-              MEMINI_URL: http://memini.ai.svc.cluster.local:8080
-              MEMINI_NAMESPACE: hermes
 
               SEERR_URL: http://jellyseerr.default.svc.cluster.local
               HASS_URL: 'https://hass.hayden.moe'
