@@ -11,6 +11,11 @@ spec:
   values:
     fullnameOverride: *name
 
+    deployment:
+      podLabels:
+        db.policy.home.arpa/df-litellm-redis: allow
+        egress.policy.home.arpa/cluster: allow
+
     auth:
       oidc:
         enabled: true
