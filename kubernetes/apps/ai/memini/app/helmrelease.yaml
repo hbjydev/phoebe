@@ -26,6 +26,9 @@ spec:
           reloader.stakater.com/auto: "true"
         pod:
           labels:
+            ingress.policy.home.arpa/internal: allow
+            ingress.policy.home.arpa/external: allow
+            engress.policy.home.arpa/litellm: allow
             db.policy.home.arpa/postgres: allow
           securityContext:
             fsGroup: 1000
