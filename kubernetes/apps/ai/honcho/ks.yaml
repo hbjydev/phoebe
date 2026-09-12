@@ -11,6 +11,7 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/postgres/pass
+    - ../../../../components/redis
   interval: 1h
   path: ./kubernetes/apps/ai/honcho/app
   postBuild:
