@@ -6,7 +6,7 @@ resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
 configMapGenerator:
-  - name: honcho-config
+  - name: hermes-config
     files:
       - ./resources/config.yaml
       - ./resources/honcho.json
