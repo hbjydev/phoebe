@@ -1,0 +1,225 @@
+---
+# yaml-language-server: $schema=https://schemas.rzegocki.dev/other/app-template-hr.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: honcho
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: honcho
+  interval: 1h
+  values:
+    controllers:
+      honcho:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          labels:
+            db.policy.home.arpa/postgres: allow
+            ingress.policy.home.arpa/cluster: allow
+            egress.policy.home.arpa/litellm: allow
+            egress.policy.home.arpa/internet: allow
+        containers:
+          app:
+            image: &img
+              repository: ghcr.io/plastic-labs/honcho
+              tag: v3.1.2@sha256:7d11ab23bdc9d6f8e7ebd9d1204e55b4953b623e524ce0643ac4ab0145fa92e7
+            command:
+              - /bin/sh
+              - -c
+            args:
+              - |
+                cd /app
+                export DB_CONNECTION_URI="postgresql+psycopg://$${PGUSER}:$${PGPASSWORD}@$${PGHOST}:$${PGPORT}/$${PGDB}"
+                /app/.venv/bin/python scripts/provision_db.py
+                /app/.venv/bin/python scripts/configure_embeddings.py --yes
+                exec /app/.venv/bin/fastapi run --host 0.0.0.0 src/main.py
+            env: &env
+              # Authentication
+              AUTH_USE_AUTH: "false"
+
+              # Caching
+              CACHE_ENABLED: "true"
+              CACHE_URL: redis://honcho-redis.ai.svc.cluster.local:6379/0?suppress=true
+
+              # Embeddings
+              EMBEDDING_API_KEY: "dummy"
+              EMBEDDING_MODEL_CONFIG__DIMENSIONS_MODE: never
+              EMBEDDING_MODEL_CONFIG__MODEL: all-MiniLM-L6-v2
+              EMBEDDING_MODEL_CONFIG__OVERRIDES__API_KEY_ENV: EMBEDDING_API_KEY
+              EMBEDDING_MODEL_CONFIG__OVERRIDES__BASE_URL: http://text-embeddings-inference.ai.svc.cluster.local:8080/v1
+              EMBEDDING_MODEL_CONFIG__TRANSPORT: openai
+              EMBEDDING_VECTOR_DIMENSIONS: "1024"
+
+              # LLMs
+              LLM_OPENAI_API_KEY:
+                secretKeyRef:
+                  name: honcho-litellm
+                  key: api-key
+              OPENAI_BASE_URL: http://litellm.ai.svc.cluster.local:4000/v1
+
+              # Telemetry
+              TELEMETRY_ENABLED: "false"
+
+              # Database
+              PGDB: { secretKeyRef: { name: honcho-postgres, key: database } }
+              PGUSER: { secretKeyRef: { name: honcho-postgres, key: username } }
+              PGPASSWORD: { secretKeyRef: { name: honcho-postgres, key: password } }
+              PGHOST: { secretKeyRef: { name: honcho-postgres, key: poolhost } }
+              PGPORT: "5432"
+            probes:
+              liveness:
+                enabled: true
+                spec:
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: &hcPort 8000
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 10
+            securityContext: &sc
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 1Gi
+
+          deriver:
+            image: *img
+            command:
+              - "/bin/sh"
+              - "-c"
+            args:
+              - |
+                cd /app
+                export DB_CONNECTION_URI="postgresql+psycopg://$${PGUSER}:$${PGPASSWORD}@$${PGHOST}:$${PGPORT}/honcho"
+                exec /app/.venv/bin/python -m src.deriver
+            env: *env
+            securityContext: *sc
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 1Gi
+
+          openconcho:
+            image:
+              repository: ghcr.io/offendingcommit/openconcho-web
+              tag: 0.16.2@sha256:9d131061a4d45a6b9a850d85cffe74b56e5135f4710c00c5485ccd7e8f8c6120
+            env:
+              OPENCONCHO_DEFAULT_HONCHO_URL: http://127.0.0.1:8000
+              OPENCONCHO_UPSTREAM_ALLOWLIST: 127.0.0.1
+              TZ: Europe/Warsaw
+            probes:
+              liveness:
+                enabled: true
+                spec:
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              readiness:
+                enabled: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: &ocPort 8080
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 10
+            securityContext:
+              runAsUser: 101
+              runAsGroup: 101
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities:
+                drop:
+                  - ALL
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 128Mi
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+
+
+    service:
+      app:
+        controller: main
+        ports:
+          http:
+            port: 80
+            targetPort: *hcPort
+      openconcho:
+        controller: main
+        ports:
+          http:
+            port: *ocPort
+
+    route:
+      app:
+        hostnames:
+          - "honcho.${ROOT_DOMAIN}"
+        parentRefs:
+          - name: internal
+            namespace: network
+        rules:
+          - name: app
+            backendRefs:
+              - kind: Service
+                name: honcho-openconcho
+                port: *ocPort
+            matches:
+              - path:
+                  type: PathPrefix
+                  value: /
+
+    persistence:
+      config:
+        type: configMap
+        name: honcho-configmap
+        globalMounts:
+          - subPath: config.toml
+            path: /app/config.toml
+            readOnly: true
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+            subPath: tmp

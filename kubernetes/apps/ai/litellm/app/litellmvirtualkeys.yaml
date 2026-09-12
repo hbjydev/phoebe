@@ -53,3 +53,18 @@ spec:
     - chatgpt/gpt-5.6-sol
     - chatgpt/gpt-6-astra
     - chatgpt/gpt-image-2
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/litellm.home-operations.com/litellmvirtualkey_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: honcho
+  namespace: ai
+spec:
+  proxyRef: litellm
+  secretName: honcho-litellm
+  secretKey: api-key
+  keyAlias: honcho
+  models:
+    - chatgpt/gpt-5.6-luna
