@@ -75,6 +75,8 @@ spec:
               SEARXNG_URL: http://searxng.selfhosted.svc.cluster.local:8080
 
               HOME: /data
+
+              PATH: "$(HOME)/.local/bin:$(HOME)/.local/share/mise/shims:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/bin:/app/.venv/bin:/app/node_modules/.bin"
             envFrom: &envFrom
               - secretRef:
                   name: hermes-config-env
