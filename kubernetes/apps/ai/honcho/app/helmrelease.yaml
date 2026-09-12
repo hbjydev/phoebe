@@ -181,13 +181,13 @@ spec:
 
     service:
       app:
-        controller: main
+        controller: honcho
         ports:
           http:
             port: 80
             targetPort: *hcPort
       openconcho:
-        controller: main
+        controller: honcho
         ports:
           http:
             port: *ocPort
