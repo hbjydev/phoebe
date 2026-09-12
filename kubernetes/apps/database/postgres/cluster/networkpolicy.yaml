@@ -30,7 +30,7 @@ metadata:
 spec:
   endpointSelector: &cnpg
     matchLabels:
-      cnpg.io/cluster: &name postgres
+      cnpg.io/cluster: postgres
   ingress:
     # allow postgres pods to talk to each other
     - fromEndpoints: [*cnpg]
@@ -56,8 +56,7 @@ spec:
         - matchLabels:
             db.policy.home.arpa/postgres: allow
           matchExpressions:
-            - &ns
-              key: io.kubernetes.pod.namespace
+            - key: io.kubernetes.pod.namespace
               operator: Exists
       toPorts:
         - ports:
