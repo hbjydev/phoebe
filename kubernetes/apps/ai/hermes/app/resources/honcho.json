@@ -1,0 +1,21 @@
+{
+  "hosts": {
+    "hermes": {
+      "peerName": "hayden",
+      "aiPeer": "holly",
+      "workspace": "hermes",
+      "observationMode": "directional",
+      "writeFrequency": "async",
+      "recallMode": "hybrid",
+      "contextTokens": 1200,
+      "dialecticCadence": 2,
+      "dialecticReasoningLevel": "medium",
+      "sessionStrategy": "per-session",
+      "enabled": true,
+      "saveMessages": true,
+      "pinUserPeer": false,
+      "runtimePeerPrefix": "discord_"
+    }
+  },
+  "baseUrl": "http://honcho-app.ai.svc.cluster.local"
+}

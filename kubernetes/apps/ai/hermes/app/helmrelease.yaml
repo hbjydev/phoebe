@@ -40,6 +40,7 @@ spec:
                 set -euo pipefail
                 rm -rf /data/config.yaml*
                 cp /run/config/config.yaml /data/config.yaml
+                cp /run/config/honcho.json /data/honcho.json
             securityContext:
               allowPrivilegeEscalation: false
               capabilities: { drop: [ALL] }
@@ -173,6 +174,8 @@ spec:
             init:
               - path: /run/config/config.yaml
                 subPath: config.yaml
+              - path: /run/config/honcho.json
+                subPath: honcho.json
 
       run:
         type: emptyDir
