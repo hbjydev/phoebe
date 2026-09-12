@@ -195,7 +195,7 @@ spec:
     route:
       app:
         hostnames:
-          - "honcho.${ROOT_DOMAIN}"
+          - "honcho.hayden.moe"
         parentRefs:
           - name: internal
             namespace: network
