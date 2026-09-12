@@ -1,0 +1,45 @@
+[deriver.model_config]
+transport = "openai"
+model = "chatgpt/gpt-5.6-luna"
+
+[summary.model_config]
+transport = "openai"
+model = "chatgpt/gpt-5.6-luna"
+
+[dream.deduction_model_config]
+transport = "openai"
+model = "chatgpt/gpt-5.6-luna"
+
+[dream.induction_model_config]
+transport = "openai"
+model = "chatgpt/gpt-5.6-luna"
+
+[dialectic.levels.minimal]
+MAX_TOOL_ITERATIONS = 1
+[dialectic.levels.minimal.model_config]
+transport = "openai"
+model = "chatgpt/gpt-5.6-luna"
+
+[dialectic.levels.low]
+MAX_TOOL_ITERATIONS = 5
+[dialectic.levels.low.model_config]
+transport = "openai"
+model = "chatgpt/gpt-5.6-luna"
+
+[dialectic.levels.medium]
+MAX_TOOL_ITERATIONS = 2
+[dialectic.levels.medium.model_config]
+transport = "openai"
+model = "chatgpt/gpt-5.6-luna"
+
+[dialectic.levels.high]
+MAX_TOOL_ITERATIONS = 4
+[dialectic.levels.high.model_config]
+transport = "openai"
+model = "chatgpt/gpt-5.6-luna"
+
+[dialectic.levels.max]
+MAX_TOOL_ITERATIONS = 10
+[dialectic.levels.max.model_config]
+transport = "openai"
+model = "chatgpt/gpt-5.6-luna"
