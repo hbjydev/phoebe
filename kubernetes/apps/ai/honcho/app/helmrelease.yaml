@@ -17,6 +17,7 @@ spec:
         pod:
           labels:
             db.policy.home.arpa/postgres: allow
+            db.policy.home.arpa/df-honcho-redis: allow
             ingress.policy.home.arpa/cluster: allow
             egress.policy.home.arpa/litellm: allow
             egress.policy.home.arpa/internet: allow
