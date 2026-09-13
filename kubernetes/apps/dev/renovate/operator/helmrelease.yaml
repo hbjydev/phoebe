@@ -13,7 +13,7 @@ spec:
 
     deployment:
       podLabels:
-        db.policy.home.arpa/df-litellm-redis: allow
+        db.policy.home.arpa/df-renovate-operator-redis: allow
         egress.policy.home.arpa/cluster: allow
 
     auth:
