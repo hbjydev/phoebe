@@ -21,6 +21,9 @@ spec:
       jellyseerr:
         annotations:
           reloader.stakater.com/auto: "true"
+        pod:
+          labels:
+            egress.policy.home.arpa/internet: allow
         containers:
           app:
             image:
