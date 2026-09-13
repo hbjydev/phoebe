@@ -19,3 +19,26 @@ spec:
       toPorts:
         - ports:
             - port: "4000"
+
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: "litellm"
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: litellm
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: kguardian-llm-bridge
+            app.kubernetes.io/instance: kguardian
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: In
+              values: [kguardian]
+      toPorts:
+        - ports:
+            - port: "8080"
