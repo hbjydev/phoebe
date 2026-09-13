@@ -3,27 +3,6 @@
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: immich
-spec:
-  endpointSelector:
-    matchLabels:
-      app.kubernetes.io/instance: immich
-  egress:
-    - toEndpoints:
-        - matchLabels:
-            app: dragonfly
-            app.kubernetes.io/name: dragonfly
-            k8s:io.kubernetes.pod.namespace: database
-      toPorts:
-        - ports:
-            - port: "6379"
-              protocol: TCP
-
----
-# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumnetworkpolicy_v2.json
-apiVersion: cilium.io/v2
-kind: CiliumNetworkPolicy
-metadata:
   name: immich-server
 spec:
   endpointSelector:
