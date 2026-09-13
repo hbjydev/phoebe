@@ -12,6 +12,7 @@ spec:
   components:
     - ../../../../components/postgres/pass
     - ../../../../components/kopiur
+    - ../../../../components/redis
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph

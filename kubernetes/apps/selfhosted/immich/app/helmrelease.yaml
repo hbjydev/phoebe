@@ -65,9 +65,9 @@ spec:
                     name: immich-postgres
                     key: poolhost
 
-              REDIS_HOSTNAME: dragonfly.database.svc.cluster.local
+              REDIS_HOSTNAME: immich-redis.selfhosted.svc.cluster.local
               REDIS_PORT: 6379
-              REDIS_DBINDEX: 1
+              REDIS_DBINDEX: 0
 
     immich:
       metrics:
