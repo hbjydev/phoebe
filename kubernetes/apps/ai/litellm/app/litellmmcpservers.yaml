@@ -88,3 +88,8 @@ spec:
     volumeMounts:
       - name: tmp
         mountPath: /tmp
+    podSecurityContext:
+      runAsUser: &id 0
+      runAsGroup: *id
+      runAsNonRoot: false
+      fsGroup: *id
