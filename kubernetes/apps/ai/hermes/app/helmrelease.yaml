@@ -127,6 +127,7 @@ spec:
             securityContext: *secCtx
 
     defaultPodOptions:
+      automountServiceAccountToken: true
       imagePullSecrets:
         - name: imp-forgejo
       securityContext:
