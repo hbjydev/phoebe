@@ -15,4 +15,4 @@ resources:
   - ./openclaw/ks.yaml
   - ./llama-cpp-reranker/ks.yaml
   - ./text-embeddings-inference/ks.yaml
-  - ./toolhive/ks.yaml
+  # - ./toolhive/ks.yaml
