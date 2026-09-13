@@ -1,0 +1,46 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: forgejo-runner
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: forgejo-runner-instance
+  enableDefaultDeny:
+    ingress: true
+  egress:
+    # Forgejo Server
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: forgejo
+            k8s:io.kubernetes.pod.namespace: forgejo
+      toPorts:
+        - ports:
+            - port: "3000"
+              protocol: TCP
+
+    # Forgejo runner cache & proxy (job pods -> runner pod)
+    - toEndpoints:
+        - matchExpressions:
+            - key: app.kubernetes.io/instance
+              operator: In
+              values:
+                - forgejo-runner
+            - key: k8s:io.kubernetes.pod.namespace
+              operator: In
+              values:
+                - forgejo
+      toPorts:
+        - ports:
+            - port: "8088"
+              protocol: TCP
+            - port: "8089"
+              protocol: TCP
+
+    - # Own services via ingress gateways (e.g. git.erwanleboucher.dev)
+      toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/managed-by: envoy-gateway
+            k8s:io.kubernetes.pod.namespace: network
