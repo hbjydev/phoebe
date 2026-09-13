@@ -70,8 +70,8 @@ spec:
     available_on_public_internet: true
   transport: http
   authTokenRef:
-    key: miniflux-token
-    name: token
+    name: miniflux-token
+    key: token
   workload:
     # renovate: datasource=docker depName=jwonder/miniflux-mcp
     image: jwonder/miniflux-mcp:0.7.0
