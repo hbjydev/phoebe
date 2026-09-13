@@ -153,6 +153,8 @@ spec:
         value: http
       - name: MCP_LISTEN_ADDR
         value: :8080
+      - name: VM_INSTANCE_TYPE
+        value: single
       - name: VM_INSTANCE_ENTRYPOINT
         value: http://vmsingle-victoria-metrics.observability.svc:8429
     volumes:
