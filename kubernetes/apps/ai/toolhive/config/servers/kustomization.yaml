@@ -7,9 +7,5 @@ resources:
   - ./externalsecret.yaml
 
   # servers
-  - ./context7
-  - ./forgejo
-  - ./gh-grep
   - ./grafana
   - ./kubesearch
-  - ./miniflux

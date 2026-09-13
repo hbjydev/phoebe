@@ -3,7 +3,7 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMMCPServer
 metadata:
-  name: context7
+  name: mcp-context7
 spec:
   alias: context7
   url: https://mcp.context7.com/mcp
@@ -20,7 +20,7 @@ spec:
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMMCPServer
 metadata:
-  name: kguardian
+  name: mcp-kguardian
 spec:
   alias: kguardian
   url: http://kguardian-llm-bridge.kguardian.svc.cluster.local:8080/mcp
@@ -33,7 +33,7 @@ spec:
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMMCPServer
 metadata:
-  name: ha-mcp
+  name: mcp-hass
 spec:
   alias: hass
   params:
@@ -50,6 +50,37 @@ spec:
         valueFrom:
           secretKeyRef:
             name: homeassistant-token
+            key: token
+    volumes:
+      - name: tmp
+        emptyDir: {}
+    volumeMounts:
+      - name: tmp
+        mountPath: /tmp
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: mcp-miniflux
+spec:
+  alias: miniflux
+  params:
+    available_on_public_internet: true
+  transport: stdio
+  workload:
+    # renovate: datasource=docker depName=jwonder/miniflux-mcp
+    image: jwonder/miniflux-mcp:0.7.0
+    env:
+      - name: MINIFLUX_URL
+        value: http://miniflux.selfhosted.svc.cluster.local:8080
+      - name: MCP_TRANSPORT
+        value: stdio
+      - name: MINIFLUX_API_KEY
+        valueFrom:
+          secretKeyRef:
+            name: miniflux-token
             key: token
     volumes:
       - name: tmp
