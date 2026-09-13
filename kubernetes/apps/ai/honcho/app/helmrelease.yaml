@@ -47,7 +47,7 @@ spec:
               # Embeddings
               EMBEDDING_API_KEY: "dummy"
               EMBEDDING_MODEL_CONFIG__DIMENSIONS_MODE: never
-              EMBEDDING_MODEL_CONFIG__MODEL: all-MiniLM-L6-v2
+              EMBEDDING_MODEL_CONFIG__MODEL: sentence-transformers/all-MiniLM-L6-v2
               EMBEDDING_MODEL_CONFIG__OVERRIDES__API_KEY_ENV: EMBEDDING_API_KEY
               EMBEDDING_MODEL_CONFIG__OVERRIDES__BASE_URL: http://text-embeddings-inference.ai.svc.cluster.local:8080/v1
               EMBEDDING_MODEL_CONFIG__TRANSPORT: openai
