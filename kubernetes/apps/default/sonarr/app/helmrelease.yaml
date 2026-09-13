@@ -21,6 +21,14 @@ spec:
       sonarr:
         annotations:
           reloader.stakater.com/auto: "true"
+        pod:
+          labels:
+            egress.policy.home.arpa/internet: allow
+            egress.policy.home.arpa/sabnzbd: allow
+            egress.policy.home.arpa/qbittorrent: allow
+            egress.policy.home.arpa/slskd: allow
+            egress.policy.home.arpa/prowlarr: allow
+            db.policy.home.arpa/postgres: allow
         containers:
           app:
             image:
