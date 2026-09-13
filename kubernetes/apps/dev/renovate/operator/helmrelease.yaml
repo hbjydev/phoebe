@@ -8,6 +8,10 @@ spec:
     kind: OCIRepository
     name: *name
   interval: 30m
+  install:
+    disableSchemaValidation: true
+  upgrade:
+    disableSchemaValidation: true
   values:
     fullnameOverride: *name
 
