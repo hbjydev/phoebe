@@ -133,3 +133,31 @@ spec:
     volumeMounts:
       - name: tmp
         mountPath: /tmp
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: mcp-victoriametrics
+spec:
+  alias: victoriametrics
+  params:
+    available_on_public_internet: true
+  workload:
+    # renovate: datasource=docker depName=ghcr.io/victoriametrics/mcp-victoriametrics
+    image: ghcr.io/victoriametrics/mcp-victoriametrics:v1.20.2
+    port: 8080
+    env:
+      - name: MCP_SERVER_MODE
+        value: http
+      - name: MCP_LISTEN_ADDR
+        value: :8080
+      - name: VM_INSTANCE_ENTRYPOINT
+        value: http://vmsingle-victoria-metrics.observability.svc:8429
+    volumes:
+      - name: tmp
+        emptyDir: {}
+    volumeMounts:
+      - name: tmp
+        mountPath: /tmp
