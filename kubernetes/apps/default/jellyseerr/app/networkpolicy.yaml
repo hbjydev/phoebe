@@ -13,8 +13,6 @@ spec:
       toPorts: &http [{ports: [{port: "80", protocol: TCP}]}]
     - toEndpoints: [{matchLabels: {app.kubernetes.io/name: radarr}}]
       toPorts: *http
-    - toEndpoints: [{matchLabels: {app.kubernetes.io/name: sonarr}}]
-      toPorts: *http
 
     - toEndpoints:
         - matchLabels:
