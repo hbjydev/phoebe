@@ -146,7 +146,7 @@ spec:
     available_on_public_internet: true
   workload:
     # renovate: datasource=docker depName=ghcr.io/victoriametrics/mcp-victoriametrics
-    image: ghcr.io/victoriametrics/mcp-victoriametrics:v1.20.2
+    image: ghcr.io/victoriametrics/mcp-victoriametrics:v1.120.1
     port: 8080
     env:
       - name: MCP_SERVER_MODE
