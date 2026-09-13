@@ -39,8 +39,8 @@ spec:
               - |
                 set -euo pipefail
                 rm -rf /data/config.yaml*
-                cp /run/config/config.yaml /data/config.yaml
-                cp /run/config/honcho.json /data/honcho.json
+                cp /etc/hermes/config.yaml /data/config.yaml
+                cp /etc/hermes/honcho.json /data/honcho.json
             securityContext:
               allowPrivilegeEscalation: false
               capabilities: { drop: [ALL] }
@@ -174,9 +174,9 @@ spec:
         advancedMounts:
           hermes:
             init:
-              - path: /run/config/config.yaml
+              - path: /etc/hermes/config.yaml
                 subPath: config.yaml
-              - path: /run/config/honcho.json
+              - path: /etc/hermes/honcho.json
                 subPath: honcho.json
 
       run:
@@ -184,7 +184,7 @@ spec:
         advancedMounts:
           hermes:
             app:
-              - path: /run
+              - path: /var/lib/hermes/run
 
       tmp:
         type: emptyDir
