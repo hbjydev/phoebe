@@ -68,15 +68,26 @@ spec:
   alias: miniflux
   params:
     available_on_public_internet: true
-  transport: stdio
+  transport: http
+  authTokenRef:
+    key: miniflux-token
+    name: token
   workload:
     # renovate: datasource=docker depName=jwonder/miniflux-mcp
     image: jwonder/miniflux-mcp:0.7.0
     env:
+      - name: MCP_TRANSPORT
+        value: streamable-http
+      - name: MCP_HTTP_ADDR
+        value: :8080
+      - name: MCP_AUTH_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: miniflux-token
+            key: token
+
       - name: MINIFLUX_URL
         value: http://miniflux.selfhosted.svc.cluster.local:8080
-      - name: MCP_TRANSPORT
-        value: stdio
       - name: MINIFLUX_API_KEY
         valueFrom:
           secretKeyRef:
