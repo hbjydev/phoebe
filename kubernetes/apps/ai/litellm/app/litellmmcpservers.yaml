@@ -69,6 +69,7 @@ spec:
   params:
     available_on_public_internet: true
   transport: http
+  authType: bearer
   authTokenRef:
     name: miniflux-token
     key: token
