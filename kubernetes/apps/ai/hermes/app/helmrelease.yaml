@@ -70,8 +70,6 @@ spec:
               HERMES_DASHBOARD_OIDC_CLIENT_ID: hermes
 
               SEERR_URL: http://jellyseerr.default.svc.cluster.local
-              HASS_URL: 'https://hass.hayden.moe'
-
               SEARXNG_URL: http://searxng.selfhosted.svc.cluster.local:8080
 
               HOME: /data
