@@ -57,7 +57,7 @@ spec:
       app:
         type: LoadBalancer
         annotations:
-          external-dns.alpha.kubernetes.io/hostname: smtp-relay.hayden.moe
+          external-dns.kubernetes.io/hostname: smtp-relay.hayden.moe
           lbipam.cilium.io/ips: 10.80.0.25
         externalTrafficPolicy: Local
         ports:
