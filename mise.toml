@@ -7,10 +7,10 @@ TALOSCONFIG = "{{ config_root }}/talos/talosconfig"
 JUST_UNSTABLE = "1"
 
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
-KUBE_VERSION="1.35.8"
+KUBE_VERSION="1.36.3"
 
 # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
-TALOS_VERSION="1.12.12"
+TALOS_VERSION="1.13.10"
 
 [settings]
 experimental = true
@@ -30,7 +30,7 @@ python.uv_venv_auto = true
 "pipx:flux-local" = "8.4.0"
 gum = "2.0.1"
 just = "1.58.0"
-talosctl = "1.13.9"
+talosctl = "1.13.10"
 terraform = "1.16.2"
 upctl = "3.36.0"
 uv = "0.12.13"
