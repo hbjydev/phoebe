@@ -35,7 +35,7 @@ spec:
       hostRoot: /sys/fs/cgroup
     cni:
       exclusive: false
-    devices: enp+
+    devices: bond+
     enableIPv4BIGTCP: false
     endpointRoutes:
       enabled: true
