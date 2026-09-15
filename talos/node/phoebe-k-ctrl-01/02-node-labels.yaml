@@ -1,0 +1,4 @@
+apiVersion: v1alpha1
+kind: KubeNodeConfig
+labels:
+  amd.feature.node.kubernetes.io/gpu: "true"

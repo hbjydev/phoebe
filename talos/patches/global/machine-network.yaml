@@ -1,9 +1,0 @@
-# vim:ft=yaml
----
-machine:
-  network:
-    disableSearchDomain: true
-    nameservers:
-      - 10.70.0.1
-      - 1.1.1.1
-      - 1.0.0.1

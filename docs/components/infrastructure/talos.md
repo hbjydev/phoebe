@@ -13,47 +13,48 @@ API-driven approach.
 
 ```mermaid
 flowchart TD
-    talconfig(talconfig.yaml) --> talhelper
-    talhelper(Talhelper) --> nodecfg
-    nodecfg(Node configs) --> talosctl
-    talosctl(talosctl apply-node ...) --> nodes
+    topfconfig(topf.yaml) --> topf(TOPF)
+    patches(Layered Talos patches) --> topf
+    secrets(1Password secrets provider) --> topf
+    topf --> nodes
     nodes(Bare metal nodes)
 ```
 
 ## Configuration Files
 
-### Main Configuration Template
+### Main Configuration
 
-`talos/talconfig.yaml.j2` - Jinja2 template that defines:
+`talos/topf.yaml` defines:
 
 - Cluster name and endpoint
 - Kubernetes and Talos versions
-- Node definitions (hostname, IP, disk, network)
-- Patches to apply
+- Image Factory schematic and Secure Boot settings
+- Node names, IPs, and roles
 
 ```yaml
 clusterName: phoebe
-endpoint: https://10.80.0.8:6443
-
-talosVersion: "{{ ENV.TALOS_VERSION }}"
-kubernetesVersion: "{{ ENV.KUBE_VERSION }}"
+clusterEndpoint: https://10.80.0.8:6443
+kubernetesVersion: "1.37.0"
+talosVersion: "1.14.0"
+schematicId: "@schematic.yaml"
+secureboot: true
 
 nodes:
-  - hostname: phoebe-k-ctrl-01
-    controlPlane: true
-    ipAddress: 10.60.0.10
-    # ... additional config
+  - host: phoebe-k-ctrl-01
+    ip: 10.70.0.186
+    role: control-plane
 ```
 
-### Secrets Template
+### Secrets
 
-`talos/talsecret.yaml.optpl` - 1Password template for cluster secrets:
+`talos/secrets.yaml.optpl` is the 1Password template for the existing Talos
+secrets bundle. `talos/secrets-provider` injects it on demand for TOPF, so
+plaintext credentials and private keys are never written to the repository.
+The bundle contains:
 
 - Cluster ID and secret
 - Bootstrap token
 - TLS certificates for etcd, Kubernetes, and Talos
-
-Secrets are fetched from 1Password at configuration generation time.
 
 ### Schematic
 
@@ -75,67 +76,71 @@ This schematic is submitted to Talos Factory to build a custom installer image.
 
 ## Patches
 
-Patches modify the base Talos configuration. Located in `talos/patches/`:
+TOPF layers patches in this order:
 
-### Global Patches (All Nodes)
+- `talos/all/` for every node
+- `talos/control-plane/` for control-plane nodes
+- `talos/worker/` for workers, when present
+- `talos/node/<host>/` for one node
 
-- `machine-files.yaml` - Custom files to place on nodes
-- `machine-kubelet.yaml` - Kubelet configuration and feature gates
-- `machine-network.yaml` - Network settings
-- `machine-sysctls.yaml` - Kernel parameters
-- `machine-time.yaml` - NTP configuration
+Patches use the Talos 1.14 multi-document API. Most settings are standalone
+documents such as `KubeletConfig`, `ResolverConfig`, `VLANConfig`, and
+`UnattendedInstallConfig`. Only fields still owned by the legacy document, such
+as machine certificate SANs, machine features, and etcd settings, remain under
+`machine:` or `cluster:`.
 
-### Controller Patches (Control Plane Only)
-
-- `cluster.yaml` - API server, etcd, and scheduler configuration
-
-Example from `machine-kubelet.yaml`:
+Example from `talos/all/07-kubelet.yaml`:
 
 ```yaml
-machine:
-  kubelet:
-    defaultRuntimeSeccompProfileEnabled: true
-    disableManifestsDirectory: true
-    extraConfig:
-      featureGates:
-        ResourceHealthStatus: true
+apiVersion: v1alpha1
+kind: KubeletConfig
+defaultRuntimeSeccompProfileEnabled: true
+config:
+  featureGates:
+    ResourceHealthStatus: true
 ```
 
 ## Just Commands
 
 The `talos/mod.just` file provides management commands:
 
-### Generate Configuration
+### Render Configuration
 
 ```bash
-just talos genconfig
+just talos render
 ```
 
-Generates node-specific configurations using talhelper.
+Renders node-specific configuration into the ignored `talos/output/` directory
+without applying anything.
 
 ### Apply Configuration
 
 ```bash
-just talos apply-node <ip> [args]
+just talos apply --dry-run
+just talos apply
+just talos apply-node <host> [args]
 ```
 
-Applies configuration to a specific node.
+Always review the dry-run before applying an existing cluster.
 
 ### Get Kubeconfig
 
 ```bash
-just talos kubeconfig <ip>
+just talos kubeconfig
+just talos talosconfig
 ```
 
-Retrieves the cluster kubeconfig.
+Generates client configuration from the existing secrets bundle.
 
 ### Upgrade Talos
 
 ```bash
-just talos upgrade <node> [args]
+just talos upgrade <host> --dry-run
+just talos upgrade <host> [args]
 ```
 
-Upgrades a node to a new Talos version.
+TOPF upgrades the selected node to the Talos version and schematic declared in
+`topf.yaml`.
 
 ### Upgrade Kubernetes
 
@@ -149,40 +154,50 @@ Upgrades a node to a new Kubernetes version.
 
 ### Talos Upgrades
 
-1. Update `talosVersion` in `talconfig.yaml.j2`
-2. Regenerate configuration: `just talos genconfig`
-3. Upgrade each node one at a time:
+1. Update `talosVersion` in `talos/topf.yaml` and keep the `mise.toml` Talos
+   client pins aligned.
+2. Check and run the node upgrade. When moving from Talos 1.13 to 1.14, do
+   this before applying the new multi-document configuration; Talos 1.14 can
+   continue running the existing legacy configuration during the reboot.
 
 ```bash
-just talos upgrade 10.60.0.10
+just talos upgrade phoebe-k-ctrl-01 --dry-run
+just talos upgrade phoebe-k-ctrl-01
 ```
 
-4. Wait for node to reboot and rejoin
-5. Repeat for remaining nodes
+3. Wait for the node to reboot and rejoin.
+4. Review and apply the Talos 1.14 configuration:
+
+```bash
+just talos apply --dry-run
+just talos apply
+```
+
+5. Repeat the node upgrade for remaining nodes, when present.
 
 ### Kubernetes Upgrades
 
-1. Update `kubernetesVersion` in `talconfig.yaml.j2`
-2. Regenerate configuration: `just talos genconfig`
-3. Upgrade control plane first:
+1. Update `kubernetesVersion` in `talos/topf.yaml` and `KUBE_VERSION` in
+   `mise.toml`.
+2. Run a Kubernetes upgrade against a control-plane node:
 
 ```bash
-just talos upgrade-k8s 10.60.0.10
+just talos upgrade-k8s 10.70.0.186 --dry-run
+just talos upgrade-k8s 10.70.0.186
 ```
 
-4. The upgrade propagates to worker nodes automatically
+3. The control-plane upgrade updates kubelet across the cluster.
 
 ## Bootstrapping
 
 Initial cluster bootstrap is handled by `bootstrap/mod.just`:
 
-1. **Apply Talos config** to all nodes
-2. **Bootstrap Kubernetes** on the control plane
-3. **Wait for nodes** to be ready
-4. **Create namespaces** from directory structure
-5. **Apply CRDs** via Helmfile
-6. **Install core apps** (Cilium, CoreDNS, Flux)
-7. **Fetch kubeconfig** for cluster access
+1. **Apply Talos config and bootstrap Kubernetes** with TOPF
+2. **Wait for nodes** to be ready
+3. **Create namespaces** from directory structure
+4. **Apply CRDs** via Helmfile
+5. **Install core apps** (Cilium, CoreDNS, Flux)
+6. **Fetch kubeconfig** for cluster access
 
 ```bash
 just bootstrap

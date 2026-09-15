@@ -6,28 +6,14 @@ bootstrap_dir := justfile_dir() + '/bootstrap'
 kubernetes_dir := justfile_dir() + '/kubernetes'
 
 [private]
-default: talos k8s (kubeconfig "node") wait namespaces resources crds apps kubeconfig
+default: talos (kubeconfig "node") wait namespaces resources crds apps kubeconfig
 
 # Install Talos
 talos:
   just log info "Running stage..." "stage" "$0"
-  for n in $(just talos nodes); do \
-    if ! op=$(just talos apply-node "$n" --insecure 2>&1); then \
-      if [[ "$op" == *"certificate required"* ]]; then \
-        just log info "Talos already configured, skipping apply of config" "stage" "$0" "node" "$n"; \
-        continue; \
-      fi; \
-      just log fatal "Failed to apply Talos configuration" "stage" "$0" "node" "$n" "output" "$op"; \
-    fi; \
-  done
-
-# Install Kubernetes
-k8s:
-  just log info "Running stage..." "stage" "$0"
-  until op=$(talosctl -n "$(just talos controller)" bootstrap 2>&1 || true) && [[ "$op" == *"AlreadyExists"* ]]; do \
-    just log info "Kubernetes bootstrap in progress. Retrying in 5 seconds..." "stage" "$0"; \
-    sleep 5; \
-  done
+  if ! op=$(just talos apply --auto-bootstrap --confirm=false 2>&1); then \
+    just log fatal "Failed to apply Talos configuration" "stage" "$0" "output" "$op"; \
+  fi
 
 # Fetch kubeconfig
 kubeconfig lb="cilium":

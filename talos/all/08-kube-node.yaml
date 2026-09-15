@@ -1,0 +1,6 @@
+apiVersion: v1alpha1
+kind: KubeNodeConfig
+nodeIP:
+  validSubnets:
+    - 10.70.0.0/24
+    - 100.64.0.0/10  # tailscale

@@ -1,7 +1,6 @@
 set quiet := true
 set shell := ['bash', '-euo', 'pipefail', '-c']
 
-tmp_dir := `mktemp -d`
 talos_dir := justfile_dir() + "/talos"
 
 [private]
@@ -10,66 +9,43 @@ default:
 
 [private]
 controller:
-  talosctl config info -o yaml | yq -e '.endpoints[0]'
+  yq -er '.nodes[] | select(.role == "control-plane") | .ip' "{{ talos_dir }}/topf.yaml" | head -n1
 
 [private]
 nodes:
-  talosctl config info -o yaml | yq -e '.nodes | join(" ")'
+  yq -er '.nodes[].host' "{{ talos_dir }}/topf.yaml"
 
-# Applies a Talos config to a given node
-apply-node node *args: genconfig
-  files=$(just talos render-config); \
-  cmd=$(talhelper gencommand apply \
-    --config-file "$(echo "$files" | jq -r .config)" \
-    --node "{{ node }}" \
-    --out-dir "{{ talos_dir }}" | sed 's/;//') && \
-  $cmd {{ args }}
+# Applies the desired configuration to every node.
+apply *args:
+  cd "{{ talos_dir }}" && topf apply {{ args }}
 
-# Generates the necessary Kubeconfig to access the cluster
-kubeconfig node *args: genconfig
-  files=$(just talos render-config); \
-  cmd=$(talhelper gencommand kubeconfig \
-    --config-file "$(echo "$files" | jq -r .config)" \
-    --node "{{ node }}" \
-    --out-dir "{{ talos_dir }}" | sed 's/;//') && \
-  $cmd {{ args }}
+# Applies the desired configuration to one node selected by its TOPF host name.
+apply-node node *args:
+  cd "{{ talos_dir }}" && topf --nodes-filter '^{{ node }}$' apply {{ args }}
 
-# Upgrades a given node to the provided Talos version
-upgrade node *args: genconfig
-  files=$(just talos render-config); \
-  cmd=$(talhelper gencommand upgrade \
-    --config-file "$(echo "$files" | jq -r .config)" \
-    --node "{{ node }}" \
-    --out-dir "{{ talos_dir }}" | sed 's/;//') && \
-  $cmd {{ args }}
+# Renders the generated Talos machine configurations without applying them.
+render *args:
+  cd "{{ talos_dir }}" && topf render --output output {{ args }}
 
-# Upgrades a given node to the provided Kubernetes version
-upgrade-k8s node *args: genconfig
-  files=$(just talos render-config); \
-  cmd=$(talhelper gencommand upgrade-k8s \
-    --config-file "$(echo "$files" | jq -r .config)" \
-    --node "{{ node }}" \
-    --out-dir "{{ talos_dir }}" | sed 's/;//') && \
-  $cmd {{ args }}
+# Compatibility alias for the previous recipe name.
+genconfig: render
 
-# Generates Talos config and secret files into the talos directory
-genconfig:
-  files=$(just talos render-config); \
-  talhelper genconfig \
-    --secret-file "$(echo "$files" | jq -r .secret)" \
-    --config-file "$(echo "$files" | jq -r .config)" \
-    --out-dir "{{ talos_dir }}"
+# Generates the admin kubeconfig managed by this repository.
+kubeconfig *args:
+  cd "{{ talos_dir }}" && topf kubeconfig {{ args }} > kubeconfig
 
-# Generate a schematic ID from the schematic definition
+# Generates talosconfig from the configured secrets bundle.
+talosconfig *args:
+  cd "{{ talos_dir }}" && topf talosconfig {{ args }} > talosconfig
+
+# Prints the deterministic image-factory schematic ID.
 schematic-id:
-  curl -fsSL -X POST --data-binary @{{ talos_dir }}/schematic.yaml https://factory.talos.dev/schematics | jq -r .id
+  cd "{{ talos_dir }}" && topf schematic-ids
 
-# Render talos config for a node
-render-config:
-  export TALOS_DIR="{{ talos_dir }}"; \
-  export TALOS_SCHEMATIC="$(just talos schematic-id)"; \
-  secret_file="$(mktemp)"; \
-  config_file="$(mktemp)"; \
-  just template "{{ talos_dir }}/talsecret.yaml.optpl" > "$secret_file"; \
-  just template "{{ talos_dir }}/talconfig.yaml.j2" > "$config_file"; \
-  echo "{\"secret\":\"$secret_file\",\"config\":\"$config_file\"}"
+# Upgrades a node to the Talos version and schematic declared in topf.yaml.
+upgrade node *args:
+  cd "{{ talos_dir }}" && topf --nodes-filter '^{{ node }}$' upgrade {{ args }}
+
+# Upgrades Kubernetes; TOPF intentionally delegates this operation to talosctl.
+upgrade-k8s node *args:
+  talosctl upgrade-k8s --nodes "{{ node }}" --to "$KUBE_VERSION" {{ args }}

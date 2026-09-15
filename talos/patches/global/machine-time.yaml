@@ -1,8 +1,0 @@
-# vim:ft=yaml
----
-machine:
-  time:
-    disabled: false
-    servers:
-      # Cloudflare NTP
-      - time.cloudflare.com

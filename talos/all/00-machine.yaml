@@ -1,0 +1,7 @@
+# Fields which remain in the v1alpha1 document in Talos 1.14.
+machine:
+  certSANs:
+    - 127.0.0.1
+    - phoebe.hayden.moe
+  features:
+    diskQuotaSupport: true

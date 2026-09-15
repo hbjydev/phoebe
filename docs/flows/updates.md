@@ -96,7 +96,7 @@ spec:
 
 Version updates for Talos and Kubernetes are managed through:
 
-- `talos/talconfig.yaml.j2` - Contains version references
+- `talos/topf.yaml` - Contains the Talos and Kubernetes version references
 - Custom Renovate managers detect and update these versions
 
 ## Dashboard

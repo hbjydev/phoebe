@@ -1,0 +1,6 @@
+apiVersion: v1alpha1
+kind: UnattendedInstallConfig
+provisioning:
+  diskSelector:
+    match: disk.serial == "S4EUNZFN539342N"
+  wipe: false
