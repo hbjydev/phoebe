@@ -1,11 +1,10 @@
 ---
 apiVersion: v1alpha1
 kind: LinkAliasConfig
-name: net%d
+name: net0
 selector:
-  match: >-
-    (link.driver == "igc" || link.driver == "r8169")
-    && mac(link.permanent_addr).startsWith("58:47:ca:7f:")
+  match: link.driver == "igc" && mac(link.permanent_addr).startsWith("58:47:ca:7f:")
+
 ---
 apiVersion: v1alpha1
 kind: BondConfig
@@ -15,6 +14,7 @@ links:
   - net1
 bondMode: active-backup
 mtu: 9000
+
 ---
 apiVersion: v1alpha1
 kind: VLANConfig
@@ -22,10 +22,12 @@ name: bond0.70
 vlanID: 70
 parent: bond0
 mtu: 9000
+
 ---
 apiVersion: v1alpha1
 kind: DHCPv4Config
-name: bond0.70
+name: bond0
+
 ---
 apiVersion: v1alpha1
 kind: VLANConfig
@@ -33,6 +35,7 @@ name: bond0.20
 vlanID: 20
 parent: bond0
 mtu: 9000
+
 ---
 apiVersion: v1alpha1
 kind: VLANConfig
