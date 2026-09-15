@@ -13,5 +13,5 @@ secretsProvider: ./secrets-provider
 
 nodes:
   - host: phoebe-k-ctrl-01
-    ip: 192.168.5.15
+    ip: 10.70.0.186
     role: control-plane

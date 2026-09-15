@@ -3,7 +3,9 @@ apiVersion: v1alpha1
 kind: LinkAliasConfig
 name: net0
 selector:
-  match: link.driver == "igc" && mac(link.permanent_addr).startsWith("58:47:ca:7f:")
+  match: >-
+    (link.driver == "igc" || link.driver == "r8169")
+    && mac(link.permanent_addr).startsWith("58:47:ca:7f:")
 
 ---
 apiVersion: v1alpha1
@@ -26,7 +28,7 @@ mtu: 9000
 ---
 apiVersion: v1alpha1
 kind: DHCPv4Config
-name: bond0
+name: bond0.70
 
 ---
 apiVersion: v1alpha1
