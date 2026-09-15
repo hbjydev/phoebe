@@ -7,10 +7,10 @@ TALOSCONFIG = "{{ config_root }}/talos/talosconfig"
 JUST_UNSTABLE = "1"
 
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
-KUBE_VERSION="1.35.2"
+KUBE_VERSION="1.35.8"
 
 # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
-TALOS_VERSION="1.12.7"
+TALOS_VERSION="1.12.12"
 
 [settings]
 experimental = true
