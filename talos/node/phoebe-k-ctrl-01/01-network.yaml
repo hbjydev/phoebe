@@ -1,7 +1,7 @@
 ---
 apiVersion: v1alpha1
 kind: LinkAliasConfig
-name: net0
+name: net%d
 selector:
   match: >-
     (link.driver == "igc" || link.driver == "r8169")
@@ -29,6 +29,7 @@ mtu: 9000
 apiVersion: v1alpha1
 kind: DHCPv4Config
 name: bond0.70
+clientIdentifier: mac
 
 ---
 apiVersion: v1alpha1
