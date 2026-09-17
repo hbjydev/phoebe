@@ -40,6 +40,7 @@ spec:
     - name: litellm-operator
   components:
     - ../../../../components/kopiur
+    - ../../../../components/kanidm
     - ../../../../components/postgres/pass
   path: ./kubernetes/apps/ai/litellm/app
   prune: true
@@ -48,6 +49,13 @@ spec:
       APP: *app
       NAMESPACE: *namespace
       KOPIUR_CAPACITY: 1Gi
+
+      OIDC_DISPLAY_NAME: LiteLLM
+      OIDC_ORIGIN: https://llm.hayden.moe/
+      OIDC_REDIRECT_URLS: '["https://llm.hayden.moe/sso/callback"]'
+      OIDC_GROUP_PREFIX: litellm
+      OIDC_USERS_GROUP_MEMBERS: '[hayden]'
+      OIDC_ADMIN_GROUP_MEMBERS: '[hayden]'
   sourceRef:
     kind: GitRepository
     name: flux-system

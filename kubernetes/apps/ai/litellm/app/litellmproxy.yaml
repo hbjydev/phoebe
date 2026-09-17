@@ -97,6 +97,27 @@ spec:
     - name: REDIS_PORT
       value: "6379"
 
+    - name: PROXY_BASE_URL
+      value: https://llm.hayden.moe
+    - name: GENERIC_AUTHORIZATION_ENDPOINT
+      value: https://sso.hayden.moe/ui/oauth2
+    - name: GENERIC_TOKEN_ENDPOINT
+      value: https://sso.hayden.moe/oauth2/token
+    - name: GENERIC_USERINFO_ENDPOINT
+      value: https://sso.hayden.moe/oauth2/openid/litellm/userinfo
+    - name: GENERIC_SCOPE
+      value: openid profile email
+    - name: GENERIC_CLIENT_ID
+      valueFrom:
+        secretKeyRef:
+          name: litellm-kanidm-oauth2-credentials
+          key: CLIENT_ID
+    - name: GENERIC_CLIENT_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: litellm-kanidm-oauth2-credentials
+          key: CLIENT_SECRET
+
   resources:
     requests:
       cpu: 100m
@@ -114,3 +135,9 @@ spec:
     parentRefs:
       - name: external
         namespace: network
+    filters:
+      - type: RequestHeaderModifier
+        requestHeaderModifier:
+          set:
+            - name: x-litellm-session-id
+              value: '%REQ(x-session-id)%'
