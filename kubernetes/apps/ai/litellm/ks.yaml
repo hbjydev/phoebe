@@ -40,7 +40,7 @@ spec:
     - name: litellm-operator
   components:
     - ../../../../components/kopiur
-    - ../../../../components/kanidm
+    - ../../../../components/kanidm/private
     - ../../../../components/postgres/pass
   path: ./kubernetes/apps/ai/litellm/app
   prune: true
