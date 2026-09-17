@@ -51,6 +51,7 @@ spec:
       KOPIUR_CAPACITY: 1Gi
 
       OIDC_DISPLAY_NAME: LiteLLM
+      OIDC_ALLOW_INSECURE_CLIENT_DISABLE_PKCE: 'true'
       OIDC_ORIGIN: https://llm.hayden.moe/
       OIDC_REDIRECT_URLS: '["https://llm.hayden.moe/sso/callback"]'
       OIDC_GROUP_PREFIX: litellm
