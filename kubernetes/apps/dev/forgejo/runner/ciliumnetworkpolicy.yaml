@@ -31,7 +31,7 @@ spec:
             - key: k8s:io.kubernetes.pod.namespace
               operator: In
               values:
-                - forgejo
+                - dev
       toPorts:
         - ports:
             - port: "8088"
