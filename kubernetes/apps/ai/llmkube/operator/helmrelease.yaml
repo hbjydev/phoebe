@@ -18,7 +18,3 @@ spec:
       mode: shared
       size: 20Gi
       storageClass: ceph-block
-
-    webhook:
-      certManager:
-        enabled: true
