@@ -5,7 +5,7 @@ kind: LiteLLMModel
 metadata:
   name: chatgpt-gpt-6-astra
 spec:
-  modelName: chatgpt/gpt-6-astra
+  modelName: gpt-6-astra
   params:
     model: chatgpt/gpt-6-astra
   info:
@@ -18,7 +18,7 @@ kind: LiteLLMModel
 metadata:
   name: chatgpt-gpt-5.6-luna
 spec:
-  modelName: chatgpt/gpt-5.6-luna
+  modelName: gpt-5.6-luna
   params:
     model: chatgpt/gpt-5.6-luna
   info:
@@ -31,7 +31,7 @@ kind: LiteLLMModel
 metadata:
   name: chatgpt-gpt-5.6-terra
 spec:
-  modelName: chatgpt/gpt-5.6-terra
+  modelName: gpt-5.6-terra
   params:
     model: chatgpt/gpt-5.6-terra
   info:
@@ -44,7 +44,7 @@ kind: LiteLLMModel
 metadata:
   name: chatgpt-gpt-5.6-sol
 spec:
-  modelName: chatgpt/gpt-5.6-sol
+  modelName: gpt-5.6-sol
   params:
     model: chatgpt/gpt-5.6-sol
   info:
@@ -57,7 +57,7 @@ kind: LiteLLMModel
 metadata:
   name: chatgpt-gpt-image-2
 spec:
-  modelName: chatgpt/gpt-image-2
+  modelName: gpt-image-2
   params:
     model: chatgpt/gpt-image-2
   info:

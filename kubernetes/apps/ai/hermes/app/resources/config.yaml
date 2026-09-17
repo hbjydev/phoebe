@@ -4,32 +4,32 @@ custom_providers:
     key_env: LITELLM_API_KEY
     base_url: http://litellm.ai.svc.cluster.local:4000
     models:
-      chatgpt/gpt-5.6-luna:
+      gpt-5.6-luna:
         context_length: 272000
-      chatgpt/gpt-5.6-terra:
+      gpt-5.6-terra:
         context_length: 272000
-      chatgpt/gpt-5.6-sol:
+      gpt-5.6-sol:
         context_length: 272000
-      chatgpt/gpt-6-astra:
+      gpt-6-astra:
         context_length: 272000
 
 model:
-  default: chatgpt/gpt-5.6-luna
+  default: gpt-5.6-luna
   provider: custom:litellm
   context_length: 272000
 
 model_aliases:
   luna:
-    model: chatgpt/gpt-5.6-luna
+    model: gpt-5.6-luna
     provider: custom:litellm
   terra:
-    model: chatgpt/gpt-5.6-terra
+    model: gpt-5.6-terra
     provider: custom:litellm
   sol:
-    model: chatgpt/gpt-5.6-sol
+    model: gpt-5.6-sol
     provider: custom:litellm
   astra:
-    model: chatgpt/gpt-6-astra
+    model: gpt-6-astra
     provider: custom:litellm
 
 memory:
@@ -81,7 +81,7 @@ agent:
   reasoning_effort: medium
 
 delegation:
-  model: chatgpt/gpt-5.6-luna
+  model: gpt-5.6-luna
   max_concurrent_children: 6
   max_spawn_depth: 2
 
@@ -92,12 +92,12 @@ moa:
       enabled: true
       reference_models:
         - provider: custom:litellm
-          model: chatgpt/gpt-5.6-luna
+          model: gpt-5.6-luna
         - provider: custom:litellm
-          model: chatgpt/gpt-5.6-terra
+          model: gpt-5.6-terra
       aggregator:
         provider: custom:litellm
-        model: chatgpt/gpt-5.6-terra
+        model: gpt-5.6-terra
       max_tokens: 8192
 
 mcp_servers:
