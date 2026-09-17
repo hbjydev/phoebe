@@ -1,30 +1,30 @@
 [deriver.model_config]
 transport = "openai"
-model = "gpt-5.6-luna"
+model = "deepseek-v4.1-flash"
 
 [summary.model_config]
 transport = "openai"
-model = "gpt-5.6-luna"
+model = "deepseek-v4.1-flash"
 
 [dream.deduction_model_config]
 transport = "openai"
-model = "gpt-5.6-luna"
+model = "deepseek-v4.1-flash"
 
 [dream.induction_model_config]
 transport = "openai"
-model = "gpt-5.6-luna"
+model = "deepseek-v4.1-flash"
 
 [dialectic.levels.minimal]
 MAX_TOOL_ITERATIONS = 1
 [dialectic.levels.minimal.model_config]
 transport = "openai"
-model = "gpt-5.6-luna"
+model = "deepseek-v4-flash"
 
 [dialectic.levels.low]
 MAX_TOOL_ITERATIONS = 5
 [dialectic.levels.low.model_config]
 transport = "openai"
-model = "gpt-5.6-luna"
+model = "deepseek-v4.1-flash"
 
 [dialectic.levels.medium]
 MAX_TOOL_ITERATIONS = 2
@@ -42,4 +42,4 @@ model = "gpt-5.6-luna"
 MAX_TOOL_ITERATIONS = 10
 [dialectic.levels.max.model_config]
 transport = "openai"
-model = "gpt-5.6-luna"
+model = "gpt-5.6-terra"
