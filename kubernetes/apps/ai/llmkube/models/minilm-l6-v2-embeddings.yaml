@@ -6,7 +6,6 @@ metadata:
   name: all-minilm-l6-v2
 spec:
   source: hf://sentence-transformers/all-MiniLM-L6-v2
-  format: custom
   hardware:
     accelerator: vulkan
     memoryBudget: 1Gi
