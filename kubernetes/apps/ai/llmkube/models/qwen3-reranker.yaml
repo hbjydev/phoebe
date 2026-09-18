@@ -33,4 +33,4 @@ spec:
   resources:
     cpu: "1"
     memory: 2Gi
-    memoryLimit: 6Gi
+    # memoryLimit: 6Gi
