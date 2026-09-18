@@ -45,11 +45,10 @@ spec:
               CACHE_URL: redis://honcho-redis.ai.svc.cluster.local:6379/0?suppress=true
 
               # Embeddings
-              EMBEDDING_API_KEY: "dummy"
               EMBEDDING_MODEL_CONFIG__DIMENSIONS_MODE: never
-              EMBEDDING_MODEL_CONFIG__MODEL: sentence-transformers/all-MiniLM-L6-v2
-              EMBEDDING_MODEL_CONFIG__OVERRIDES__API_KEY_ENV: EMBEDDING_API_KEY
-              EMBEDDING_MODEL_CONFIG__OVERRIDES__BASE_URL: http://text-embeddings-inference.ai.svc.cluster.local:8080/v1
+              EMBEDDING_MODEL_CONFIG__MODEL: qwen3-embegging-0.6b
+              EMBEDDING_MODEL_CONFIG__OVERRIDES__API_KEY_ENV: LLM_OPENAI_API_KEY
+              EMBEDDING_MODEL_CONFIG__OVERRIDES__BASE_URL: http://litellm.ai.svc.cluster.local:8080/v1
               EMBEDDING_MODEL_CONFIG__TRANSPORT: openai
               EMBEDDING_VECTOR_DIMENSIONS: "1024"
 
