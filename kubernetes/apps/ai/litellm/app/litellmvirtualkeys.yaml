@@ -74,3 +74,4 @@ spec:
   models:
     - gpt-5.6-luna
     - deepseek-v4-flash
+    - qwen3-embedding-0.6b
