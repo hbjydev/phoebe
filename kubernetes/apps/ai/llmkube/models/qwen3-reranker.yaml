@@ -10,7 +10,7 @@ spec:
   quantization: Q8_0
   hardware:
     accelerator: vulkan
-    memoryBudget: 1Gi
+    memoryBudget: 6Gi
   resources:
     cpu: "1"
     memory: 2Gi
@@ -26,6 +26,11 @@ spec:
   runtime: llamacpp
   mode: rerank
   replicas: 1
+  contextSize: 8192
+  batchSize: 8192
+  uBatchSize: 2048
+  parallelSlots: 8
   resources:
     cpu: "1"
     memory: 2Gi
+    memoryLimit: 6Gi
