@@ -1,0 +1,31 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/inference.llmkube.dev/model_v1alpha1.json
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: Model
+metadata:
+  name: qwen3-reranker-0.6b
+spec:
+  source: https://huggingface.co/ggml-org/Qwen3-Reranker-0.6B-Q8_0-GGUF
+  format: gguf
+  quantization: Q8_0
+  hardware:
+    accelerator: vulkan
+    memoryBudget: 1Gi
+  resources:
+    cpu: "1"
+    memory: 2Gi
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/inference.llmkube.dev/inferenceservice_v1alpha1.json
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: InferenceService
+metadata:
+  name: qwen3-reranker-0.6b
+spec:
+  modelRef: qwen3-reranker-0.6b
+  runtime: llamacpp
+  mode: rerank
+  replicas: 1
+  resources:
+    cpu: "1"
+    memory: 2Gi
