@@ -13,6 +13,4 @@ resources:
   - ./litellm/ks.yaml
   - ./mcp-auth-proxy/ks.yaml
   - ./openclaw/ks.yaml
-  - ./llama-cpp-reranker/ks.yaml
-  - ./text-embeddings-inference/ks.yaml
   - ./llmkube/ks.yaml
