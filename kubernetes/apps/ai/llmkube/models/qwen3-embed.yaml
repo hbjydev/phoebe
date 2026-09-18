@@ -3,9 +3,11 @@
 apiVersion: inference.llmkube.dev/v1alpha1
 kind: Model
 metadata:
-  name: all-minilm-l6-v2
+  name: qwen3-embedding-0.6b
 spec:
-  source: hf://sentence-transformers/all-MiniLM-L6-v2
+  source: hf://Qwen/Qwen3-Embedding-0.6B-GGUF
+  files:
+    - Qwen3-Embedding-0.6B-Q8_0.gguf
   hardware:
     accelerator: vulkan
     memoryBudget: 1Gi
@@ -20,8 +22,15 @@ kind: InferenceService
 metadata:
   name: all-minilm-l6-v2
 spec:
-  modelRef: all-minilm-l6-v2
-  runtime: vllm
+  modelRef: qwen3-embedding-0.6b
+  runtime: llamacpp
+  mode: embedding
+  replicas: 1
+  contextSize: 32768
+  batchSize: 2048
+  uBatchSize: 2048
+  parallelSlots: 32
+  flashAttention: true
   resources:
     cpu: "1"
-    memory: 2Gi
+    memory: 4Gi
