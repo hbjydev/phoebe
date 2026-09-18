@@ -40,7 +40,7 @@ spec:
     available_on_public_internet: true
   workload:
     # renovate: datasource=docker depName=ghcr.io/homeassistant-ai/ha-mcp
-    image: ghcr.io/homeassistant-ai/ha-mcp:8.4.3
+    image: ghcr.io/homeassistant-ai/ha-mcp:8.5.0
     port: 8086
     command: ["ha-mcp-web"]
     env:
