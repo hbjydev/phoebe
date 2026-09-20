@@ -1,0 +1,26 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/operator.victoriametrics.com/vmservicescrape_v1beta1.json
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMServiceScrape
+metadata:
+  name: home-assistant
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: home-assistant
+  jobLabel: hass
+  namespaceSelector:
+    matchNames:
+      - default
+  endpoints:
+    - port: http
+      path: /api/prometheus
+      scrape_interval: 60s
+      honorLabels: true
+      scheme: https
+      tlsConfig:
+        insecureSkipVerify: true
+      authorization:
+        credentials:
+          key: token
+          name: hass-scrape
