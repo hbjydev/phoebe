@@ -14,11 +14,13 @@ spec:
       home-assistant:
         annotations:
           reloader.stakater.com/auto: "true"
+
         pod:
           labels:
             egress.policy.home.arpa/internet: allow
             egress.policy.home.arpa/lan: allow
             egress.policy.home.arpa/iot: allow
+
         initContainers:
           init-config:
             image: &img
@@ -47,6 +49,7 @@ spec:
                 cpu: 10m
               limits:
                 memory: 2Gi
+
     defaultPodOptions:
       annotations:
         k8s.v1.cni.cncf.io/networks: |-
@@ -62,12 +65,14 @@ spec:
         runAsGroup: 0
         fsGroup: 0
         fsGroupChangePolicy: OnRootMismatch
+
     service:
       app:
         ports:
           http:
             appProtocol: kubernetes.io/ws
             port: 8123
+
     route:
       app:
         annotations:
@@ -79,6 +84,7 @@ spec:
         parentRefs:
           - name: external
             namespace: network
+
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}"
