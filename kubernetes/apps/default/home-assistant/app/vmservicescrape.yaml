@@ -17,9 +17,6 @@ spec:
       path: /api/prometheus
       scrape_interval: 60s
       honorLabels: true
-      scheme: https
-      tlsConfig:
-        insecureSkipVerify: true
       authorization:
         credentials:
           key: token
