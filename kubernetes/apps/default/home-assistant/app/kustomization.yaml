@@ -6,3 +6,13 @@ resources:
   - ./ciliumnetworkpolicy.yaml
   - ./pvc.yaml
   - ./helmrelease.yaml
+
+configMapGenerator:
+  - name: home-assistant-configmap
+    files:
+      - ./resources/configuration.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled

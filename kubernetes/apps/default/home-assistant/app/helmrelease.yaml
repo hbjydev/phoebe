@@ -19,11 +19,21 @@ spec:
             egress.policy.home.arpa/internet: allow
             egress.policy.home.arpa/lan: allow
             egress.policy.home.arpa/iot: allow
-        containers:
-          app:
-            image:
+        initContainers:
+          init-config:
+            image: &img
               repository: ghcr.io/home-operations/home-assistant
               tag: 2026.9.3@sha256:638c4c8d62caad377e70bfa7beef75f70c9343a49aed64aad824f2cd06843c1c
+            command:
+              - /bin/bash
+              - -c
+              - |
+                rm /config/configuration.yaml
+                cp /run/config/configuration.yaml /config/configuration.yaml
+
+        containers:
+          app:
+            image: *img
             env:
               TZ: Europe/London
               HASS_HTTP_USE_X_FORWARDED_FOR: true
@@ -74,6 +84,14 @@ spec:
         existingClaim: "{{ .Release.Name }}"
         globalMounts:
           - path: /config
+      configmap:
+        type: configMap
+        name: home-assistant-configmap
+        advancedMounts:
+          home-assistant:
+            init-config:
+              - path: /run/config/configuration.yaml
+                subPath: configuration.yaml
       config-cache:
         existingClaim: "{{ .Release.Name }}-cache"
         globalMounts:
