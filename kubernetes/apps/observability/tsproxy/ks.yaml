@@ -9,11 +9,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  healthChecks:
-    - apiVersion: tailscale.com/v1alpha1
-      kind: ProxyGroup
-      name: ts-o11y-proxy
-      namespace: *namespace
   interval: 1h
   path: ./kubernetes/apps/observability/tsproxy/app
   prune: true
