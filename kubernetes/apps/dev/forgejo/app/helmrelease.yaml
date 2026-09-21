@@ -18,6 +18,10 @@ spec:
         APP_NAME: "Hayden's Git"
         APP_SLOGAN: "because sometimes it takes a man to be best girl"
 
+        ui:
+          THEMES: forgejo-auto,forgejo-light,forgejo-dark,gitdotgay,gitdotgay-light,gitdotgay-dark
+          DEFAULT_THEME: gitdotgay
+
         database:
           DB_TYPE: postgres
           HOST: pooler-rw.database.svc:5432
