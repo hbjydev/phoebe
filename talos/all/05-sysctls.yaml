@@ -16,4 +16,5 @@ params:
   # IPv6 removal
   net.ipv6.conf.bond0/20.accept_ra: 0
   net.ipv6.conf.bond0/70.accept_ra: 0
-  net.ipv6.conf.bond0.accept_ra: 2
+  net.ipv6.conf.bond0/90.accept_ra: 0
+  net.ipv6.conf.bond0.accept_ra: 0
