@@ -7,3 +7,13 @@ resources:
   - ./helmrelease.yaml
   - ./externalsecret.yaml
   - ./httproute.yaml
+configMapGenerator:
+  - name: forgejo-themes
+    files:
+      - ./resources/themes/theme-gitdotgay.css
+      - ./resources/themes/theme-gitdotgay-dark.css
+      - ./resources/themes/theme-gitdotgay-light.css
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled

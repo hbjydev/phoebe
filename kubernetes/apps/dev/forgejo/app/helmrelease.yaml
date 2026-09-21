@@ -135,6 +135,8 @@ spec:
       enabled: false
 
     extraContainerVolumeMounts:
+      - name: forgejo-themes
+        mountPath: "/data/gitea/public/assets/css"
       - name: postgres-forgejo
         mountPath: "/var/run/secrets/postgresql"
       - name: root-ca
@@ -166,6 +168,10 @@ spec:
         secret:
           secretName: forgejo-signing-key
           defaultMode: 0400
+
+      - name: forgejo-themes
+        configMap:
+          name: forgejo-themes
 
     httpRoute:
       enabled: false
