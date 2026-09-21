@@ -12,3 +12,8 @@ params:
   sunrpc.tcp_slot_table_entries: "128"          # NFS
   sunrpc.tcp_max_slot_table_entries: "128"      # NFS
   user.max_user_namespaces: "11255"             # User Namespaces
+
+  # IPv6 removal
+  net.ipv6.conf.bond0/20.accept_ra: 0
+  net.ipv6.conf.bond0/70.accept_ra: 0
+  net.ipv6.conf.bond0.accept_ra: 2
