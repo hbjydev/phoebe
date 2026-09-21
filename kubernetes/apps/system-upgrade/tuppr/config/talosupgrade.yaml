@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/tuppr.home-operations.com/talosupgrade_v1alpha1.json
 ---
 apiVersion: tuppr.home-operations.com/v1alpha1
 kind: TalosUpgrade
@@ -11,24 +12,6 @@ spec:
   policy:
     waitForVolumeDetach: true
     drainTimeout: 10m
-
-  hooks:
-    pre:
-      - name: ceph-set-noout
-        image: ghcr.io/rook/rook:v1.18.7
-        command: ["sh", "-c"]
-        args: ["ceph osd set noout"]
-        envFrom:
-          - secretRef:
-              name: rook-ceph-mon
-    post:
-      - name: ceph-unset-noout
-        image: ghcr.io/rook/rook:v1.18.7
-        command: ["sh", "-c"]
-        args: ["ceph osd unset noout"]
-        envFrom:
-          - secretRef:
-              name: rook-ceph-mon
 
   healthChecks:
     # All nodes Ready
