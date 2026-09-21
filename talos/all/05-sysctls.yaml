@@ -14,7 +14,13 @@ params:
   user.max_user_namespaces: "11255"             # User Namespaces
 
   # IPv6 removal
+  net.ipv6.conf.bond0.accept_ra: 0
   net.ipv6.conf.bond0/20.accept_ra: 0
   net.ipv6.conf.bond0/70.accept_ra: 0
   net.ipv6.conf.bond0/90.accept_ra: 0
-  net.ipv6.conf.bond0.accept_ra: 0
+
+  # Prevent Link-Local (fe80::) generation on the host bonds/VLANs
+  net.ipv6.conf.bond0.addr_gen_mode: "1"
+  net.ipv6.conf.bond0/20.addr_gen_mode: "1"
+  net.ipv6.conf.bond0/70.addr_gen_mode: "1"
+  net.ipv6.conf.bond0/90.addr_gen_mode: "1"
