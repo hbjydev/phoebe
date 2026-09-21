@@ -7,3 +7,39 @@ spec:
   talos:
     # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
     version: v1.14.0
+
+  policy:
+    waitForVolumeDetach: true
+    drainTimeout: 10m
+
+  hooks:
+    pre:
+      - name: ceph-set-noout
+        image: ghcr.io/rook/rook:v1.18.7
+        command: ["sh", "-c"]
+        args: ["ceph osd set noout"]
+        envFrom:
+          - secretRef:
+              name: rook-ceph-mon
+    post:
+      - name: ceph-unset-noout
+        image: ghcr.io/rook/rook:v1.18.7
+        command: ["sh", "-c"]
+        args: ["ceph osd unset noout"]
+        envFrom:
+          - secretRef:
+              name: rook-ceph-mon
+
+  healthChecks:
+    # All nodes Ready
+    - apiVersion: v1
+      kind: Node
+      expr: status.conditions.filter(c, c.type == "Ready").all(c, c.status == "True")
+      timeout: 10m
+
+    # Ceph ready
+    - apiVersion: ceph.rook.io/v1
+      kind: CephCluster
+      name: rook-ceph
+      namespace: rook-ceph
+      expr: status.ceph.health in ["HEALTH_OK", "HEALTH_WARN"]
