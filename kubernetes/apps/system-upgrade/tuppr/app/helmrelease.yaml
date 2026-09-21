@@ -1,0 +1,27 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tuppr
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: tuppr
+  values:
+    fullnameOverride: tuppr
+    image:
+      tag: 0.5.7
+      digest: sha256:28728edb8ec848db4500db612747f9007de0646c7f2340c0902c3b99dbb8e590
+
+    monitoring:
+      serviceMonitor:
+        enabled: true
+
+      dashboards:
+        enabled: true
+        grafanaOperator:
+          enabled: true
+          matchLabels:
+            grafana.internal/instance: grafana
