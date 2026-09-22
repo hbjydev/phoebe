@@ -14,19 +14,19 @@ custom_providers:
         context_length: 272000
 
 model:
-  default: gpt-5.6-luna
+  default: gpt-6-luna
   provider: custom:litellm
   context_length: 272000
 
 model_aliases:
   luna:
-    model: gpt-5.6-luna
+    model: gpt-6-luna
     provider: custom:litellm
   terra:
     model: gpt-5.6-terra
     provider: custom:litellm
   sol:
-    model: gpt-5.6-sol
+    model: gpt-6-sol
     provider: custom:litellm
   astra:
     model: gpt-6-astra
@@ -92,7 +92,7 @@ moa:
       enabled: true
       reference_models:
         - provider: custom:litellm
-          model: gpt-5.6-luna
+          model: gpt-6-luna
         - provider: custom:litellm
           model: gpt-5.6-terra
       aggregator:

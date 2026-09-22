@@ -11,7 +11,7 @@ spec:
   secretKey: api-key
   keyAlias: kguardian
   models:
-    - gpt-5.6-luna
+    - gpt-6-luna
   secretAnnotations:
     reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
     reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: kguardian
@@ -34,6 +34,8 @@ spec:
     - gpt-5.6-terra
     - gpt-5.6-sol
     - gpt-6-astra
+    - gpt-6-luna
+    - gpt-6-sol
     - gpt-image-2
     - deepseek-v4.1-flash
     - deepseek-v4-flash
@@ -55,6 +57,9 @@ spec:
     - gpt-5.6-terra
     - gpt-5.6-sol
     - gpt-6-astra
+    - gpt-6-astra
+    - gpt-6-luna
+    - gpt-6-sol
     - gpt-image-2
     - deepseek-v4.1-flash
     - deepseek-v4-flash
@@ -72,6 +77,6 @@ spec:
   secretKey: api-key
   keyAlias: honcho
   models:
-    - gpt-5.6-luna
+    - gpt-6-luna
     - deepseek-v4-flash
     - qwen3-embedding-0.6b
