@@ -47,12 +47,31 @@ spec:
               runAsGroup: 1000
               runAsUser: 1000
 
+          install-tools:
+            image: &image
+              repository: nousresearch/hermes-agent
+              tag: v2026.9.21@sha256:6bece0644e29a347e5ae17db43c36938c86f171c6f5e0cef18aa2075d331f3a3
+            command:
+              - /bin/sh
+              - -c
+              - |
+                set -e
+                mkdir -p $(HOME)/.local/bin
+                rm -f $(HOME)/.local/bin/hermes
+                if [ ! -f $(HOME)/.local/share/mise ]; then
+                  curl https://mise.run | sh
+                fi
+            env: &baseEnv
+              TZ: Europe/London
+              HOME: /data
+              HOMEBREW_PREFIX: $(HOME)/.local/share/brew
+              PATH: "$(HOME)/.local/bin:$(HOME)/.local/share/mise/shims:$(HOME)/.local/share/brew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
         containers:
           app:
-            image: &image
-              repository: forgejo.hayden.moe/hayden/containers/hermes
-              tag: v2026.9.21-07cd13b@sha256:d4412fc9597a3ed83290683593e171b5f80bcd2eceabe53f87e028d631f50baa
+            image: *image
             env: &env
+              <<: *baseEnv
               TZ: Europe/London
 
               API_SERVER_ENABLED: "true"
@@ -73,7 +92,6 @@ spec:
               SEARXNG_URL: http://searxng.selfhosted.svc.cluster.local:8080
 
               HOME: /data
-
               PATH: "$(HOME)/.local/bin:$(HOME)/.local/share/mise/shims:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/bin:/app/.venv/bin:/app/node_modules/.bin"
             envFrom: &envFrom
               - secretRef:
