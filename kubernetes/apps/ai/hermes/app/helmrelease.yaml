@@ -70,6 +70,10 @@ spec:
         containers:
           app:
             image: *image
+            args:
+              - gateway
+              - run
+              - --no-supervise
             env: &env
               <<: *baseEnv
               TZ: Europe/London
