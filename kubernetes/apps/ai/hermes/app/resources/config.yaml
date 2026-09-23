@@ -80,35 +80,35 @@ agent:
   api_max_retries: 3
   reasoning_effort: medium
 
-# gateway:
-#   multiplex_profiles: true
-#   profile_routes:
-#     - # Home Server -> Holly
-#       name: home-server
-#       platform: discord
-#       guild_id: "1394013827573743727"
-#       profile: default
-#
-#     - # Personal Server -> Chat Channel -> Mimi
-#       name: home-server
-#       platform: discord
-#       guild_id: "1363571384193912943"
-#       chat_id: "1552319412386795540"
-#       profile: mimi
-#
-#     - # Personal Server -> Ops Channel -> Ops Agent
-#       name: home-server
-#       platform: discord
-#       guild_id: "1363571384193912943"
-#       chat_id: "1552319427813449799"
-#       profile: ops
-#
-#     - # Personal Server -> Coding Channel -> Coder Agent
-#       name: home-server
-#       platform: discord
-#       guild_id: "1363571384193912943"
-#       chat_id: "1552319441017118770"
-#       profile: coder
+gateway:
+  multiplex_profiles: true
+  profile_routes:
+    - # Home Server -> Holly
+      name: home-server
+      platform: discord
+      guild_id: "1394013827573743727"
+      profile: default
+
+    - # Personal Server -> Chat Channel -> Mimi
+      name: personal-server-chat
+      platform: discord
+      guild_id: "1363571384193912943"
+      chat_id: "1552319412386795540"
+      profile: mimi
+
+    - # Personal Server -> Ops Channel -> Ops Agent
+      name: personal-server-ops
+      platform: discord
+      guild_id: "1363571384193912943"
+      chat_id: "1552319427813449799"
+      profile: ops
+
+    - # Personal Server -> Coding Channel -> Coder Agent
+      name: personal-server-coding
+      platform: discord
+      guild_id: "1363571384193912943"
+      chat_id: "1552319441017118770"
+      profile: coder
 
 delegation:
   model: gpt-5.6-luna
