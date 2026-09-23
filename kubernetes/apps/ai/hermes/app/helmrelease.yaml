@@ -121,7 +121,10 @@ spec:
                   - SETUID
                 drop:
                   - ALL
-              readOnlyRootFilesystem: true
+              readOnlyRootFilesystem: false
+              runAsGroup: 0
+              runAsNonRoot: false
+              runAsUser: 0
 
           dashboard:
             image: *image
