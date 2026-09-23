@@ -51,7 +51,7 @@ spec:
           app:
             image: &image
               repository: forgejo.hayden.moe/hayden/containers/hermes
-              tag: v2026.9.7-15c3ac5@sha256:22822b8a782598a7dbbd224cb202882fc062d4b74a6f8ac6986984135707c7f2
+              tag: v2026.9.21-07cd13b@sha256:d4412fc9597a3ed83290683593e171b5f80bcd2eceabe53f87e028d631f50baa
             env: &env
               TZ: Europe/London
 
