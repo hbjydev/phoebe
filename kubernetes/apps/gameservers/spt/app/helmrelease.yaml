@@ -40,6 +40,16 @@ spec:
               TZ: Europe/London
             securityContext:
               allowPrivilegeEscalation: true
+              capabilities:
+                add:
+                  - CHOWN
+                  - DAC_OVERRIDE
+                  - FOWNER
+                  - FSETID
+                  - SETGID
+                  - SETUID
+                drop:
+                  - ALL
               readOnlyRootFilesystem: false
               runAsNonRoot: false
               runAsUser: 0
