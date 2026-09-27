@@ -1,0 +1,11 @@
+---
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: spt
+spec:
+  endpoints:
+    - dnsName: spt.hayden.moe
+      recordType: CNAME
+      targets:
+        - external.hayden.moe

@@ -1,0 +1,108 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: spt
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      spt:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        replicas: 1
+        strategy: Recreate
+        type: deployment
+
+        serviceAccount:
+          identifier: spt
+
+        initContainers:
+          install-mods:
+            image: &image
+              repository: ghcr.io/sp-tushonka/server-csharp
+              tag: 4.1.6@sha256:ac23ccb3d77d828690823a269adbb14817cea18dc4f9529a4d87b3def4fa2f4a
+            command:
+              - /bin/sh
+              - /install-mods.sh
+            env: &baseEnv
+              TZ: Europe/London
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities: { drop: [ ALL ] }
+              readOnlyRootFilesystem: false
+              runAsNonRoot: false
+              runAsUser: 0
+              runAsGroup: 0
+
+        containers:
+          app:
+            image: *image
+            env:
+              <<: *baseEnv
+              SPT_IP: 0.0.0.0
+              SPT_PORT: &port 6969
+              SPT_BACKEND_IP: '46.62.132.125'
+              SPT_BACKEND_PORT: *port
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              limits:
+                memory: 2Gi
+            ports:
+              - containerPort: *port
+                protocol: TCP
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities: { drop: [ ALL ] }
+              readOnlyRootFilesystem: true
+
+    defaultPodOptions:
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 1000
+        runAsUser: 1000
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+
+    service:
+      app:
+        controller: spt
+        ipFamilies:
+          - IPv4
+        ports:
+          spt:
+            port: *port
+
+    persistence:
+      data:
+        existingClaim: '{{ .Release.Name }}'
+        globalMounts:
+          - path: /opt/spt/user
+
+      scripts:
+        type: configMap
+        name: 'spt-scripts'
+        defaultMode: 0o755
+        globalMounts:
+          - path: /install-mods.sh
+            subPath: config.yaml
+
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
