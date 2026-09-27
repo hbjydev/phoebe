@@ -93,6 +93,9 @@ spec:
         existingClaim: '{{ .Release.Name }}'
         globalMounts:
           - path: /opt/spt/user
+            subPath: user
+          - path: /opt/spt/SPT_Data
+            subPath: data
 
       scripts:
         type: configMap
