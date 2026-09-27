@@ -37,3 +37,9 @@ download_mod() {
 
 FIKA_VERSION="2.4.1"
 download_mod "fika-server" "${FIKA_VERSION}" "https://github.com/project-fika/Fika-Server-CSharp/releases/download/v${FIKA_VERSION}/Fika.Server.Release.${FIKA_VERSION}.zip"
+
+SAIN_VERSION="4.5.1"
+download_mod "Solarint-SAIN-ServerMod" "${SAIN_VERSION}" "https://github.com/ArchangelWTF/SAIN/releases/download/v${SAIN_VERSION}/SAIN.${SAIN_VERSION}.zip"
+
+SMTM_VERSION="3.0.2"
+download_mod "swiftxp-showmethemoney" "${SMTM_VERSION}" "https://github.com/mattpsvreis/spt-show-me-the-money/releases/download/${SMTM_VERSION}/ShowMeTheMoney-${SMTM_VERSION}-SPT-4.1.5.zip"
