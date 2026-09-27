@@ -2,7 +2,7 @@
 
 apt update && apt install -y unzip
 
-mkdir -p "/opt/spt/user/mods"
+mkdir -p "/opt/spt/user/mods" && chown -R 1000:1000 "/opt/spt/user"
 
 download_mod() {
   local mod_name="$1"
@@ -28,6 +28,8 @@ download_mod() {
     fi
     echo "${mod_version}" > "${install_mods}/version.txt"
   fi
+
+  chown -R 1000:1000 "${install_mods}"
 
   echo "Mod ${mod_name} v${mod_version} installed successfully."
   rm -rf "${workdir}"
