@@ -7,7 +7,7 @@ global:
     cluster: megahost
 
 remote_write:
-  - url: https://victoriametrics/api/v1/write
+  - url: https://victoriametrics.tailfc32e5.ts.net/api/v1/write
     queue_config:
       max_samples_per_send: 1000
       max_shards: 5
