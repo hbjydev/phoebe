@@ -40,7 +40,6 @@ spec:
               TZ: Europe/London
             securityContext:
               allowPrivilegeEscalation: true
-              capabilities: { drop: [ ALL ] }
               readOnlyRootFilesystem: false
               runAsNonRoot: false
               runAsUser: 0
