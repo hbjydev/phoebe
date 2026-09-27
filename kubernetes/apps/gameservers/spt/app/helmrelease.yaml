@@ -100,7 +100,7 @@ spec:
         defaultMode: 0o755
         globalMounts:
           - path: /install-mods.sh
-            subPath: config.yaml
+            subPath: install-mods.sh
 
       tmp:
         type: emptyDir
