@@ -39,7 +39,7 @@ spec:
             env: &baseEnv
               TZ: Europe/London
             securityContext:
-              allowPrivilegeEscalation: false
+              allowPrivilegeEscalation: true
               capabilities: { drop: [ ALL ] }
               readOnlyRootFilesystem: false
               runAsNonRoot: false
