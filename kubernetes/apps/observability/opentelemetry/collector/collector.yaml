@@ -103,6 +103,20 @@ spec:
           num_consumers: 4
           queue_size: 1000
 
+      otlphttp/vlogs:
+        logs_endpoint: http://vlsingle-victoria-logs.observability.svc.cluster.local:9428/opentelemetry/v1/logs
+        compression: gzip
+        timeout: 10s
+        retry_on_failure:
+          enabled: true
+          initial_interval: 1s
+          max_interval: 30s
+          max_elapsed_time: 300s
+        sending_queue:
+          enabled: true
+          num_consumers: 4
+          queue_size: 1000
+
     service:
       telemetry:
         metrics:
@@ -122,3 +136,7 @@ spec:
           receivers: [otlp]
           processors: [memory_limiter, k8sattributes, resource, batch]
           exporters: [otlphttp/vmetrics]
+        logs:
+          receivers: [otlp]
+          processors: [memory_limiter, k8sattributes, resource, batch]
+          exporters: [otlphttp/vlogs]
