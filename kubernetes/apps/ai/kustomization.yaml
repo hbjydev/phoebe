@@ -12,5 +12,4 @@ resources:
   - ./mimi/ks.yaml
   - ./litellm/ks.yaml
   - ./mcp-auth-proxy/ks.yaml
-  - ./openclaw/ks.yaml
   - ./llmkube/ks.yaml
