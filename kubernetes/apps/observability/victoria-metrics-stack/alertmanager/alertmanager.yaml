@@ -29,9 +29,7 @@ spec:
     routes:
       - receiver: blackhole
         matchers:
-          - name: alertname
-            value: InfoInhibitor
-            matchType: =
+          - alertname=InfoInhibitor
     group_by:
       - alertname
       - cluster
