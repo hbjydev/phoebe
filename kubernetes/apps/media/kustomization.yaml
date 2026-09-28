@@ -6,9 +6,6 @@ namespace: media
 components:
   - ../../components/common
 resources:
-  - dispatcharr/ks.yaml
   - jellyfin/ks.yaml
   - navidrome/ks.yaml
-  - pinepods/ks.yaml
   - plex/ks.yaml
-  - suwayomi/ks.yaml
