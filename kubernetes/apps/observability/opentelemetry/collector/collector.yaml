@@ -33,7 +33,7 @@ spec:
         limit_percentage: 80
         spike_limit_percentage: 20
 
-      k8sattributes:
+      k8s_attributes:
         auth_type: serviceAccount
         passthrough: false
         filter:
@@ -75,7 +75,7 @@ spec:
         timeout: 5s
 
     exporters:
-      otlphttp/vtraces:
+      otlp_http/vtraces:
         traces_endpoint: http://vtsingle-victoria-traces.observability.svc.cluster.local:10428/insert/opentelemetry/v1/traces
         compression: gzip
         timeout: 10s
@@ -89,7 +89,7 @@ spec:
           num_consumers: 4
           queue_size: 1000
 
-      otlphttp/vmetrics:
+      otlp_http/vmetrics:
         metrics_endpoint: http://vmsingle-victoria-metrics.observability.svc.cluster.local:8428/opentelemetry/v1/metrics
         compression: gzip
         timeout: 10s
@@ -103,7 +103,7 @@ spec:
           num_consumers: 4
           queue_size: 1000
 
-      otlphttp/vlogs:
+      otlp_http/vlogs:
         logs_endpoint: http://vlsingle-victoria-logs.observability.svc.cluster.local:9428/opentelemetry/v1/logs
         compression: gzip
         timeout: 10s
@@ -130,13 +130,13 @@ spec:
       pipelines:
         traces:
           receivers: [otlp]
-          processors: [memory_limiter, k8sattributes, resource, batch]
+          processors: [memory_limiter, k8s_attributes, resource, batch]
           exporters: [otlphttp/vtraces]
         metrics:
           receivers: [otlp]
-          processors: [memory_limiter, k8sattributes, resource, batch]
+          processors: [memory_limiter, k8s_attributes, resource, batch]
           exporters: [otlphttp/vmetrics]
         logs:
           receivers: [otlp]
-          processors: [memory_limiter, k8sattributes, resource, batch]
+          processors: [memory_limiter, k8s_attributes, resource, batch]
           exporters: [otlphttp/vlogs]
