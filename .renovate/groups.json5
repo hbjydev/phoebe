@@ -23,7 +23,7 @@
     {
       description: "Cilium Group",
       groupName: "Cilium",
-      matchDatasources: ["docker"],
+      matchDatasources: ["docker", "mise"],
       matchPackageNames: ["/cilium/"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
