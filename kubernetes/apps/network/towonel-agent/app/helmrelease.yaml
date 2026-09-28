@@ -35,6 +35,9 @@ spec:
         - name: stunner-turn-udp
           origin: stunner.network.svc.cluster.local:3478
           listen_port: 3478
+        - name: spt-hayden-server
+          origin: 192.168.4.97:25565
+          listen_port: 25565
       inviteTokenSecret:
         name: towonel-agent-secret
         key: TOWONEL_INVITE_TOKEN
