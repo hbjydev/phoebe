@@ -21,6 +21,8 @@ spec:
       services:
         - hostname: '*.hayden.moe'
           origin: external.network.svc.cluster.local:443
+        - hostname: '*.s3.hayden.moe'
+          origin: external.network.svc.cluster.local:443
       tcpServices:
         - name: forgejo-ssh
           origin: forgejo-ssh.dev.svc.cluster.local:22
