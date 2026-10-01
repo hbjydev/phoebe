@@ -112,23 +112,23 @@ hayden.moe {
 		not path */index.html
 	}
 
-	reverse_proxy @not_index https://hayden-www.hel1.your-objectstorage.com {
-		header_up Host hayden-www.hel1.your-objectstorage.com
+	reverse_proxy @not_index https://s3.hayden.moe {
+		header_up Host hayden.moe
 		header_up X-Forwarded-Host {host}
 
     @s3_error status 403 404
     handle_response @s3_error {
       rewrite * {path}/index.html
 
-      reverse_proxy https://hayden-www.hel1.your-objectstorage.com {
-				header_up Host hayden-www.hel1.your-objectstorage.com
+      reverse_proxy https://s3.hayden.moe {
+				header_up Host hayden.moe
 				header_up X-Forwarded-Host {host}
       }
     }
 	}
 
-	reverse_proxy https://hayden-www.hel1.your-objectstorage.com {
-		header_up Host hayden-www.hel1.your-objectstorage.com
+	reverse_proxy https://s3.hayden.moe {
+		header_up Host hayden.moe
 		header_up X-Forwarded-Host {host}
 	}
 }
