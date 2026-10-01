@@ -9,6 +9,7 @@ spec:
     - hayden.moe
     - "*.hayden.moe"
     - "*.at.hayden.moe"
+    - "*.s3.hayden.moe"
   duration: 160h
   issuerRef:
     name: letsencrypt-production
