@@ -8,7 +8,7 @@ spec:
   interval: 1h
   chartRef:
     kind: OCIRepository
-    name: webui
+    name: app-template
   values:
     controllers:
       garage-webui:
