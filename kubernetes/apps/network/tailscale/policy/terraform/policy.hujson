@@ -10,6 +10,12 @@
       "ip":  ["*"],
     },
     {
+      "src": ["autogroup:member", "tag:server"],
+      "dst": ["10.70.0.1/32"],
+      "via": ["tag:phoebe-gw"],
+      "ip":  ["tcp:53", "udp:53"],
+    },
+    {
       "src": ["autogroup:member"],
       "dst": ["autogroup:self"],
       "ip":  ["*"],
