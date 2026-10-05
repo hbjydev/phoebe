@@ -16,7 +16,7 @@ spec:
           app:
             image:
               repository: ghcr.io/unpoller/unpoller
-              tag: v5.2.10@sha256:3f8ba1897851f2b0df64841dd776a92774a7ace73a1a0dd1cb75df657214fae3
+              tag: v5.5.0@sha256:0f45de09caec353b68f67524f864a6c68fc551600261c2002312750b52fe38a8
             env:
               TZ: Europe/London
               UP_UNIFI_DEFAULT_ROLE: unpoller
