@@ -3,7 +3,7 @@
 apiVersion: renovate-operator.mogenius.com/v1alpha1
 kind: RenovateJob
 metadata:
-  name: forgejo
+  name: rnv-forgejo
 spec:
   metadata:
     annotations:
