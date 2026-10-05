@@ -131,12 +131,12 @@ spec:
         traces:
           receivers: [otlp]
           processors: [memory_limiter, k8s_attributes, resource, batch]
-          exporters: [otlphttp/vtraces]
+          exporters: [otlp_http/vtraces]
         metrics:
           receivers: [otlp]
           processors: [memory_limiter, k8s_attributes, resource, batch]
-          exporters: [otlphttp/vmetrics]
+          exporters: [otlp_http/vmetrics]
         logs:
           receivers: [otlp]
           processors: [memory_limiter, k8s_attributes, resource, batch]
-          exporters: [otlphttp/vlogs]
+          exporters: [otlp_http/vlogs]
