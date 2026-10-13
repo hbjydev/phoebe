@@ -17,6 +17,12 @@ locals {
       source_zone = "internal"
       dest_zone   = "management"
     },
+    {
+      idx         = 1100
+      name        = "Allow local communication"
+      source_zone = "management"
+      dest_zone   = "management"
+    },
 
     # 2xxx: Inter-VLAN Policies
     {
