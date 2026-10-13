@@ -5,6 +5,7 @@ mod ansible "ansible"
 mod bootstrap "bootstrap"
 mod kube "kubernetes"
 mod talos "talos"
+mod terraform "terraform"
 
 [private]
 default:
