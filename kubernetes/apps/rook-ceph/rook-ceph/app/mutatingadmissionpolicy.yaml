@@ -6,13 +6,12 @@
 # forever in the kernel (D state, folio_wait_writeback), because the OSD that
 # would serve that read is the one trying to start. Deadlock.
 #
-# Rook writes this exact filter itself, but only on the `lvm` code path
-# (CV_MODE=lvm). This cluster runs raw-mode OSDs, so the filter is never
-# applied and the deadlock is reachable on every OSD restart. Rook regenerates
-# the OSD Deployment on each reconcile, so patching the Deployment does not
-# survive; mutating at pod admission does.
-#
-# Remove once Rook applies the filter on the raw path too.
+# Rook 1.21 also filters LVM scans, but Ceph v20.2.4 raw activation probes
+# every lsblk device for LUKS before using --device. That Python read can
+# deadlock on /dev/rbd0 independently of LVM. Skip RBD and CSI encrypted RBD
+# mappings before the encryption probe. Patch only the container's Python
+# module; the OSD disk and host files are not modified by this workaround.
+# Keep this at pod admission because Rook regenerates OSD Deployments.
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: MutatingAdmissionPolicy
 metadata:
@@ -49,6 +48,7 @@ spec:
               op: "replace",
               path: "/spec/initContainers/" + string(i) + "/command/2",
               value: "echo 'devices { global_filter = [ \"r|^/dev/rbd|\", \"r|^/dev/nbd|\", \"r|^/dev/drbd|\", \"r|^/dev/zram|\" ] }' >> /etc/lvm/lvm.conf\n"
+                + "python3 - <<'PYROOK'\nimport inspect\nfrom pathlib import Path\nfrom ceph_volume import objectstore\np = Path(inspect.getfile(objectstore.mapping['RAW']['bluestore']))\ns = p.read_text()\nneedle = \"            device: str = d.get('NAME', '')\\n\"\nreplacement = needle + \"            if device.startswith(('/dev/rbd', '/dev/mapper/luks-rbd-')):\\n                continue\\n\"\nif replacement not in s:\n    if s.count(needle) != 1:\n        raise RuntimeError('Ceph raw activation changed; review RBD scan workaround')\n    patched = s.replace(needle, replacement)\n    compile(patched, str(p), 'exec')\n    p.write_text(patched)\nPYROOK\n"
                 + object.spec.initContainers[i].command[2]
             })
 ---
