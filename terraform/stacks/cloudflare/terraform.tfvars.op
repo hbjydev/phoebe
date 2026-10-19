@@ -1,0 +1,19 @@
+# vim:tfvars
+
+account_id = "op://cluster-phoebe/tf-cloudflare-zones/account_id"
+api_token  = "op://cluster-phoebe/tf-cloudflare-zones/api_token"
+
+domains = {
+  moe = {
+    domain  = "hayden.moe"
+    zone_id = "op://cluster-phoebe/tf-cloudflare-zones/moe_zone_id"
+  },
+  dev = {
+    domain  = "hbjy.dev"
+    zone_id = "op://cluster-phoebe/tf-cloudflare-zones/dev_zone_id"
+  },
+  alt = {
+    domain  = "thighhighs.moe"
+    zone_id = "op://cluster-phoebe/tf-cloudflare-zones/alt_zone_id"
+  },
+}

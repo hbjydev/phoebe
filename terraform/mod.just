@@ -57,6 +57,9 @@ _run stack *args:
   cd "$dir"
   if [[ -f .env.op ]]; then
     op run --no-masking --env-file=.env.op -- terraform {{ args }}
+  elif [[ -f terraform.tfvars.op ]]; then
+    op inject --in-file terraform.tfvars.op --out-file=terraform.tfvars --force
+    terraform {{ args }}
   else
     terraform {{ args }}
   fi
