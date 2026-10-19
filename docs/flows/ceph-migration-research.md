@@ -200,9 +200,9 @@ namespace makes restored ownership a particular restore-drill check.
 Each affected Flux Kustomization depends on `kopiur-repository`, which depends on
 the Kopiur installation. All eight application Kustomize builds passed, and all
 16 backup resources passed server-side dry-run against the installed API.
-Nothing was deployed and no backup or restore was run. After deployment, verify
-all eight uploads and restore each workload before marking its recovery path
-proven; the policies alone do not close the migration acceptance gate.
+At that validation stage, nothing was deployed and no backup or restore was run.
+The required follow-up was to verify all eight uploads and restore each workload;
+the policies alone did not close the migration acceptance gate. Results follow.
 
 Scheduled copies are live-volume snapshots, not application-aware exports.
 They do not automatically stop writers or claim application consistency. The
@@ -210,6 +210,94 @@ existing `shutdown-ceph` workflow discovers these policies after deployment and
 takes final backups after stopping consumers; retain that step for the disk
 cutover. Native backup workflows or explicit quiescing can be added separately
 where stronger ongoing consistency is required.
+
+### Restore drill, 2026-10-19
+
+After deployment, all eight new policies and schedules were Ready. The drill
+used the Mise-installed `kubectl kopiur` 0.10.16 to trigger manual snapshots and
+restore their exact Kopia snapshot IDs from the Hetzner repository. Production
+writers remained running. All eight manual backups succeeded without reported
+file errors, all eight restores completed, and the application checks below
+passed. Scratch PVCs used `ceph-block` in the temporary
+`storage-restore-check-20261019` namespace. Validation pods had ingress and
+egress denied, no service-account token, and no Services or routes.
+
+| Workload | Remote Kopia snapshot ID | Validation |
+| --- | --- | --- |
+| Kanidm | `87a183b8a103d619c9399c59473c2edd` | Restore completed; SQLite integrity and `kanidmd database verify` passed; isolated 1.11.2 server returned HTTP 200 from `/status` using disposable TLS. |
+| MCP auth proxy | `94e2c59e096dc8b65082a1bf9ce60b2c` | Restore completed on retry; key and secret hashes matched the originals; mode 0600 and UID/GID 1000 preserved; running process opened restored `/data/db`; `/healthz` returned 200. |
+| Grafana | `ae7bb2386477a31f42b1df8bad9105cc` | Restore completed; SQLite integrity passed; isolated server `/api/health` reported database `ok`. |
+| slskd | `e38610b8129a39c4ca3acb141db14d12` | Restore completed; all nine discovered SQLite databases passed integrity checks; server used restored `/data/data` and returned HTTP 200. External shares and Soulseek connectivity were excluded. |
+| Gatus | `7acb3bcb983d11b64d2ef3f55d0392ba` | Restore completed; SQLite integrity passed; `/health` returned 200, including a repeat with production's `hostUsers: false` setting. |
+| VictoriaTraces | `20352f5fb8efa7b479644e5194df272d` | Restore completed; `/health` returned 200; LogsQL read a stored span and a time-bounded Jaeger query returned one trace with five spans. Latest timestamp, 2026-09-10 00:38:58 UTC, matched production. |
+| VictoriaLogs | `a643da72f85a26bf5408379c4ed7e973` | Restore completed for 6,324,306,384 logical bytes across 426,323 files; `/health` returned 200; LogsQL returned a historical record timestamped 2026-10-19 12:46:50 UTC. |
+| VictoriaMetrics | `56c8beeb5de1b560ac3e25072df01c1d` | Restore completed for 16,525,717,788 logical bytes across 1,509 files; `/health` returned 200; `count(up)` at 2026-10-19 12:40 UTC returned 85, matching the production query at the same timestamp. |
+
+After validation, the scratch namespace was deleted and all eight scratch PVs
+were confirmed reclaimed. Disposable TLS material was removed. All eight
+production workloads and the Hetzner repository were Ready after cleanup.
+
+Manual Snapshot names use `csi-drill-20261019-<policy>` in the source namespace,
+with `deletionPolicy: Retain`. Restore names use the same prefix in the scratch
+namespace; the MCP auth and Logs retries add `-r2`. Record the remote IDs rather
+than relying on catalog object names remaining present indefinitely.
+These recovery points remain subject to repository retention; take and record
+fresh stopped-writer backups for the actual cutover.
+
+The first MCP auth restore failed with `chown ... operation not permitted`.
+The generated mover ran as UID 0 but dropped all Linux capabilities, despite
+`privilegedMode: true`. A fresh restore of the same backup passed after explicitly
+adding capabilities. This tested override belongs under `Restore.spec.mover`:
+
+```yaml
+privilegedMode: true
+podSecurityContext:
+  runAsUser: 0
+  runAsGroup: 0
+  runAsNonRoot: false
+  fsGroup: 0
+securityContext:
+  runAsUser: 0
+  runAsGroup: 0
+  runAsNonRoot: false
+  privileged: false
+  capabilities:
+    drop: [ALL]
+    add: [CHOWN, DAC_OVERRIDE, FOWNER, FSETID]
+```
+
+The scratch namespace opted in with the
+`kopiur.home-operations.com/privileged-movers: "true"` annotation. The CLI created
+a passive populator Restore first; its mover was patched before creating the
+claim with `dataSourceRef`, so no restore Job could start with the old settings.
+All restores required missing snapshots and permission errors to fail:
+`onMissingSnapshot: Fail`, `ignoreErrors: false`,
+`ignorePermissionErrors: false`, `skipOwners: false`, `skipPermissions: false`.
+No production mover defaults were changed. See the upstream
+[security-context reference](https://kopiur.home-operations.com/security-context/)
+and [Restore reference](https://kopiur.home-operations.com/reference/crds/restore/).
+
+The first Logs restore was deliberately replaced early with a fresh target and
+`--parallel 32` instead of the default eight workers, because its many small
+files were restoring slowly. Both attempts used the same pinned backup and
+strict error/ownership settings. This is a drill tuning choice, not a change to
+production backup policy. End-to-end creation-to-Ready times for the five small
+volumes were 42–62 seconds; Traces took 5 minutes 24 seconds for 10,198 files.
+Metrics took 9 minutes 27 seconds for 1,509 files and 16.5GB of logical data.
+Logs took 52 minutes 45 seconds with 32 workers for 426,323 files and 6.3GB.
+These include scheduling and volume provisioning as well as remote restoration.
+The first full Logs backup's mover ran for 12 minutes 3 seconds; Metrics took
+29 minutes 29 seconds. Those upload timings exclude some staging and controller
+reconciliation time. They are observations from concurrent work on this cluster,
+not guaranteed cutover timings or measurements of a new CSI.
+
+These checks exercise remote recovery into fresh Ceph volumes. They do not test
+Miroir/OpenEBS, a wiped disk, a fresh cluster, full authentication flows, or every
+historical record. Application startup used isolated configuration without
+production integration credentials. Final stopped-writer backups, the separate
+CNPG recovery drill, and the remaining PVC preservation decisions are still
+required before disk reuse. Passing one live-snapshot drill does not establish
+that every future live snapshot will be application-consistent.
 
 ## Miroir
 
