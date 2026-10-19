@@ -18,7 +18,7 @@ spec:
   sources:
     - pvc:
         name: vtsingle-victoria-traces
-  volumeSnapshotClassName: csi-ceph-blockpool
+  volumeSnapshotClassName: miroir-snap
   errorHandling:
     ignoreFileErrors: false
     ignoreDirErrors: false

@@ -24,7 +24,7 @@ spec:
     - pvc:
         name: "${KOPIUR_PVC:=${APP}}"
 
-  volumeSnapshotClassName: "${KOPIUR_SNAPSHOTCLASS:=csi-ceph-blockpool}"
+  volumeSnapshotClassName: "${KOPIUR_SNAPSHOTCLASS:=miroir-snap}"
 
   mover:
     privilegedMode: "${KOPIUR_PRIVILEGED_MODE:=false}"

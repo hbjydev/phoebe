@@ -18,7 +18,7 @@ spec:
   sources:
     - pvc:
         name: config-gatus-0
-  volumeSnapshotClassName: csi-ceph-blockpool
+  volumeSnapshotClassName: miroir-snap
   errorHandling:
     ignoreFileErrors: false
     ignoreDirErrors: false

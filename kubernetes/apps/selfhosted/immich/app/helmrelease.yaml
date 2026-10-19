@@ -93,7 +93,7 @@ spec:
           size: 10Gi
           type: persistentVolumeClaim
           accessMode: ReadWriteOnce
-          storageClass: ceph-block
+          storageClass: miroir-local
         dev-dri:
           type: hostPath
           hostPath: /dev/dri

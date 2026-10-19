@@ -20,7 +20,7 @@ spec:
   retentionPeriod: "12"
 
   storage:
-    storageClassName: ceph-block
+    storageClassName: miroir-local
     resources:
       requests:
         storage: 50Gi

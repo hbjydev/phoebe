@@ -1,0 +1,233 @@
+"""Offline tests: no kubectl, Talos, or remote services are used."""
+import copy
+import io
+import json
+from pathlib import Path
+import sys
+import tempfile
+import unittest
+from contextlib import redirect_stdout
+from unittest.mock import patch
+
+import prepare
+import step
+
+sys.path.insert(0, str(prepare.ROOT / 'kubernetes'))
+import maintenance
+
+
+def fixture():
+    sources = ['observability/config-gatus-0', 'garage-system/garage-meta']
+    sources += ['apps/data-'+str(n) for n in range(32)]
+    claims = []
+    for name in sorted(set(sources) | prepare.CACHES | prepare.DISCARD | prepare.DATABASE):
+        ns, pvc = name.split('/')
+        claims.append({'apiVersion': 'v1', 'kind': 'PersistentVolumeClaim',
+                       'metadata': {'namespace': ns, 'name': pvc, 'uid': 'old-'+pvc},
+                       'spec': {'storageClassName': 'ceph-block', 'volumeName': 'pv-'+pvc,
+                                'accessModes': ['ReadWriteOnce'], 'resources': {'requests': {'storage': '5Gi'}}}})
+    backups = []
+    for source in sources:
+        ns, name = source.split('/')
+        backups.append({'kind': 'Snapshot', 'metadata': {'namespace': ns, 'name': 'final-'+name},
+                        'spec': {'policyRef': {'name': name}},
+                        'status': {'phase': 'Succeeded', 'stats': {'filesFailed': 0},
+                                   'resolved': {'sources': [{'pvc': source}], 'repository': {'kind': 'ClusterRepository', 'name': 'hetzner'}},
+                                   'snapshot': {'kopiaSnapshotID': 'pinned-'+name,
+                                                'identity': {'username': ns+'-'+name, 'hostname': ns, 'sourcePath': '/pvc/'+name}}}})
+    state = {'snapshots': {'complete': True, 'requests': backups}}
+    return claims, backups, state
+
+
+class BundleTests(unittest.TestCase):
+    def setUp(self):
+        self.claims, self.backups, self.state = fixture()
+
+    def test_every_claim_is_accounted_for_and_backups_pinned(self):
+        rows, objects = prepare.build(self.claims, self.backups, self.state)
+        self.assertEqual(len(rows), 48)
+        self.assertEqual({d: sum(r['disposition'] == d for r in rows) for d in ('restore', 'cache', 'discard', 'postgres')},
+                         {'restore': 34, 'cache': 7, 'discard': 5, 'postgres': 2})
+        self.assertIn('observability/config-gatus-0', objects)
+        self.assertNotIn('observability/gatus', objects)
+        for row in rows:
+            if row['disposition'] != 'restore': continue
+            parts = objects[row['claim']]
+            spec = parts['restore']['spec']
+            self.assertEqual(spec['source']['identity']['snapshotID'], row['backupID'])
+            self.assertEqual(spec['policy']['onMissingSnapshot'], 'Fail')
+            self.assertFalse(spec['options']['skipOwners'])
+            self.assertFalse(spec['options']['ignorePermissionErrors'])
+            self.assertNotIn('volumeName', parts['pvc']['spec'])
+            self.assertEqual(parts['pvc']['spec']['dataSourceRef']['name'], row['restore'])
+            self.assertTrue(parts['binder']['spec']['volumes'][0]['persistentVolumeClaim']['readOnly'])
+
+    def test_changed_inventory_is_rejected(self):
+        for change in ('extra', 'missing', 'replacement-source'):
+            with self.subTest(change=change):
+                claims = copy.deepcopy(self.claims)
+                if change == 'extra':
+                    extra = copy.deepcopy(claims[0]); extra['metadata']['name'] = 'unknown'; claims.append(extra)
+                elif change == 'missing': claims.pop()
+                else: claims[0]['metadata']['name'] = 'renamed'
+                with self.assertRaises(RuntimeError): prepare.build(claims, self.backups, self.state)
+
+    def test_bad_backups_are_rejected(self):
+        for change in ('missing', 'failed', 'file-error', 'no-id', 'repository', 'duplicate-source'):
+            with self.subTest(change=change):
+                backups = copy.deepcopy(self.backups)
+                if change == 'missing': backups.pop()
+                elif change == 'failed': backups[0]['status']['phase'] = 'Failed'
+                elif change == 'file-error': backups[0]['status']['stats']['filesFailed'] = 1
+                elif change == 'no-id': del backups[0]['status']['snapshot']['kopiaSnapshotID']
+                elif change == 'repository': backups[0]['status']['resolved']['repository']['name'] = 'other'
+                else: backups[0]['status']['resolved']['sources'] = backups[1]['status']['resolved']['sources']
+                with self.assertRaises(RuntimeError): prepare.build(self.claims, backups, self.state)
+
+    def test_incomplete_shutdown_is_rejected(self):
+        self.state['snapshots']['complete'] = False
+        with self.assertRaises(RuntimeError): prepare.build(self.claims, self.backups, self.state)
+
+    def test_claim_keeps_helm_ownership_but_not_binding_or_owner_uid(self):
+        old = self.claims[0]
+        old['metadata'].update(labels={'app.kubernetes.io/managed-by': 'Helm'},
+                               annotations={'meta.helm.sh/release-name': 'example', 'pv.kubernetes.io/bind-completed': 'yes'},
+                               ownerReferences=[{'uid': 'old-owner'}])
+        new = prepare.new_claim(old)
+        self.assertEqual(new['metadata']['annotations'], {'meta.helm.sh/release-name': 'example'})
+        self.assertEqual(new['metadata']['labels'], old['metadata']['labels'])
+        self.assertNotIn('ownerReferences', new['metadata'])
+
+    def test_git_patch_covers_default_class_policies_recovery_and_freeze(self):
+        diff = prepare.git_patch()
+        self.assertIn('+    storageclass.kubernetes.io/is-default-class: "true"', diff)
+        self.assertIn('+        serverName: postgres-miroir', diff)
+        self.assertIn('+        backupID: '+prepare.PG_BACKUP_ID, diff)
+        self.assertIn('+      source: backup', diff)
+        self.assertEqual(diff.count('+  suspend: true'), 3)
+        self.assertIn('${KOPIUR_SNAPSHOTCLASS:=miroir-snap}', diff)
+
+
+class PrepareTests(unittest.TestCase):
+    def run_prepare(self, out, *, missing_backup=False, source_server='postgres'):
+        claims, backups, state = fixture()
+        state.update(context='admin@phoebe', server='https://example.test', stages=['ceph'])
+        state['snapshots']['run'] = 'test-run'
+        (out.parent/'kubernetes').mkdir(exist_ok=True)
+        (out.parent/'kubernetes/.maintenance-state.json').write_text(json.dumps(state))
+        pg = {'apiVersion': 'postgresql.cnpg.io/v1', 'kind': 'Cluster',
+              'metadata': {'name': 'postgres', 'namespace': 'database', 'uid': 'pg-original',
+                           'annotations': {'cnpg.io/hibernation': 'on'}},
+              'spec': {'storage': {'storageClass': 'ceph-block'},
+                       'managed': {'roles': [{'name': 'app-role'}]},
+                       'plugins': [{'name': 'barman-cloud.cloudnative-pg.io', 'parameters': {'barmanObjectName': 'barman-hetzner'}}],
+                       # Live cluster uses "source"; Git currently uses "backup".
+                       'externalClusters': [{'name': 'source', 'plugin': {'name': 'barman-cloud.cloudnative-pg.io',
+                                            'parameters': {'barmanObjectName': 'barman-hetzner', 'serverName': source_server}}}]}}
+        objects = {
+            'deployment': [{'metadata': {'name': n}, 'spec': {'replicas': 0}} for n in ('flux-operator', 'kustomize-controller', 'helm-controller')],
+            'pvc': claims, 'snapshots.kopiur.home-operations.com': backups,
+            'clusters.postgresql.cnpg.io': [pg],
+            'backups.postgresql.cnpg.io': [] if missing_backup else [{'metadata': {'name': prepare.PG_BACKUP}, 'status': {'phase': 'completed', 'backupId': prepare.PG_BACKUP_ID}}],
+            'cephcluster': [{'metadata': {'name': 'rook-ceph', 'uid': 'ceph-original'}, 'spec': {'storage': {}}}],
+            'node': [{'metadata': {'name': prepare.NODE}}],
+            'job': [], 'cephfilesystem': [], 'cephobjectstore': [], 'cephblockpool': [],
+            'namespace': [{'metadata': {'name': n, 'annotations': {'kopiur.home-operations.com/privileged-movers': 'true'}}} for n in {c['metadata']['namespace'] for c in claims}],
+        }
+        with patch.object(prepare, 'ROOT', out.parent), patch.object(prepare, 'get', side_effect=lambda kind, ns=None: objects[kind]), patch.object(prepare, 'kubectl', return_value=state['server']), patch.object(prepare, 'git_patch', return_value='reviewed diff'), patch.object(maintenance, 'verify_stopped'), patch.object(maintenance, 'kubectl'):
+            prepare.prepare(out)
+
+    def test_live_recovery_source_alias_does_not_produce_empty_stop(self):
+        with tempfile.TemporaryDirectory() as tmp, redirect_stdout(io.StringIO()):
+            out = Path(tmp)/'bundle'
+            try:
+                self.run_prepare(out)
+            except Exception as error:
+                self.fail(f'STOP: {error}')
+            pg = json.loads((out/'postgres.json').read_text())
+            source_name = pg['spec']['bootstrap']['recovery']['source']
+            source = next(x for x in pg['spec']['externalClusters'] if x['name'] == source_name)
+            self.assertEqual(source['plugin']['parameters']['serverName'], 'postgres')
+            self.assertEqual(pg['spec']['managed']['roles'], [{'name': 'app-role'}])
+
+    def test_missing_backup_has_actionable_error_and_no_partial_bundle(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)/'bundle'
+            with self.assertRaisesRegex(RuntimeError, prepare.PG_BACKUP):
+                self.run_prepare(out, missing_backup=True)
+            self.assertFalse(out.exists())
+
+    def test_wrong_recovery_archive_leaves_no_partial_bundle(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)/'bundle'
+            with self.assertRaisesRegex(RuntimeError, 'recovery'):
+                self.run_prepare(out, source_server='wrong-archive')
+            self.assertFalse(out.exists())
+
+
+class StepTests(unittest.TestCase):
+    def test_every_preview_avoids_cluster_and_bundle_access(self):
+        for phase in step.DESCRIPTIONS:
+            with self.subTest(phase=phase), patch('sys.argv', ['step.py', phase]), patch.object(step, 'Migration') as migration, patch.object(step, 'kubectl') as kube, redirect_stdout(io.StringIO()):
+                step.main()
+                migration.assert_not_called(); kube.assert_not_called()
+
+    def test_delete_has_api_uid_precondition(self):
+        obj = {'apiVersion': 'v1', 'kind': 'PersistentVolumeClaim', 'metadata': {'name': 'data', 'namespace': 'apps', 'uid': 'original'}}
+        with patch.object(step, 'kubectl') as kube, redirect_stdout(io.StringIO()):
+            step.delete(obj, 'persistentvolumeclaims')
+        args = kube.call_args
+        self.assertEqual(args.args, ('delete', '--raw', '/api/v1/namespaces/apps/persistentvolumeclaims/data', '-f', '-'))
+        self.assertEqual(json.loads(args.kwargs['data'])['preconditions'], {'uid': 'original'})
+
+    def test_create_accepts_defaults_but_rejects_different_backup(self):
+        obj = {'kind': 'Restore', 'metadata': {'namespace': 'apps', 'name': 'restore'},
+               'spec': {'source': {'identity': {'snapshotID': 'pinned'}}, 'list': [{'name': 'x'}]}}
+        actual = copy.deepcopy(obj); actual['spec']['list'][0]['default'] = True
+        with patch.object(step, 'one', return_value=actual), patch.object(step, 'kubectl') as kube:
+            step.create(obj); kube.assert_not_called()
+            actual['spec']['source']['identity']['snapshotID'] = 'other'
+            with self.assertRaises(RuntimeError): step.create(obj)
+            kube.assert_not_called()
+
+    def test_talos_volume_cannot_run_before_cleanup(self):
+        migration = step.Migration.__new__(step.Migration); migration.progress = {'retire': True}
+        with patch.object(step, 'talos') as talos, patch.object(step, 'disk') as disk:
+            with self.assertRaisesRegex(RuntimeError, 'ceph-cleanup'): migration.talos_volume()
+            talos.assert_not_called(); disk.assert_not_called()
+
+    def test_miroir_cannot_start_before_talos_volume(self):
+        migration = step.Migration.__new__(step.Migration); migration.progress = {'ceph-cleanup': True}
+        with patch.object(step, 'apply_file') as apply:
+            with self.assertRaisesRegex(RuntimeError, 'talos-volume'): migration.activate()
+            apply.assert_not_called()
+
+    def test_pending_talos_volume_blocks_retirement_before_any_delete(self):
+        migration = step.Migration.__new__(step.Migration); migration.progress = {'git': True}
+        pending = {'metadata': {'id': 'r-miroir'}}
+        with patch.object(migration, 'frozen'), patch.object(step, 'disk'), patch.object(step, 'talos', return_value=json.dumps(pending)), patch.object(step, 'delete') as delete:
+            with self.assertRaisesRegex(RuntimeError, 'pending Miroir'): migration.retire()
+            delete.assert_not_called()
+
+    def test_disk_selection_rejects_os_disk(self):
+        disk = {'metadata': {'id': 'nvme0n1'}, 'spec': {'serial': prepare.SERIAL, 'size': 1000204886016, 'dev_path': '/dev/nvme0n1'}}
+        volume = {'metadata': {'id': 'STATE'}, 'spec': {'location': '/dev/nvme0n1p3'}}
+        with patch.object(step, 'talos', side_effect=[json.dumps(disk), json.dumps(volume)]):
+            with self.assertRaisesRegex(RuntimeError, 'system volume'): step.disk()
+
+    def test_disk_selection_uses_serial_and_parses_talos_stream(self):
+        disk = {'metadata': {'id': 'nvme7n1'}, 'spec': {'serial': prepare.SERIAL, 'size': 1000204886016, 'dev_path': '/dev/nvme7n1'}}
+        other = {'spec': {'serial': 'OS-DISK'}}
+        with patch.object(step, 'talos', side_effect=[json.dumps(other)+'\n'+json.dumps(disk), '']):
+            self.assertEqual(step.disk()['spec']['dev_path'], '/dev/nvme7n1')
+
+    def test_completed_cleanup_cannot_be_run_again(self):
+        migration = step.Migration.__new__(step.Migration)
+        migration.progress = {'retire': True, 'ceph-cleanup': True}
+        with patch.object(migration, 'frozen'), patch.object(step, 'disk'), patch.object(step, 'get') as get:
+            with self.assertRaisesRegex(RuntimeError, 'already completed'): migration.ceph_cleanup()
+            get.assert_not_called()
+
+
+if __name__ == '__main__':
+    unittest.main()

@@ -17,4 +17,4 @@ spec:
       enabled: true
       mode: shared
       size: 20Gi
-      storageClass: ceph-block
+      storageClass: miroir-local

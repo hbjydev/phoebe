@@ -18,7 +18,7 @@ spec:
   sources:
     - pvc:
         name: grafana-pvc
-  volumeSnapshotClassName: csi-ceph-blockpool
+  volumeSnapshotClassName: miroir-snap
   errorHandling:
     ignoreFileErrors: false
     ignoreDirErrors: false

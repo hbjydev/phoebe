@@ -59,7 +59,7 @@ Kopiur, the snapshot controller, Ceph, and CSI remain running, it then:
 3. Waits for other queued Kopiur operations and active movers to finish before
    stopping Kopiur and performing the final Ceph consumer check.
 
-The live inventory inspected during implementation has 48 Ceph PVCs and 26
+The live inventory inspected on 2026-10-19 has 48 Ceph PVCs and 34
 Kopiur policies. CSI snapshots remain on Ceph; only the configured Kopiur policies
 upload backups to their repositories. A CSI snapshot alone does not protect
 against losing the Ceph storage itself.
@@ -101,8 +101,14 @@ When adding a client configured only through a Secret, add its dependency label
 
 Flux's operator, Kustomize controller, and Helm controller are temporarily scaled
 to zero so GitOps cannot reset the maintenance changes. Operators owning selected
-workloads also stop. These reconciliation controllers remain stopped until the
-last active maintenance stage is restored. Other applications continue running,
+workloads also stop, except Garage: its Deployment also serves the admission
+webhook needed for PVC updates during snapshot creation. The helper saves and
+sets the parent `GarageCluster.spec.maintenance.suspended`, then waits for the
+child GarageNodes to acknowledge suspension before stopping their workloads.
+The operator and its webhooks stay running. The saved maintenance configuration
+is restored with the other reconciliation guards after workload recovery.
+The other reconciliation controllers remain stopped until the last active
+maintenance stage is restored. Other applications continue running,
 but GitOps changes are held during this period. The Flux source controller keeps
 running.
 
@@ -144,6 +150,12 @@ original replica counts, node selectors, schedule suspension values, and
 hibernation annotation. Already-stopped services remain stopped. Keep this file
 until recovery finishes, and use the same checkout and kubeconfig for all stages.
 Do not run concurrent maintenance sessions from different checkouts.
+
+Older saved states may contain a stopped `garage-operator` Deployment. The
+helper rejects those states rather than taking its admission webhook offline
+again. Recover the webhook and migrate that saved guard to GarageCluster
+maintenance suspension before retrying. Simply scaling the operator back up
+without suspending reconciliation can restart Garage writers.
 
 Overlapping stages hold a shared consumer down until every stage that selected
 it has been restored. For example, Forgejo stays stopped after `restore-ceph`

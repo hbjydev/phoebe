@@ -17,7 +17,28 @@ spec:
   sources:
     - pvc:
         name: garage-meta
-  volumeSnapshotClassName: csi-ceph-blockpool
+  volumeSnapshotClassName: miroir-snap
+  errorHandling:
+    ignoreFileErrors: false
+    ignoreDirErrors: false
+    ignoreUnknownTypes: false
+  mover:
+    # Garage's node key and LMDB files are not readable by the default UID 1000.
+    privilegedMode: true
+    podSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      runAsNonRoot: false
+      fsGroup: 0
+      fsGroupChangePolicy: OnRootMismatch
+    securityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      runAsNonRoot: false
+      privileged: false
+      capabilities:
+        drop: [ALL]
+        add: [DAC_READ_SEARCH]
 
 ---
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotschedule_v1alpha1.json
@@ -70,7 +91,7 @@ spec:
   resources:
     requests:
       storage: 5Gi
-  storageClassName: ceph-block
+  storageClassName: miroir-local
 
 ---
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotpolicy_v1alpha1.json
@@ -91,7 +112,7 @@ spec:
   sources:
     - pvc:
         name: garage-data
-  volumeSnapshotClassName: csi-ceph-blockpool
+  volumeSnapshotClassName: miroir-snap
 ---
 
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotschedule_v1alpha1.json
@@ -144,4 +165,4 @@ spec:
   resources:
     requests:
       storage: 100Gi
-  storageClassName: ceph-block
+  storageClassName: miroir-local

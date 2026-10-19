@@ -18,7 +18,7 @@ spec:
   sources:
     - pvc:
         name: mcp-auth-proxy
-  volumeSnapshotClassName: csi-ceph-blockpool
+  volumeSnapshotClassName: miroir-snap
   errorHandling:
     ignoreFileErrors: false
     ignoreDirErrors: false

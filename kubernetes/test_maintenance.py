@@ -105,6 +105,28 @@ class DiscoveryTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "Unknown owner"):
             m.plan([*fixtures(), obj], "postgres")
 
+    def test_garage_keeps_webhook_online_and_suspends_parent(self):
+        cluster = {"kind": "GarageCluster", "metadata": {
+            "name": "garage", "namespace": "garage-system", "uid": "garage"},
+            "spec": {}}
+        node = {"kind": "GarageNode", "metadata": {
+            "name": "garage-node0", "namespace": "garage-system", "uid": "node"},
+            "spec": {"clusterRef": {"name": "garage"}}}
+        sts = workload("garage-node0", "garage-system", kind="StatefulSet",
+                       owner="GarageNode", claims=("data",))
+        claim = {"kind": "PersistentVolumeClaim", "metadata": {
+            "name": "data", "namespace": "garage-system"},
+            "spec": {"storageClassName": "ceph"}}
+        items = [*fixtures(), workload("garage-operator", "garage-system"),
+                 cluster, node, sts, claim]
+        targets, guards = m.plan(items, "ceph")
+        self.assertIn(m.key(sts), targets)
+        self.assertNotIn("Deployment/garage-system/garage-operator", guards)
+        self.assertEqual(guards[m.key(cluster)]["field"], "maintenance")
+        self.assertIsNone(guards[m.key(cluster)]["original"])
+        with self.assertRaisesRegex(RuntimeError, "GarageCluster"):
+            m.plan([i for i in items if i is not cluster], "ceph")
+
     def test_autoscaler_and_matching_node_abort(self):
         hpa = {"kind": "HorizontalPodAutoscaler", "metadata": {"name": "auto", "namespace": "apps"},
                "spec": {"scaleTargetRef": {"kind": "Deployment", "name": "shared"}}}
@@ -188,6 +210,39 @@ class RecoveryTests(unittest.TestCase):
                 patch.object(m, "wait_for", side_effect=lambda _, f: pending.extend(f())):
             m.verify_stopped("ceph")
         self.assertEqual(pending, [])
+
+    def test_garage_maintenance_restores_exact_original_and_waits_for_ack(self):
+        cluster = {"kind": "GarageCluster", "metadata": {
+            "name": "garage", "namespace": "garage-system", "uid": "garage"},
+            "spec": {"maintenance": {"suspended": True}}}
+        for original in (None, {"suspended": False}, {"suspended": True}):
+            action = m.record(cluster, "maintenance", original)
+            with patch.object(m, "kubectl", return_value=json.dumps(cluster)) as kubectl:
+                m.apply(action, restore=True)
+                payload = json.loads(kubectl.call_args.args[-1])
+                if original is None:
+                    self.assertEqual(payload, [{"op": "remove", "path": "/spec/maintenance"}])
+                else:
+                    self.assertEqual(payload[0]["value"], original)
+        node = {"kind": "GarageNode", "metadata": {
+            "name": "node", "namespace": "garage-system", "generation": 2},
+            "spec": {"clusterRef": {"name": "garage"}}, "status": {}}
+        def get(*args):
+            return json.dumps({"items": [node] if args[1].startswith("garagenodes") else []})
+        def wait(_, predicate):
+            self.assertEqual(predicate(), ["GarageNode/garage-system/node"])
+            node["status"]["conditions"] = [{"type": "Suspended", "status": "True",
+                                               "observedGeneration": 2}]
+            self.assertEqual(predicate(), [])
+        with patch.object(m, "kubectl", side_effect=get), patch.object(m, "wait_for", side_effect=wait):
+            m.wait_stopped([action])
+
+    def test_legacy_garage_state_cannot_stop_webhook_again(self):
+        with patch.object(m, "apply") as apply:
+            with self.assertRaisesRegex(RuntimeError, "admission webhook"):
+                m.shutdown({"guards": {"Deployment/garage-system/garage-operator": {}}},
+                           "ceph", fixtures())
+            apply.assert_not_called()
 
     def test_uid_replacement_rejected_before_mutation(self):
         action = m.record(fixtures()[4], "replicas", 2)

@@ -4,12 +4,16 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: postgres
-  annotations:
-    cnpg.io/skipEmptyWalArchiveCheck: enabled
 spec:
   instances: 2
 
   imageName: ghcr.io/cloudnative-pg/postgresql:18.4-standard-trixie@sha256:7259c775ce18bdf668f17a68accb78e5bcc8074bbea9c8cdac974a8a8525a173
+
+  bootstrap:
+    recovery:
+      source: backup
+      recoveryTarget:
+        backupID: 20261019T153149
 
   resources:
     requests:
@@ -25,21 +29,22 @@ spec:
 
   storage:
     size: 24Gi
-    storageClass: ceph-block
+    storageClass: miroir-local
 
   plugins:
     - name: &plugin barman-cloud.cloudnative-pg.io
       isWALArchiver: true
       parameters:
         barmanObjectName: &store barman-hetzner
+        serverName: postgres-miroir
 
   externalClusters:
-    - name: &src source
+    - name: &src backup
       plugin:
         name: *plugin
         parameters:
           barmanObjectName: *store
-          serverName: hayden-postgres
+          serverName: postgres
 
   postgresql:
     pg_hba:

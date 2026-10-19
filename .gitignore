@@ -3,4 +3,5 @@ kubeconfig
 age.key
 site
 kubernetes/.maintenance-state.*
+kubernetes/.miroir-migration/
 __pycache__/

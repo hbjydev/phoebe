@@ -32,7 +32,7 @@ spec:
   storage:
     volumeClaimTemplate:
       spec:
-        storageClassName: ceph-block
+        storageClassName: miroir-local
         resources:
           requests:
             storage: 20Gi

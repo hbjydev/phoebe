@@ -71,7 +71,7 @@ spec:
         statefulset:
           volumeClaimTemplates:
             - name: config
-              storageClass: ceph-block
+              storageClass: miroir-local
               accessMode: ReadWriteOnce
               size: 5Gi
     defaultPodOptions:

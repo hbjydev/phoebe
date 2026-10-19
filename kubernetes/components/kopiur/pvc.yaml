@@ -18,4 +18,4 @@ spec:
     requests:
       storage: "${KOPIUR_CAPACITY:=5Gi}"
 
-  storageClassName: "${KOPIUR_STORAGECLASS:=ceph-block}"
+  storageClassName: "${KOPIUR_STORAGECLASS:=miroir-local}"

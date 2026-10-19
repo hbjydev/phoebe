@@ -19,7 +19,8 @@ SNAPSHOT_TIMEOUT = 3600
 RESOURCES = (
     "deployment,statefulset,daemonset,cronjob,job,pod,pvc,pv,storageclass,"
     "cluster.postgresql.cnpg.io,dragonfly,scheduledbackup,backup.postgresql.cnpg.io,hpa,node,"
-    "snapshotpolicy,snapshotschedule,volumesnapshotclass"
+    "snapshotpolicy,snapshotschedule,volumesnapshotclass,"
+    "garageclusters.v1beta2.garage.rajsingh.info,garagenodes.garage.rajsingh.info"
 )
 FLUX = (
     ("flux-system", "flux-operator"),
@@ -31,7 +32,6 @@ FLUX = (
 OPERATORS = {
     "LiteLLMProxy": ("ai", "litellm-operator"),
     "InferenceService": ("ai", "llmkube-controller-manager"),
-    "GarageNode": ("garage-system", "garage-operator"),
     "Kanidm": ("security", "kaniop"),
     "Grafana": ("observability", "grafana-operator"),
     "VMSingle": ("observability", "victoria-metrics-operator"),
@@ -184,6 +184,20 @@ def plan(items, stage):
         if not selected or ns == "rook-ceph":
             continue
         for owner in obj["metadata"].get("ownerReferences", []):
+            if owner["kind"] == "GarageNode":
+                # The operator also serves fail-closed PVC admission webhooks.
+                # Keep it running; suspend the parent before stopping writers.
+                node = next((i for i in items if i["kind"] == "GarageNode"
+                             and identity(i) == (ns, owner["name"])), None)
+                if node is None:
+                    raise RuntimeError(f"Missing GarageNode owner for {key(obj)}")
+                ref = node["spec"]["clusterRef"]
+                cluster = next((i for i in items if i["kind"] == "GarageCluster"
+                                and identity(i) == (ref.get("namespace") or ns, ref["name"])), None)
+                if cluster is None:
+                    raise RuntimeError(f"Missing GarageCluster for {key(node)}")
+                guards[key(cluster)] = record(cluster, "maintenance", cluster["spec"].get("maintenance"))
+                continue
             if owner["kind"] not in OPERATORS:
                 raise RuntimeError(f"Unknown owner {owner['kind']} for {key(obj)}")
             guard(OPERATORS[owner["kind"]])
@@ -238,6 +252,7 @@ def resource(action):
     kind = {
         "Cluster": "cluster.postgresql.cnpg.io",
         "SnapshotSchedule": "snapshotschedules.kopiur.home-operations.com",
+        "GarageCluster": "garageclusters.v1beta2.garage.rajsingh.info",
     }.get(action["kind"], action["kind"])
     return f"{kind}/{action['name']}"
 
@@ -254,6 +269,17 @@ def apply(action, restore=False):
         annotation = ("cnpg.io/hibernation-" if restore and value is None
                       else f"cnpg.io/hibernation={value if restore else 'on'}")
         kubectl("annotate", ref, "-n", ns, annotation, "--overwrite", capture=False)
+    elif field == "maintenance":
+        value = action["original"] if restore else {
+            **(current["spec"].get("maintenance") or {}), "suspended": True,
+        }
+        if restore and value is None:
+            if "maintenance" not in current["spec"]:
+                return
+            patch = [{"op": "remove", "path": "/spec/maintenance"}]
+        else:
+            patch = [{"op": "add", "path": "/spec/maintenance", "value": value}]
+        kubectl("patch", ref, "-n", ns, "--type=json", "-p", json.dumps(patch), capture=False)
     elif field == "nodeSelector":
         # A JSON patch replaces the whole selector, preserving its original
         # absence and avoiding merge-patch keys lingering on recovery.
@@ -387,6 +413,18 @@ def wait_stopped(actions):
         pods = json.loads(kubectl("get", "pod", "-A", "-o", "json"))["items"]
         remaining = []
         for action in actions:
+            if action["field"] == "maintenance":
+                nodes = json.loads(kubectl("get", "garagenodes.garage.rajsingh.info",
+                                           "-n", action["namespace"], "-o", "json"))["items"]
+                for node in nodes:
+                    if node["spec"]["clusterRef"]["name"] != action["name"]:
+                        continue
+                    suspended = any(c["type"] == "Suspended" and c["status"] == "True"
+                                    and c.get("observedGeneration") == node["metadata"]["generation"]
+                                    for c in node.get("status", {}).get("conditions", []))
+                    if not suspended:
+                        remaining.append(key(node))
+                continue
             if action["field"] not in ("replicas", "nodeSelector"):
                 continue
             obj = json.loads(kubectl("get", resource(action), "-n", action["namespace"], "-o", "json"))
@@ -442,6 +480,9 @@ def ready(action):
 
 
 def shutdown(state, stage, items):
+    if "Deployment/garage-system/garage-operator" in state["guards"]:
+        raise RuntimeError("Saved maintenance state stopped Garage's admission webhook; "
+                           "recover it with GarageCluster maintenance suspension before retrying")
     targets, guards = plan(items, stage)
     if stage == "ceph" and "snapshots" not in state:
         run = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S") + "-" + uuid.uuid4().hex[:6]

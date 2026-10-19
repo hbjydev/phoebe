@@ -30,7 +30,7 @@ spec:
   storage:
     volumeClaimTemplate:
       spec:
-        storageClassName: ceph-block
+        storageClassName: miroir-local
         accessModes:
           - ReadWriteOnce
         resources:
