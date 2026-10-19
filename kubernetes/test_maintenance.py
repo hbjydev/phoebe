@@ -140,6 +140,56 @@ class DiscoveryTests(unittest.TestCase):
 
 
 class RecoveryTests(unittest.TestCase):
+    def test_temporary_webhook_configuration_blocks_resume_before_mutation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / '.miroir-migration').mkdir()
+            (root / '.miroir-migration/operator-webhook.json').write_text('{}')
+            with patch.object(m, 'STATE', root / 'state.json'), patch.object(m, 'apply') as apply, \
+                    self.assertRaisesRegex(RuntimeError, 'webhook cleanup is incomplete'):
+                m.restore({'stages': ['postgres'], 'resources': {}, 'guards': {}}, 'postgres')
+            apply.assert_not_called()
+
+    def test_ondelete_statefulset_waits_for_current_generation_and_ready_replicas(self):
+        obj = workload('garage-node0', 'garage-system', kind='StatefulSet')
+        obj['metadata']['generation'] = 3
+        obj['spec']['updateStrategy'] = {'type': 'OnDelete'}
+        obj['status'] = {'observedGeneration': 2, 'replicas': 1, 'readyReplicas': 1}
+        action = m.record(obj, 'replicas', 1)
+        stale = copy.deepcopy(obj)
+        pending = copy.deepcopy(obj)
+        pending['status'].update(observedGeneration=3, readyReplicas=0)
+        ready = copy.deepcopy(obj)
+        ready['status'].update(observedGeneration=3, currentRevision='old', updateRevision='new')
+        responses = iter([obj, stale, pending, ready])
+
+        def kubectl(*args, **kwargs):
+            if args[0] == 'rollout':
+                self.fail('rollout status is only available for RollingUpdate strategy type')
+            self.assertEqual(args[0], 'get')
+            return json.dumps(next(responses))
+
+        with patch.object(m, 'kubectl', side_effect=kubectl), patch.object(m.time, 'sleep') as sleep:
+            m.ready(action)
+        self.assertEqual(sleep.call_count, 2)
+
+    def test_ondelete_readiness_rejects_replaced_controller(self):
+        obj = workload('garage-node0', 'garage-system', kind='StatefulSet')
+        obj['spec']['updateStrategy'] = {'type': 'OnDelete'}
+        action = m.record(obj, 'replicas', 1)
+        changed = copy.deepcopy(obj)
+        changed['metadata']['uid'] = 'replacement'
+        with patch.object(m, 'kubectl', side_effect=[json.dumps(obj), json.dumps(changed)]), \
+                self.assertRaisesRegex(RuntimeError, 'was replaced while waiting'):
+            m.ready(action)
+
+    def test_rolling_statefulset_still_uses_rollout_status(self):
+        obj = workload('rolling', kind='StatefulSet')
+        obj['spec']['updateStrategy'] = {'type': 'RollingUpdate'}
+        with patch.object(m, 'kubectl', return_value=json.dumps(obj)) as kubectl:
+            m.ready(m.record(obj, 'replicas', 1))
+        self.assertEqual(kubectl.call_args.args[:3], ('rollout', 'status', 'StatefulSet/rolling'))
+
     def test_overlapping_stages_preserve_inverse_and_restore_in_order(self):
         items = fixtures()
         state = {"stages": [], "resources": {}, "guards": {}}

@@ -109,6 +109,7 @@ class BundleTests(unittest.TestCase):
             'kubernetes/apps/miroir-system/miroir/config/storageclass.yaml': 'metadata:\n  name: miroir-local\n',
             'kubernetes/apps/miroir-system/miroir/config/kustomization.yaml': 'resources: []\n',
             'kubernetes/components/kopiur/snapshotpolicy.yaml': 'spec:\n  volumeSnapshotClassName: "${KOPIUR_SNAPSHOTCLASS:=csi-ceph-blockpool}"\n',
+            'kubernetes/apps/media/plex/ks.yaml': 'spec:\n  dependsOn:\n    - name: rook-ceph-cluster\n      namespace: rook-ceph\n',
             'kubernetes/apps/rook-ceph/rook-ceph/ks.yaml': '\n---\nspec:\n  interval: 1h\n' * 3,
         }
         with tempfile.TemporaryDirectory() as tmp:
@@ -122,6 +123,8 @@ class BundleTests(unittest.TestCase):
         self.assertIn('+      source: backup', diff)
         self.assertEqual(diff.count('+  suspend: true'), 3)
         self.assertIn('${KOPIUR_SNAPSHOTCLASS:=miroir-snap}', diff)
+        self.assertIn('+    - name: miroir-config', diff)
+        self.assertIn('+      namespace: miroir-system', diff)
 
 
 class PrepareTests(unittest.TestCase):

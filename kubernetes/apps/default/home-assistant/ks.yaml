@@ -10,8 +10,8 @@ spec:
   dependsOn:
     - name: multus-networks
       namespace: kube-system
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
+    - name: miroir-config
+      namespace: miroir-system
   interval: 1h
   path: ./kubernetes/apps/default/home-assistant/app
   postBuild:
@@ -42,8 +42,8 @@ spec:
   dependsOn:
     - name: multus-networks
       namespace: kube-system
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
+    - name: miroir-config
+      namespace: miroir-system
   interval: 1h
   path: ./kubernetes/apps/default/home-assistant/matter-server
   postBuild:
@@ -74,8 +74,8 @@ spec:
   dependsOn:
     - name: multus-networks
       namespace: kube-system
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
+    - name: miroir-config
+      namespace: miroir-system
   interval: 1h
   path: ./kubernetes/apps/default/home-assistant/openthread
   postBuild:

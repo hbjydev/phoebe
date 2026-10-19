@@ -202,6 +202,42 @@ consume, fresh application backups and the remaining maintenance actions.
 The scripts do not uninstall Rook's remaining Helm releases/CRDs or test Miroir
 across a node reboot.
 
+### Correct operator storage settings before the final resume
+
+After `restore-ceph`, while only the `postgres` maintenance stage remains, check
+the live Grafana, VLSingle, VMSingle, VTSingle and VLAgent resources. Their Git
+manifests may already use Miroir while the live resources still say `ceph-block`.
+The final restore starts their operators before Flux, so correct these fields first:
+
+```sh
+python3 misc/ceph-to-miroir/repair_operator_storage.py
+python3 misc/ceph-to-miroir/repair_operator_storage.py --execute
+```
+
+The first command is a read-only preview. The second requires typing
+`repair-storage` and checks that Flux and both affected operators are stopped.
+VictoriaMetrics hosts its validating webhook in the operator Pod, so the script
+temporarily starts that operator with every reconciliation controller disabled
+using the installed v0.75.0 release's `controller.disableReconcileFor` flag.
+It waits for the webhook endpoint, validates all remaining patches with server
+dry runs, then patches only the five storage-class fields with UID/resource-version
+checks. Webhook admission stays enabled throughout.
+
+The script stops the temporary operator and restores its original arguments in
+a cleanup block, including after patch failures. Grafana and Flux remain stopped.
+Already-corrected fields are skipped on retry. Temporary recovery information is
+saved in `kubernetes/.miroir-migration/operator-webhook.json` before starting the
+webhook; if that file remains after interruption or cleanup failure, rerun the
+helper to finish cleanup before `restore-postgres`. Do not delete that file to
+bypass the cleanup check. The script refuses an unexpected operator image or
+arguments. The flag and controller registry were verified against the
+[installed operator source](https://github.com/VictoriaMetrics/operator/blob/v0.75.0/internal/manager/manager.go).
+
+Once these corrections succeed, `just kube restore-postgres` restores the
+remaining applications, database backup schedule, operators and Flux, then
+removes the maintenance state. Review other pending Git changes before running
+it: enabling Flux also applies queued upgrade configuration.
+
 ## Failures and retries
 
 Stop at a failed check and inspect the named object and logs. Progress is recorded

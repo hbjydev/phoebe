@@ -14,8 +14,8 @@ spec:
   prune: true
   retryInterval: 5m
   dependsOn:
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
+    - name: miroir-config
+      namespace: miroir-system
   sourceRef:
     kind: GitRepository
     name: flux-system

@@ -10,8 +10,8 @@ spec:
       namespace: kopiur-system
     - name: multus-networks
       namespace: kube-system
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
+    - name: miroir-config
+      namespace: miroir-system
   interval: 1h
   path: ./kubernetes/apps/downloads/slskd/app
   postBuild:

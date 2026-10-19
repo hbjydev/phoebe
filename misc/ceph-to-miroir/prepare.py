@@ -145,6 +145,8 @@ def git_patch():
         for path in sorted((ROOT / directory).rglob('*.yaml')):
             if '/apps/rook-ceph/' in str(path): continue
             old = path.read_text(); new = old.replace('csi-ceph-blockpool', 'miroir-snap').replace('ceph-block', 'miroir-local')
+            new = new.replace('    - name: rook-ceph-cluster\n      namespace: rook-ceph\n',
+                              '    - name: miroir-config\n      namespace: miroir-system\n')
             if path.as_posix().endswith('/miroir/config/kustomization.yaml'):
                 new = new.replace('resources: []', 'resources:\n  - ./storageclass.yaml\n  - ./volumesnapshotclass.yaml\n  - ./miroirnode.yaml')
             if path.as_posix().endswith('/miroir/config/storageclass.yaml'):

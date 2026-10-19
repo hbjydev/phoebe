@@ -475,6 +475,26 @@ def ready(action):
     elif action["field"] == "replicas" and action["original"] == 0:
         return
     elif action["field"] in ("replicas", "nodeSelector"):
+        if action["kind"] == "StatefulSet":
+            obj = json.loads(kubectl("get", resource(action), "-n", action["namespace"], "-o", "json"))
+            if obj["spec"].get("updateStrategy", {}).get("type") == "OnDelete":
+                # OnDelete deliberately permits old Pod revisions. Wait for the
+                # restored replica count, not a rollout that requires Pod deletion.
+                def pending():
+                    current = json.loads(kubectl("get", resource(action), "-n", action["namespace"], "-o", "json"))
+                    if current["metadata"]["uid"] != action["uid"]:
+                        raise RuntimeError(f"{resource(action)} was replaced while waiting for readiness")
+                    status = current.get("status", {})
+                    desired = action["original"]
+                    if (not current["metadata"].get("deletionTimestamp")
+                            and current["spec"].get("replicas", 1) == desired
+                            and status.get("observedGeneration", 0) >= current["metadata"]["generation"]
+                            and status.get("replicas", 0) == desired
+                            and status.get("readyReplicas", 0) == desired):
+                        return []
+                    return [resource(action)]
+                wait_for(f"for {resource(action)} replicas to become ready", pending)
+                return
         kubectl("rollout", "status", resource(action), "-n", action["namespace"],
                 "--timeout=10m", capture=False)
 
@@ -529,6 +549,9 @@ def restore(state, stage):
     if stage not in state["stages"]:
         print(f"No saved {stage} maintenance stage to restore.")
         return
+    if (STATE.parent / '.miroir-migration/operator-webhook.json').exists():
+        raise RuntimeError('Temporary VictoriaMetrics webhook cleanup is incomplete; rerun '
+                           'misc/ceph-to-miroir/repair_operator_storage.py --execute before restoring workloads')
     actions = [a for a in state["resources"].values() if a["stages"] == [stage]]
     # PostgreSQL first; ordinary consumers next; writers and schedules last.
     def order(action):
