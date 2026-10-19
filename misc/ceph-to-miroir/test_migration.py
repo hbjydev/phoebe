@@ -181,6 +181,98 @@ class PrepareTests(unittest.TestCase):
             self.assertFalse(out.exists())
 
 
+class PlexExceptionTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(); self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        state = {'context': 'admin@phoebe', 'snapshots': {'run': 'run', 'complete': True},
+                 'guards': {}, 'resources': {}}
+        for name in ('plex', 'other'):
+            state['resources']['Deployment/media/'+name] = {'kind': 'Deployment', 'namespace': 'media',
+                'name': name, 'uid': 'deployment-'+name, 'field': 'replicas'}
+        (self.root/'kubernetes').mkdir()
+        (self.root/'kubernetes/.maintenance-state.json').write_text(json.dumps(state))
+        self.migration = step.Migration.__new__(step.Migration)
+        self.migration.allow_plex = True
+        self.migration.plan = {'context': 'admin@phoebe', 'run': 'run', 'server': 'https://example.test',
+            'claims': [{'claim': 'media/plex', 'disposition': 'restore', 'restore': 'plex-point', 'backupID': 'pinned'}]}
+        self.migration.progress = {'smoke': True, 'restore:media/plex': True}
+        self.plex = {'metadata': {'uid': 'deployment-plex'}, 'spec': {'replicas': 1,
+            'template': {'spec': {'volumes': [{'persistentVolumeClaim': {'claimName': 'plex'}}]}}}}
+        self.other = {'metadata': {'uid': 'deployment-other'}, 'spec': {'replicas': 0}}
+        self.flux = {'spec': {'replicas': 0}}
+        self.pvc = {'metadata': {'uid': 'restored-pvc'}, 'spec': {'storageClassName': 'miroir-local',
+            'dataSourceRef': {'apiGroup': 'kopiur.home-operations.com', 'kind': 'Restore', 'name': 'plex-point'}},
+            'status': {'phase': 'Bound'}}
+        self.restore = {'status': {'phase': 'Completed', 'resolved': {'kopiaSnapshotID': 'pinned'},
+            'claims': {'plex': {'uid': 'restored-pvc', 'phase': 'Populated', 'resolved': {'kopiaSnapshotID': 'pinned'}}}}}
+        self.addCleanup(patch.stopall)
+        patch.object(step, 'ROOT', self.root).start()
+        patch.object(step, 'kubectl', return_value='https://example.test').start()
+        patch.object(step, 'one', side_effect=self.one).start()
+
+    def one(self, kind, name, ns=None):
+        if ns == 'flux-system': return self.flux
+        if kind == 'pvc': return self.pvc
+        if kind == 'restores.kopiur.home-operations.com': return self.restore
+        if name == 'plex': return self.plex
+        if name == 'other': return self.other
+        raise AssertionError((kind, name, ns))
+
+    def test_completed_plex_is_allowed_only_with_explicit_flag_and_phase(self):
+        self.migration.frozen(allow_plex=True)
+        with self.assertRaisesRegex(RuntimeError, 'Writer running: plex'): self.migration.frozen()
+        self.migration.allow_plex = False
+        with self.assertRaisesRegex(RuntimeError, 'Writer running: plex'): self.migration.frozen(allow_plex=True)
+
+    def test_other_writer_and_flux_still_block(self):
+        self.other['spec']['replicas'] = 1
+        with self.assertRaisesRegex(RuntimeError, 'Writer running: other'): self.migration.frozen(allow_plex=True)
+        self.other['spec']['replicas'] = 0; self.flux['spec']['replicas'] = 1
+        with self.assertRaisesRegex(RuntimeError, 'Flux controller'): self.migration.frozen(allow_plex=True)
+
+    def test_replaced_deployment_or_extra_claim_blocks(self):
+        self.plex['metadata']['uid'] = 'replacement'
+        with self.assertRaisesRegex(RuntimeError, 'Workload replaced'): self.migration.frozen(allow_plex=True)
+        self.plex['metadata']['uid'] = 'deployment-plex'
+        self.plex['spec']['template']['spec']['volumes'].append({'persistentVolumeClaim': {'claimName': 'other'}})
+        with self.assertRaisesRegex(RuntimeError, 'exactly the restored'): self.migration.frozen(allow_plex=True)
+
+    def test_incomplete_or_replaced_restore_blocks(self):
+        self.migration.progress['restore:media/plex'] = False
+        with self.assertRaisesRegex(RuntimeError, 'Complete phase'): self.migration.frozen(allow_plex=True)
+        self.migration.progress['restore:media/plex'] = True
+        original = copy.deepcopy(self.restore)
+        for change in ('phase', 'snapshot', 'claim-uid', 'claim-phase', 'claim-snapshot'):
+            with self.subTest(change=change):
+                self.restore = copy.deepcopy(original)
+                status = self.restore['status']; claim = status['claims']['plex']
+                if change == 'phase': status['phase'] = 'Running'
+                elif change == 'snapshot': status['resolved']['kopiaSnapshotID'] = 'wrong'
+                elif change == 'claim-uid': claim['uid'] = 'old-pvc'
+                elif change == 'claim-phase': claim['phase'] = 'Populating'
+                else: claim['resolved']['kopiaSnapshotID'] = 'wrong'
+                with self.assertRaisesRegex(RuntimeError, 'not complete'): self.migration.frozen(allow_plex=True)
+
+    def test_wrong_storage_or_source_blocks(self):
+        self.pvc['spec']['storageClassName'] = 'ceph-block'
+        with self.assertRaisesRegex(RuntimeError, 'not Bound on Miroir'): self.migration.frozen(allow_plex=True)
+        self.pvc['spec']['storageClassName'] = 'miroir-local'
+        self.pvc['spec']['dataSourceRef']['name'] = 'another-restore'
+        with self.assertRaisesRegex(RuntimeError, 'different restore source'): self.migration.frozen(allow_plex=True)
+
+    def test_restore_all_skips_plex_without_mover_or_binding_pod(self):
+        with patch.object(step, 'create') as create, patch.object(step, 'delete') as delete, patch.object(self.migration, 'start_kopiur') as start, redirect_stdout(io.StringIO()):
+            self.migration.restore_all()
+            create.assert_not_called(); delete.assert_not_called(); start.assert_not_called()
+
+    def test_flag_rejected_for_destructive_phases_before_bundle_access(self):
+        for phase in ('retire', 'ceph-cleanup', 'talos-volume', 'activate', 'smoke'):
+            with self.subTest(phase=phase), patch('sys.argv', ['step.py', phase, '--allow-plex', '--execute']), patch.object(step, 'Migration') as migration, patch('sys.stderr', new=io.StringIO()):
+                with self.assertRaises(SystemExit): step.main()
+                migration.assert_not_called()
+
+
 class StepTests(unittest.TestCase):
     def test_cleanup_job_checks_labels_node_and_terminal_status(self):
         job = {'metadata': {'name': 'cluster-cleanup-job-phoebe-k-ctrl-01',

@@ -7,7 +7,7 @@ metadata:
 spec:
   talos:
     # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
-    version: v1.14.1
+    version: v1.14.4
 
   policy:
     waitForVolumeDetach: true
@@ -19,10 +19,3 @@ spec:
       kind: Node
       expr: status.conditions.filter(c, c.type == "Ready").all(c, c.status == "True")
       timeout: 10m
-
-    # Ceph ready
-    - apiVersion: ceph.rook.io/v1
-      kind: CephCluster
-      name: rook-ceph
-      namespace: rook-ceph
-      expr: status.ceph.health in ["HEALTH_OK", "HEALTH_WARN"]

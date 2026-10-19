@@ -121,8 +121,9 @@ def cleanup_jobs_finished(items):
 
 
 class Migration:
-    def __init__(self, bundle):
+    def __init__(self, bundle, allow_plex=False):
         self.bundle = bundle
+        self.allow_plex = allow_plex
         self.plan = json.loads((bundle/'plan.json').read_text())
         self.progress_path = bundle/'progress.json'
         self.progress = json.loads(self.progress_path.read_text()) if self.progress_path.exists() else {}
@@ -133,11 +134,38 @@ class Migration:
     def needs(self, *phases):
         for phase in phases: require(self.progress.get(phase), f'Complete phase {phase} first')
 
-    def frozen(self):
+    def check_plex_restored(self, deployment):
+        self.needs('smoke', 'restore:media/plex')
+        claims = {v['persistentVolumeClaim']['claimName']
+                  for v in deployment['spec']['template']['spec'].get('volumes', [])
+                  if 'persistentVolumeClaim' in v}
+        require(claims == {'plex'}, 'Plex exception requires exactly the restored media/plex PVC')
+        row = next((r for r in self.plan['claims'] if r['claim'] == 'media/plex'), None)
+        require(row and row['disposition'] == 'restore', 'Plex is absent from the approved restore plan')
+        pvc = one('pvc', 'plex', 'media')
+        require(pvc and not pvc['metadata'].get('deletionTimestamp')
+                and pvc['spec'].get('storageClassName') == 'miroir-local'
+                and pvc.get('status', {}).get('phase') == 'Bound', 'Plex PVC is not Bound on Miroir')
+        require(pvc['spec'].get('dataSourceRef') == {
+            'apiGroup': 'kopiur.home-operations.com', 'kind': 'Restore', 'name': row['restore']},
+            'Plex PVC uses a different restore source')
+        restore = one('restores.kopiur.home-operations.com', row['restore'], 'media')
+        status = restore.get('status', {}) if restore else {}
+        claim = status.get('claims', {}).get('plex', {})
+        require(status.get('phase') == 'Completed'
+                and status.get('resolved', {}).get('kopiaSnapshotID') == row['backupID']
+                and claim.get('phase') == 'Populated'
+                and claim.get('uid') == pvc['metadata']['uid']
+                and claim.get('resolved', {}).get('kopiaSnapshotID') == row['backupID'],
+                'Plex restore is not complete for this PVC and pinned backup')
+
+    def frozen(self, *, allow_plex=False):
         state = json.loads((ROOT/'kubernetes/.maintenance-state.json').read_text())
         require(state['context'] == self.plan['context'] == 'admin@phoebe', 'Wrong context')
         require(state['snapshots']['run'] == self.plan['run'] and state['snapshots']['complete'], 'Maintenance run changed')
         require(kubectl('config', 'view', '--minify', '-o', 'jsonpath={.clusters[0].cluster.server}') == self.plan['server'], 'Kubernetes API server changed')
+        if allow_plex and self.allow_plex:
+            require('Deployment/media/plex' in state['resources'], 'Plex is absent from the saved maintenance state')
         for name in ('flux-operator', 'kustomize-controller', 'helm-controller'):
             obj = one('deployment', name, 'flux-system')
             require(obj and obj['spec'].get('replicas') == 0, f'Flux controller {name} is not frozen')
@@ -146,7 +174,10 @@ class Migration:
             obj = one(action['kind'], action['name'], action['namespace'])
             require(obj and obj['metadata']['uid'] == action['uid'], f'Workload replaced/missing: {action["name"]}')
             field = action['field']
-            if field == 'replicas': require(obj['spec'].get('replicas') == 0, f'Writer running: {action["name"]}')
+            if (allow_plex and self.allow_plex and field == 'replicas'
+                    and (action['kind'], action['namespace'], action['name']) == ('Deployment', 'media', 'plex')):
+                self.check_plex_restored(obj)
+            elif field == 'replicas': require(obj['spec'].get('replicas') == 0, f'Writer running: {action["name"]}')
             elif field == 'nodeSelector': require(obj['spec']['template']['spec'].get('nodeSelector', {}).get('maintenance.home.arpa/disabled') == 'true', f'DaemonSet enabled: {action["name"]}')
             elif field == 'suspend': require(obj['spec'].get('suspend') is True, 'Schedule resumed')
             elif field == 'schedule.suspend': require(obj['spec']['schedule'].get('suspend') is True, 'Kopiur schedule resumed')
@@ -272,7 +303,7 @@ class Migration:
         self.done('activate')
 
     def start_kopiur(self):
-        state = self.frozen()
+        state = self.frozen(allow_plex=True)
         for name in ('kopiur-webhook', 'kopiur-controller'):
             action = state['resources']['Deployment/kopiur-system/'+name]
             require(action['original'] > 0, f'Kopiur was already disabled: {name}')
@@ -280,9 +311,14 @@ class Migration:
             kubectl('rollout', 'status', 'deployment/'+name, '-n', 'kopiur-system', '--timeout=5m')
 
     def restore(self, claim):
-        self.needs('smoke'); self.frozen()
+        self.needs('smoke'); self.frozen(allow_plex=True)
         row = next((r for r in self.plan['claims'] if r['claim'] == claim), None)
         require(row and row['disposition'] == 'restore', 'Choose one of the 34 restore claims from plan.json')
+        if self.allow_plex and claim == 'media/plex':
+            # frozen() verifies the completed restore and current PVC UID.
+            # Do not create another binding Pod or touch Plex's live volume.
+            print('Plex restore verified; skipping media/plex under --allow-plex.', flush=True)
+            return
         ns, name = claim.split('/'); current = one('pvc', name, ns)
         require(not current or current['spec'].get('storageClassName') == 'miroir-local', 'Old PVC still exists')
         self.start_kopiur()
@@ -307,13 +343,13 @@ class Migration:
             if row['disposition'] == 'restore': self.restore(row['claim'])
 
     def caches(self):
-        self.needs('smoke'); self.frozen()
+        self.needs('smoke'); self.frozen(allow_plex=True)
         for row in self.plan['claims']:
             if row['disposition'] == 'cache': create(json.loads((self.bundle/'claims'/row['claim']/'pvc.json').read_text()))
         self.done('caches')
 
     def postgres(self):
-        self.needs('smoke'); self.frozen()
+        self.needs('smoke'); self.frozen(allow_plex=True)
         old = one('clusters.postgresql.cnpg.io', 'postgres', 'database')
         require(not old or old['metadata']['uid'] != self.plan['postgresUID'], 'Old Cluster still exists')
         backup = one('backups.postgresql.cnpg.io', self.plan['postgresBackup'], 'database')
@@ -361,7 +397,7 @@ class Migration:
 
     def policies(self):
         self.needs('postgres', 'caches', *('restore:'+r['claim'] for r in self.plan['claims'] if r['disposition'] == 'restore'))
-        self.frozen()
+        self.frozen(allow_plex=True)
         # IfNotPresent policies will not pick up the class change from Git.
         # Check all of them before patching any of them.
         policies = []
@@ -376,7 +412,7 @@ class Migration:
 
     def verify(self):
         self.needs('policies')
-        self.frozen()
+        self.frozen(allow_plex=True)
         for row in self.plan['claims']:
             ns, name = row['claim'].split('/')
             if row['disposition'] == 'postgres': continue
@@ -399,12 +435,16 @@ def main():
     parser.add_argument('phase', choices=DESCRIPTIONS)
     parser.add_argument('--bundle', type=Path, default=DEFAULT_BUNDLE)
     parser.add_argument('--claim', help='namespace/PVC for the restore phase')
+    parser.add_argument('--allow-plex', action='store_true', help='Allow only media/plex to run after verifying its completed Miroir restore; skip restoring Plex again')
     parser.add_argument('--execute', action='store_true', help='Run the selected phase after typed confirmation')
     args = parser.parse_args()
+    if args.allow_plex and args.phase not in ('restore', 'restore-all', 'caches', 'postgres', 'policies', 'verify'):
+        parser.error('--allow-plex is only available for restore, restore-all, caches, postgres, policies and verify')
     print(DESCRIPTIONS[args.phase])
+    if args.allow_plex: print('Plex exception enabled: its completed restore will be checked; all other writer guards remain active.')
     if not args.execute:
         print('Preview only. Review the script and bundle; add --execute to run this phase.'); return
-    migration = Migration(args.bundle.resolve())
+    migration = Migration(args.bundle.resolve(), allow_plex=args.allow_plex)
     if args.phase != 'verify':
         phrase = 'DISCARD CEPH '+SERIAL if args.phase in ('retire', 'ceph-cleanup') else args.phase
         require(input(f'Type {phrase!r} to continue: ') == phrase, 'Cancelled')

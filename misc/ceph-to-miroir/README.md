@@ -95,6 +95,24 @@ Later, an individual restore can be selected explicitly:
 mise exec -- python3 misc/ceph-to-miroir/step.py restore --claim garage-system/garage-meta --execute
 ```
 
+If Plex has already been restored and you have started it for playback, use the
+explicit exception to continue the remaining restores:
+
+```sh
+mise exec -- python3 misc/ceph-to-miroir/step.py restore-all --allow-plex --execute
+```
+
+`--allow-plex` permits only the original `Deployment/media/plex`. Its only PVC
+must be `media/plex`, Bound on Miroir, with a completed restore from the pinned
+backup whose populated claim UID matches the live PVC. The saved Plex restore
+phase must also be complete. Plex is verified and skipped on reruns; the script
+does not recreate its binding Pod or restore its live data again. Other writers,
+operators, schedules and Flux must remain paused.
+
+Use the same flag for subsequent `caches`, `postgres`, `policies` and `verify`
+commands while Plex is running. The exception is not saved in the maintenance
+state and is rejected for disk retirement, Ceph cleanup and the smoke test.
+
 Deleting the source PVCs already destroys their Ceph volumes under the `Delete`
 reclaim policy. **Rollback from `retire` onward requires external backups**, even
 before the disk is wiped. Local Ceph snapshots are not a rollback path after that
@@ -127,9 +145,62 @@ for recovery. Before a separately reviewed resumption:
   new backups/WAL to `postgres-miroir`. Future disaster-recovery manifests must
   select that new archive and a new backup ID.
 
-The scripts do not uninstall Rook's remaining Helm releases/CRDs, test Miroir
-across a node reboot, or automatically solve application controller adoption.
-Those are subsequent steps after storage recovery is reviewed.
+### Repair the three retained StatefulSets
+
+`repair_controllers.py` handles `downloads/slskd`, `observability/gatus` and
+`security/kanidm-default`. They can be Ready using the restored PVCs while their
+immutable claim templates still say `ceph-block`. This helper replaces only those
+controllers with `miroir-local` templates, using orphan deletion to retain their
+Pods and PVCs. It verifies each PVC's UID and PV binding before and after repair.
+The StatefulSet controller may roll a Pod during adoption; allow for a brief
+application interruption.
+
+First take a full PostgreSQL backup named `postgres-post-miroir` and wait for it
+to complete. Preparation checks that it belongs to the recovered PostgreSQL
+Cluster and that the cluster archives to `postgres-miroir`:
+
+```sh
+python3 misc/ceph-to-miroir/repair_controllers.py prepare
+```
+
+This reads the cluster and creates `kubernetes/.miroir-migration/controllers/`
+with a plan, three replacement JSON manifests, their diffs, and a backup of the
+maintenance state. It makes no cluster changes. If the bundle already exists,
+review it rather than regenerating it midway through repair.
+
+Review each `.diff` and replacement `.json`. The intended changes are the claim
+template storage class and a controller annotation used to recognize retries.
+Helm ownership, Kanidm ownership, Pod configuration and live replica counts are
+preserved. Then run the phases individually, checking each result before moving
+to the next:
+
+```sh
+python3 misc/ceph-to-miroir/repair_controllers.py slskd --execute
+python3 misc/ceph-to-miroir/repair_controllers.py gatus --execute
+python3 misc/ceph-to-miroir/repair_controllers.py kanidm --execute
+python3 misc/ceph-to-miroir/repair_controllers.py adopt-postgres --execute
+```
+
+Without `--execute`, these four commands only describe the action. Execution
+also requires typing the phase name. The Kanidm phase pauses Kaniop, updates the
+parent Kanidm resource's storage class, replaces the StatefulSet, and restores
+Kaniop's captured replica count after readiness succeeds. If it fails while
+Kaniop is paused, inspect the error and retry the same phase; the operator stays
+paused until a successful retry. No PVCs or Pods are explicitly deleted.
+
+Each repair atomically updates only that StatefulSet's UID in the saved
+maintenance state. `adopt-postgres` checks the pinned completed backup again and
+updates only the saved PostgreSQL Cluster UID; it does not mutate the cluster.
+Keep `maintenance-state.before.json` for reference, not as a file to restore
+over the new UIDs. The shared maintenance lock prevents concurrent helper runs.
+Retries recognize replacements through the captured token and configuration;
+unknown replacement controllers or changed PVCs stop the operation.
+
+These phases leave Flux and Rook suspended and do not resume other applications
+or schedules. Before resuming, separately verify the Git revision Flux will
+consume, fresh application backups and the remaining maintenance actions.
+The scripts do not uninstall Rook's remaining Helm releases/CRDs or test Miroir
+across a node reboot.
 
 ## Failures and retries
 
