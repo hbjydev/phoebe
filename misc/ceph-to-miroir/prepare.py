@@ -40,6 +40,10 @@ def get(kind, namespace=None):
 def key(obj):
     return obj['metadata'].get('namespace', '') + '/' + obj['metadata']['name']
 
+def is_rook_cleanup_job(job):
+    labels = job['metadata'].get('labels', {})
+    return labels.get('app') == 'rook-ceph-cleanup' and labels.get('rook_cluster') == 'rook-ceph'
+
 def clean(obj):
     return {'apiVersion': obj['apiVersion'], 'kind': obj['kind'],
             'metadata': {k: obj['metadata'][k] for k in ('name', 'namespace') if k in obj['metadata']},
@@ -187,7 +191,7 @@ def prepare(out):
     ceph = get('cephcluster', 'rook-ceph')
     require(len(ceph) == 1 and ceph[0]['metadata']['name'] == 'rook-ceph', 'Unexpected Ceph clusters')
     require({n['metadata']['name'] for n in get('node')} == {NODE}, 'Node inventory changed; review disk cleanup scope')
-    require(not any(j['metadata']['name'].startswith('rook-ceph-cleanup') for j in get('job', 'rook-ceph')), 'Old Rook cleanup jobs exist; inspect before preparing')
+    require(not any(is_rook_cleanup_job(j) for j in get('job', 'rook-ceph')), 'Old Rook cleanup jobs exist; inspect before preparing')
     require(not get('cephfilesystem', 'rook-ceph') and not get('cephobjectstore', 'rook-ceph'), 'Unexpected Ceph filesystems/object stores')
     pools = get('cephblockpool', 'rook-ceph')
     namespaces = {x['metadata']['name']: x for x in get('namespace')}

@@ -8,7 +8,7 @@ import sys
 import time
 from pathlib import Path
 from urllib.parse import quote
-from prepare import ROOT, DEFAULT_BUNDLE, SERIAL, NODE, require, kubectl, get, command, dump, key
+from prepare import ROOT, DEFAULT_BUNDLE, SERIAL, NODE, require, kubectl, get, command, dump, key, is_rook_cleanup_job
 
 DESCRIPTIONS = {
     'git': 'Apply the reviewed local Git patch. Does not reconcile Flux or change the cluster.',
@@ -103,6 +103,21 @@ def no_pending_volume():
     configs = stream_json(talos('get', 'volumeconfigs', '-o', 'json'))
     require(not any(v['metadata']['id'] == 'r-miroir' for v in configs),
             'Remove the pending Miroir RawVolumeConfig before retiring Ceph; otherwise provisioning could race cleanup')
+
+
+def cleanup_jobs_finished(items):
+    jobs = [j for j in items if is_rook_cleanup_job(j)]
+    for job in jobs:
+        name = job['metadata']['name']
+        pod = job['spec']['template']['spec']
+        selector_node = pod.get('nodeSelector', {}).get('kubernetes.io/hostname')
+        require(selector_node == NODE and pod.get('nodeName', NODE) == NODE,
+                f'Cleanup Job {name} targets an unexpected node')
+        conditions = job.get('status', {}).get('conditions', [])
+        require(not any(c['type'] in ('Failed', 'FailureTarget') and c['status'] == 'True' for c in conditions),
+                f'Rook cleanup Job {name} failed; inspect its logs')
+    return bool(jobs) and all(any(c['type'] == 'Complete' and c['status'] == 'True'
+                                 for c in j.get('status', {}).get('conditions', [])) for j in jobs)
 
 
 class Migration:
@@ -204,7 +219,7 @@ class Migration:
         # historical cleanup Job for successful cleanup of this cluster.
         if not self.progress.get('cleanup-started'):
             require(cluster and cluster['metadata']['uid'] == self.plan['cephUID'], 'Original CephCluster missing/replaced')
-            require(not any(j['metadata']['name'].startswith('rook-ceph-cleanup') for j in get('job', 'rook-ceph')), 'Unexpected pre-existing cleanup jobs')
+            require(not any(is_rook_cleanup_job(j) for j in get('job', 'rook-ceph')), 'Unexpected pre-existing cleanup jobs')
             self.done('cleanup-started')
         if cluster:
             require(cluster['metadata']['uid'] == self.plan['cephUID'], 'CephCluster replaced')
@@ -220,11 +235,7 @@ class Migration:
             patch('cephcluster', 'rook-ceph', 'rook-ceph', {'spec': {'cleanupPolicy': {'confirmation': 'yes-really-destroy-data'}}})
             delete(cluster, 'cephclusters')
         poll('CephCluster deleted', lambda: one('cephcluster', 'rook-ceph', 'rook-ceph') is None, 1800)
-        def cleanup_finished():
-            jobs = [j for j in get('job', 'rook-ceph') if j['metadata']['name'].startswith('rook-ceph-cleanup')]
-            require(not any(any(c['type'] == 'Failed' and c['status'] == 'True' for c in j.get('status', {}).get('conditions', [])) for j in jobs), 'Rook cleanup job failed')
-            return bool(jobs) and all(j.get('status', {}).get('succeeded', 0) >= 1 for j in jobs)
-        poll('Rook disk/host-path cleanup jobs succeeded', cleanup_finished, 1800)
+        poll('Rook disk/host-path cleanup jobs succeeded', lambda: cleanup_jobs_finished(get('job', 'rook-ceph')), 1800)
         # Prevent the old Helm releases/controllers from returning with Flux.
         for kind in ('kustomization', 'helmrelease'):
             for x in get(kind, 'rook-ceph'): patch(kind, x['metadata']['name'], 'rook-ceph', {'spec': {'suspend': True}})

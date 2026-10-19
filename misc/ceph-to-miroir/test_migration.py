@@ -99,7 +99,23 @@ class BundleTests(unittest.TestCase):
         self.assertNotIn('ownerReferences', new['metadata'])
 
     def test_git_patch_covers_default_class_policies_recovery_and_freeze(self):
-        diff = prepare.git_patch()
+        # Use pre-cutover fixtures: the user's working tree may already have
+        # the generated patch applied while the migration is in progress.
+        files = {
+            'kubernetes/apps/database/postgres/cluster/cluster.yaml':
+                'metadata:\n  name: postgres\n  annotations:\n    cnpg.io/skipEmptyWalArchiveCheck: enabled\n'
+                f'spec:\n  bootstrap:\n    recovery:\n      backup:\n        name: {prepare.PG_BACKUP}\n'
+                '  plugins:\n    - name: barman-cloud.cloudnative-pg.io\n      parameters:\n        barmanObjectName: &store barman-hetzner\n',
+            'kubernetes/apps/miroir-system/miroir/config/storageclass.yaml': 'metadata:\n  name: miroir-local\n',
+            'kubernetes/apps/miroir-system/miroir/config/kustomization.yaml': 'resources: []\n',
+            'kubernetes/components/kopiur/snapshotpolicy.yaml': 'spec:\n  volumeSnapshotClassName: "${KOPIUR_SNAPSHOTCLASS:=csi-ceph-blockpool}"\n',
+            'kubernetes/apps/rook-ceph/rook-ceph/ks.yaml': '\n---\nspec:\n  interval: 1h\n' * 3,
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for name, value in files.items():
+                path = root/name; path.parent.mkdir(parents=True, exist_ok=True); path.write_text(value)
+            with patch.object(prepare, 'ROOT', root): diff = prepare.git_patch()
         self.assertIn('+    storageclass.kubernetes.io/is-default-class: "true"', diff)
         self.assertIn('+        serverName: postgres-miroir', diff)
         self.assertIn('+        backupID: '+prepare.PG_BACKUP_ID, diff)
@@ -166,6 +182,41 @@ class PrepareTests(unittest.TestCase):
 
 
 class StepTests(unittest.TestCase):
+    def test_cleanup_job_checks_labels_node_and_terminal_status(self):
+        job = {'metadata': {'name': 'cluster-cleanup-job-phoebe-k-ctrl-01',
+                            'labels': {'app': 'rook-ceph-cleanup', 'rook_cluster': 'rook-ceph'}},
+               'spec': {'template': {'spec': {'nodeSelector': {'kubernetes.io/hostname': prepare.NODE}}}},
+               'status': {'succeeded': 1}}
+        self.assertFalse(step.cleanup_jobs_finished([]))
+        self.assertFalse(step.cleanup_jobs_finished([job]))
+        job['status']['conditions'] = [{'type': 'Complete', 'status': 'True'}]
+        self.assertTrue(step.cleanup_jobs_finished([job]))
+        for label in ('app', 'rook_cluster'):
+            other = copy.deepcopy(job); other['metadata']['labels'][label] = 'unrelated'
+            self.assertFalse(step.cleanup_jobs_finished([other]))
+        other = copy.deepcopy(job)
+        other['spec']['template']['spec']['nodeSelector']['kubernetes.io/hostname'] = 'another-node'
+        with self.assertRaisesRegex(RuntimeError, 'unexpected node'): step.cleanup_jobs_finished([other])
+        for condition in ('Failed', 'FailureTarget'):
+            other = copy.deepcopy(job)
+            other['status']['conditions'] = [{'type': condition, 'status': 'True'}]
+            with self.assertRaisesRegex(RuntimeError, 'failed'): step.cleanup_jobs_finished([other])
+
+    def test_cleanup_accepts_completed_rook_job_with_cluster_cleanup_name(self):
+        job = {'metadata': {'name': 'cluster-cleanup-job-phoebe-k-ctrl-01',
+                            'labels': {'app': 'rook-ceph-cleanup', 'rook-ceph-cleanup': 'true', 'rook_cluster': 'rook-ceph'}},
+               'spec': {'template': {'spec': {'nodeSelector': {'kubernetes.io/hostname': prepare.NODE}}}},
+               'status': {'succeeded': 1, 'conditions': [{'type': 'Complete', 'status': 'True'}]}}
+        migration = step.Migration.__new__(step.Migration)
+        migration.progress = {'retire': True, 'cleanup-started': True}
+        objects = {'node': [{'metadata': {'name': prepare.NODE}}], 'job': [job]}
+        def check_poll(description, predicate, *args):
+            self.assertTrue(predicate(), description)
+        with patch.object(migration, 'frozen'), patch.object(migration, 'done') as done, patch.object(step, 'disk'), patch.object(step, 'no_pending_volume'), patch.object(step, 'one', return_value=None), patch.object(step, 'get', side_effect=lambda kind, ns=None: objects.get(kind, [])), patch.object(step, 'poll', side_effect=check_poll), patch.object(step, 'patch') as mutation, patch.object(step, 'delete') as delete:
+            migration.ceph_cleanup()
+            done.assert_called_once_with('ceph-cleanup')
+            mutation.assert_not_called(); delete.assert_not_called()
+
     def test_every_preview_avoids_cluster_and_bundle_access(self):
         for phase in step.DESCRIPTIONS:
             with self.subTest(phase=phase), patch('sys.argv', ['step.py', phase]), patch.object(step, 'Migration') as migration, patch.object(step, 'kubectl') as kube, redirect_stdout(io.StringIO()):
