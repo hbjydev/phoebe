@@ -7,3 +7,25 @@ provisioning:
     match: disk.serial == "25044DD0CC34"
   grow: true
   minSize: 1GiB
+
+---
+apiVersion: v1alpha1
+kind: KernelModuleConfig
+name: dm_thin_pool
+
+---
+apiVersion: v1alpha1
+kind: KernelModuleConfig
+name: zfs
+
+---
+apiVersion: v1alpha1
+kind: KernelModuleConfig
+name: drbd
+parameters:
+  - usermode_helper=disabled
+
+---
+apiVersion: v1alpha1
+kind: KernelModuleConfig
+name: drbd_transport_tcp

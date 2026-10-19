@@ -1,13 +1,13 @@
 clusterName: phoebe
 clusterEndpoint: https://10.80.0.8:6443
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
-kubernetesVersion: "1.37.0"
+kubernetesVersion: "1.37.1"
 # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
-talosVersion: "1.14.0"
+talosVersion: "1.14.4"
 
 schematicId: "@schematic.yaml"
 platform: metal
-secureboot: true
+secureboot: false
 
 secretsProvider: ./secrets-provider
 
