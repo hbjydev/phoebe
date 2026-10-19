@@ -1,0 +1,9 @@
+---
+apiVersion: v1alpha1
+kind: RawVolumeConfig
+name: miroir
+provisioning:
+  diskSelector:
+    match: disk.serial == "25044DD0CC34"
+  grow: true
+  minSize: 1GiB
