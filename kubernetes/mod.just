@@ -4,6 +4,34 @@ set shell := ['bash', '-euo', 'pipefail', '-c']
 kubernetes_dir := justfile_dir() + "/kubernetes"
 misc_dir := justfile_dir() + "/misc"
 
+# Preview the live consumers and controllers for a maintenance stage.
+maintenance-plan storage:
+  python3 "{{ kubernetes_dir }}/maintenance.py" plan "{{ storage }}"
+
+# Stop PostgreSQL clients, leaving PostgreSQL running.
+shutdown-postgres:
+  python3 "{{ kubernetes_dir }}/maintenance.py" shutdown postgres
+
+# Restore PostgreSQL clients to their saved replica counts.
+restore-postgres:
+  python3 "{{ kubernetes_dir }}/maintenance.py" restore postgres
+
+# Stop clients of every Dragonfly instance, leaving Dragonfly running.
+shutdown-dragonfly:
+  python3 "{{ kubernetes_dir }}/maintenance.py" shutdown dragonfly
+
+# Restore Dragonfly clients to their saved replica counts.
+restore-dragonfly:
+  python3 "{{ kubernetes_dir }}/maintenance.py" restore dragonfly
+
+# Quiesce Ceph consumers, hibernate PostgreSQL, snapshot, then stop Kopiur.
+shutdown-ceph:
+  python3 "{{ kubernetes_dir }}/maintenance.py" shutdown ceph
+
+# Restore PostgreSQL and Ceph PVC consumers before their writers.
+restore-ceph:
+  python3 "{{ kubernetes_dir }}/maintenance.py" restore ceph
+
 [private]
 default:
   just -l kube

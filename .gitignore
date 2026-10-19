@@ -2,3 +2,5 @@ talosconfig
 kubeconfig
 age.key
 site
+kubernetes/.maintenance-state.*
+__pycache__/

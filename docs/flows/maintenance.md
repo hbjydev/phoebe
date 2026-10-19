@@ -1,479 +1,177 @@
-# Ceph Maintenance
+# Persistent storage maintenance
 
-This runbook quiesces workloads that use Ceph-backed storage before planned
-storage, Talos, or node maintenance. It stops direct RBD consumers, PostgreSQL
-clients, observability writers, and Kopiur before hibernating PostgreSQL.
+The Kubernetes just module provides independent shutdown and restore stages for
+PostgreSQL clients, Dragonfly clients, and Rook-Ceph PVC consumers. Run these
+commands from the repository with its mise environment active; they require
+`just`, `python3`, and `kubectl`, and the context must be `admin@phoebe`.
 
-The procedure deliberately leaves the Rook operator, Ceph daemons, and Ceph CSI
-drivers running. They can be stopped later as part of the maintenance operation
-after the final consumer check is empty.
+## Inspect and preview
 
-## Preconditions
-
-- Run the commands from a shell with `kubectl`, `flux`, and `jq` installed.
-- The current Kubernetes context must be `admin@phoebe`.
-- Do not continue if Ceph reports `HEALTH_ERR`.
-- Let any active backup or restore finish before stopping the storage layer.
-- Keep the terminal open until the shutdown verification completes.
-
-Check the cluster before starting:
+Inspect storage health, backups, and running workloads before starting:
 
 ```bash
 kubectl config current-context
 kubectl get cephcluster --namespace rook-ceph
 kubectl exec --namespace rook-ceph deployment/rook-ceph-tools -- ceph status
+kubectl get backup.postgresql.cnpg.io --all-namespaces
 kubectl get volumesnapshot --all-namespaces
 kubectl get pods --all-namespaces
+
+just kube maintenance-plan postgres
+just kube maintenance-plan dragonfly
+just kube maintenance-plan ceph
 ```
 
-## Shutdown
+The plan commands are read-only. They show both consumers and reconciliation
+controllers that must stop. Do not proceed with Ceph maintenance if Ceph reports
+`HEALTH_ERR`. Allow backup and restore operations to finish first.
 
-The first two suspensions freeze the Flux hierarchy so it cannot restore
-replica counts during maintenance. The ResourceSet annotation separately
-freezes the generated CloudNativePG Kustomization.
-
-The target list includes applications that mount `ceph-block` directly and
-applications that write to the Ceph-backed PostgreSQL cluster. When a new
-Ceph-backed application is added, it must also be added to this list.
+## Staged shutdown
 
 ```bash
-bash <<'BASH'
-set -euo pipefail
-
-expected_context="admin@phoebe"
-[[ "$(kubectl config current-context)" == "$expected_context" ]]
-
-flux suspend kustomization flux-system --namespace flux-system
-flux suspend kustomization cluster-apps --namespace flux-system
-
-kubectl annotate resourceset/cnpg-cluster \
-  --namespace database \
-  fluxcd.controlplane.io/reconcile=disabled \
-  --overwrite
-
-while read -r namespace kustomization; do
-  flux suspend kustomization "$kustomization" --namespace "$namespace"
-
-  while read -r helmrelease; do
-    [[ -n "$helmrelease" ]] || continue
-
-    flux suspend helmrelease "$helmrelease" --namespace "$namespace"
-
-    while read -r controller; do
-      [[ -n "$controller" ]] || continue
-      kubectl scale "$controller" --namespace "$namespace" --replicas=0
-      kubectl rollout status "$controller" \
-        --namespace "$namespace" \
-        --timeout=5m
-    done < <(
-      kubectl get deployment,statefulset \
-        --namespace "$namespace" \
-        --selector "helm.toolkit.fluxcd.io/name=${helmrelease}" \
-        --output name
-    )
-  done < <(
-    kubectl get helmreleases.helm.toolkit.fluxcd.io \
-      --namespace "$namespace" \
-      --selector "kustomize.toolkit.fluxcd.io/name=${kustomization}" \
-      --output jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
-  )
-done <<'TARGETS'
-ai hermes
-ai honcho
-ai litellm
-ai llama-cpp-reranking
-ai mcp-auth-proxy
-ai memini
-ai mimi
-ai openclaw
-database cnpg-cluster
-default home-assistant
-default jellyseerr
-default lidarr
-default matter-server
-default openthread
-default prowlarr
-default radarr
-default sonarr
-dev forgejo
-downloads qbittorrent
-downloads qui
-downloads sabnzbd
-downloads slskd
-kguardian kguardian
-kopiur-system kopiur
-matrix continuwuity
-media dispatcharr
-media jellyfin
-media navidrome
-media picard
-media pinepods
-media plex
-media suwayomi
-observability gatus
-observability grafana-instance
-observability victoria-logs
-observability victoria-metrics
-observability victoria-traces
-security kaniop-instance
-selfhosted immich
-selfhosted miniflux
-selfhosted ntfy
-selfhosted paperless
-selfhosted searxng
-selfhosted tranquil
-TARGETS
-
-# Stop the operator-managed application workloads.
-kubectl patch litellmproxy/litellm \
-  --namespace ai \
-  --type merge \
-  --patch '{"spec":{"replicas":0}}'
-kubectl wait deployment/litellm \
-  --namespace ai \
-  --for='jsonpath={.spec.replicas}=0' \
-  --timeout=2m
-kubectl rollout status deployment/litellm --namespace ai --timeout=5m
-
-# Stop observability writers before their stores.
-kubectl patch vlagent/logs-agent \
-  --namespace observability \
-  --type merge \
-  --patch '{"spec":{"paused":true}}'
-kubectl delete daemonset/vlagent-logs-agent \
-  --namespace observability \
-  --ignore-not-found \
-  --wait=true
-
-kubectl patch vmagent/metrics-agent \
-  --namespace observability \
-  --type merge \
-  --patch '{"spec":{"paused":true}}'
-kubectl scale deployment/vmagent-metrics-agent \
-  --namespace observability \
-  --replicas=0
-kubectl rollout status deployment/vmagent-metrics-agent \
-  --namespace observability \
-  --timeout=5m
-
-kubectl patch vlsingle/victoria-logs \
-  --namespace observability \
-  --type merge \
-  --patch '{"spec":{"paused":true}}'
-kubectl scale deployment/vlsingle-victoria-logs \
-  --namespace observability \
-  --replicas=0
-kubectl rollout status deployment/vlsingle-victoria-logs \
-  --namespace observability \
-  --timeout=5m
-
-kubectl patch vmsingle/victoria-metrics \
-  --namespace observability \
-  --type merge \
-  --patch '{"spec":{"paused":true}}'
-kubectl scale deployment/vmsingle-victoria-metrics \
-  --namespace observability \
-  --replicas=0
-kubectl rollout status deployment/vmsingle-victoria-metrics \
-  --namespace observability \
-  --timeout=5m
-
-kubectl patch vtsingle/victoria-traces \
-  --namespace observability \
-  --type merge \
-  --patch '{"spec":{"paused":true}}'
-kubectl scale deployment/vtsingle-victoria-traces \
-  --namespace observability \
-  --replicas=0
-kubectl rollout status deployment/vtsingle-victoria-traces \
-  --namespace observability \
-  --timeout=5m
-
-kubectl patch grafanas.grafana.integreatly.org/grafana \
-  --namespace observability \
-  --type merge \
-  --patch '{"spec":{"suspend":true}}'
-kubectl scale deployment/grafana-deployment \
-  --namespace observability \
-  --replicas=0
-kubectl rollout status deployment/grafana-deployment \
-  --namespace observability \
-  --timeout=5m
-
-kubectl patch kanidm/kanidm \
-  --namespace security \
-  --type json \
-  --patch '[{"op":"replace","path":"/spec/replicaGroups/0/replicas","value":0}]'
-kubectl wait statefulset/kanidm-default \
-  --namespace security \
-  --for='jsonpath={.spec.replicas}=0' \
-  --timeout=2m
-kubectl rollout status statefulset/kanidm-default \
-  --namespace security \
-  --timeout=5m
-
-# PostgreSQL is the final Ceph-backed application to stop.
-kubectl annotate cluster/postgres \
-  --namespace database \
-  cnpg.io/hibernation=on \
-  --overwrite
-kubectl wait cluster/postgres \
-  --namespace database \
-  --for='jsonpath={.status.conditions[?(@.type=="cnpg.io/hibernation")].status}=True' \
-  --timeout=10m
-BASH
+just kube shutdown-postgres
+just kube shutdown-dragonfly
+just kube shutdown-ceph
 ```
 
-## Shutdown verification
+| Stage | What stops | What stays running |
+| --- | --- | --- |
+| `postgres` | PostgreSQL client Deployments, StatefulSets, DaemonSets, applicable CronJobs, and PostgreSQL backup schedules | PostgreSQL and its pooler |
+| `dragonfly` | Clients of all Dragonfly instances | Dragonfly instances and their operator |
+| `ceph` | Direct Ceph PVC consumers, PostgreSQL clients, observability writers, and backup schedules; PostgreSQL hibernates, snapshots complete, then Kopiur stops | Rook, Ceph daemons, CSI, and CloudNativePG |
 
-This query lists every non-Rook Pod that still mounts a Ceph-backed PVC. It
-must produce no output before the Ceph storage layer or node is stopped.
+Each stage can be used independently. The Ceph stage also stops PostgreSQL
+clients because PostgreSQL's own PVCs use Ceph. The first two stages give you a
+point to perform separate database or Dragonfly maintenance before continuing.
+These tasks do not shut down the Dragonfly instances themselves.
+
+### Automatic maintenance snapshots
+
+`shutdown-ceph` includes a mandatory snapshot step. It pauses PostgreSQL and
+Kopiur schedules, stops application writers, and hibernates PostgreSQL. While
+Kopiur, the snapshot controller, Ceph, and CSI remain running, it then:
+
+1. Creates a CSI `VolumeSnapshot` for every bound Ceph PVC and waits for
+   `status.readyToUse=true`. This includes volumes without a Kopiur policy,
+   unused volumes, caches, and PostgreSQL's primary and replica volumes.
+2. Creates a manual Kopiur `Snapshot` for every configured policy and waits for
+   `Succeeded` or `Unchanged`. Failed runs or unreadable files block shutdown.
+3. Waits for other queued Kopiur operations and active movers to finish before
+   stopping Kopiur and performing the final Ceph consumer check.
+
+The live inventory inspected during implementation has 48 Ceph PVCs and 26
+Kopiur policies. CSI snapshots remain on Ceph; only the configured Kopiur policies
+upload backups to their repositories. A CSI snapshot alone does not protect
+against losing the Ceph storage itself.
+
+The helper uses the Kubernetes APIs directly; the `kubectl kopiur` plugin is not
+required. Home Assistant's maintenance invocation uses the root mover settings
+already specified in its repository configuration, because its older live
+`IfNotPresent` policy still uses UID 1000.
+
+Snapshot names and the maintenance run label are saved before shutdown begins.
+A timeout or interrupted command reuses the same requests on the next run;
+an older successful snapshot does not satisfy the new run. Each snapshot wait
+has a one-hour timeout. Failed snapshot objects remain available for inspection,
+and Kopiur stays running if the snapshot step fails. Fix the failure and remove
+its failed request before rerunning to recreate it, or use `restore-ceph` to
+cancel maintenance.
+
+The resulting snapshots remain after recovery. Inspect them using the run label
+printed by the helper:
 
 ```bash
-kubectl get pods --all-namespaces --output json |
-  jq -r --slurpfile pvc <(kubectl get pvc --all-namespaces --output json) '
-    ($pvc[0].items
-      | map(select(
-          .spec.storageClassName == "ceph-block" or
-          ((.metadata.annotations["volume.kubernetes.io/storage-provisioner"] // "")
-            | contains("ceph"))
-        ))
-      | map({
-          key: (.metadata.namespace + "/" + .metadata.name),
-          value: true
-        })
-      | from_entries) as $ceph_claims
-    | .items[] as $pod
-    | select($pod.metadata.namespace != "rook-ceph")
-    | select(any(
-        $pod.spec.volumes[]?;
-        .persistentVolumeClaim.claimName as $claim
-        | $ceph_claims[$pod.metadata.namespace + "/" + $claim]
-      ))
-    | $pod.metadata.namespace + "/" + $pod.metadata.name
-  '
+kubectl get volumesnapshot,snapshots.kopiur.home-operations.com --all-namespaces \\
+  --selector maintenance.home.arpa/run=RUN
 ```
 
-If the query reports a mover, backup, restore, or snapshot Pod, allow that
-operation to complete and run the check again. Investigate any other result
-before continuing; do not stop Ceph while a consumer remains mounted.
+Remove CSI snapshots when you no longer need those maintenance restore points;
+their snapshot class's deletion policy controls removal of the underlying Ceph
+snapshots. Kopiur requests follow each policy's deletion and repository retention
+settings. The status checks follow the installed CRD
+schemas and the [Kopiur Snapshot reference](https://kopiur.home-operations.com/reference/crds/snapshot/).
 
-Check Ceph once more immediately before maintenance:
+The helper discovers database clients from Pod dependency labels and PostgreSQL
+configuration references. LiveKit is explicitly included because its Dragonfly
+connection lives in a Secret. Ceph detection uses StorageClass provisioners,
+bound PV CSI drivers, mounted claims, and StatefulSet claim templates. An unknown
+operator owner or an applicable autoscaler aborts planning before any mutation.
+When adding a client configured only through a Secret, add its dependency label
+(or an explicit supplemental target) so discovery includes it.
 
-```bash
-kubectl exec --namespace rook-ceph deployment/rook-ceph-tools -- ceph status
-```
+Flux's operator, Kustomize controller, and Helm controller are temporarily scaled
+to zero so GitOps cannot reset the maintenance changes. Operators owning selected
+workloads also stop. These reconciliation controllers remain stopped until the
+last active maintenance stage is restored. Other applications continue running,
+but GitOps changes are held during this period. The Flux source controller keeps
+running.
+
+Deployments and StatefulSets scale to zero. DaemonSets receive a temporary node
+selector that matches no node. The tasks wait for active consumer Pods to
+terminate, including terminating Pods. Active Jobs, backup movers, and unmanaged
+consumers must finish naturally; the helper does not delete them. An active
+PostgreSQL backup also blocks verification. Consumer checks time out after ten
+minutes and report the remaining consumers; snapshot waits allow one hour.
+
+PostgreSQL uses CloudNativePG's
+[declarative hibernation](https://cloudnative-pg.io/docs/1.30/declarative_hibernation/),
+which retains its PVCs. The Ceph task verifies hibernation and checks every active
+non-Rook Pod for Ceph mounts before reporting success. A failed check means the
+storage layer is not ready to stop.
 
 ## Recovery
 
-Recover Ceph and its CSI drivers before running these commands. The recovery
-sequence starts stateful services before their clients, then restores normal
-GitOps reconciliation.
+Recover Ceph and its CSI drivers first, and inspect Ceph health again. If you
+separately stopped PostgreSQL or Dragonfly, bring those services back before
+restoring their clients.
 
 ```bash
-bash <<'BASH'
-set -euo pipefail
-
-expected_context="admin@phoebe"
-[[ "$(kubectl config current-context)" == "$expected_context" ]]
-
-kubectl wait cephcluster/rook-ceph \
-  --namespace rook-ceph \
-  --for='jsonpath={.status.ceph.health}=HEALTH_OK' \
-  --timeout=10m
 kubectl exec --namespace rook-ceph deployment/rook-ceph-tools -- ceph status
 
-# Restore PostgreSQL before its clients.
-kubectl annotate cluster/postgres \
-  --namespace database \
-  cnpg.io/hibernation=off \
-  --overwrite
-kubectl wait cluster/postgres \
-  --namespace database \
-  --for='jsonpath={.status.readyInstances}=2' \
-  --timeout=10m
-
-# Restore identity.
-kubectl patch kanidm/kanidm \
-  --namespace security \
-  --type json \
-  --patch '[{"op":"replace","path":"/spec/replicaGroups/0/replicas","value":1}]'
-kubectl wait statefulset/kanidm-default \
-  --namespace security \
-  --for='jsonpath={.spec.replicas}=1' \
-  --timeout=2m
-kubectl rollout status statefulset/kanidm-default \
-  --namespace security \
-  --timeout=10m
-
-# Restore the observability stores, then their writers.
-kubectl patch vlsingle/victoria-logs \
-  --namespace observability \
-  --type merge \
-  --patch '{"spec":{"paused":false}}'
-kubectl scale deployment/vlsingle-victoria-logs \
-  --namespace observability \
-  --replicas=1
-kubectl rollout status deployment/vlsingle-victoria-logs \
-  --namespace observability \
-  --timeout=10m
-
-kubectl patch vmsingle/victoria-metrics \
-  --namespace observability \
-  --type merge \
-  --patch '{"spec":{"paused":false}}'
-kubectl scale deployment/vmsingle-victoria-metrics \
-  --namespace observability \
-  --replicas=1
-kubectl rollout status deployment/vmsingle-victoria-metrics \
-  --namespace observability \
-  --timeout=10m
-
-kubectl patch vtsingle/victoria-traces \
-  --namespace observability \
-  --type merge \
-  --patch '{"spec":{"paused":false}}'
-kubectl scale deployment/vtsingle-victoria-traces \
-  --namespace observability \
-  --replicas=1
-kubectl rollout status deployment/vtsingle-victoria-traces \
-  --namespace observability \
-  --timeout=10m
-
-kubectl patch vlagent/logs-agent \
-  --namespace observability \
-  --type merge \
-  --patch '{"spec":{"paused":false}}'
-kubectl wait daemonset/vlagent-logs-agent \
-  --namespace observability \
-  --for=create \
-  --timeout=2m
-kubectl rollout status daemonset/vlagent-logs-agent \
-  --namespace observability \
-  --timeout=10m
-
-kubectl patch vmagent/metrics-agent \
-  --namespace observability \
-  --type merge \
-  --patch '{"spec":{"paused":false}}'
-kubectl scale deployment/vmagent-metrics-agent \
-  --namespace observability \
-  --replicas=1
-kubectl rollout status deployment/vmagent-metrics-agent \
-  --namespace observability \
-  --timeout=10m
-
-kubectl patch grafanas.grafana.integreatly.org/grafana \
-  --namespace observability \
-  --type merge \
-  --patch '{"spec":{"suspend":false}}'
-kubectl scale deployment/grafana-deployment \
-  --namespace observability \
-  --replicas=1
-kubectl rollout status deployment/grafana-deployment \
-  --namespace observability \
-  --timeout=10m
-
-kubectl patch litellmproxy/litellm \
-  --namespace ai \
-  --type merge \
-  --patch '{"spec":{"replicas":1}}'
-kubectl wait deployment/litellm \
-  --namespace ai \
-  --for='jsonpath={.spec.replicas}=1' \
-  --timeout=2m
-kubectl rollout status deployment/litellm --namespace ai --timeout=10m
-
-# Resume each application and its Helm releases.
-while read -r namespace kustomization; do
-  flux resume kustomization "$kustomization" --namespace "$namespace"
-
-  while read -r helmrelease; do
-    [[ -n "$helmrelease" ]] || continue
-    flux resume helmrelease "$helmrelease" --namespace "$namespace"
-  done < <(
-    kubectl get helmreleases.helm.toolkit.fluxcd.io \
-      --namespace "$namespace" \
-      --selector "kustomize.toolkit.fluxcd.io/name=${kustomization}" \
-      --output jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
-  )
-done <<'TARGETS'
-ai hermes
-ai honcho
-ai litellm
-ai llama-cpp-reranking
-ai mcp-auth-proxy
-ai memini
-ai mimi
-ai openclaw
-default home-assistant
-default jellyseerr
-default lidarr
-default matter-server
-default openthread
-default prowlarr
-default radarr
-default sonarr
-dev forgejo
-downloads qbittorrent
-downloads qui
-downloads sabnzbd
-downloads slskd
-kguardian kguardian
-kopiur-system kopiur
-matrix continuwuity
-media dispatcharr
-media jellyfin
-media navidrome
-media picard
-media pinepods
-media plex
-media suwayomi
-observability gatus
-observability grafana-instance
-observability victoria-logs
-observability victoria-metrics
-observability victoria-traces
-security kaniop-instance
-selfhosted immich
-selfhosted miniflux
-selfhosted ntfy
-selfhosted paperless
-selfhosted searxng
-selfhosted tranquil
-TARGETS
-
-flux resume kustomization cnpg-cluster --namespace database
-kubectl annotate resourceset/cnpg-cluster \
-  --namespace database \
-  fluxcd.controlplane.io/reconcile=enabled \
-  --overwrite
-
-flux resume kustomization cluster-apps --namespace flux-system
-flux resume kustomization flux-system --namespace flux-system
-BASH
+just kube restore-ceph
+just kube restore-dragonfly
+just kube restore-postgres
 ```
 
-## Recovery verification
+The Ceph restore rehydrates PostgreSQL and waits for its configured number of
+ready instances, then restores consumers before observability writers and
+backup schedules. Each resumed Deployment, StatefulSet, and DaemonSet must
+complete its rollout. Reconciliation controllers restore last.
+
+Every task saves its inverse before changing the cluster in
+`kubernetes/.maintenance-state.json` (ignored by Git). Recovery restores the
+original replica counts, node selectors, schedule suspension values, and
+hibernation annotation. Already-stopped services remain stopped. Keep this file
+until recovery finishes, and use the same checkout and kubeconfig for all stages.
+Do not run concurrent maintenance sessions from different checkouts.
+
+Overlapping stages hold a shared consumer down until every stage that selected
+it has been restored. For example, Forgejo stays stopped after `restore-ceph`
+and `restore-dragonfly` if the `postgres` stage is still active. The state file
+is removed after the final successful restore.
+
+## Verification and interrupted operations
 
 ```bash
-kubectl get kustomizations --all-namespaces
-kubectl get helmreleases --all-namespaces
-kubectl get cluster/postgres --namespace database
-kubectl get kanidm/kanidm --namespace security
+kubectl get deployments,statefulsets,daemonsets --all-namespaces
+kubectl get kustomizations,helmreleases --all-namespaces
+kubectl get cluster.postgresql.cnpg.io/postgres --namespace database
 kubectl get pods --all-namespaces
 kubectl exec --namespace rook-ceph deployment/rook-ceph-tools -- ceph status
 ```
 
-All resumed Kustomizations and HelmReleases should become ready. PostgreSQL
-should report two ready instances, and Ceph should remain `HEALTH_OK`.
+Reconciliation should return to its previous state after the final restore.
+Workloads should return to their saved replica counts, and PostgreSQL should
+report its configured number of ready instances.
 
-## Aborting the process
+If shutdown fails, inspect the reported consumers and rerun the same shutdown
+task, or run its restore task to cancel maintenance. Repeating a stage preserves
+its original recovery values. If restore fails, fix the reported issue and rerun
+it; the saved state remains available. A replaced resource with a different UID
+requires manual review rather than applying recovery values to a new workload.
 
-If shutdown fails before PostgreSQL hibernates, fix or inspect the reported
-workload and rerun the shutdown block. The operations are idempotent.
+Run the helper's offline discovery and recovery tests with:
 
-If maintenance is cancelled after PostgreSQL hibernates, run the complete
-recovery procedure. Do not resume only the root Flux Kustomizations: doing so
-can start clients before PostgreSQL, identity, and observability storage are
-ready.
+```bash
+python3 -m unittest discover -s kubernetes -p 'test_maintenance.py'
+```
