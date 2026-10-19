@@ -23,6 +23,7 @@ spec:
               kind: Folder
               spec:
                 forProvider:
+                  deletionProtection: false
                   parentRef:
                     name: fldr-phoebe
                     namespace: crossplane-system
