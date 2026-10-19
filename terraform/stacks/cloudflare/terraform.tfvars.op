@@ -9,11 +9,17 @@ domains = {
     zone_id = "op://cluster-phoebe/tf-cloudflare-zones/moe_zone_id"
   },
   dev = {
-    domain  = "hbjy.dev"
-    zone_id = "op://cluster-phoebe/tf-cloudflare-zones/dev_zone_id"
+    domain     = "hbjy.dev"
+    zone_id    = "op://cluster-phoebe/tf-cloudflare-zones/dev_zone_id"
+    dkim_value = "op://cluster-phoebe/tf-cloudflare-gsuite/dev_dkim"
   },
   alt = {
     domain  = "thighhighs.moe"
     zone_id = "op://cluster-phoebe/tf-cloudflare-zones/alt_zone_id"
+  },
+  roost = {
+    domain     = "roost.moe"
+    zone_id    = "op://cluster-phoebe/tf-cloudflare-zones/roost_zone_id"
+    dkim_value = "op://cluster-phoebe/tf-cloudflare-gsuite/roost_dkim"
   },
 }

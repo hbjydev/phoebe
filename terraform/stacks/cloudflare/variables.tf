@@ -11,7 +11,8 @@ variable "account_id" {
 variable "domains" {
   sensitive = false
   type = map(object({
-    domain  = string
-    zone_id = string
+    domain     = string
+    zone_id    = string
+    dkim_value = optional(string)
   }))
 }
