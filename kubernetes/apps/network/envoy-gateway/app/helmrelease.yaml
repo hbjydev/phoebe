@@ -17,7 +17,7 @@ spec:
       imageRegistry: mirror.gcr.io
     deployment:
       replicas: 2
-      priorityClassName: cluster-critical
+      priorityClassName: system-cluster-critical
       envoyGateway:
         resources:
           requests:
