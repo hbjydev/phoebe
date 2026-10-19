@@ -1,5 +1,7 @@
 locals {
-  ap_macs = ["9c:05:d6:37:19:4d"]
+  aps = {
+    all = ["office"]
+  }
 
   wlans = {
     mix = {
@@ -30,7 +32,9 @@ variable "iot_passphrase" {
 
 resource "unifi_ap_group" "default" {
   name        = "All APs"
-  device_macs = local.ap_macs
+  device_macs = [
+    for ap in local.aps.all : unifi_device.devices[ap].mac
+  ]
 }
 
 resource "unifi_client_qos_rate" "wifi" {
