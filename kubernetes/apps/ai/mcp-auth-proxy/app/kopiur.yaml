@@ -1,0 +1,53 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotpolicy_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: SnapshotPolicy
+metadata:
+  name: mcp-auth-proxy
+spec:
+  # Scheduled snapshots capture live state. Quiesce writers for migration backups.
+  copyMethod: Snapshot
+  credentialProjection:
+    enabled: true
+  repository:
+    kind: ClusterRepository
+    name: hetzner
+  retention:
+    keepHourly: 8
+    keepDaily: 7
+  sources:
+    - pvc:
+        name: mcp-auth-proxy
+  volumeSnapshotClassName: csi-ceph-blockpool
+  errorHandling:
+    ignoreFileErrors: false
+    ignoreDirErrors: false
+    ignoreUnknownTypes: false
+  mover:
+    podSecurityContext:
+      fsGroup: 1000
+      fsGroupChangePolicy: OnRootMismatch
+      runAsUser: 1000
+      runAsGroup: 1000
+      runAsNonRoot: true
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      runAsNonRoot: true
+      privileged: false
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotschedule_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: SnapshotSchedule
+metadata:
+  name: mcp-auth-proxy
+spec:
+  policyRef:
+    name: mcp-auth-proxy
+  schedule:
+    concurrencyPolicy: Forbid
+    cron: "H */12 * * *"
+    jitter: 10m
+    runOnCreate: false
+

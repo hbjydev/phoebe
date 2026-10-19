@@ -12,6 +12,8 @@ spec:
   components:
     - ../../../../components/kanidm/private
   dependsOn:
+    - name: kopiur-repository
+      namespace: kopiur-system
     - name: litellm
       namespace: ai
   interval: 1h

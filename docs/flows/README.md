@@ -8,3 +8,8 @@ what my cluster is _doing_ with the components installed.
 
 - [Ceph maintenance](./maintenance.md) - Quiesce Ceph-backed workloads before
   planned storage or node maintenance, then restore them in dependency order.
+
+## Investigations
+
+- [Ceph migration research](./ceph-migration-research.md) - Compare Miroir and
+  OpenEBS and plan a migration using the existing storage disk.

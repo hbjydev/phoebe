@@ -6,6 +6,8 @@ metadata:
   name: slskd
 spec:
   dependsOn:
+    - name: kopiur-repository
+      namespace: kopiur-system
     - name: multus-networks
       namespace: kube-system
     - name: rook-ceph-cluster

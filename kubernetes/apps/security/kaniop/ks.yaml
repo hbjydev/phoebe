@@ -34,6 +34,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: kopiur-repository
+      namespace: kopiur-system
     - name: kaniop
   interval: 1h
   path: ./kubernetes/apps/security/kaniop/instance

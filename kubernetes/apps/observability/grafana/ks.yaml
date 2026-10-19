@@ -22,6 +22,8 @@ metadata:
   name: grafana-instance
 spec:
   dependsOn:
+    - name: kopiur-repository
+      namespace: kopiur-system
     - name: grafana
     - name: rook-ceph-cluster
       namespace: rook-ceph

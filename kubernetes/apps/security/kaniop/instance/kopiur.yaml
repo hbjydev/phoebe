@@ -1,0 +1,55 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotpolicy_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: SnapshotPolicy
+metadata:
+  name: kanidm
+spec:
+  # Scheduled snapshots capture live state. Quiesce writers for migration backups.
+  copyMethod: Snapshot
+  credentialProjection:
+    enabled: true
+  repository:
+    kind: ClusterRepository
+    name: hetzner
+  retention:
+    keepHourly: 8
+    keepDaily: 7
+  sources:
+    - pvc:
+        name: kanidm-data-kanidm-default-0
+  volumeSnapshotClassName: csi-ceph-blockpool
+  errorHandling:
+    ignoreFileErrors: false
+    ignoreDirErrors: false
+    ignoreUnknownTypes: false
+  mover:
+    # Namespace opt-in permits root with Kopiur's operation-specific capabilities.
+    privilegedMode: true
+    podSecurityContext:
+      fsGroup: 0
+      fsGroupChangePolicy: OnRootMismatch
+      runAsUser: 0
+      runAsGroup: 0
+      runAsNonRoot: false
+    securityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      runAsNonRoot: false
+      privileged: false
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotschedule_v1alpha1.json
+apiVersion: kopiur.home-operations.com/v1alpha1
+kind: SnapshotSchedule
+metadata:
+  name: kanidm
+spec:
+  policyRef:
+    name: kanidm
+  schedule:
+    concurrencyPolicy: Forbid
+    cron: "H */12 * * *"
+    jitter: 10m
+    runOnCreate: false
+
