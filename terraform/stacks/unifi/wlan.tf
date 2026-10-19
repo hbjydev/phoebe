@@ -53,4 +53,8 @@ resource "unifi_wlan" "wifi" {
   network_id    = unifi_network.networks[each.value.network].id
   ap_group_ids  = [unifi_ap_group.default.id]
   user_group_id = unifi_client_qos_rate.wifi.id
+
+  lifecycle {
+    ignore_changes = [bandsteering_mode]
+  }
 }

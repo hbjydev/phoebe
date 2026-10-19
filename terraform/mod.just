@@ -30,6 +30,10 @@ validate stack *args:
 show stack *args:
   just terraform _run "{{ stack }}" show {{ args }}
 
+# Modify the current state of a stack
+state stack *args:
+  just terraform _run "{{ stack }}" state {{ args }}
+
 # Format all Terraform files in place
 fmt:
   terraform fmt -recursive "{{ source_directory() }}"

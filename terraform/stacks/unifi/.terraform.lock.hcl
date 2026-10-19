@@ -6,6 +6,7 @@ provider "registry.terraform.io/ubiquiti-community/unifi" {
   constraints = "0.59.0"
   hashes = [
     "h1:U3BUKSx4RON6GMcsfFw7Aq04FPYmH6gctCjZjoMqBlQ=",
+    "h1:rJW4Cl2BCgyIgR8UiCwn/4ckHNBIFfW2REVZhc+9Yto=",
     "zh:10193d8db98fd5e0a649448fd0300d8f8024ea80b5460e817b6c240e4236b77f",
     "zh:4237023307cd0134c46d5eab482ae169909c19b0e75561e920c7d880506e5a05",
     "zh:436303b0e2935d365670058a8217d90a1a97d17823a035b9551e22ab1e990716",
