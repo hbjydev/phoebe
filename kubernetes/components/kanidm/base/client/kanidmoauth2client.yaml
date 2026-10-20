@@ -21,6 +21,8 @@ spec:
 
   redirectUrl: ${OIDC_REDIRECT_URLS:=${emptyArray}}
 
+  claimMap: ${OIDC_CLAIM_MAP:=${emptyArray}}
+
   scopeMap:
     - group: ${OIDC_USERS_GROUP_NAME}
       scopes:

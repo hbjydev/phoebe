@@ -36,6 +36,7 @@ spec:
       OIDC_GROUP_PREFIX: immich
       OIDC_USERS_GROUP_MEMBERS: '[hayden, invisible]'
       OIDC_ADMIN_GROUP_MEMBERS: '[hayden]'
+      OIDC_CLAIM_MAP: '[{name: immich_role, valuesMap: [{group: immich_users, values: [user]}, {group: immich_admins, values: [admins]}]}]'
 
       DATABASE_EXTENSIONS: |
         [
