@@ -5,4 +5,7 @@ kind: Kustomization
 resources:
   # Resources
   - ./helmrelease.yaml
+  - ./httproute.yaml
+  - ./uisecret.yaml
+  - ./securitypolicy.yaml
   - ./ocirepository.yaml

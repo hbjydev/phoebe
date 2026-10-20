@@ -44,6 +44,37 @@ spec:
       credentialProjection:
         enabled: true
 
+    ui:
+      enabled: true
+      auth:
+        userHeader: x-user-username
+        groupsHeader: x-user-groups
+        groupsFormat: base64Json
+        emailHeader: x-user-email
+
+        proxySecret:
+          existingSecret: kopiur-ui-proxy-token
+          key: credential
+
+        allowedGroups: [kopiur_admins, kopiur_users]
+      rbac:
+        userRoles: true
+        bindings:
+          - role: user
+            groups: [kopiur_admins]
+          - role: viewer
+            groups: [kopiur_users]
+
+      networkPolicy:
+        enabled: true
+        proxySelector:
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: network
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/component: proxy
+
     monitoring:
       serviceMonitor:
         enabled: true

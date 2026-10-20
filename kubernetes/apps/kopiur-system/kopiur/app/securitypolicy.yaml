@@ -1,0 +1,38 @@
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: kopiur-ui-oidc
+  namespace: kopiur-system
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: kopiur-ui
+  oidc:
+    provider:
+      issuer: https://sso.hayden.moe/oauth2/openid/kopiur
+    clientIDRef:
+      name: kopiur-kanidm-oauth2-credentials
+    clientSecret:
+      name: kopiur-kanidm-oauth2-credentials
+    redirectURL: https://sso.hayden.moe/oauth2/callback
+    cookieNames:
+      idToken: IdToken-kopiur-ui
+    scopes: [openid, profile, email, groups]
+  jwt:
+    providers:
+      - name: kanidm
+        issuer: https://sso.hayden.moe/oauth2/openid/kopiur
+        remoteJWKS:
+          uri: https://sso.hayden.moe/oauth2/openid/forgejo/public_key.jwk
+        # Validate the ID token the oidc block stored, from its cookie.
+        extractFrom:
+          cookies: [IdToken-kopiur-ui]
+        claimToHeaders:
+          - claim: preferred_username # → ui.auth.userHeader
+            header: x-user-username
+          - claim: groups # a list → base64-encoded → groupsFormat: base64Json
+            header: x-user-groups
+          - claim: email # → ui.auth.emailHeader (display only)
+            header: x-user-email
