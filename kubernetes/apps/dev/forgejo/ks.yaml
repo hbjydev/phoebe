@@ -16,6 +16,8 @@ spec:
     - ../../../../components/redis
     - ../../../../components/kopiur
   dependsOn:
+    - name: cnpg-cluster
+      namespace: database
     - name: miroir-config
       namespace: miroir-system
   interval: 1h
