@@ -30,78 +30,7 @@ spec:
               tag: 10@sha256:827d37bc128288ccf160ee318bb3cb92d591164cb217e92f8bc61e3982ae1834
             command:
               - /bin/bash
-              - -ec
-              - |
-                #!/usr/bin/env bash
-                set -euo pipefail
-
-                base_url="https://10.70.0.1"
-                username="${UNIFI_USERNAME}"
-                password="${UNIFI_PASSWORD}"
-
-                cert_pem="$(cat /certs/tls.crt | awk '{printf "%s\\n", $0}')"
-                key_pem="$(cat /certs/tls.key | awk '{printf "%s\\n", $0}')"
-
-                date="$(date +%Y%m%d%H%M)"
-
-                token=""
-                csrf_token=""
-
-                fatal() {
-                  local msg="${1}"
-                  echo "[FATAL] ${msg}"
-                  exit 1
-                }
-
-                login() {
-                  resp="$(curl -k -X POST "${base_url}/api/auth/login" \
-                    -H "Content-Type: application/json" \
-                    -d "{\"username\":\"${username}\",\"password\":\"${password}\"}" \
-                    -i)"
-
-                  token="$(echo "${resp}" | grep -i 'set-cookie: TOKEN=' | awk -F= '{print $2}' | awk -F';' '{print $1}' | tr -d '\r')"
-                  csrf_token="$(echo "${resp}" | grep -i 'x-csrf-token: ' | awk '{print $2}')"
-                }
-
-                get() {
-                  resp="$(curl -k -X GET "${base_url}${1}" \
-                    -H "Content-Type: application/json" \
-                    -H "Cookie: TOKEN=${token}" \
-                    -H "x-csrf-token: ${csrf_token}")"
-
-                  echo "${resp}"
-                }
-
-                post() {
-                  resp="$(curl -k -X POST "${base_url}${1}" \
-                    -H "Content-Type: application/json" \
-                    -H "Cookie: TOKEN=${token}" \
-                    -H "x-csrf-token: ${csrf_token}" \
-                    -d "${2}")"
-
-                  echo "${resp}"
-                }
-
-                put() {
-                  resp="$(curl -k -X PUT "${base_url}${1}" \
-                    -H "Content-Type: application/json" \
-                    -H "Cookie: TOKEN=${token}" \
-                    -H "x-csrf-token: ${csrf_token}" \
-                    -d "${2}")"
-
-                  echo "${resp}"
-                }
-
-                echo "[INFO ] Installing JQ..."
-                dnf install -y jq
-
-                echo "[INFO ] Logging into UniFi"
-                login || fatal "Failed to log in"
-                echo "[INFO ] Uploading new certificate"
-                id=$(post /api/userCertificates '{"name":"le-'"${date}"'","cert":"'"${cert_pem}"'","key":"'"${key_pem}"'"}' | jq -r .id)
-                echo "[INFO ] Activating certificate"
-                put "/api/userCertificates/${id}/status" '{"active":true}' || fatal "Failed to activate new certificate"
-                echo "[INFO ] Complete"
+              - /scripts/upload.sh
             env:
               TZ: Europe/London
             envFrom:
@@ -124,3 +53,9 @@ spec:
         type: secret
         name: hayden-moe-tls
         defaultMode: 0o600
+      scripts:
+        type: configMap
+        name: unifi-cert-upload-script
+        globalMounts:
+          - path: /scripts
+            readOnly: true
