@@ -9,7 +9,6 @@ spec:
     labels:
       app.kubernetes.io/name: *name
   components:
-    - ../../../../components/redis
     - ../../../../components/kanidm/private
   interval: 1h
   path: ./kubernetes/apps/dev/renovate/operator
