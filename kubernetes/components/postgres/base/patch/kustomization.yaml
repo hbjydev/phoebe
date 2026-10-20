@@ -53,6 +53,7 @@ patches:
               - name: k8s.ksgate.org/postgres-ready
               - name: k8s.ksgate.org/postgres-service
               - name: k8s.ksgate.org/database-applied
+              - name: k8s.ksgate.org/database-role-applied
           persistence:
             postgres-certs:
               type: secret
