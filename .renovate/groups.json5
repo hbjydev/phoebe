@@ -6,8 +6,9 @@
     { matchDatasources: ["docker"],                 semanticCommitScope: "image" },
 
     // Update type-specific types
-    { matchUpdateTypes: ["major", "minor"], semanticCommitType: "feat" },
-    { matchUpdateTypes: ["patch"],          semanticCommitType: "fix" },
+    { matchDatasources: ["docker"], matchUpdateTypes: ["major", "minor"], semanticCommitType: "feat" },
+    { matchDatasources: ["docker"], matchUpdateTypes: ["patch"],          semanticCommitType: "fix" },
+    { matchDatasources: ["docker"], matchUpdateTypes: ["digest"],         semanticCommitType: "chore" },
 
     {
       description: "1Password Connect group",
