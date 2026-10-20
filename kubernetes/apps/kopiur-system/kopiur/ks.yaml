@@ -18,7 +18,21 @@ spec:
       name: *app
       namespace: *namespace
   interval: 1h
+  components:
+    - ../../../../components/kanidm/private
   path: ./kubernetes/apps/kopiur-system/kopiur/app
+  postBuild:
+    substitute:
+      APP: *app
+      NAMESPACE: *namespace
+
+      OIDC_DISPLAY_NAME: Kopiur
+      OIDC_ORIGIN: https://kopiur.hayden.moe/
+      OIDC_REDIRECT_URLS: '["https://kopiur.hayden.moe/oauth2/callback"]'
+      OIDC_SECRET_KEY_ALIASES: '{clientId: [client-id], clientSecret: [client-secret]}'
+      OIDC_GROUP_PREFIX: kopiur
+      OIDC_USERS_GROUP_MEMBERS: '[hayden]'
+      OIDC_ADMIN_GROUP_MEMBERS: '[hayden]'
   prune: true
   retryInterval: 2m
   sourceRef:
