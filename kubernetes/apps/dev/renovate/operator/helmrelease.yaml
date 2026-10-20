@@ -47,8 +47,9 @@ spec:
 
     config:
       globalParallelismLimit: 3
+      forwardCacheToJobs: true
 
-    valkey:
+    externalKeyValueStore:
       existingSecret: renovate-redis-cache
 
     webhook:

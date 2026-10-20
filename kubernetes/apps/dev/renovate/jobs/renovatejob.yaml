@@ -16,14 +16,16 @@ spec:
     - hayden/*
     - tactica/*
   # renovate: datasource=docker depName=renovate/renovate
-  image: renovate/renovate:44.155.1
+  image: ghcr.io/renovatebot/renovate:44.167.5
   imagePullSecrets:
     - name: imp-atcr
     - name: imp-forgejo
-  parallelism: 2
+  parallelism: 3
   schedule: 0 */12 * * *
   secretRef: forgejo-renovate
   extraEnv:
+    - name: RENOVATE_PLATFORM_COMMIT
+      value: "true"
     - name: RENOVATE_ONBOARDING_CONFIG
       value: |
         {
@@ -46,11 +48,6 @@ spec:
   webhook:
     enabled: true
     authentication:
-      enabled: true
-      secretRef:
-        name: renovate-webhook
-        key: webhook
-    sync:
       enabled: true
       secretRef:
         name: renovate-webhook
