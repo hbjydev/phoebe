@@ -25,7 +25,7 @@ spec:
       - name: kanidm
         issuer: https://sso.hayden.moe/oauth2/openid/kopiur
         remoteJWKS:
-          uri: https://sso.hayden.moe/oauth2/openid/forgejo/public_key.jwk
+          uri: https://sso.hayden.moe/oauth2/openid/kopiur/public_key.jwk
         # Validate the ID token the oidc block stored, from its cookie.
         extractFrom:
           cookies: [IdToken-kopiur-ui]
