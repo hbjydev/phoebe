@@ -12,6 +12,7 @@ spec:
   components:
     - ../../../../components/postgres/pass
     - ../../../../components/kopiur
+    - ../../../../components/kanidm
     - ../../../../components/redis
   dependsOn:
     - name: miroir-config
@@ -22,12 +23,20 @@ spec:
     substitute:
       APP: *app
       NAMESPACE: *namespace
+
       KOPIUR_CAPACITY: 32Gi
       KOPIUR_UID: '0'
       KOPIUR_GID: '0'
       KOPIUR_PRIVILEGED_MODE: "true"
       KOPIUR_RUN_AS_NON_ROOT: "false"
-      PG_SIZE: 10Gi
+
+      OIDC_DISPLAY_NAME: Immich
+      OIDC_ORIGIN: https://photos.hayden.moe/
+      OIDC_REDIRECT_URLS: '["app.immich:///oauth-callback", "https://photos.hayden.moe/auth/login", "https://photos.hayden.moe/user-settings"]'
+      OIDC_GROUP_PREFIX: immich
+      OIDC_USERS_GROUP_MEMBERS: '[hayden, invisible]'
+      OIDC_ADMIN_GROUP_MEMBERS: '[hayden]'
+
       DATABASE_EXTENSIONS: |
         [
           { name: vector },

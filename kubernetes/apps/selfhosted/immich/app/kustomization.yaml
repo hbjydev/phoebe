@@ -6,4 +6,3 @@ resources:
   - ./ciliumnetworkpolicy.yaml
   - ./httproute.yaml
   - ./helmrelease.yaml
-  - ./kanidm.yaml
