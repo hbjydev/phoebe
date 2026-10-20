@@ -38,6 +38,18 @@ spec:
         readerGroups: [renovate_users@sso.hayden.moe]
         adminGroups: [renovate_admins@sso.hayden.moe]
 
+    valkey:
+      enabled: true
+      auth:
+        usersExistingSecret: renovate-operator-valkey
+
+    extraEnv:
+      - name: OIDC_SESSION_SECRET
+        valueFrom:
+          secretKeyRef:
+            name: renovate-operator-session
+            key: session-secret
+
     route:
       enabled: true
       hostnames: ["renovate.hayden.moe"]
