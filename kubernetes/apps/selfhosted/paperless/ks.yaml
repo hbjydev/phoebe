@@ -11,6 +11,7 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/redis
+    - ../../../../components/kanidm/private
   dependsOn:
     - name: miroir-config
       namespace: miroir-system
@@ -20,6 +21,14 @@ spec:
     substitute:
       APP: *app
       NAMESPACE: *namespace
+
+      OIDC_DISPLAY_NAME: Paperless
+      OIDC_IMAGE_URL: https://cdn.jsdelivr.net/gh/selfhst/icons@main/svg/paperless-ngx.svg
+      OIDC_ORIGIN: https://paperless.hayden.moe/
+      OIDC_REDIRECT_URLS: '["https://paperless.hayden.moe/accounts/oidc/kanidm/login/callback/"]'
+      OIDC_GROUP_PREFIX: paperless
+      OIDC_USERS_GROUP_MEMBERS: '[hayden, invisible]'
+      OIDC_ADMIN_GROUP_MEMBERS: '[hayden]'
   prune: true
   retryInterval: 2m
   sourceRef:

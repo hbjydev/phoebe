@@ -6,7 +6,6 @@ resources:
   - ./ciliumnetworkpolicy.yaml
   - ./externalsecret.yaml
   - ./helmrelease.yaml
-  - ./kanidm.yaml
 generatorOptions:
   disableNameSuffixHash: true
   annotations:
