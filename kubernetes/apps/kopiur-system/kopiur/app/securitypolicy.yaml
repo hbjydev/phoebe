@@ -16,7 +16,7 @@ spec:
       name: kopiur-kanidm-oauth2-credentials
     clientSecret:
       name: kopiur-kanidm-oauth2-credentials
-    redirectURL: https://sso.hayden.moe/oauth2/callback
+    redirectURL: https://kopiur.hayden.moe/oauth2/callback
     cookieNames:
       idToken: IdToken-kopiur-ui
     scopes: [openid, profile, email, groups]
