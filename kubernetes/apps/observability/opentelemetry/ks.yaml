@@ -41,7 +41,7 @@ spec:
   healthChecks:
     - apiVersion: opentelemetry.io/v1beta1
       kind: OpenTelemetryCollector
-      name: otelcol
+      name: otel-collector
       namespace: *namespace
   interval: 1h
   path: ./kubernetes/apps/observability/opentelemetry/collector
