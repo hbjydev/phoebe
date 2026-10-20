@@ -60,10 +60,12 @@ spec:
       rbac:
         userRoles: true
         bindings:
-          - role: user
+          - role: editor
             groups: [kopiur_admins]
-          - role: viewer
+          - role: user
             groups: [kopiur_users]
+          - role: browse
+            groups: [kopiur_admins]
 
       networkPolicy:
         enabled: true
