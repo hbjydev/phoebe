@@ -12,7 +12,7 @@ spec:
   components:
     - ../../../../components/postgres/pass
     - ../../../../components/kopiur
-    - ../../../../components/kanidm
+    - ../../../../components/kanidm/private
     - ../../../../components/redis
   dependsOn:
     - name: miroir-config
