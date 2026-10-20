@@ -50,7 +50,9 @@ spec:
       forwardCacheToJobs: true
 
     externalKeyValueStore:
-      existingSecret: renovate-redis-cache
+      existingSecret:
+        name: renovate-redis-cache
+        urlKey: valkey-url
 
     webhook:
       enabled: true
