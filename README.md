@@ -4,14 +4,13 @@
 
 ### <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f680/512.gif" alt="🚀" width="16" height="16"> Phoebe GitOps <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f6a7/512.gif" alt="🚧" width="16" height="16">
 
-_The cluster that runs on my desk, a bare metal Talos Kubernetes cluster, provisioned using `talosctl`, `helm`, and `flux`._
+_The cluster that runs on my desk: a bare metal Talos Kubernetes cluster, managed with Flux._
 
 </div>
 
 <div align="center">
 
-[![Status-Page](https://img.shields.io/uptimerobot/status/m793599155-ba1b18e51c9f8653acd0f5c1?color=brightgreeen&label=Status%20Page&style=for-the-badge&logo=statuspage&logoColor=white)](https://status.hayden.moe)&nbsp;&nbsp;
-[![Alertmanager](https://img.shields.io/uptimerobot/status/m793494864-dfc695db066960233ac70f45?color=brightgreeen&label=Alertmanager&style=for-the-badge&logo=prometheus&logoColor=white)](https://status.hayden.moe)
+[Status page](https://status.hayden.moe)
 
 </div>
 
@@ -24,9 +23,10 @@ This is a monorepo for the cluster that lives on my desk, which I called
 repository into my cluster, and a combination of [SOPS](https://getsops.io/) and
 [1Password](https://1password.com) to inject secrets into those services.
 
-It automatically updates itself over time using
-[Renovate](https://docs.renovatebot.com/), and tests pull requests for those
-updates using [GitHub Actions](https://github.com/features/actions).
+Dependency updates come from [Renovate](kubernetes/apps/dev/renovate), which
+runs in the cluster and opens pull requests on my self-hosted
+[Forgejo](kubernetes/apps/dev/forgejo) instance. Flux reconciles changes from
+this repository into the cluster.
 
 ---
 
@@ -35,16 +35,39 @@ updates using [GitHub Actions](https://github.com/features/actions).
 My Kubernetes cluster is deployed with [Talos](https://www.talos.dev). This
 repository's structure is largely based on the amazing work put in over at
 [`onedr0p/home-ops`](https://github.com/onedr0p/home-ops), but running my own
-services and configurations.
+services and configurations. The current [Talos configuration](talos/topf.yaml)
+defines a single control-plane node that also runs application workloads.
 
 ### Core Components
 
-- [cert-manager](https://github.com/cert-manager/cert-manager): Manages TLS certificates via Let's Encrypt.
-- [cilium](https://github.com/cilium/cilium): eBPF-based networking and L2 load balancing with VIPs.
-- [external-dns](https://github.com/kubernetes-sigs/external-dns): Pushes DNS updates to CloudFlare and my internal DNS server when changes are needed.
-- [external-secrets](https://github.com/external-secrets/external-secrets): Managed Kubernetes secrets using [1Password Connect](https://github.com/1Password/connect).
-- [longhorn](https://github.com/longhorn/longhorn): Clustered storage system that handles all the difficult things for me, and is very easy to deploy.
-- [sops](https://github.com/getsops/sops): Managed secrets for Kubernetes, encrypted with Age, safely committed to Git.
+- [Flux Operator](kubernetes/apps/flux-system): Manages Flux and the GitOps reconciliation of cluster resources.
+- [Cilium](kubernetes/apps/kube-system/cilium): eBPF-based networking, network policies, and load balancer IP advertisement over BGP to my UniFi router.
+- [Envoy Gateway](kubernetes/apps/network/envoy-gateway): Internal and external application routing using the Kubernetes Gateway API.
+- [Tailscale](kubernetes/apps/network/tailscale): Private access to cluster services and subnet routing.
+- [cert-manager and trust-manager](kubernetes/apps/cert-manager): TLS certificate issuance and trust bundle distribution.
+- External DNS: Separate deployments manage [Cloudflare](kubernetes/apps/network/cloudflare-dns) and [UniFi](kubernetes/apps/network/unifi-dns) DNS records.
+- [External Secrets](kubernetes/apps/external-secrets): Syncs Kubernetes secrets from 1Password Connect.
+- [SOPS](kubernetes/components/common/sops): Keeps Age-encrypted secrets in Git.
+- [Miroir](kubernetes/apps/miroir-system): Persistent volumes backed by a local LVM thin pool. The default `miroir-local` storage class uses one replica.
+- [Garage](kubernetes/apps/garage-system): S3-compatible object storage, managed by the Garage operator.
+- [CloudNativePG](kubernetes/apps/cnpg-system) and [Dragonfly](kubernetes/apps/dragonfly-system): Operators for PostgreSQL databases and Redis-compatible data stores.
+- [Kanidm](kubernetes/apps/security/kaniop): Identity and single sign-on, managed by Kaniop.
+- [Observability](kubernetes/apps/observability): VictoriaMetrics, VictoriaLogs, and VictoriaTraces for telemetry; OpenTelemetry for collection; Grafana for dashboards; Alertmanager for alerts; and Gatus for status checks.
+
+Media libraries are mounted separately over NFS from my NAS.
+
+### Applications
+
+Alongside the infrastructure, the cluster runs:
+
+- [Media servers](kubernetes/apps/media): Jellyfin, Plex, and Navidrome.
+- [Home and media automation](kubernetes/apps/default): Home Assistant, Jellyseerr, and the *arr applications, with [download clients](kubernetes/apps/downloads) in their own namespace.
+- [Self-hosted services](kubernetes/apps/selfhosted): Immich, Paperless, Miniflux, SearXNG, and Tranquil.
+- [Matrix](kubernetes/apps/matrix): Continuwuity and LiveKit.
+- [AI services](kubernetes/apps/ai): Including LiteLLM, Hermes, and LLMKube.
+
+The manifests under [`kubernetes/apps`](kubernetes/apps) are the source of truth
+for the configured services.
 
 ---
 
