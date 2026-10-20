@@ -5,6 +5,7 @@ kind: ResourceSet
 metadata:
   name: cnpg-cluster
   annotations:
+    fluxcd.controlplane.io/prune: "disabled"
     fluxcd.controlplane.io/reconcile: "enabled"
     fluxcd.controlplane.io/reconcileEvery: "30m"
     fluxcd.controlplane.io/reconcileTimeout: "5m"
