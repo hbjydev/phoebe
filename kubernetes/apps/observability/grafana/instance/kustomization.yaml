@@ -5,6 +5,5 @@ kind: Kustomization
 resources:
   - ./kopiur.yaml
   - ./grafana.yaml
-  - ./httproute.yaml
   - ./servicemonitor.yaml
   - ./kanidm.yaml

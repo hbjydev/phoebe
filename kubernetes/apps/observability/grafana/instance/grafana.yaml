@@ -48,6 +48,7 @@ spec:
     server:
       enable_gzip: "true"
       root_url: https://grafana.hayden.moe
+
   deployment:
     spec:
       strategy:
@@ -83,6 +84,15 @@ spec:
             - name: grafana-data
               persistentVolumeClaim:
                 claimName: grafana-pvc
+
+  httpRoute:
+    spec:
+      hostnames:
+        - grafana.hayden.moe
+      parentRefs:
+        - name: internal
+          namespace: network
+
   persistentVolumeClaim:
     spec:
       accessModes:
@@ -91,4 +101,5 @@ spec:
         requests:
           storage: 10Gi
       storageClassName: miroir-local
+
   disableDefaultSecurityContext: All
