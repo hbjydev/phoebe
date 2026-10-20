@@ -56,14 +56,14 @@ spec:
           existingSecret: kopiur-ui-proxy-token
           key: credential
 
-        allowedGroups: [kopiur_admins, kopiur_users]
+        allowedGroups: [kopiur_admins@sso.hayden.moe, kopiur_users@sso.hayden.moe]
       rbac:
         userRoles: true
         bindings:
           - role: editor
-            groups: [kopiur_admins]
+            groups: [kopiur_admins@sso.hayden.moe]
           - role: user
-            groups: [kopiur_users]
+            groups: [kopiur_users@sso.hayden.moe]
 
       networkPolicy:
         enabled: true
