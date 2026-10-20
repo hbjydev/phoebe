@@ -59,6 +59,7 @@ spec:
         allowedGroups: [kopiur_admins@sso.hayden.moe, kopiur_users@sso.hayden.moe]
       rbac:
         userRoles: true
+        browseRole: true
         bindings:
           - role: editor
             groups: [kopiur_admins@sso.hayden.moe]
