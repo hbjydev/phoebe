@@ -64,8 +64,6 @@ spec:
             groups: [kopiur_admins]
           - role: user
             groups: [kopiur_users]
-          - role: browse
-            groups: [kopiur_admins]
 
       networkPolicy:
         enabled: true
