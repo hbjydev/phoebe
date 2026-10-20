@@ -20,6 +20,19 @@ patches:
           substitute:
             DISABLE_PASSWORD: "false"
             APP: "${APP}"
+        patches:
+          - target:
+              group: postgresql.cnpg.io
+              kind: DatabaseRole
+              version: v1
+            patch: |-
+              apiVersion: postgresql.cnpg.io/v1
+              kind: DatabaseRole
+              metadata:
+                name: not-used
+              spec:
+                passwordSecret:
+                  name: ${APP}-postgres
 
   - target:
       kind: HelmRelease

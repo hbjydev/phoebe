@@ -39,6 +39,14 @@ patches:
                   "namespace": "database",
                   "expression": "resource.status.applied"
                 }
+              k8s.ksgate.org/database-role-applied: |
+                {
+                  "apiVersion": "postgresql.cnpg.io/v1",
+                  "kind": "DatabaseRole",
+                  "name": "postgres-${APP}",
+                  "namespace": "database",
+                  "expression": "resource.status.applied"
+                }
             labels:
               db.policy.home.arpa/postgres: allow
             schedulingGates:
