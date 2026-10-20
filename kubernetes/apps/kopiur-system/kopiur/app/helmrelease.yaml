@@ -59,7 +59,6 @@ spec:
         allowedGroups: [kopiur_admins, kopiur_users]
       rbac:
         userRoles: true
-        browseRole: true
         bindings:
           - role: editor
             groups: [kopiur_admins]
