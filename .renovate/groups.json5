@@ -37,6 +37,8 @@
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
+      semanticCommitType: "feat",
+      semanticCommitScope: "cilium",
     },
     {
       description: "CoreDNS Group",
@@ -98,17 +100,9 @@
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
+      semanticCommitType: "feat",
+      semanticCommitScope: "kubernetes",
       minimumGroupSize: 5,
-    },
-    {
-      description: "Rook-Ceph Group",
-      groupName: "Rook-Ceph",
-      matchDatasources: ["docker"],
-      matchPackageNames: ["/rook-ceph/", "/rook-ceph-cluster/"],
-      group: {
-        commitMessageTopic: "{{{groupName}}} group",
-      },
-      minimumGroupSize: 2,
     },
     {
       description: "Talos Group",
@@ -118,6 +112,8 @@
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
+      semanticCommitType: "feat",
+      semanticCommitScope: "talos",
       minimumGroupSize: 2,
     },
   ],
