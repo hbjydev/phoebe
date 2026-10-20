@@ -38,16 +38,6 @@ spec:
         barmanObjectName: &store barman-hetzner
         serverName: postgres-miroir
 
-  managed:
-    roles:
-      - connectionLimit: -1
-        disablePassword: true
-        ensure: present
-        inherit: true
-        login: true
-        name: pooler-rw
-        superuser: false
-
   externalClusters:
     - name: &src backup
       plugin:
