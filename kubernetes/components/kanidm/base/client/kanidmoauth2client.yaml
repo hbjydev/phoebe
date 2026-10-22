@@ -19,6 +19,8 @@ spec:
 
   allowInsecureClientDisablePkce: ${OIDC_ALLOW_INSECURE_CLIENT_DISABLE_PKCE:=false}
 
+  preferShortUsername: ${OIDC_PREFER_SHORT_USERNAME:=false}
+
   redirectUrl: ${OIDC_REDIRECT_URLS:=${emptyArray}}
 
   claimMap: ${OIDC_CLAIM_MAP:=${emptyArray}}

@@ -36,6 +36,7 @@ spec:
       OIDC_GROUP_PREFIX: silo
       OIDC_USERS_GROUP_MEMBERS: '[hayden, invisible]'
       OIDC_ADMIN_GROUP_MEMBERS: '[hayden]'
+      OIDC_PREFER_SHORT_USERNAME: 'true'
 
       DATABASE_EXTENSIONS: '[{ name: vector }]'
   prune: true
