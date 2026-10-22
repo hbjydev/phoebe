@@ -37,7 +37,7 @@ spec:
               DATABASE_URL:
                 secretKeyRef:
                   name: tranquil-postgres
-                  key: poolurl
+                  key: url
               CRAWLERS: https://bsky.network,https://relay.upcloud.world
 
               # Storage
