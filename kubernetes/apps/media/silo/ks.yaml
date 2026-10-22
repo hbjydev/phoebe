@@ -30,6 +30,13 @@ spec:
       KOPIUR_PRIVILEGED_MODE: "true"
       KOPIUR_RUN_AS_NON_ROOT: "false"
 
+      OIDC_DISPLAY_NAME: Silo
+      OIDC_ORIGIN: https://silo.hayden.moe/
+      OIDC_REDIRECT_URLS: '["https://silo.hayden.moe/api/v2/auth/oauth/5/callback"]'
+      OIDC_GROUP_PREFIX: silo
+      OIDC_USERS_GROUP_MEMBERS: '[hayden, invisible]'
+      OIDC_ADMIN_GROUP_MEMBERS: '[hayden]'
+
       DATABASE_EXTENSIONS: '[{ name: vector }]'
   prune: true
   sourceRef:
