@@ -95,6 +95,7 @@ spec:
   keyAlias: kguardian
   models:
     - qwen3-reranker-0.6b
+    - gpt-6-luna
   secretAnnotations:
     reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
     reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: media
