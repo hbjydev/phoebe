@@ -18,7 +18,7 @@ spec:
           reloader.stakater.com/auto: "true"
         pod:
           labels:
-            egress.policy.home.arpa/internet: "true"
+            egress.policy.home.arpa/block-all: "true"
         containers:
           app:
             image:

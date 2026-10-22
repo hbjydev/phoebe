@@ -1,0 +1,69 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: "apps-to-smtp-relay"
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/smtp-relay: allow
+  egress:
+    - toEndpoints: &smtp
+        - matchLabels:
+            app.kubernetes.io/name: smtp-relay
+            app.kubernetes.io/instance: smtp-relay
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+      toPorts:
+        - ports:
+            - port: "25"
+              protocol: TCP
+
+    - toEndpoints: *smtp
+      icmps: [{}]
+
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: smtp-relay
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: smtp-relay
+      app.kubernetes.io/instance: smtp-relay
+  ingress:
+    # allow prometheus monitoring via vmagent
+    - fromEndpoints:
+        - matchLabels:
+            managed-by: vm-operator
+            app.kubernetes.io/name: vmagent
+            app.kubernetes.io/instance: metrics-agent
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+
+    # allow labelled pods to connect to smtp-relay only and ping with icmp
+    - fromEndpoints: &smtp
+        - matchLabels:
+            egress.policy.home.arpa/smtp-relay: allow
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+      toPorts:
+        - ports:
+            - port: "25"
+              protocol: TCP
+    - fromEndpoints: *smtp
+      icmps: [{}]
+  egress:
+    # to smtp2go for outbound SMTP
+    - toFQDNs:
+        - matchPattern: 'mail-eu.smtp2go.com'
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: ANY

@@ -17,6 +17,7 @@ spec:
         pod:
           labels:
             egress.policy.home.arpa/internet: "true"
+            egress.policy.home.arpa/smtp-relay: "true"
             db.policy.home.arpa/postgres: allow
             prom.policy.home.arpa/kps: allow
         strategy: RollingUpdate

@@ -24,6 +24,7 @@ spec:
         pod:
           labels:
             egress.policy.home.arpa/internet: "true"
+            egress.policy.home.arpa/smtp-relay: allow
             db.policy.home.arpa/df-paperless-redis: allow
         containers:
           app:
