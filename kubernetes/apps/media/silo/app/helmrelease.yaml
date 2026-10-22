@@ -24,6 +24,8 @@ spec:
         pod:
           labels:
             egress.policy.home.arpa/internet: "true"
+            egress.policy.home.arpa/smtp-relay: allow
+            egress.policy.home.arpa/litellm: allow
             db.policy.home.arpa/postgres: allow
             db.policy.home.arpa/df-silo-redis: allow
         containers:
