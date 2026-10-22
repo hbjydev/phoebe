@@ -61,8 +61,8 @@ spec:
       icmps: [{}]
   egress:
     # to smtp2go for outbound SMTP
-    - toFQDNs:
-        - matchPattern: 'mail-eu.smtp2go.com'
+    - toEntities:
+        - world
       toPorts:
         - ports:
             - port: "587"
