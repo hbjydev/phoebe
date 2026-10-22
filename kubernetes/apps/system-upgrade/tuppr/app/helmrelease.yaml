@@ -12,8 +12,8 @@ spec:
   values:
     fullnameOverride: tuppr
     image:
-      tag: 0.5.7
-      digest: sha256:28728edb8ec848db4500db612747f9007de0646c7f2340c0902c3b99dbb8e590
+      tag: 0.5.10
+      digest: sha256:38e9ea6280951110a39362a92e910f04d35452bc52096e20d47d5e237d2d9b0c
 
     monitoring:
       serviceMonitor:
