@@ -90,9 +90,9 @@ metadata:
   namespace: ai
 spec:
   proxyRef: litellm
-  secretName: kguardian-litellm
+  secretName: silo-litellm
   secretKey: api-key
-  keyAlias: kguardian
+  keyAlias: silo
   models:
     - qwen3-reranker-0.6b
     - gpt-6-luna
