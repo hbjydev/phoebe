@@ -31,7 +31,7 @@ spec:
               DATABASE_URL:
                 secretKeyRef:
                   name: miniflux-postgres
-                  key: poolurl
+                  key: url
               RUN_MIGRATIONS: '1'
 
               TRUSTED_REVERSE_PROXY_NETWORKS: '172.18.0.0/16'
