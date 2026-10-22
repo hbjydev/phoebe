@@ -45,6 +45,7 @@ spec:
               SILO_PLUGIN_CACHE_DIR: /var/lib/silo/plugins
               POSTGRES_TUNE: auto
               MEDIA_CONTAINER_ROOT: /mnt/media
+              SILO_METRICS_LISTEN: 0.0.0.0:9091
             envFrom:
               - secretRef:
                   name: ${APP}
@@ -93,13 +94,25 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
 
     service:
-      app:
+      main:
         type: ClusterIP
         ports:
           http:
             port: *port
           jellyfin-http:
             port: *jfPort
+          metrics:
+            port: 9091
+
+    serviceMonitor:
+      main:
+        enabled: true
+        jobLabel: silo
+        endpoints:
+          - port: metrics
+            interval: 30s
+            scrapeTimeout: 10s
+            path: /metrics
 
     route:
       app:
@@ -113,7 +126,7 @@ spec:
             namespace: network
         rules:
           - backendRefs:
-              - identifier: app
+              - identifier: main
                 port: *port
 
       jellyfin:
@@ -127,7 +140,7 @@ spec:
             namespace: network
         rules:
           - backendRefs:
-              - identifier: app
+              - identifier: main
                 port: *jfPort
 
     persistence:
