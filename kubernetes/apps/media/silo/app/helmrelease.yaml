@@ -87,7 +87,7 @@ spec:
           }]
 
       securityContext:
-        fsGroup: 0
+        fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
 
     service:
