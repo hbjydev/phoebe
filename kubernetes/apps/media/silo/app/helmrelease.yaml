@@ -33,8 +33,8 @@ spec:
               tag: build-1626@sha256:251676244b2b2339b2142714a11a41a5e096b23dd4ccee987edd6c4fefe5dd41
             env:
               TZ: Europe/London
-              PORT: "8080"
-              JF_PORT: "8096"
+              PORT: &port 8080
+              JF_PORT: &jfPort 8096
               DATABASE_URL:
                 secretKeyRef:
                   name: ${APP}-postgres
@@ -53,7 +53,7 @@ spec:
                 spec:
                   httpGet:
                     path: /health
-                    port: &port 8096
+                    port: *port
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
@@ -96,6 +96,8 @@ spec:
         ports:
           http:
             port: *port
+          jellyfin-http:
+            port: *jfPort
 
     route:
       app:
