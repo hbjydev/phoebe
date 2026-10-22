@@ -116,6 +116,20 @@ spec:
               - identifier: app
                 port: *port
 
+      jellyfin:
+        annotations:
+          gatus.home-operations.com/endpoint: |-
+            conditions: ["[STATUS] == 401"]
+        hostnames:
+          - "jellyfin.hayden.moe"
+        parentRefs:
+          - name: external
+            namespace: network
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *jfPort
+
     persistence:
       data:
         existingClaim: "{{ .Release.Name }}"
@@ -130,6 +144,8 @@ spec:
       cache:
         existingClaim: "{{ .Release.Name }}-cache"
         globalMounts:
+          - subPath: npm
+            path: /root/.npm
           - subPath: transcode
             path: /tmp/silo-transcode
           - subPath: download-artifacts
