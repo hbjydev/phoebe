@@ -21,6 +21,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      NAMESPACE: *namespace
 
       KOPIUR_CAPACITY: 5Gi
       KOPIUR_UID: "0"
