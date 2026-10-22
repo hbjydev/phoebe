@@ -44,28 +44,13 @@ spec:
               # renovate: datasource=github-releases depName=immich-app/immich
               tag: v3.3.4
             env:
-              DB_PASSWORD:
+              DB_URL:
                 valueFrom:
                   secretKeyRef:
-                    name: immich-postgres
-                    key: password
-              DB_USERNAME:
-                valueFrom:
-                  secretKeyRef:
-                    name: immich-postgres
-                    key: username
-              DB_DATABASE_NAME:
-                valueFrom:
-                  secretKeyRef:
-                    name: immich-postgres
-                    key: database
-              DB_HOSTNAME:
-                valueFrom:
-                  secretKeyRef:
-                    name: immich-postgres
-                    key: poolhost
+                    name: ${APP}-postgres
+                    key: url
 
-              REDIS_HOSTNAME: immich-redis.selfhosted.svc.cluster.local
+              REDIS_HOSTNAME: ${APP}-redis.selfhosted.svc.cluster.local
               REDIS_PORT: 6379
               REDIS_DBINDEX: 0
 
