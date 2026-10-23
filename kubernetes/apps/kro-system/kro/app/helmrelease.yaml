@@ -10,6 +10,9 @@ spec:
     name: kro
   interval: 1h
   values:
+    config:
+      featureGates:
+        CELOmitFunction: true
     metrics:
       service:
         create: true
