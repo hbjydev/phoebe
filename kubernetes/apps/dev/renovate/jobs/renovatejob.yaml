@@ -6,8 +6,6 @@ metadata:
   name: rnv-forgejo
 spec:
   metadata:
-    annotations:
-      reloader.stakater.com/auto: "true"
     labels:
       db.policy.home.arpa/df-renovate-operator-redis: allow
       egress.policy.home.arpa/cluster: allow
