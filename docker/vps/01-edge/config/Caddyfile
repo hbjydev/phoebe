@@ -90,6 +90,9 @@ hayden.moe {
 	# Matrix .well-known — proxy to the matrix subdomain (federation clients don't follow 3xx).
 	@matrix path /.well-known/matrix/*
 	handle @matrix {
+    header {
+      Access-Control-Allow-Origin "*"
+    }
 		reverse_proxy https://matrix.hayden.moe
 	}
 
