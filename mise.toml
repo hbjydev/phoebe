@@ -37,7 +37,7 @@ yq = "4.54.1"
 "pipx:ansible" = "14.5.0"
 "pipx:ansible-core" = "2.21.5"
 vals = "0.50.0"
-"aqua:postfinance/topf" = "0.6.1"
+"aqua:postfinance/topf" = "0.6.2"
 cmctl = "2.6.1"
 
 # kubectl plugins
