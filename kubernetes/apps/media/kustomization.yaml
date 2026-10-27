@@ -9,3 +9,4 @@ resources:
   - navidrome/ks.yaml
   - plex/ks.yaml
   - silo/ks.yaml
+  - seerr/ks.yaml

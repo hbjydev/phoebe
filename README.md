@@ -60,8 +60,8 @@ Media libraries are mounted separately over NFS from my NAS.
 
 Alongside the infrastructure, the cluster runs:
 
-- [Media servers](kubernetes/apps/media): Jellyfin, Plex, and Navidrome.
-- [Home and media automation](kubernetes/apps/default): Home Assistant, Jellyseerr, and the *arr applications, with [download clients](kubernetes/apps/downloads) in their own namespace.
+- [Media services](kubernetes/apps/media): Plex, Navidrome, Silo, and Seerr.
+- [Home automation](kubernetes/apps/default): Home Assistant, with the *arr applications and [download clients](kubernetes/apps/downloads) in their own namespace.
 - [Self-hosted services](kubernetes/apps/selfhosted): Immich, Paperless, Miniflux, SearXNG, and Tranquil.
 - [Matrix](kubernetes/apps/matrix): Continuwuity and LiveKit.
 - [AI services](kubernetes/apps/ai): Including LiteLLM, Hermes, and LLMKube.

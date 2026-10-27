@@ -88,7 +88,7 @@ spec:
               HERMES_DASHBOARD_OIDC_ISSUER: https://sso.hayden.moe/oauth2/openid/hermes
               HERMES_DASHBOARD_OIDC_CLIENT_ID: hermes
 
-              SEERR_URL: http://jellyseerr.default.svc.cluster.local
+              SEERR_URL: http://seerr.media.svc.cluster.local
               SEARXNG_URL: http://searxng.selfhosted.svc.cluster.local:8080
 
               HOME: /data

@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: jellyseerr
+  name: seerr
 spec:
   interval: 1h
   chartRef:
@@ -18,7 +18,7 @@ spec:
       retries: 3
   values:
     controllers:
-      jellyseerr:
+      seerr:
         annotations:
           reloader.stakater.com/auto: "true"
         pod:
@@ -35,7 +35,7 @@ spec:
               PORT: &port 80
             envFrom:
               - secretRef:
-                  name: jellyseerr-secret
+                  name: seerr-secret
             probes:
               liveness: &probes
                 enabled: true
@@ -67,7 +67,7 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     service:
       app:
-        controller: jellyseerr
+        controller: seerr
         ports:
           http:
             port: *port
@@ -79,6 +79,7 @@ spec:
             conditions: ["[STATUS] == 200"]
         hostnames:
           - "{{ .Release.Name }}.hayden.moe"
+          - jellyseerr.hayden.moe
           - request.hayden.moe
         parentRefs:
           - name: external
@@ -90,17 +91,17 @@ spec:
                 port: *port
     persistence:
       config:
-        existingClaim: jellyseerr
+        existingClaim: seerr
         globalMounts:
           - path: /app/config
       config-cache:
-        existingClaim: jellyseerr-cache
+        existingClaim: seerr-cache
         globalMounts:
           - path: /app/config/cache
       tmpfs:
         type: emptyDir
         advancedMounts:
-          jellyseerr:
+          seerr:
             app:
               - path: /app/config/logs
                 subPath: logs

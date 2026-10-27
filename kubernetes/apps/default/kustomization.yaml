@@ -7,4 +7,3 @@ components:
   - ../../components/common
 resources:
   - ./home-assistant/ks.yaml
-  - ./jellyseerr/ks.yaml

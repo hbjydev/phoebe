@@ -3,8 +3,8 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app jellyseerr
-  namespace: &namespace default
+  name: &app seerr
+  namespace: &namespace media
 spec:
   commonMetadata:
     labels:
@@ -15,7 +15,7 @@ spec:
     - name: miroir-config
       namespace: miroir-system
   interval: 1h
-  path: ./kubernetes/apps/default/jellyseerr/app
+  path: ./kubernetes/apps/media/seerr/app
   postBuild:
     substitute:
       APP: *app
