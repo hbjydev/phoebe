@@ -15,7 +15,7 @@ spec:
           matchExpressions:
             - key: io.kubernetes.pod.namespace
               operator: In
-              values: [default]
+              values: [default, downloads]
       toPorts:
         - ports:
             - port: "80"

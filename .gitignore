@@ -5,3 +5,4 @@ site
 kubernetes/.maintenance-state.*
 kubernetes/.miroir-migration/
 __pycache__/
+kubernetes/.arr-migration/

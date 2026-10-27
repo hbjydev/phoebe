@@ -9,9 +9,21 @@ spec:
     matchLabels:
       app.kubernetes.io/name: jellyseerr
   egress:
-    - toEndpoints: [{matchLabels: {app.kubernetes.io/name: sonarr}}]
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: sonarr
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: In
+              values: [default, downloads]
       toPorts: &http [{ports: [{port: "80", protocol: TCP}]}]
-    - toEndpoints: [{matchLabels: {app.kubernetes.io/name: radarr}}]
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: radarr
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: In
+              values: [default, downloads]
       toPorts: *http
 
     - toEndpoints:

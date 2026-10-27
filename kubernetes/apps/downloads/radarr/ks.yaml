@@ -4,7 +4,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app radarr
-  namespace: &namespace default
+  namespace: &namespace downloads
 spec:
   commonMetadata:
     labels:
@@ -16,7 +16,7 @@ spec:
     - name: miroir-config
       namespace: miroir-system
   interval: 1h
-  path: ./kubernetes/apps/default/radarr/app
+  path: ./kubernetes/apps/downloads/radarr/app
   postBuild:
     substitute:
       APP: *app
