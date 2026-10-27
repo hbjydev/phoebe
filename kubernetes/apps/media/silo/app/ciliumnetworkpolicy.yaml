@@ -23,3 +23,10 @@ spec:
             - key: io.kubernetes.pod.namespace
               operator: Exists
       toPorts: *http
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: seerr
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+      toPorts: *http
