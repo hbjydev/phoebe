@@ -32,7 +32,7 @@ spec:
           app:
             image:
               repository: ghcr.io/silo-server/silo-server
-              tag: build-1626@sha256:251676244b2b2339b2142714a11a41a5e096b23dd4ccee987edd6c4fefe5dd41
+              tag: build-1770@sha256:b989857a785638ad78daf5e90d8c54e11541b7fd6633b56f712524e7659f943d
             env:
               TZ: Europe/London
               PORT: &port 8080
