@@ -24,7 +24,7 @@ spec:
       APP: *app
       NAMESPACE: *namespace
 
-      KOPIUR_CAPACITY: 5Gi
+      KOPIUR_CAPACITY: 10Gi
       KOPIUR_UID: "0"
       KOPIUR_GID: "0"
       KOPIUR_PRIVILEGED_MODE: "true"
