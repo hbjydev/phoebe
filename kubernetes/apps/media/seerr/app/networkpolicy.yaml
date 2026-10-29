@@ -37,3 +37,34 @@ spec:
         - ports:
             - port: "32400"
               protocol: TCP
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            egress.policy.home.arpa/seerr: allow
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+      toPorts:
+        - ports:
+            - port: '80'
+              protocol: TCP
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: apps-to-seerr
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/seerr: allow
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: seerr
+            io.kubernetes.pod.namespace: media
+      toPorts:
+        - ports:
+            - port: '80'
+              protocol: TCP

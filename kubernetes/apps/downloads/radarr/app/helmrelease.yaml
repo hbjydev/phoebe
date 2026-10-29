@@ -23,6 +23,7 @@ spec:
           reloader.stakater.com/auto: "true"
         pod:
           labels:
+            ingress.policy.home.arpa/internal: allow
             egress.policy.home.arpa/internet: allow
             egress.policy.home.arpa/sabnzbd: allow
             egress.policy.home.arpa/qbittorrent: allow

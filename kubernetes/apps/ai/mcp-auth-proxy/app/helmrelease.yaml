@@ -83,6 +83,9 @@ spec:
               limits:
                 memory: 512Mi
         pod:
+          labels:
+            egress.policy.home.arpa/litellm: allow
+            ingress.policy.home.arpa/external: allow
           securityContext:
             fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch

@@ -16,6 +16,7 @@ spec:
           reloader.stakater.com/auto: "true"
         pod:
           labels:
+            ingress.policy.home.arpa/external: allow
             egress.policy.home.arpa/internet: "true"
             db.policy.home.arpa/postgres: allow
             prom.policy.home.arpa/kps: allow

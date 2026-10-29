@@ -16,8 +16,9 @@ spec:
           reloader.stakater.com/auto: "true"
         pod:
           labels:
+            ingress.policy.home.arpa/external: allow
             egress.policy.home.arpa/internet: "true"
-            egress.policy.home.arpa/smtp-relay: "true"
+            egress.policy.home.arpa/smtp-relay: allow
             db.policy.home.arpa/postgres: allow
             prom.policy.home.arpa/kps: allow
         strategy: RollingUpdate

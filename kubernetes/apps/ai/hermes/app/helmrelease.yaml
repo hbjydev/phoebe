@@ -67,6 +67,13 @@ spec:
               HOMEBREW_PREFIX: $(HOME)/.local/share/brew
               PATH: "$(HOME)/.local/bin:$(HOME)/.local/share/mise/shims:$(HOME)/.local/share/brew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
+        pod:
+          labels:
+            egress.policy.home.arpa/litellm: allow
+            egress.policy.home.arpa/honcho: allow
+            egress.policy.home.arpa/seerr: allow
+            egress.policy.home.arpa/searxng: allow
+            ingress.policy.home.arpa/external: allow
         containers:
           app:
             image: *image

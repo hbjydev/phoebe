@@ -19,6 +19,11 @@ spec:
         strategy: Recreate
         type: deployment
 
+        pod:
+          labels:
+            egress.policy.home.arpa/litellm: allow
+            egress.policy.home.arpa/memini: allow
+            egress.policy.home.arpa/searxng: allow
         containers:
           mimi:
             image:

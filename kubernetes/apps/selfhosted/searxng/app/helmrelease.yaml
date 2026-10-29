@@ -17,6 +17,7 @@ spec:
         strategy: RollingUpdate
         pod:
           labels:
+            ingress.policy.home.arpa/external: allow
             egress.policy.home.arpa/internet: "true"
             prom.policy.home.arpa/kps: allow
             db.policy.home.arpa/df-searxng-redis: allow
