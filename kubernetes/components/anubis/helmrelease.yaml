@@ -10,6 +10,11 @@ spec:
     namespace: default
   interval: 1h
   values:
+    defaultPodOptions:
+      annotations: {}
+      labels: {}
+      schedulingGates: []
+
     controllers:
       anubis:
         annotations:
