@@ -163,6 +163,9 @@ spec:
                 memory: 128Mi
 
     defaultPodOptions:
+      annotations: {}
+      labels: {}
+      schedulingGates: []
       automountServiceAccountToken: false
       enableServiceLinks: false
       securityContext:

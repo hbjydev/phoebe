@@ -31,6 +31,11 @@ spec:
     remediation:
       retries: 3
   values:
+    defaultPodOptions:
+      annotations: {}
+      labels: {}
+      schedulingGates: []
+
     controllers:
       main:
         pod:

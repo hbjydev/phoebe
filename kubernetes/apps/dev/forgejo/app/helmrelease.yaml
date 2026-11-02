@@ -10,6 +10,11 @@ spec:
     name: forgejo
   interval: 30m
   values:
+    defaultPodOptions:
+      annotations: {}
+      labels: {}
+      schedulingGates: []
+
     gitea:
       admin:
         username: ""

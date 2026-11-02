@@ -52,6 +52,9 @@ spec:
               limits:
                 memory: 1024Mi
     defaultPodOptions:
+      annotations: {}
+      labels: {}
+      schedulingGates: []
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000

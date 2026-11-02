@@ -57,6 +57,11 @@ spec:
                             csi.cert-manager.io/common-name: kguardian
                             csi.cert-manager.io/fs-group: "1000"
   values:
+    defaultPodOptions:
+      annotations: {}
+      labels: {}
+      schedulingGates: []
+
     global:
       labels:
         egress.policy.home.arpa/litellm: allow

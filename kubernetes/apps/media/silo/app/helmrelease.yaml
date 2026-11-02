@@ -85,6 +85,8 @@ spec:
                 memory: 6Gi
 
     defaultPodOptions:
+      labels: {}
+      schedulingGates: []
       annotations:
         k8s.v1.cni.cncf.io/networks: |-
           [{
