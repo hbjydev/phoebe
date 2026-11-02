@@ -25,6 +25,7 @@ python.uv_venv_auto = true
 "aqua:helmfile/helmfile" = "1.8.2"
 "aqua:kubernetes-sigs/kustomize" = "5.6.0"
 "aqua:kubernetes/kubectl" = "1.33.1"
+"aqua:kyverno/kyverno" = "1.19.2"
 "cargo:minijinja-cli" = "latest"
 "pipx:flux-local" = "8.4.0"
 gum = "2.0.2"
