@@ -1,0 +1,25 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: litellm-postgres-client
+spec:
+  secretName: litellm-postgres-client
+  commonName: litellm
+  issuerRef:
+    name: postgres-client-ca
+    kind: ClusterIssuer
+  privateKey:
+    algorithm: ECDSA
+    size: 384
+    encoding: PKCS8
+    rotationPolicy: Always
+  usages:
+    - client auth
+  keystores:
+    pkcs12:
+      create: true
+      # Prisma/OpenSSL 3 cannot read the CSI driver's legacy RC2 encoding.
+      profile: Modern2023
+      # Format password, not a database credential; the private key is in this Secret.
+      password: changeit

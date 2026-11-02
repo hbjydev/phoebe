@@ -52,6 +52,7 @@ spec:
   podAnnotations:
     reloader.stakater.com/auto: "true"
     configmap.reloader.stakater.com/reload: cluster-roots
+    secret.reloader.stakater.com/reload: litellm-postgres-client
 
   podLabels:
     trust.home.arpa/inject: "true"
@@ -62,20 +63,9 @@ spec:
 
   volumes:
     - name: postgres-certs
-      csi:
-        driver: csi.cert-manager.io
-        readOnly: true
-        volumeAttributes:
-          csi.cert-manager.io/issuer-name: postgres-client-ca
-          csi.cert-manager.io/issuer-kind: ClusterIssuer
-          csi.cert-manager.io/key-algorithm: ECDSA
-          csi.cert-manager.io/key-size: "384"
-          csi.cert-manager.io/key-encoding: PKCS8
-          csi.cert-manager.io/key-usages: client auth
-          csi.cert-manager.io/common-name: litellm
-          csi.cert-manager.io/pkcs12-enable: "true"
-          # Format password only; access to the mounted private key is the credential.
-          csi.cert-manager.io/pkcs12-password: changeit
+      secret:
+        secretName: litellm-postgres-client
+        defaultMode: 0400
     - configMap:
         name: litellm-chatgpt-compat
       name: chatgpt-compat
