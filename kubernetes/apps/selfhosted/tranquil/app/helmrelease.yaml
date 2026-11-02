@@ -20,6 +20,7 @@ spec:
             egress.policy.home.arpa/internet: "true"
             egress.policy.home.arpa/smtp-relay: allow
             db.policy.home.arpa/postgres: allow
+            trust.home.arpa/inject: "true"
             prom.policy.home.arpa/kps: allow
         strategy: RollingUpdate
         containers:
