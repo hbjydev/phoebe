@@ -16,7 +16,8 @@ spec:
           reloader.stakater.com/auto: "true"
         pod:
           labels:
-            egress.policy.home.arpa/qbittorrent: "true"
+            ingress.policy.home.arpa/internal: allow
+            egress.policy.home.arpa/qbittorrent: allow
         containers:
           app:
             image:

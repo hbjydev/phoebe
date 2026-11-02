@@ -21,3 +21,34 @@ spec:
       toPorts:
         - ports:
             - port: "8080"
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            egress.policy.home.arpa/honcho: allow
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+      toPorts:
+        - ports:
+            - port: '8000'
+              protocol: TCP
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: apps-to-honcho
+spec:
+  endpointSelector:
+    matchLabels:
+      egress.policy.home.arpa/honcho: allow
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: honcho
+            io.kubernetes.pod.namespace: ai
+      toPorts:
+        - ports:
+            - port: '8000'
+              protocol: TCP

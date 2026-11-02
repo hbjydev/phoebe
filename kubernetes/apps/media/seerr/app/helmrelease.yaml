@@ -23,6 +23,9 @@ spec:
           reloader.stakater.com/auto: "true"
         pod:
           labels:
+            egress.policy.home.arpa/sonarr: allow
+            egress.policy.home.arpa/radarr: allow
+            ingress.policy.home.arpa/external: allow
             egress.policy.home.arpa/internet: allow
         containers:
           app:

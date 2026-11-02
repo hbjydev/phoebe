@@ -23,6 +23,11 @@ spec:
           reloader.stakater.com/auto: "true"
         pod:
           labels:
+            egress.policy.home.arpa/sonarr: allow
+            egress.policy.home.arpa/radarr: allow
+            egress.policy.home.arpa/seerr: allow
+            ingress.policy.home.arpa/external: allow
+            prom.policy.home.arpa/kps: allow
             egress.policy.home.arpa/internet: "true"
             egress.policy.home.arpa/smtp-relay: allow
             egress.policy.home.arpa/litellm: allow
