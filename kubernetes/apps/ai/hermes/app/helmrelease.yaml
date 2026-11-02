@@ -21,6 +21,7 @@ spec:
       hermes:
         annotations:
           reloader.stakater.com/auto: "true"
+          configmap.reloader.stakater.com/reload: cluster-roots
         replicas: 1
         strategy: Recreate
         type: deployment
@@ -62,13 +63,19 @@ spec:
                   curl https://mise.run | sh
                 fi
             env: &baseEnv
+              # Tools also use Node and curl alongside Python.
+              NODE_EXTRA_CA_CERTS: /var/run/cluster-trust/ca.crt
+              CURL_CA_BUNDLE: /var/run/cluster-trust/ca.crt
               TZ: Europe/London
               HOME: /data
               HOMEBREW_PREFIX: $(HOME)/.local/share/brew
               PATH: "$(HOME)/.local/bin:$(HOME)/.local/share/mise/shims:$(HOME)/.local/share/brew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
         pod:
+          annotations:
+            trust.home.arpa/profile: python
           labels:
+            trust.home.arpa/inject: "true"
             egress.policy.home.arpa/litellm: allow
             egress.policy.home.arpa/honcho: allow
             egress.policy.home.arpa/seerr: allow

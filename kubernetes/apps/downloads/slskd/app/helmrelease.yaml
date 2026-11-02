@@ -15,8 +15,10 @@ spec:
         type: statefulset
         annotations:
           reloader.stakater.com/auto: "true"
+          configmap.reloader.stakater.com/reload: cluster-roots
         pod:
           labels:
+            trust.home.arpa/inject: "true"
             egress.policy.home.arpa/internet: "true"
         containers:
           app:

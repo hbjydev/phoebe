@@ -39,6 +39,11 @@ spec:
   params:
     available_on_public_internet: true
   workload:
+    podLabels:
+      trust.home.arpa/inject: "true"
+    podAnnotations:
+      trust.home.arpa/profile: python
+      configmap.reloader.stakater.com/reload: cluster-roots
     # renovate: datasource=docker depName=ghcr.io/homeassistant-ai/ha-mcp
     image: ghcr.io/homeassistant-ai/ha-mcp:9.0.0
     port: 8086
@@ -74,6 +79,10 @@ spec:
     name: miniflux-token
     key: token
   workload:
+    podLabels:
+      trust.home.arpa/inject: "true"
+    podAnnotations:
+      configmap.reloader.stakater.com/reload: cluster-roots
     # renovate: datasource=docker depName=jwonder/miniflux-mcp
     image: jwonder/miniflux-mcp:0.8.0
     env:
@@ -117,6 +126,10 @@ spec:
   params:
     available_on_public_internet: true
   workload:
+    podLabels:
+      trust.home.arpa/inject: "true"
+    podAnnotations:
+      configmap.reloader.stakater.com/reload: cluster-roots
     # renovate: datasource=docker depName=ghcr.io/victoriametrics/mcp-victorialogs
     image: ghcr.io/victoriametrics/mcp-victorialogs:v1.9.0
     port: 8080
@@ -145,6 +158,10 @@ spec:
   params:
     available_on_public_internet: true
   workload:
+    podLabels:
+      trust.home.arpa/inject: "true"
+    podAnnotations:
+      configmap.reloader.stakater.com/reload: cluster-roots
     # renovate: datasource=docker depName=ghcr.io/victoriametrics/mcp-victoriametrics
     image: ghcr.io/victoriametrics/mcp-victoriametrics:v1.120.1
     port: 8080
