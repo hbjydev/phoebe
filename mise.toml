@@ -1,5 +1,4 @@
 [env]
-_.python.venv = { path = "{{ config_root }}/.venv", create = true }
 KUBECONFIG = "{{ config_root }}/talos/kubeconfig"
 MINIJINJA_CONFIG_FILE = "{{ config_root }}/.minijinja.toml"
 SOPS_AGE_KEY_FILE = "{{ config_root }}/age.key"
@@ -14,7 +13,6 @@ TALOS_VERSION="1.14.4"
 
 [settings]
 experimental = true
-python.uv_venv_auto = true
 
 [tools]
 "aqua:FiloSottile/age" = "1.3.2"
@@ -33,17 +31,16 @@ just = "1.59.0"
 talosctl = "1.14.5"
 terraform = "1.17.1"
 upctl = "3.37.0"
-uv = "0.13.6"
 yq = "4.54.1"
 "pipx:ansible" = "14.5.0"
 "pipx:ansible-core" = "2.21.5"
 vals = "0.50.0"
 "aqua:postfinance/topf" = "0.6.2"
 cmctl = "2.6.2"
+node = "26.13.0"
+pnpm = "12.16.1"
 
 # kubectl plugins
 "github:home-operations/kopiur" = { version = "0.10.17", matching = "kubectl-kopiur_", rename_exe = "kubectl-kopiur" }
 "github:cloudnative-pg/cloudnative-pg" = { version = "1.30.1", matching = "kubectl-cnpg_", rename_exe = "kubectl-cnpg" }
 "github:kguardian-dev/kguardian" = { version = "1.12.0", version_prefix = "advisor/", rename_exe = "kubectl-kguardian" }
-node = "26.13.0"
-pnpm = "12.16.1"
