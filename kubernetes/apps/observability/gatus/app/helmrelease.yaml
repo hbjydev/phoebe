@@ -22,6 +22,12 @@ spec:
         type: statefulset
         annotations:
           reloader.stakater.com/auto: "true"
+          configmap.reloader.stakater.com/reload: cluster-roots
+        pod:
+          labels:
+            # v5.38.0 uses Go's system roots (RootCAs unset); keep client.insecure=false.
+            # https://github.com/TwiN/gatus/blob/v5.38.0/client/config.go
+            trust.home.arpa/inject: "true"
         initContainers:
           gatus-sidecar:
             image:

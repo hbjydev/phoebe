@@ -14,8 +14,12 @@ spec:
       miniflux:
         annotations:
           reloader.stakater.com/auto: "true"
+          configmap.reloader.stakater.com/reload: cluster-roots
         pod:
           labels:
+            # 2.3.5's feed transport uses Go's system roots; keep ignore_tls_errors=false.
+            # https://github.com/miniflux/v2/blob/2.3.5/internal/reader/fetcher/request_builder.go
+            trust.home.arpa/inject: "true"
             ingress.policy.home.arpa/external: allow
             egress.policy.home.arpa/internet: "true"
             db.policy.home.arpa/postgres: allow
