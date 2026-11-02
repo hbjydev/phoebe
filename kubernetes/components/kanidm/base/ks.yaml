@@ -61,7 +61,8 @@ spec:
     substitute:
       APP: ${APP}
       OIDC_DISPLAY_NAME: ${q:='}${OIDC_DISPLAY_NAME}${q:='}
-      OIDC_IMAGE_URL: ${q:='}${OIDC_IMAGE_URL:-https://cdn.jsdelivr.net/gh/selfhst/icons@main/svg/${APP}.svg}${q:='}
+      OIDC_SELFHST_ICON_NAME: ${q:='}${OIDC_SELFHST_ICON_NAME}${q:='}
+      OIDC_IMAGE_URL: ${q:='}${OIDC_IMAGE_URL:-https://cdn.jsdelivr.net/gh/selfhst/icons@main/svg/${OIDC_SELFHST_ICON_NAME:-${APP}}.svg}${q:='}
       OIDC_ORIGIN: ${q:='}${OIDC_ORIGIN}${q:='}
       OIDC_PREFER_SHORT_USERNAME: ${q:='}${OIDC_PREFER_SHORT_USERNAME:=false}${q:='}
       OIDC_PUBLIC: ${q:='}${OIDC_PUBLIC:=false}${q:='}

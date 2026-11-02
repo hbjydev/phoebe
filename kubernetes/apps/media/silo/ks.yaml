@@ -34,6 +34,7 @@ spec:
       OIDC_ORIGIN: https://silo.hayden.moe/
       OIDC_REDIRECT_URLS: '["https://silo.hayden.moe/api/v2/auth/oauth/5/callback"]'
       OIDC_GROUP_PREFIX: silo
+      OIDC_SELFHST_ICON_NAME: silo-media-server
       OIDC_USERS_GROUP_MEMBERS: '[hayden, invisible]'
       OIDC_ADMIN_GROUP_MEMBERS: '[hayden]'
       OIDC_PREFER_SHORT_USERNAME: 'true'
