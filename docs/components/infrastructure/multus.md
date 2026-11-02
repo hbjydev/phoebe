@@ -1,7 +1,3 @@
----
-icon: octicons/versions-24
----
-
 # Multus CNI
 
 [Multus CNI](https://github.com/k8snetworkplumbingwg/multus-cni) is a 'CNI

@@ -71,6 +71,25 @@ for the configured services.
 
 ---
 
+## Documentation
+
+The [documentation site](https://hbjydev.github.io/phoebe/) uses VitePress.
+From the repository root, use the Node.js and pnpm versions in `mise.toml` to start the local site:
+
+```bash
+pnpm install --frozen-lockfile
+pnpm dev
+```
+
+Open the local URL that VitePress prints, with `/phoebe/` as the path.
+Run `pnpm build` to build the site and detect broken page links.
+Run `pnpm preview` to serve the built site.
+
+Edit pages in `docs/` and navigation in `docs/.vitepress/config.mts`.
+Each section uses `index.md` for its landing page.
+Use relative Markdown links between pages and GitHub URLs for files outside `docs/`.
+Mermaid code blocks render as diagrams in both light and dark themes.
+
 ## Acknowledgements
 
 Thanks to all the people who donate their time to the

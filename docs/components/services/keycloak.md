@@ -1,7 +1,3 @@
----
-icon: simple/keycloak
----
-
 # Keycloak
 
 [Keycloak](https://keycloak.org) is the IdP (**Id**entity **P**rovider) I use

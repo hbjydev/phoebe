@@ -1,7 +1,3 @@
----
-icon: octicons/server-24
----
-
 # Hardware
 
 This page documents the hardware I use in my setup, should you want to either

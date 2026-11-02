@@ -1,7 +1,3 @@
----
-icon: octicons/shield-check-24
----
-
 # Cert-Manager
 
 [Cert-Manager](https://cert-manager.io) is a Kubernetes operator to manage TLS

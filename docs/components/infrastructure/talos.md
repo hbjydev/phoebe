@@ -1,7 +1,3 @@
----
-icon: simple/talos
----
-
 # Talos Linux
 
 [Talos](https://www.talos.dev/) is an immutable, minimal Linux distribution

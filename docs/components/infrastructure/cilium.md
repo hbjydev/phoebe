@@ -1,7 +1,3 @@
----
-icon: simple/cilium
----
-
 # Cilium
 
 [Cilium](https://cilium.io) is a
@@ -16,7 +12,7 @@ hardware, which is useful in a lower-budget lab like this one.
 
 Let's run through the features of Cilium I use in a little more depth.
 
-### :octicons-plug-16: Container Networking
+### Container Networking
 
 Cilium, first and foremost, is a CNI. That means it provides networking for all
 the things running inside the cluster. This includes pods and services.
@@ -34,7 +30,7 @@ However, it does more than roleplay as a container packet router.
   allowing an operator (hey, that's me!) to keep tabs on problems routing
   traffic between pods and services easily.
 
-### :octicons-broadcast-16: Load Balancing
+### Load Balancing
 
 The cluster uses Cilium as a Load Balancer using
 [BGP](https://www.cloudflare.com/en-gb/learning/security/glossary/what-is-bgp/).
@@ -43,7 +39,7 @@ The way this works is by advertising routes with BGP to my router, which is
 [configured as a BGP peer](https://github.com/hbjydev/phoebe/blob/main/bgp.conf).
 These routes are stored by my router and then rebroadcasted to the rest of my
 network, making the services with `type: LoadBalancer` in my cluster (like
-[Envoy](./envoy)) available to all the clients connected to my Wi-Fi and over
+[Envoy](./envoy.md)) available to all the clients connected to my Wi-Fi and over
 Ethernet.
 
 This allows me to have internal gateways which route traffic through my cluster

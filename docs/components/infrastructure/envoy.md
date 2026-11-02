@@ -1,7 +1,3 @@
----
-icon: simple/envoyproxy
----
-
 # Envoy Gateway
 
 I use [Envoy Gateway](https://gateway.envoyproxy.io/) to provide ingress to my

@@ -7,3 +7,6 @@ kubernetes/.miroir-migration/
 __pycache__/
 kubernetes/.arr-migration/
 kubernetes/.seerr-migration/
+docs/.vitepress/dist
+docs/.vitepress/cache
+node_modules/

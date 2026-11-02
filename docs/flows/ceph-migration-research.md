@@ -55,12 +55,12 @@ Kopiur policies and CNPG backups, and `ceph df` through the toolbox. They are a
 point-in-time inventory, not restore validation or proof of application-used
 bytes. No cluster objects were changed.
 
-The [Ceph manifest](../../kubernetes/apps/rook-ceph/rook-ceph/cluster/helmrelease.yaml)
+The [Ceph manifest](https://github.com/hbjydev/phoebe/blob/ee23d9da21ecbbf0dd359e94deadbfe633335231/kubernetes/apps/rook-ceph/rook-ceph/cluster/helmrelease.yaml)
 uses one monitor, pool replication size 1 and a particular NVMe device, with no
 CephFS or RGW. It requests 4GiB memory per OSD, 1GiB for the monitor and 512MiB
 for the manager, before CSI/operator overhead. Comparing this with candidate
 requests suggests room to save resources, but actual savings need measurement.
-The [Talos inventory](../../talos/topf.yaml) also has one node; its configured
+The [Talos inventory](https://github.com/hbjydev/phoebe/blob/ee23d9da21ecbbf0dd359e94deadbfe633335231/talos/topf.yaml) also has one node; its configured
 Talos version is 1.14.0, while the live node is already 1.14.1.
 
 Claims without Kopiur need individual treatment:
@@ -80,13 +80,13 @@ Claims without Kopiur need individual treatment:
   Decide whether to archive or restore them; absence of consumers is not
   authorization to delete them.
 
-Kopiur's [Hetzner repository](../../kubernetes/apps/kopiur-system/kopiur/repository/clusterrepository.yaml)
+Kopiur's [Hetzner repository](https://github.com/hbjydev/phoebe/blob/ee23d9da21ecbbf0dd359e94deadbfe633335231/kubernetes/apps/kopiur-system/kopiur/repository/clusterrepository.yaml)
 is external S3, and PostgreSQL has a separate external
-[Barman object store](../../kubernetes/apps/database/postgres/cluster/objectstore.yaml).
+[Barman object store](https://github.com/hbjydev/phoebe/blob/ee23d9da21ecbbf0dd359e94deadbfe633335231/kubernetes/apps/database/postgres/cluster/objectstore.yaml).
 The recovery path therefore need not depend on the Ceph-backed Garage instance.
 Keep access credentials and the Kopia encryption password independently usable.
 
-The shared [Kopiur component](../../kubernetes/components/kopiur/pvc.yaml)
+The shared [Kopiur component](https://github.com/hbjydev/phoebe/blob/ee23d9da21ecbbf0dd359e94deadbfe633335231/kubernetes/components/kopiur/pvc.yaml)
 already exposes `KOPIUR_STORAGECLASS`; its snapshot policy exposes
 `KOPIUR_SNAPSHOTCLASS`. However, resources marked `IfNotPresent` and existing
 bound PVCs will not migrate just because defaults change. Its bootstrap Restore
@@ -175,14 +175,14 @@ The subsequent manifest change adds one SnapshotPolicy and SnapshotSchedule in
 each application's `kopiur.yaml`, targeting the existing claim without creating
 a new PVC or Restore:
 
-- [MCP auth proxy](../../kubernetes/apps/ai/mcp-auth-proxy/app/kopiur.yaml)
-- [slskd](../../kubernetes/apps/downloads/slskd/app/kopiur.yaml)
-- [Gatus](../../kubernetes/apps/observability/gatus/app/kopiur.yaml)
-- [Grafana](../../kubernetes/apps/observability/grafana/instance/kopiur.yaml)
-- [Kanidm](../../kubernetes/apps/security/kaniop/instance/kopiur.yaml)
-- [VictoriaMetrics](../../kubernetes/apps/observability/victoria-metrics-stack/metrics/kopiur.yaml)
-- [VictoriaLogs](../../kubernetes/apps/observability/victoria-metrics-stack/logs/kopiur.yaml)
-- [VictoriaTraces](../../kubernetes/apps/observability/victoria-metrics-stack/traces/kopiur.yaml)
+- [MCP auth proxy](https://github.com/hbjydev/phoebe/blob/ee23d9da21ecbbf0dd359e94deadbfe633335231/kubernetes/apps/ai/mcp-auth-proxy/app/kopiur.yaml)
+- [slskd](https://github.com/hbjydev/phoebe/blob/ee23d9da21ecbbf0dd359e94deadbfe633335231/kubernetes/apps/downloads/slskd/app/kopiur.yaml)
+- [Gatus](https://github.com/hbjydev/phoebe/blob/ee23d9da21ecbbf0dd359e94deadbfe633335231/kubernetes/apps/observability/gatus/app/kopiur.yaml)
+- [Grafana](https://github.com/hbjydev/phoebe/blob/ee23d9da21ecbbf0dd359e94deadbfe633335231/kubernetes/apps/observability/grafana/instance/kopiur.yaml)
+- [Kanidm](https://github.com/hbjydev/phoebe/blob/ee23d9da21ecbbf0dd359e94deadbfe633335231/kubernetes/apps/security/kaniop/instance/kopiur.yaml)
+- [VictoriaMetrics](https://github.com/hbjydev/phoebe/blob/ee23d9da21ecbbf0dd359e94deadbfe633335231/kubernetes/apps/observability/victoria-metrics-stack/metrics/kopiur.yaml)
+- [VictoriaLogs](https://github.com/hbjydev/phoebe/blob/ee23d9da21ecbbf0dd359e94deadbfe633335231/kubernetes/apps/observability/victoria-metrics-stack/logs/kopiur.yaml)
+- [VictoriaTraces](https://github.com/hbjydev/phoebe/blob/ee23d9da21ecbbf0dd359e94deadbfe633335231/kubernetes/apps/observability/victoria-metrics-stack/traces/kopiur.yaml)
 
 They use the Hetzner repository, `csi-ceph-blockpool`, the existing retention
 settings (8 hourly / 7 daily), and the existing 12-hour schedule with hashed
