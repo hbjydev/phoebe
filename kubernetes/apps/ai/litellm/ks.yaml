@@ -37,6 +37,8 @@ spec:
       app.kubernetes.io/name: *app
   interval: 1h
   dependsOn:
+    - name: kyverno-config
+      namespace: kyverno
     - name: litellm-operator
   components:
     - ../../../../components/kopiur

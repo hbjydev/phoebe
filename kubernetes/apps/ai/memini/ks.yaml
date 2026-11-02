@@ -12,6 +12,9 @@ spec:
   components:
     - ../../../../components/postgres/pass
     - ../../../../components/kopiur
+  dependsOn:
+    - name: kyverno-config
+      namespace: kyverno
   interval: 1h
   path: ./kubernetes/apps/ai/memini/app
   postBuild:

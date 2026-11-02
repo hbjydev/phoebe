@@ -25,8 +25,10 @@ spec:
         replicas: 0
         annotations:
           reloader.stakater.com/auto: "true"
+          configmap.reloader.stakater.com/reload: cluster-roots
         pod:
           labels:
+            trust.home.arpa/inject: "true"
             db.policy.home.arpa/postgres: allow
           securityContext:
             fsGroup: 1000
@@ -43,11 +45,7 @@ spec:
                     name: memini-secret
                     key: MEMINI_API_KEY
               MEMINI_BACKEND: postgres
-              MEMINI_POSTGRES_DSN:
-                valueFrom:
-                  secretKeyRef:
-                    name: memini-postgres
-                    key: poolurl
+              MEMINI_POSTGRES_DSN: "postgresql://memini@pooler-rw.database.svc:5432/memini?sslmode=verify-full&sslcert=/var/run/secrets/postgresql/tls.crt&sslkey=/var/run/secrets/postgresql/tls.key&sslrootcert=/var/run/cluster-trust/ca.crt"
               MEMINI_DEFAULT_NAMESPACE: default
               MEMINI_DEMOTE_AFTER: 1440h
               MEMINI_TOMBSTONE_TTL: 720h
@@ -71,6 +69,24 @@ spec:
               capabilities: { drop: [ALL] }
 
     persistence:
+      postgres-certs:
+        type: custom
+        globalMounts:
+          - path: /var/run/secrets/postgresql
+            readOnly: true
+        volumeSpec:
+          csi:
+            driver: csi.cert-manager.io
+            readOnly: true
+            volumeAttributes:
+              csi.cert-manager.io/issuer-name: postgres-client-ca
+              csi.cert-manager.io/issuer-kind: ClusterIssuer
+              csi.cert-manager.io/key-algorithm: ECDSA
+              csi.cert-manager.io/key-size: "384"
+              csi.cert-manager.io/key-encoding: PKCS8
+              csi.cert-manager.io/key-usages: client auth
+              csi.cert-manager.io/common-name: memini
+              csi.cert-manager.io/fs-group: "1000"
       data:
         existingClaim: memini
 

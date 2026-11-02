@@ -51,14 +51,31 @@ spec:
 
   podAnnotations:
     reloader.stakater.com/auto: "true"
+    configmap.reloader.stakater.com/reload: cluster-roots
 
   podLabels:
+    trust.home.arpa/inject: "true"
     db.policy.home.arpa/postgres: allow
     db.policy.home.arpa/df-litellm-redis: allow
     egress.policy.home.arpa/cluster: allow
     egress.policy.home.arpa/internet-https: allow
 
   volumes:
+    - name: postgres-certs
+      csi:
+        driver: csi.cert-manager.io
+        readOnly: true
+        volumeAttributes:
+          csi.cert-manager.io/issuer-name: postgres-client-ca
+          csi.cert-manager.io/issuer-kind: ClusterIssuer
+          csi.cert-manager.io/key-algorithm: ECDSA
+          csi.cert-manager.io/key-size: "384"
+          csi.cert-manager.io/key-encoding: PKCS8
+          csi.cert-manager.io/key-usages: client auth
+          csi.cert-manager.io/common-name: litellm
+          csi.cert-manager.io/pkcs12-enable: "true"
+          # Format password only; access to the mounted private key is the credential.
+          csi.cert-manager.io/pkcs12-password: changeit
     - configMap:
         name: litellm-chatgpt-compat
       name: chatgpt-compat
@@ -67,6 +84,9 @@ spec:
         claimName: litellm
 
   volumeMounts:
+    - name: postgres-certs
+      mountPath: /var/run/secrets/postgresql
+      readOnly: true
     - name: data
       mountPath: /app/chatgpt_tokens
       subPath: chatgpt-tokens
@@ -82,11 +102,9 @@ spec:
     - name: CHATGPT_TOKEN_DIR
       value: /app/chatgpt_tokens
 
+    # Prisma uses a PKCS#12 client identity and strict server verification.
     - name: DATABASE_URL
-      valueFrom:
-        secretKeyRef:
-          name: litellm-postgres
-          key: url
+      value: "postgresql://litellm@pooler-rw.database.svc:5432/litellm?sslmode=require&sslaccept=strict&sslcert=/var/run/cluster-trust/ca.crt&sslidentity=/var/run/secrets/postgresql/keystore.p12&sslpassword=changeit"
 
     - name: LITELLM_LOG
       value: INFO
