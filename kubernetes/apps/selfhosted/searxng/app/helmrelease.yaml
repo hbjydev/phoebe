@@ -18,7 +18,7 @@ spec:
         pod:
           labels:
             ingress.policy.home.arpa/external: allow
-            egress.policy.home.arpa/internet: "true"
+            egress.policy.home.arpa/internet: allow
             prom.policy.home.arpa/kps: allow
             db.policy.home.arpa/df-searxng-redis: allow
         containers:
