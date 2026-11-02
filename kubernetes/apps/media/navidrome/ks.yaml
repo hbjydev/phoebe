@@ -11,6 +11,8 @@ spec:
   components:
     - ../../../../components/kopiur
   dependsOn:
+    - name: kyverno-config
+      namespace: kyverno
     - name: miroir-config
       namespace: miroir-system
   interval: 1h

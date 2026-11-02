@@ -14,8 +14,12 @@ spec:
       navidrome:
         annotations:
           reloader.stakater.com/auto: "true"
+          configmap.reloader.stakater.com/reload: cluster-roots
         pod:
           labels:
+            # Go HTTP clients use system roots (SSL_CERT_FILE).
+            # https://github.com/navidrome/navidrome/blob/v0.64.2/utils/httpclient/httpclient.go
+            trust.home.arpa/inject: "true"
             ingress.policy.home.arpa/external: allow
             prom.policy.home.arpa/kps: allow
             egress.policy.home.arpa/internet: "true"

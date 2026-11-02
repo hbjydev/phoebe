@@ -12,6 +12,8 @@ spec:
   components:
     - ../../../../components/kanidm/private
   dependsOn:
+    - name: kyverno-config
+      namespace: kyverno
     - name: kopiur-repository
       namespace: kopiur-system
     - name: litellm

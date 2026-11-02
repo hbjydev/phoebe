@@ -12,6 +12,8 @@ spec:
   components:
     - ../../../../components/kopiur
   dependsOn:
+    - name: kyverno-config
+      namespace: kyverno
     - name: qbittorrent
       namespace: downloads
     - name: miroir-config
