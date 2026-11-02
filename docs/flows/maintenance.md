@@ -1,189 +1,230 @@
-# Persistent storage maintenance
+# Miroir maintenance
 
-The Kubernetes just module provides independent shutdown and restore stages for
-PostgreSQL clients, Dragonfly clients, and Rook-Ceph PVC consumers. Run these
-commands from the repository with its mise environment active; they require
-`just`, `python3`, and `kubectl`, and the context must be `admin@phoebe`.
+Use this runbook for a planned node reboot or shutdown with the existing storage disk intact.
+Phoebe has one node and one copy of each `miroir-local` volume.
+All cluster services stop during the outage.
 
-## Inspect and preview
+This procedure does not cover disk replacement, pool repair, or a Miroir upgrade.
+For lost data, use [application recovery](./restore-application.md) or [PostgreSQL recovery](./restore-postgres.md).
+A pool is the disk space that Miroir uses for volumes.
 
-Inspect storage health, backups, and running workloads before starting:
+## 1. Establish the maintenance scope
 
-```bash
-kubectl config current-context
-kubectl get cephcluster --namespace rook-ceph
-kubectl exec --namespace rook-ceph deployment/rook-ceph-tools -- ceph status
-kubectl get backup.postgresql.cnpg.io --all-namespaces
-kubectl get volumesnapshot --all-namespaces
-kubectl get pods --all-namespaces
+Run these commands in Bash from the repository root on your administration machine.
+Use the tools and credentials selected by `mise.toml`.
+Mise sets `KUBECONFIG` and `TALOSCONFIG` for this repository.
+Keep this shell open until recovery finishes.
 
-just kube maintenance-plan postgres
-just kube maintenance-plan dragonfly
-just kube maintenance-plan ceph
-```
+1. Record the maintenance purpose and the authorized outage window.
+2. Arrange a pause in deployments and automated upgrades during that window.
+3. Make sure that you can reach the physical machine if remote access fails.
 
-The plan commands are read-only. They show both consumers and reconciliation
-controllers that must stop. Do not proceed with Ceph maintenance if Ceph reports
-`HEALTH_ERR`. Allow backup and restore operations to finish first.
-
-## Staged shutdown
+Select the target from `talos/topf.yaml`:
 
 ```bash
-just kube shutdown-postgres
-just kube shutdown-dragonfly
-just kube shutdown-ceph
+MAINT_NODE='phoebe-k-ctrl-01'
+MAINT_IP="$(yq -er '.nodes[] | select(.host == "phoebe-k-ctrl-01") | .ip' talos/topf.yaml)"
+
+kubectl get node "$MAINT_NODE" -o wide
+talosctl --nodes "$MAINT_IP" --endpoints "$MAINT_IP" version
 ```
 
-| Stage | What stops | What stays running |
-| --- | --- | --- |
-| `postgres` | PostgreSQL client Deployments, StatefulSets, DaemonSets, applicable CronJobs, and PostgreSQL backup schedules | PostgreSQL and its pooler |
-| `dragonfly` | Clients of all Dragonfly instances | Dragonfly instances and their operator |
-| `ceph` | Direct Ceph PVC consumers, PostgreSQL clients, observability writers, and backup schedules; PostgreSQL hibernates, snapshots complete, then Kopiur stops | Rook, Ceph daemons, CSI, and CloudNativePG |
+These commands read cluster state.
+Make sure that the node address matches `talos/topf.yaml`.
+If the live topology differs from `talos/topf.yaml`, stop and revise the plan.
 
-Each stage can be used independently. The Ceph stage also stops PostgreSQL
-clients because PostgreSQL's own PVCs use Ceph. The first two stages give you a
-point to perform separate database or Dragonfly maintenance before continuing.
-These tasks do not shut down the Dragonfly instances themselves.
+## 2. Inspect storage and workloads
 
-### Automatic maintenance snapshots
-
-`shutdown-ceph` includes a mandatory snapshot step. It pauses PostgreSQL and
-Kopiur schedules, stops application writers, and hibernates PostgreSQL. While
-Kopiur, the snapshot controller, Ceph, and CSI remain running, it then:
-
-1. Creates a CSI `VolumeSnapshot` for every bound Ceph PVC and waits for
-   `status.readyToUse=true`. This includes volumes without a Kopiur policy,
-   unused volumes, caches, and PostgreSQL's primary and replica volumes.
-2. Creates a manual Kopiur `Snapshot` for every configured policy and waits for
-   `Succeeded` or `Unchanged`. Failed runs or unreadable files block shutdown.
-3. Waits for other queued Kopiur operations and active movers to finish before
-   stopping Kopiur and performing the final Ceph consumer check.
-
-The live inventory inspected on 2026-10-19 has 48 Ceph PVCs and 34
-Kopiur policies. CSI snapshots remain on Ceph; only the configured Kopiur policies
-upload backups to their repositories. A CSI snapshot alone does not protect
-against losing the Ceph storage itself.
-
-The helper uses the Kubernetes APIs directly; the `kubectl kopiur` plugin is not
-required. Home Assistant's maintenance invocation uses the root mover settings
-already specified in its repository configuration, because its older live
-`IfNotPresent` policy still uses UID 1000.
-
-Snapshot names and the maintenance run label are saved before shutdown begins.
-A timeout or interrupted command reuses the same requests on the next run;
-an older successful snapshot does not satisfy the new run. Each snapshot wait
-has a one-hour timeout. Failed snapshot objects remain available for inspection,
-and Kopiur stays running if the snapshot step fails. Fix the failure and remove
-its failed request before rerunning to recreate it, or use `restore-ceph` to
-cancel maintenance.
-
-The resulting snapshots remain after recovery. Inspect them using the run label
-printed by the helper:
+Read the current storage state:
 
 ```bash
-kubectl get volumesnapshot,snapshots.kopiur.home-operations.com --all-namespaces \\
-  --selector maintenance.home.arpa/run=RUN
+kubectl get storageclass miroir-local -o yaml
+kubectl get miroirnodes.miroir.home-operations.com "$MAINT_NODE" -o yaml
+kubectl get miroirvolumes.miroir.home-operations.com -o wide
+kubectl get pods -n miroir-system -o wide
+kubectl get pvc -A
+kubectl get pods -A --field-selector "spec.nodeName=$MAINT_NODE"
+kubectl get poddisruptionbudgets -A
+kubectl get talosupgrades,kubernetesupgrades -o yaml
 ```
 
-Remove CSI snapshots when you no longer need those maintenance restore points;
-their snapshot class's deletion policy controls removal of the underlying Ceph
-snapshots. Kopiur requests follow each policy's deletion and repository retention
-settings. The status checks follow the installed CRD
-schemas and the [Kopiur Snapshot reference](https://kopiur.home-operations.com/reference/crds/snapshot/).
+Make sure that the node is Ready and the Miroir Pods are healthy.
+Make sure that existing Miroir volumes report `Ready`.
+Inspect the MiroirNode pool statistics for capacity warnings, stale samples, or errors.
+If storage is unhealthy or an upgrade is active, stop before scheduling downtime.
 
-The helper discovers database clients from Pod dependency labels and PostgreSQL
-configuration references. LiveKit is explicitly included because its Dragonfly
-connection lives in a Secret. Ceph detection uses StorageClass provisioners,
-bound PV CSI drivers, mounted claims, and StatefulSet claim templates. An unknown
-operator owner or an applicable autoscaler aborts planning before any mutation.
-When adding a client configured only through a Secret, add its dependency label
-(or an explicit supplemental target) so discovery includes it.
+The [Miroir configuration](https://github.com/hbjydev/phoebe/tree/main/kubernetes/apps/miroir-system/miroir/config)
+selects `/dev/disk/by-partlabel/r-miroir` and one replica.
+The [Talos storage configuration](https://github.com/hbjydev/phoebe/blob/main/talos/node/phoebe-k-ctrl-01/04-miroir.yaml)
+selects the disk by serial number.
+Keep both selections unchanged during this procedure.
 
-Flux's operator, Kustomize controller, and Helm controller are temporarily scaled
-to zero so GitOps cannot reset the maintenance changes. Operators owning selected
-workloads also stop, except Garage: its Deployment also serves the admission
-webhook needed for PVC updates during snapshot creation. The helper saves and
-sets the parent `GarageCluster.spec.maintenance.suspended`, then waits for the
-child GarageNodes to acknowledge suspension before stopping their workloads.
-The operator and its webhooks stay running. The saved maintenance configuration
-is restored with the other reconciliation guards after workload recovery.
-The other reconciliation controllers remain stopped until the last active
-maintenance stage is restored. Other applications continue running,
-but GitOps changes are held during this period. The Flux source controller keeps
-running.
-
-Deployments and StatefulSets scale to zero. DaemonSets receive a temporary node
-selector that matches no node. The tasks wait for active consumer Pods to
-terminate, including terminating Pods. Active Jobs, backup movers, and unmanaged
-consumers must finish naturally; the helper does not delete them. An active
-PostgreSQL backup also blocks verification. Consumer checks time out after ten
-minutes and report the remaining consumers; snapshot waits allow one hour.
-
-PostgreSQL uses CloudNativePG's
-[declarative hibernation](https://cloudnative-pg.io/docs/1.30/declarative_hibernation/),
-which retains its PVCs. The Ceph task verifies hibernation and checks every active
-non-Rook Pod for Ceph mounts before reporting success. A failed check means the
-storage layer is not ready to stop.
-
-## Recovery
-
-Recover Ceph and its CSI drivers first, and inspect Ceph health again. If you
-separately stopped PostgreSQL or Dragonfly, bring those services back before
-restoring their clients.
+Inspect the effective kubelet shutdown periods:
 
 ```bash
-kubectl exec --namespace rook-ceph deployment/rook-ceph-tools -- ceph status
-
-just kube restore-ceph
-just kube restore-dragonfly
-just kube restore-postgres
+kubectl get --raw "/api/v1/nodes/$MAINT_NODE/proxy/configz" \
+  | python3 -c 'import json, sys; c=json.load(sys.stdin)["kubeletconfig"]; print({k:c.get(k) for k in ("shutdownGracePeriod", "shutdownGracePeriodCriticalPods")})'
+kubectl get daemonsets -n miroir-system \
+  -o custom-columns='NAME:.metadata.name,GRACE:.spec.template.spec.terminationGracePeriodSeconds'
 ```
 
-The Ceph restore rehydrates PostgreSQL and waits for its configured number of
-ready instances, then restores consumers before observability writers and
-backup schedules. Each resumed Deployment, StatefulSet, and DaemonSet must
-complete its rollout. Reconciliation controllers restore last.
+The kubelet is the node service that stops workload containers.
+Make sure that its shutdown periods allow workloads to stop before the Miroir agent.
+Make sure that the critical-Pod period covers the agent termination period.
+[Miroir documents this shutdown ordering](https://github.com/home-operations/miroir/blob/main/docs/requirements.md).
+If the values are unavailable or insufficient, resolve that before rebooting.
 
-Every task saves its inverse before changing the cluster in
-`kubernetes/.maintenance-state.json` (ignored by Git). Recovery restores the
-original replica counts, node selectors, schedule suspension values, and
-hibernation annotation. Already-stopped services remain stopped. Keep this file
-until recovery finishes, and use the same checkout and kubeconfig for all stages.
-Do not run concurrent maintenance sessions from different checkouts.
+## 3. Record recovery evidence
 
-Older saved states may contain a stopped `garage-operator` Deployment. The
-helper rejects those states rather than taking its admission webhook offline
-again. Recover the webhook and migrate that saved guard to GarageCluster
-maintenance suspension before retrying. Simply scaling the operator back up
-without suspending reconciliation can restart Garage writers.
+Use the [backup guide](./backups.md) to inspect Kopiur and PostgreSQL backups.
+Record the selected backup identifiers and their ages.
+If the recovery points do not meet the outage plan, create fresh backups before continuing.
 
-Overlapping stages hold a shared consumer down until every stage that selected
-it has been restored. For example, Forgejo stays stopped after `restore-ceph`
-and `restore-dragonfly` if the `postgres` stage is still active. The state file
-is removed after the final successful restore.
+A local snapshot shares the storage disk with its source volume.
+It cannot recover data after that disk fails.
+Use the restore runbooks to establish that the required external backups are readable.
 
-## Verification and interrupted operations
+Save local evidence outside the repository:
 
 ```bash
-kubectl get deployments,statefulsets,daemonsets --all-namespaces
-kubectl get kustomizations,helmreleases --all-namespaces
-kubectl get cluster.postgresql.cnpg.io/postgres --namespace database
-kubectl get pods --all-namespaces
-kubectl exec --namespace rook-ceph deployment/rook-ceph-tools -- ceph status
+umask 077
+MAINT_DIR="$(mktemp -d /tmp/phoebe-maintenance.XXXXXX)"
+printf '%s\n' "$MAINT_NODE" "$MAINT_IP" > "$MAINT_DIR/target.txt"
+kubectl get node "$MAINT_NODE" -o json > "$MAINT_DIR/node-before.json"
+kubectl get miroirvolumes.miroir.home-operations.com -o json > "$MAINT_DIR/volumes-before.json"
+kubectl get pvc -A -o json > "$MAINT_DIR/claims-before.json"
 ```
 
-Reconciliation should return to its previous state after the final restore.
-Workloads should return to their saved replica counts, and PostgreSQL should
-report its configured number of ready instances.
+These commands write local files without changing the cluster.
+Record the directory path in your maintenance notes.
+Keep the original node scheduling state for recovery.
 
-If shutdown fails, inspect the reported consumers and rerun the same shutdown
-task, or run its restore task to cancel maintenance. Repeating a stage preserves
-its original recovery values. If restore fails, fix the reported issue and rerun
-it; the saved state remains available. A replaced resource with a different UID
-requires manual review rather than applying recovery values to a new workload.
-
-Run the helper's offline discovery and recovery tests with:
+If you need a fresh Kubernetes state backup, save an etcd snapshot:
 
 ```bash
-python3 -m unittest discover -s kubernetes -p 'test_maintenance.py'
+talosctl --nodes "$MAINT_IP" --endpoints "$MAINT_IP" etcd snapshot "$MAINT_DIR/etcd.snapshot"
 ```
+
+Etcd stores Kubernetes objects, including Secrets.
+Keep this file private and copy it to your protected backup location before the outage.
+It does not contain application volume data.
+
+## 4. Cordon the node
+
+The next command changes cluster scheduling.
+Cordoning prevents ordinary replacement Pods from starting on the node.
+Existing Pods continue to run until Talos stops them.
+
+```bash
+kubectl cordon "$MAINT_NODE"
+kubectl get node "$MAINT_NODE"
+```
+
+Make sure that the node reports `SchedulingDisabled`.
+[Miroir requires cordoning before reboot](https://github.com/home-operations/miroir/blob/main/docs/maintenance.md).
+Leave the Miroir agent running so that it can release storage during shutdown.
+
+Read backup and restore activity again:
+
+```bash
+kubectl get snapshots.kopiur.home-operations.com,restores.kopiur.home-operations.com -A
+kubectl get backups.postgresql.cnpg.io -n database
+kubectl get jobs,pods -A
+```
+
+Wait for active backup and restore work to finish.
+If an operation cannot finish while cordoned, cancel this maintenance attempt and restore the original scheduling state.
+Investigate the operation before starting a new attempt.
+
+## 5. Reboot or shut down
+
+Choose one operation below.
+Both operations stop services across the cluster.
+Phoebe has no second node for moving workloads during a drain.
+This reboot path uses Talos graceful shutdown after cordoning.
+
+For a reboot, run:
+
+```bash
+talosctl --nodes "$MAINT_IP" --endpoints "$MAINT_IP" reboot --wait --timeout=30m
+```
+
+Shutdown attempts a drain, which requests Pod eviction before stopping the node.
+A disruption budget limits how many application Pods can stop together.
+On one node, that budget can prevent eviction because replacement Pods cannot start elsewhere.
+Review the recorded budgets before choosing shutdown.
+
+For a powered-off maintenance window, run:
+
+```bash
+talosctl --nodes "$MAINT_IP" --endpoints "$MAINT_IP" shutdown --wait --timeout=30m
+```
+
+Wait for physical shutdown before touching hardware.
+Keep the original storage disk and its contents intact.
+Power the machine on when the hardware work finishes.
+
+If shutdown reports an eviction or disruption-budget failure, stop and inspect the named workload.
+Prepare its application-specific shutdown plan before retrying.
+If either command times out, inspect the node state before sending another command.
+Do not use forced reboot, forced shutdown, or a power cut to bypass a failed shutdown.
+Those actions can interrupt storage writes.
+The local `talosctl reboot --help` and `talosctl shutdown --help` describe the installed command behavior.
+
+## 6. Restore scheduling and inspect recovery
+
+Wait for the Talos API and Kubernetes API to return:
+
+```bash
+talosctl --nodes "$MAINT_IP" --endpoints "$MAINT_IP" version
+kubectl wait node/"$MAINT_NODE" --for=condition=Ready --timeout=10m
+kubectl get pods -n miroir-system -o wide
+```
+
+If an API remains unavailable, inspect the physical console and Talos logs before changing storage.
+If the node was schedulable before this procedure, restore scheduling:
+
+```bash
+kubectl uncordon "$MAINT_NODE"
+```
+
+On this single-node cluster, replacement controller Pods need scheduling before full storage recovery can finish.
+If the node was already cordoned, resolve the original maintenance reason before enabling scheduling.
+Wait for Miroir recovery after controllers restart:
+
+```bash
+kubectl get pods -n miroir-system -o wide
+kubectl wait miroirvolumes.miroir.home-operations.com --all \
+  --for=jsonpath='{.status.phase}'=Ready --timeout=10m
+kubectl get miroirnodes.miroir.home-operations.com "$MAINT_NODE" -o yaml
+kubectl get pvc -A
+kubectl get clusters.postgresql.cnpg.io -n database
+kubectl get pods -A
+kubectl get kustomizations.kustomize.toolkit.fluxcd.io,helmreleases.helm.toolkit.fluxcd.io -A
+```
+
+Make sure that the original claims still bind to the recorded volumes.
+Make sure that Miroir volumes are Ready and the pool reports fresh statistics without new errors.
+Make sure that PostgreSQL, application Pods, and Flux resources recover.
+Open the affected applications and test their normal read and write operations.
+Use a fresh backup from the [backup guide](./backups.md) to establish that backups work after the outage.
+
+## If recovery stops
+
+Keep the local evidence and the failed objects for diagnosis.
+Inspect events and Miroir Pods before attempting repairs:
+
+```bash
+kubectl get events -n miroir-system --sort-by=.lastTimestamp
+kubectl get pods -n miroir-system -o wide
+kubectl get miroirvolumes.miroir.home-operations.com -o yaml
+talosctl --nodes "$MAINT_IP" --endpoints "$MAINT_IP" dmesg
+```
+
+Do not delete claims or remove storage finalizers to clear a stalled operation.
+The `miroir-local` class deletes backing storage when Kubernetes releases the volume.
+A finalizer is a deletion guard that waits for cleanup.
+
+If a new shell is required, restore the target variables from `target.txt` and repeat the read-only identity steps.
+Keep existing suspension and scheduling states until their purpose is understood.
+Finish maintenance only after storage, applications, and backups meet the recovery criteria above.

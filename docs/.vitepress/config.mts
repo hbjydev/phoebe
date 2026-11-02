@@ -74,8 +74,21 @@ export default defineConfig({
           { text: 'GitOps', link: '/flows/gitops' },
           { text: 'Updates', link: '/flows/updates' },
           { text: 'Backups', link: '/flows/backups' },
-          { text: 'Ceph maintenance', link: '/flows/maintenance' },
-          { text: 'Ceph migration research', link: '/flows/ceph-migration-research' }
+          {
+            text: 'Restoration',
+            collapsed: false,
+            items: [
+              { text: 'Restore an application', link: '/flows/restore-application' },
+              { text: 'Restore PostgreSQL', link: '/flows/restore-postgres' }
+            ]
+          },
+          {
+            text: 'Maintenance',
+            collapsed: false,
+            items: [
+              { text: 'Miroir maintenance', link: '/flows/maintenance' }
+            ]
+          }
         ]
       }
     ],
