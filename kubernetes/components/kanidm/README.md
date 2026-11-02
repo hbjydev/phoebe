@@ -3,6 +3,28 @@
 This component provisions `kaniop`-based OIDC clients for services to use in a
 consistent way.
 
+## Scheduling gates
+
+`base` adds `k8s.ksgate.org/kanidm-client-ready`, which waits for the
+`KanidmOAuth2Client` named `${APP}` in `${NAMESPACE}` to report `status.ready`.
+`public` inherits this gate without adding a secret check. `private` also adds
+`k8s.ksgate.org/kanidm-client-secret-ready`, which waits for the generated
+`${APP}-kanidm-oauth2-credentials` Secret to contain nonempty `CLIENT_ID` and
+`CLIENT_SECRET` entries.
+
+The patches append to HelmRelease `values.defaultPodOptions.schedulingGates`,
+preserving other components' gates. Consumers must initialize the parent
+containers and use a chart that supports these pod options:
+
+```yaml
+defaultPodOptions:
+  annotations: {}
+  schedulingGates: []
+```
+
+Preserve existing annotations and gates when adding these defaults. Resources
+other than HelmReleases are not patched.
+
 ## Arguments
 
 | Key                                | Description                                                                                                                                                                         | Required? | Default                        |

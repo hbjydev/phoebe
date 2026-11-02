@@ -1,0 +1,26 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - ./ks.yaml
+patches:
+  - target:
+      kind: HelmRelease
+      group: helm.toolkit.fluxcd.io
+      version: v2
+    patch: |-
+      - op: add
+        path: /spec/values/defaultPodOptions/annotations/k8s.ksgate.org~1kanidm-client-ready
+        value: |-
+          {
+            "apiVersion": "kaniop.rs/v1beta1",
+            "kind": "KanidmOAuth2Client",
+            "name": "${APP}",
+            "namespace": "${NAMESPACE}",
+            "expression": "has(resource.status) && has(resource.status.ready) && resource.status.ready"
+          }
+      - op: add
+        path: /spec/values/defaultPodOptions/schedulingGates/-
+        value:
+          name: k8s.ksgate.org/kanidm-client-ready

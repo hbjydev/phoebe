@@ -2,5 +2,25 @@
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1alpha1
 kind: Component
-resources:
-  - ../base/ks.yaml
+components:
+  - ../base
+patches:
+  - target:
+      kind: HelmRelease
+      group: helm.toolkit.fluxcd.io
+      version: v2
+    patch: |-
+      - op: add
+        path: /spec/values/defaultPodOptions/annotations/k8s.ksgate.org~1kanidm-client-secret-ready
+        value: |-
+          {
+            "apiVersion": "v1",
+            "kind": "Secret",
+            "name": "${APP}-kanidm-oauth2-credentials",
+            "namespace": "${NAMESPACE}",
+            "expression": "has(resource.data) && 'CLIENT_ID' in resource.data && 'CLIENT_SECRET' in resource.data && resource.data.CLIENT_ID != '' && resource.data.CLIENT_SECRET != ''"
+          }
+      - op: add
+        path: /spec/values/defaultPodOptions/schedulingGates/-
+        value:
+          name: k8s.ksgate.org/kanidm-client-secret-ready

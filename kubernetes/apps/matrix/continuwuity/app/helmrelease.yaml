@@ -152,6 +152,8 @@ spec:
                 memory: 2Gi
 
     defaultPodOptions:
+      annotations: {}
+      schedulingGates: []
       dnsConfig:
         nameservers:
           - "127.0.0.1"

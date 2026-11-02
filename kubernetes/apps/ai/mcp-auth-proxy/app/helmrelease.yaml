@@ -16,6 +16,10 @@ spec:
     remediation:
       retries: 3
   values:
+    defaultPodOptions:
+      annotations: {}
+      schedulingGates: []
+
     controllers:
       app:
         annotations:
