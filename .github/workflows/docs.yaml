@@ -32,7 +32,7 @@ jobs:
           cache-key: docs-build
 
       - name: Cache VitePress
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: docs/.vitepress/cache
           key: ${{ runner.os }}-vitepress-${{ hashFiles('docs/**', 'pnpm-lock.yaml') }}
