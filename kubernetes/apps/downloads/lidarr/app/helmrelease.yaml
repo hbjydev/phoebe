@@ -48,20 +48,14 @@ spec:
               LIDARR__SERVER__PORT: &port 80
               LIDARR__UPDATE__BRANCH: develop
 
-              LIDARR__POSTGRES__MAINDB: lidarr
-              LIDARR__POSTGRES__HOST:
-                secretKeyRef:
-                  name: lidarr-postgres
-                  key: poolhost
-              LIDARR__POSTGRES__PORT: '5432'
-              LIDARR__POSTGRES__USER:
-                secretKeyRef:
-                  name: lidarr-postgres
-                  key: username
-              LIDARR__POSTGRES__PASSWORD:
-                secretKeyRef:
-                  name: lidarr-postgres
-                  key: password
+              # Verify the pooler using the injected SSL_CERT_FILE trust bundle.
+              LIDARR__POSTGRES__MAINDBCONNECTIONSTRING: >-
+                Host=pooler-rw.database.svc;
+                Database=lidarr;
+                Username=lidarr;
+                SSL Mode=VerifyFull;
+                SSL Certificate=/var/run/secrets/postgresql/tls.crt;
+                SSL Key=/var/run/secrets/postgresql/tls.key;
 
               TZ: Europe/London
             envFrom:
@@ -115,6 +109,24 @@ spec:
               - identifier: app
                 port: *port
     persistence:
+      postgres-certs:
+        type: custom
+        globalMounts:
+          - path: /var/run/secrets/postgresql
+            readOnly: true
+        volumeSpec:
+          csi:
+            driver: csi.cert-manager.io
+            readOnly: true
+            volumeAttributes:
+              csi.cert-manager.io/issuer-name: postgres-client-ca
+              csi.cert-manager.io/issuer-kind: ClusterIssuer
+              csi.cert-manager.io/key-algorithm: ECDSA
+              csi.cert-manager.io/key-size: "384"
+              csi.cert-manager.io/key-encoding: PKCS8
+              csi.cert-manager.io/key-usages: client auth
+              csi.cert-manager.io/common-name: lidarr
+              csi.cert-manager.io/fs-group: "1000"
       config:
         existingClaim: '{{ .Release.Name }}'
       media:
