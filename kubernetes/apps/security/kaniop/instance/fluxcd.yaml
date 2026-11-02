@@ -6,7 +6,7 @@ metadata:
   name: kanidm-git
 spec:
   interval: 1h
-  url: http://forgejo-http.dev.svc.cluster.local:3000/hayden/kanidm-auth-objects
+  url: https://github.com/hbjydev/kanidm-auth-objects.git
   ref:
     name: refs/heads/main
   secretRef:
@@ -30,21 +30,18 @@ kind: ExternalSecret
 metadata:
   name: kanidm-git-auth
 spec:
-  secretStoreRef:
-    kind: ClusterSecretStore
-    name: onepassword
   target:
     name: kanidm-git-auth
-  data:
-    - secretKey: username
-      remoteRef:
-        key: app-forgejo-bot
-        property: user_name
-
-    - secretKey: password
-      remoteRef:
-        key: app-forgejo-bot
-        property: forgejoToken
+    template:
+      data:
+        username: token
+        password: "{{ .token }}"
+  dataFrom:
+    - sourceRef:
+        generatorRef:
+          apiVersion: generators.external-secrets.io/v1alpha1
+          kind: ClusterGenerator
+          name: github-auth-token
 
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/notification.toolkit.fluxcd.io/receiver_v1.json
