@@ -87,6 +87,9 @@ spec:
               limits:
                 memory: 1024Mi
     defaultPodOptions:
+      annotations: {}
+      labels: {}
+      schedulingGates: []
       imagePullSecrets:
         - name: imp-atcr
       securityContext:
