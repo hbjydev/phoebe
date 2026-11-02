@@ -1,0 +1,115 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/policies.kyverno.io/mutatingpolicy_v1.json
+apiVersion: policies.kyverno.io/v1
+kind: MutatingPolicy
+metadata:
+  name: inject-cluster-trust
+spec:
+  failurePolicy: Ignore
+  reinvocationPolicy: Never
+  evaluation:
+    admission:
+      enabled: true
+    mutateExisting:
+      enabled: false
+  autogen:
+    podControllers:
+      controllers: []
+    mutatingAdmissionPolicy:
+      enabled: false
+  matchConstraints:
+    objectSelector:
+      matchLabels:
+        trust.home.arpa/inject: "true"
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: [v1]
+        operations: [CREATE]
+        resources: [pods]
+  matchConditions:
+    - name: application-namespace
+      expression: >-
+        !(object.metadata.namespace in
+          ["kyverno", "kube-system", "kube-public", "kube-node-lease", "flux-system", "cert-manager"])
+
+    - name: known-profiles
+      expression: >-
+        !has(object.metadata.annotations) || object.metadata.annotations.all(k,
+          !(k == "trust.home.arpa/profile" || k.startsWith("trust.home.arpa/profile-")) ||
+          object.metadata.annotations[k] in ["default", "python", "node", "curl", "mount-only"])
+
+    - name: not-opted-out
+      expression: >-
+        !has(object.metadata.annotations) ||
+        !("trust.home.arpa/inject" in object.metadata.annotations) ||
+        object.metadata.annotations["trust.home.arpa/inject"] != "false"
+
+    # Skip the entire Pod on a reserved volume/path collision, including a
+    # previously injected Pod. Never overwrite an application's existing mount.
+    - name: no-volume-collision
+      expression: >-
+        !has(object.spec.volumes) ||
+        !object.spec.volumes.exists(v, v.name == "phoebe-cluster-roots")
+    - name: no-mount-collision
+      expression: >-
+        (object.spec.containers +
+        (has(object.spec.initContainers) ? object.spec.initContainers : [])).all(c,
+          !has(c.volumeMounts) || !c.volumeMounts.exists(m,
+            m.name == "phoebe-cluster-roots" || m.mountPath == "/var/run/cluster-trust"))
+
+  variables:
+    - name: annotations
+      expression: 'has(object.metadata.annotations) ? object.metadata.annotations : {}'
+
+    - name: defaultProfile
+      expression: >-
+        "trust.home.arpa/profile" in variables.annotations ?
+        variables.annotations["trust.home.arpa/profile"] : "default"
+
+    - name: profileEnv
+      expression: >-
+        {"default": ["SSL_CERT_FILE"],
+         "python": ["SSL_CERT_FILE", "REQUESTS_CA_BUNDLE"],
+         "node": ["SSL_CERT_FILE", "NODE_EXTRA_CA_CERTS"],
+         "curl": ["SSL_CERT_FILE", "CURL_CA_BUNDLE"],
+         "mount-only": []}
+
+    - name: containers
+      expression: >-
+        object.spec.containers.map(c, {
+          "container": c,
+          "path": dyn("/spec/containers/" + string(object.spec.containers.indexOf(c))),
+          "profile": dyn("trust.home.arpa/profile-" + c.name in variables.annotations ?
+            variables.annotations["trust.home.arpa/profile-" + c.name] : variables.defaultProfile)
+        }) +
+        (has(object.spec.initContainers) ? object.spec.initContainers.map(c, {
+          "container": c,
+          "path": dyn("/spec/initContainers/" + string(object.spec.initContainers.indexOf(c))),
+          "profile": dyn("trust.home.arpa/profile-" + c.name in variables.annotations ?
+            variables.annotations["trust.home.arpa/profile-" + c.name] : variables.defaultProfile)
+        }) : [])
+
+  mutations:
+    - patchType: JSONPatch
+      jsonPatch:
+        expression: >-
+          [JSONPatch{
+            op: "add", path: "/spec/volumes",
+            value: (has(object.spec.volumes) ? object.spec.volumes : []) + [{
+              "name": dyn("phoebe-cluster-roots"),
+              "configMap": dyn({"name": dyn("cluster-roots"), "items": dyn([{"key": "ca.crt", "path": "ca.crt"}])})
+            }]
+          }] +
+          variables.containers.map(c, JSONPatch{
+            op: "add", path: c.path + "/volumeMounts",
+            value: (has(c.container.volumeMounts) ? c.container.volumeMounts : []) + [{
+              "name": dyn("phoebe-cluster-roots"), "mountPath": dyn("/var/run/cluster-trust"), "readOnly": dyn(true)
+            }]
+          }) +
+          variables.containers.map(c, JSONPatch{
+            op: "add", path: c.path + "/env",
+            value: (has(c.container.env) ? c.container.env : []) +
+              variables.profileEnv[c.profile].filter(e,
+                !has(c.container.env) || !c.container.env.exists(existing, existing.name == e)
+              ).map(e, {"name": e, "value": "/var/run/cluster-trust/ca.crt"})
+          })
