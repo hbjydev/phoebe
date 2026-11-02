@@ -1,9 +1,9 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: [
-    "local>hayden/renovate-config",
-    "local>hayden/phoebe//.renovate/groups.json5",
-    "local>hayden/phoebe//.renovate/autoMerge.json5",
+    "local>hbjydev/renovate-config",
+    "local>hbjydev/phoebe//.renovate/groups.json5",
+    "local>hbjydev/phoebe//.renovate/autoMerge.json5",
   ],
   ignorePaths: [
     "**/*.sops.*",
