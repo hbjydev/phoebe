@@ -55,7 +55,7 @@ jobs:
 
   docs-deploy:
     name: Deploy
-    needs: build
+    needs: docs-build
     runs-on: ubuntu-26.04
     environment:
       name: github-pages
