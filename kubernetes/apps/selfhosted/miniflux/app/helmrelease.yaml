@@ -32,6 +32,8 @@ spec:
               tag: 2.3.5-distroless@sha256:c826edc9c2284a8181e297d22a5ade1482bd9a8a4beabb2b6356bd22ce731310
             env:
               TZ: Europe/London
+              # Allow internal feeds; Cilium still restricts reachable services.
+              FETCHER_ALLOW_PRIVATE_NETWORKS: "1"
 
               DATABASE_URL:
                 secretKeyRef:
