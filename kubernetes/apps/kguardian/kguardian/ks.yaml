@@ -11,8 +11,7 @@ spec:
       app.kubernetes.io/name: kguardian
   interval: 1h
   components:
-    # Keep the role password provisioned until broker certificate auth is verified.
-    - ../../../../components/postgres/pass
+    - ../../../../components/postgres/base
   dependsOn:
     - name: kyverno-config
       namespace: kyverno
