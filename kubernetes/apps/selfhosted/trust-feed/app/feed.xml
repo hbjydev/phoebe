@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Phoebe private CA trust test</title>
+    <link>https://trust-feed.selfhosted.svc.cluster.local/</link>
+    <description>A static feed served over HTTPS using the cluster-ca issuer.</description>
+    <language>en-gb</language>
+    <item>
+      <title>Private CA feed fetched successfully</title>
+      <link>https://trust-feed.selfhosted.svc.cluster.local/</link>
+      <guid isPermaLink="false">phoebe-trust-test-1</guid>
+      <description>If this entry appears with Ignore TLS errors disabled, Miniflux accepted the service's private-CA certificate.</description>
+    </item>
+  </channel>
+</rss>

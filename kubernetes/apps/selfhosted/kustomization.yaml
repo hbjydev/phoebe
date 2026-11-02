@@ -12,3 +12,4 @@ resources:
   - ./searxng/ks.yaml
   - ./smtp-relay/ks.yaml
   - ./tranquil/ks.yaml
+  - ./trust-feed/ks.yaml

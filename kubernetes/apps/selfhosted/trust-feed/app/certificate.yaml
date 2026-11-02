@@ -1,0 +1,22 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: trust-feed
+spec:
+  secretName: trust-feed-tls
+  dnsNames:
+    - trust-feed.selfhosted.svc.cluster.local
+    - trust-feed.selfhosted.svc
+  issuerRef:
+    name: cluster-ca
+    kind: ClusterIssuer
+    group: cert-manager.io
+  duration: 720h
+  renewBefore: 240h
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+    rotationPolicy: Always
+  usages:
+    - server auth
