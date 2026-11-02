@@ -9,6 +9,53 @@ spec:
     kind: OCIRepository
     name: kguardian
   interval: 30m
+  # Chart 1.29.2 hardcodes password auth and has no extra volume/mount values.
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              group: apps
+              version: v1
+              kind: Deployment
+              name: kguardian-broker
+            patch: |-
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: kguardian-broker
+                annotations:
+                  configmap.reloader.stakater.com/reload: cluster-roots
+              spec:
+                template:
+                  metadata:
+                    labels:
+                      trust.home.arpa/inject: "true"
+                  spec:
+                    containers:
+                      - name: broker
+                        env:
+                          - name: DB_PASSWORD
+                            $patch: delete
+                          - name: DATABASE_URL
+                            value: "postgresql://kguardian@pooler-rw.database.svc.cluster.local:5432/kguardian?sslmode=verify-full&sslcert=/var/run/secrets/postgresql/tls.crt&sslkey=/var/run/secrets/postgresql/tls.key&sslrootcert=/var/run/cluster-trust/ca.crt"
+                        volumeMounts:
+                          - name: postgres-certs
+                            mountPath: /var/run/secrets/postgresql
+                            readOnly: true
+                    volumes:
+                      - name: postgres-certs
+                        csi:
+                          driver: csi.cert-manager.io
+                          readOnly: true
+                          volumeAttributes:
+                            csi.cert-manager.io/issuer-name: postgres-client-ca
+                            csi.cert-manager.io/issuer-kind: ClusterIssuer
+                            csi.cert-manager.io/key-algorithm: ECDSA
+                            csi.cert-manager.io/key-size: "384"
+                            csi.cert-manager.io/key-encoding: PKCS8
+                            csi.cert-manager.io/key-usages: client auth
+                            csi.cert-manager.io/common-name: kguardian
+                            csi.cert-manager.io/fs-group: "1000"
   values:
     global:
       labels:
@@ -37,7 +84,7 @@ spec:
       external:
         host: pooler-rw.database.svc.cluster.local
         port: 5432
-        sslMode: disable
+        sslMode: verify-full
 
     ai:
       enabled: true
