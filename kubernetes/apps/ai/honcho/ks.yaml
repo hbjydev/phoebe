@@ -12,6 +12,9 @@ spec:
   components:
     - ../../../../components/postgres/pass
     - ../../../../components/redis
+  dependsOn:
+    - name: kyverno-config
+      namespace: kyverno
   interval: 1h
   path: ./kubernetes/apps/ai/honcho/app
   postBuild:

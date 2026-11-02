@@ -14,8 +14,10 @@ spec:
       honcho:
         annotations:
           reloader.stakater.com/auto: "true"
+          configmap.reloader.stakater.com/reload: cluster-roots
         pod:
           labels:
+            trust.home.arpa/inject: "true"
             ingress.policy.home.arpa/internal: allow
             db.policy.home.arpa/postgres: allow
             db.policy.home.arpa/df-honcho-redis: allow
@@ -32,7 +34,6 @@ spec:
             args:
               - |
                 cd /app
-                export DB_CONNECTION_URI="postgresql+psycopg://$${PGUSER}:$${PGPASSWORD}@$${PGHOST}:$${PGPORT}/$${PGDB}"
                 /app/.venv/bin/python scripts/provision_db.py
                 /app/.venv/bin/python scripts/configure_embeddings.py --yes
                 exec /app/.venv/bin/fastapi run --host 0.0.0.0 src/main.py
@@ -63,11 +64,7 @@ spec:
               TELEMETRY_ENABLED: "false"
 
               # Database
-              PGDB: { secretKeyRef: { name: honcho-postgres, key: database } }
-              PGUSER: { secretKeyRef: { name: honcho-postgres, key: username } }
-              PGPASSWORD: { secretKeyRef: { name: honcho-postgres, key: password } }
-              PGHOST: { secretKeyRef: { name: honcho-postgres, key: poolhost } }
-              PGPORT: "5432"
+              DB_CONNECTION_URI: "postgresql+psycopg://honcho@pooler-rw.database.svc:5432/honcho?sslmode=verify-full&sslcert=/var/run/secrets/postgresql/tls.crt&sslkey=/var/run/secrets/postgresql/tls.key&sslrootcert=/var/run/cluster-trust/ca.crt"
             probes:
               liveness:
                 enabled: true
@@ -111,7 +108,6 @@ spec:
             args:
               - |
                 cd /app
-                export DB_CONNECTION_URI="postgresql+psycopg://$${PGUSER}:$${PGPASSWORD}@$${PGHOST}:$${PGPORT}/honcho"
                 exec /app/.venv/bin/python -m src.deriver
             env: *env
             securityContext: *sc
@@ -211,6 +207,29 @@ spec:
                   value: /
 
     persistence:
+      postgres-certs:
+        type: custom
+        advancedMounts:
+          honcho:
+            app:
+              - path: /var/run/secrets/postgresql
+                readOnly: true
+            deriver:
+              - path: /var/run/secrets/postgresql
+                readOnly: true
+        volumeSpec:
+          csi:
+            driver: csi.cert-manager.io
+            readOnly: true
+            volumeAttributes:
+              csi.cert-manager.io/issuer-name: postgres-client-ca
+              csi.cert-manager.io/issuer-kind: ClusterIssuer
+              csi.cert-manager.io/key-algorithm: ECDSA
+              csi.cert-manager.io/key-size: "384"
+              csi.cert-manager.io/key-encoding: PKCS8
+              csi.cert-manager.io/key-usages: client auth
+              csi.cert-manager.io/common-name: honcho
+              csi.cert-manager.io/fs-group: "1000"
       config:
         type: configMap
         name: honcho-configmap
