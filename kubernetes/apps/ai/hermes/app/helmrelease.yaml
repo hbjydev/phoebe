@@ -72,8 +72,6 @@ spec:
               PATH: "$(HOME)/.local/bin:$(HOME)/.local/share/mise/shims:$(HOME)/.local/share/brew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
         pod:
-          annotations:
-            trust.home.arpa/profile: python
           labels:
             trust.home.arpa/inject: "true"
             egress.policy.home.arpa/litellm: allow
@@ -144,7 +142,8 @@ spec:
               runAsUser: 0
 
     defaultPodOptions:
-      annotations: {}
+      annotations:
+        trust.home.arpa/profile: python
       schedulingGates: []
       automountServiceAccountToken: true
       imagePullSecrets:
