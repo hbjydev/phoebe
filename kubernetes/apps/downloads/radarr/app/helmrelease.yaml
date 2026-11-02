@@ -21,8 +21,11 @@ spec:
       radarr:
         annotations:
           reloader.stakater.com/auto: "true"
+          configmap.reloader.stakater.com/reload: cluster-roots
         pod:
           labels:
+            # Linux .NET uses OpenSSL roots, including SSL_CERT_FILE.
+            trust.home.arpa/inject: "true"
             ingress.policy.home.arpa/internal: allow
             egress.policy.home.arpa/internet: allow
             egress.policy.home.arpa/sabnzbd: allow
