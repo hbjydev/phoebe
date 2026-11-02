@@ -18,7 +18,7 @@ patches:
             "kind": "KanidmOAuth2Client",
             "name": "${APP}",
             "namespace": "${NAMESPACE}",
-            "expression": "has(resource.status) && has(resource.status.ready) && resource.status.ready"
+            "expression": "has(resource.status) && has(resource.status.conditions) && resource.status.conditions.exists(c, c.type == 'Exists' && c.status == 'True') && resource.status.conditions.filter(c, c.type != 'ImageUpdated').all(c, c.status == 'True' && has(c.observedGeneration) && c.observedGeneration == resource.metadata.generation)"
           }
       - op: add
         path: /spec/values/defaultPodOptions/schedulingGates/-

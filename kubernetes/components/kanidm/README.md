@@ -6,7 +6,9 @@ consistent way.
 ## Scheduling gates
 
 `base` adds `k8s.ksgate.org/kanidm-client-ready`, which waits for the
-`KanidmOAuth2Client` named `${APP}` in `${NAMESPACE}` to report `status.ready`.
+`KanidmOAuth2Client` named `${APP}` in `${NAMESPACE}` to exist and report
+successful conditions for its current generation. `ImageUpdated` is excluded:
+a failed icon download must not block application startup.
 `public` inherits this gate without adding a secret check. `private` also adds
 `k8s.ksgate.org/kanidm-client-secret-ready`, which waits for the generated
 `${APP}-kanidm-oauth2-credentials` Secret to contain nonempty `CLIENT_ID` and
