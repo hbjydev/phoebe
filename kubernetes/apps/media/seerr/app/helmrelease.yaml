@@ -21,8 +21,14 @@ spec:
       seerr:
         annotations:
           reloader.stakater.com/auto: "true"
+          configmap.reloader.stakater.com/reload: cluster-roots
         pod:
+          annotations:
+            # Node HTTPS agents use default CAs plus NODE_EXTRA_CA_CERTS.
+            # https://github.com/seerr-team/seerr/blob/v3.5.1/server/utils/customProxyAgent.ts
+            trust.home.arpa/profile: node
           labels:
+            trust.home.arpa/inject: "true"
             egress.policy.home.arpa/sonarr: allow
             egress.policy.home.arpa/radarr: allow
             ingress.policy.home.arpa/external: allow
