@@ -30,16 +30,16 @@ jobs:
           persist-credentials: false
 
       - name: Setup Repo
-        uses: bitshift-systems/.github/actions/setup-repo@c076e7fb90811393737ccade34be74f9872386a8 # setup-repo-v2.0.0
+        uses: bitshift-systems/.github/actions/setup-repo@fe43aee0037ea8876f3a4ddb111c1a604b09d695 # setup-repo-v2.1.0
         with:
           cache-key: docs-build
-          install-args: node pnpm
+          install-args: node aube
 
       - name: Cache VitePress
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: docs/.vitepress/cache
-          key: ${{ runner.os }}-vitepress-${{ hashFiles('docs/**', 'pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-vitepress-${{ hashFiles('docs/**', 'aube-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-vitepress-
 
@@ -47,10 +47,10 @@ jobs:
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: aube ci
 
       - name: Build VitePress site
-        run: pnpm run build
+        run: aube run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
