@@ -12,3 +12,7 @@ external_secrets:
   TOWONEL_ACME_EMAIL: "op://cluster-phoebe/app-towonel/acmeEmail"
   TOWONEL_INVITE_HASH_KEY: "op://cluster-phoebe/app-towonel/inviteHashKey"
   TOWONEL_OPERATOR_KEY: "op://cluster-phoebe/app-towonel/operatorKey"
+
+  INFISICAL_ENCRYPTION_KEY: "op://cluster-phoebe/app-infisical/encryptionKey"
+  INFISICAL_AUTH_SECRET: "op://cluster-phoebe/app-infisical/authSecret"
+  INFISICAL_POSTGRES_PASSWORD: "op://cluster-phoebe/app-infisical/dbPassword"

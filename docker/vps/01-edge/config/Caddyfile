@@ -74,6 +74,11 @@ doco-cd.hayden.moe {
 	reverse_proxy doco-cd:80
 }
 
+infisical.hayden.moe {
+	log
+	reverse_proxy infisical:8080
+}
+
 towonel.hayden.moe {
 	log
 	reverse_proxy towonel-hub:8443
