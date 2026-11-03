@@ -1,7 +1,7 @@
 ui       = true
 api_addr = "https://openbao.hayden.moe"
 
-storage "file" {
+storage "pebbledb" {
   path = "/openbao/data"
 }
 
