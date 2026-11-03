@@ -4,6 +4,7 @@ MINIJINJA_CONFIG_FILE = "{{ config_root }}/.minijinja.toml"
 SOPS_AGE_KEY_FILE = "{{ config_root }}/age.key"
 TALOSCONFIG = "{{ config_root }}/talos/talosconfig"
 JUST_UNSTABLE = "1"
+VAULT_ADDR = "https://openbao.hayden.moe"
 
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
 KUBE_VERSION="1.37.1"
@@ -46,3 +47,4 @@ aube = { version = "2.9.0", workflow = ["release-plz.yml@refs/heads/main", "rele
 "github:kguardian-dev/kguardian" = { version = "1.12.0", version_prefix = "advisor/", rename_exe = "kubectl-kguardian" }
 jactionlint = "2.4.0"
 shellcheck = "0.11.0"
+openbao = "2.7.2"
