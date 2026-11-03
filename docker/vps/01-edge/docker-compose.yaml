@@ -10,7 +10,7 @@ services:
     environment:
       CADDY_ACME_EMAIL: hayden+acme@hayden.moe
       VPS_LOCAL_HOSTS: >-
-        infisical.hayden.moe
+        openbao.hayden.moe
         doco-cd.hayden.moe
         towonel.hayden.moe
         www.hayden.moe

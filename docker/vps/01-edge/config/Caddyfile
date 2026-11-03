@@ -74,9 +74,9 @@ doco-cd.hayden.moe {
 	reverse_proxy doco-cd:80
 }
 
-infisical.hayden.moe {
+openbao.hayden.moe {
 	log
-	reverse_proxy infisical:8080
+	reverse_proxy openbao:8200
 }
 
 towonel.hayden.moe {
