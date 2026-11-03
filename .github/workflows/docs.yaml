@@ -27,6 +27,7 @@ jobs:
         uses: bitshift-systems/.github/actions/setup-repo@c076e7fb90811393737ccade34be74f9872386a8 # setup-repo-v2.0.0
         with:
           cache-key: docs-build
+          install-args: node pnpm
 
       - name: Cache VitePress
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
