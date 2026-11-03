@@ -56,11 +56,6 @@ services:
       - infisical_pg_data:/var/lib/postgresql/18/docker
     networks:
       - infisical
-    healthcheck:
-      test: "pg_isready --username=${POSTGRES_USER} && psql --username=${POSTGRES_USER} --list"
-      interval: 5s
-      timeout: 10s
-      retries: 10
 
 volumes:
   infisical_pg_data:
