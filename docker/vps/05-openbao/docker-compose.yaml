@@ -11,7 +11,7 @@ services:
     expose:
       - "8200"
     ports:
-      - "127.0.0.1:8200:8200"
+      - "8200:8200"
     volumes:
       - ./config/openbao.hcl:/openbao/config/openbao.hcl
       - data:/openbao/data
