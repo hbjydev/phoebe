@@ -111,7 +111,6 @@ hayden.moe {
 :8082 {
 	log
 
-	# 1. If a path ends in a slash (like "/" or "/about/"), immediately append index.html
 	@trailing_slash path */
 	rewrite @trailing_slash {path}index.html
 
