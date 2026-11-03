@@ -8,7 +8,7 @@ services:
     container_name: caddy
     restart: unless-stopped
     environment:
-      CADDY_ACME_EMAIL: ${TOWONEL_ACME_EMAIL}
+      CADDY_ACME_EMAIL: hayden+acme@hayden.moe
       VPS_LOCAL_HOSTS: >-
         doco-cd.hayden.moe
         towonel.hayden.moe
