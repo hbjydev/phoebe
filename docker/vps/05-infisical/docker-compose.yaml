@@ -53,7 +53,7 @@ services:
       POSTGRES_USER: "infisical"
       POSTGRES_DB: "infisical"
     volumes:
-      - infisical_pg_data:/var/lib/postgresql/data
+      - infisical_pg_data:/var/lib/postgresql/18/docker
     networks:
       - infisical
     healthcheck:
