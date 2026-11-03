@@ -52,6 +52,7 @@ services:
       POSTGRES_PASSWORD: "${INFISICAL_POSTGRES_PASSWORD}"
       POSTGRES_USER: "infisical"
       POSTGRES_DB: "infisical"
+      PGDATA: /var/lib/postgresql/18/docker
     volumes:
       - infisical_pg_data:/var/lib/postgresql/18/docker
     networks:
