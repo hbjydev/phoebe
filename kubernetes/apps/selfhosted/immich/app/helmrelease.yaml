@@ -45,6 +45,7 @@ spec:
             egress.policy.home.arpa/internet: allow
             db.policy.home.arpa/postgres: allow
             db.policy.home.arpa/df-immich-redis: allow
+            trust.home.arpa/inject: "true"
         containers:
           main:
             image:
