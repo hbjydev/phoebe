@@ -46,7 +46,7 @@ spec:
                 secretKeyRef:
                   name: ${APP}-postgres
                   key: url
-              REDIS_URL: redis://${APP}-redis.media.svc.cluster.local
+              REDIS_URL: redis://localhost:6379
               SILO_PLUGIN_CACHE_DIR: /var/lib/silo/plugins
               POSTGRES_TUNE: auto
               MEDIA_CONTAINER_ROOT: /mnt/media
