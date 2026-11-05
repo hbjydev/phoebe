@@ -42,6 +42,16 @@ spec:
       app: *app
       app.kubernetes.io/name: *app
       app.kubernetes.io/part-of: *app
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: database
+            app.kubernetes.io/name: dragonfly
+            app.kubernetes.io/part-of: dragonfly
+      toPorts:
+        - ports:
+            - port: "9999"
+              protocol: TCP
   ingress:
     - fromEndpoints:
         - matchLabels:
