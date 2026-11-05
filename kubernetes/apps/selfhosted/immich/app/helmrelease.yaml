@@ -34,7 +34,8 @@ spec:
     defaultPodOptions:
       annotations:
         trust.home.arpa/profile: node
-      labels: {}
+      labels:
+        trust.home.arpa/inject: "true"
       schedulingGates: []
 
     controllers:
