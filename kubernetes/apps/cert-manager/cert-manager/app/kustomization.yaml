@@ -6,6 +6,7 @@ resources:
   - ./ciliumnetworkpolicy.yaml
   - ./externalsecret.yaml
   - ./clusterissuer.yaml
+  - ./dragonfly.yaml
   - ./helmrelease.yaml
   - ./ocirepository.yaml
   - ./postgres.yaml
