@@ -37,7 +37,7 @@ spec:
         cache:
           ENABLED: true
           ADAPTER: redis
-          HOST: &redis redis://forgejo-redis:6379?pool_size=100&idle_timeout=180s
+          HOST: &redis redis://localhost:6379?pool_size=100&idle_timeout=180s
 
         cron.archive_cleanup:
           ENABLED: true
@@ -129,7 +129,7 @@ spec:
         reloader.stakater.com/auto: "true"
       labels:
         db.policy.home.arpa/postgres: allow
-        db.policy.home.arpa/df-forgejo-redis: allow
+        db.policy.home.arpa/dragonfly: allow
       env:
         - name: PGSSLROOTCERT
           value: /var/run/secrets/root-ca/ca.crt

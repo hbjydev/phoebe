@@ -32,7 +32,7 @@ spec:
             egress.policy.home.arpa/smtp-relay: allow
             egress.policy.home.arpa/litellm: allow
             db.policy.home.arpa/postgres: allow
-            db.policy.home.arpa/df-silo-redis: allow
+            db.policy.home.arpa/dragonfly: allow
         containers:
           app:
             image:
