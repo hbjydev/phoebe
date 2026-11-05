@@ -6,7 +6,7 @@ metadata:
 spec:
   image:
     repository: victoriametrics/victoria-traces
-    tag: v0.12.1
+    tag: v0.13.0
     pullPolicy: Always
 
   resources:
