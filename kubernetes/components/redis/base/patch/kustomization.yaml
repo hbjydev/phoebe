@@ -57,7 +57,7 @@ patches:
                     csi.cert-manager.io/dns-names: ${APP}
             root-ca:
               type: configMap
-              name: root-ca
+              name: cluster-roots
               defaultMode: 0440
               globalMounts:
                 - path: /var/run/secrets/root-ca
