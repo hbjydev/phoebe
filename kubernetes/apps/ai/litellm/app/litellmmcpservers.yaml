@@ -45,7 +45,7 @@ spec:
       trust.home.arpa/profile: python
       configmap.reloader.stakater.com/reload: cluster-roots
     # renovate: datasource=docker depName=ghcr.io/homeassistant-ai/ha-mcp
-    image: ghcr.io/homeassistant-ai/ha-mcp:9.0.0
+    image: ghcr.io/homeassistant-ai/ha-mcp:9.1.0
     port: 8086
     command: ["ha-mcp-web"]
     env:
