@@ -1,0 +1,141 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app dfguard
+spec:
+  interval: 5m
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    defaultPodOptions:
+      labels: {}
+      annotations: {}
+      schedulingGates: []
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+
+    controllers:
+      *app :
+        pod:
+          annotations:
+            instrumentation.opentelemetry.io/inject-sdk: "observability/instrumentation"
+            logging.vlagent.io/exclude-main: "true"
+
+        containers:
+          app:
+            image:
+              repository: ghcr.io/m00nwtchr/dfguard
+              tag: 0.2.9@sha256:2a098b5d81e1dc56cabdd783f901660ffafdc4f4f6b6bc09271c4e926985b0a1
+            env:
+              DFGUARD_PROXY_UPSTREAM: dragonfly.database.svc:6379
+              DFGUARD_PROXY_SERVER_CERT: /tls/server/tls.crt
+              DFGUARD_PROXY_SERVER_KEY: /tls/server/tls.key
+              DFGUARD_PROXY_SERVER_CA: /tls/client/ca.crt
+              DFGUARD_PROXY_UPSTREAM_CERT: /tls/dragonfly/tls.crt
+              DFGUARD_PROXY_UPSTREAM_KEY: /tls/dragonfly/tls.key
+              DFGUARD_PROXY_UPSTREAM_CA: /tls/ca/ca.crt
+              DFGUARD_PROXY_METRICS_LISTEN: "[::]:9464"
+              DFGUARD_PROXY_ACL: /config/acl.conf
+            probes:
+              liveness:
+                enabled: true
+                type: HTTP
+                path: /livez
+                port: &metricsPort 9464
+              readiness:
+                enabled: true
+                type: HTTP
+                path: /readyz
+                port: *metricsPort
+            resources:
+              requests:
+                cpu: 50m
+                memory: 64Mi
+              limits:
+                cpu: 200m
+                memory: 128Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+              seccompProfile:
+                type: RuntimeDefault
+
+    service:
+      app:
+        controller: *app
+        ports:
+          redis:
+            port: 6379
+          metrics:
+            port: *metricsPort
+
+    persistence:
+      acl:
+        type: secret
+        name: dragonfly-acls
+        globalMounts:
+          - path: /config
+            readOnly: true
+
+      tls:
+        type: custom
+        globalMounts:
+          - path: /tls/server
+            readOnly: true
+        volumeSpec:
+          csi:
+            driver: csi.cert-manager.io
+            readOnly: true
+            volumeAttributes:
+              csi.cert-manager.io/issuer-name: database-server-ca
+              csi.cert-manager.io/issuer-kind: Issuer
+              csi.cert-manager.io/key-algorithm: Ed25519
+              csi.cert-manager.io/key-usages: server auth
+              csi.cert-manager.io/dns-names: dfguard.$${POD_NAMESPACE}.svc.cluster.local,$${POD_NAME}.$${POD_NAMESPACE}.svc.cluster.local
+
+      dragonfly-cert:
+        type: custom
+        globalMounts:
+          - path: /tls/dragonfly
+            readOnly: true
+        volumeSpec:
+          csi:
+            driver: csi.cert-manager.io
+            readOnly: true
+            volumeAttributes:
+              csi.cert-manager.io/issuer-name: dragonfly-client-ca
+              csi.cert-manager.io/issuer-kind: ClusterIssuer
+              csi.cert-manager.io/key-algorithm: Ed25519
+              csi.cert-manager.io/key-usages: client auth
+              csi.cert-manager.io/dns-names: $${POD_NAME}.$${POD_NAMESPACE}.svc.cluster.local
+
+      client-ca:
+        type: secret
+        name: dfguard-client-ca
+        globalMounts:
+          - path: /tls/client
+            readOnly: true
+
+      root-ca:
+        type: configMap
+        name: root-ca
+        globalMounts:
+          - path: /tls/ca
+            readOnly: true

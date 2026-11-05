@@ -1,0 +1,81 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.m00nlit.dev/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: &app dragonfly
+spec:
+  endpointSelector:
+    matchLabels:
+      app: *app
+      app.kubernetes.io/name: *app
+      app.kubernetes.io/part-of: *app
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: database
+            app.kubernetes.io/name: dfguard
+            app.kubernetes.io/instance: dfguard
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: database
+            app.kubernetes.io/name: dragonfly
+            app.kubernetes.io/part-of: dragonfly
+            role: replica
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: dragonfly-system
+            control-plane: controller-manager
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: observability
+            app.kubernetes.io/name: vmagent
+      toPorts:
+        - ports:
+            - port: "9999"
+              protocol: TCP
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.m00nlit.dev/cilium.io/ciliumnetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: &app dfguard
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: *app
+      app.kubernetes.io/instance: *app
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: database
+            app: dragonfly
+            app.kubernetes.io/name: dragonfly
+            app.kubernetes.io/part-of: dragonfly
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: observability
+            app.kubernetes.io/name: otel-collector
+            app.kubernetes.io/part-of: opentelemetry
+      toPorts:
+        - ports:
+            - port: "4317"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s-app: coredns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: "ANY"
+          rules:
+            dns:
+              - matchPattern: "*"
