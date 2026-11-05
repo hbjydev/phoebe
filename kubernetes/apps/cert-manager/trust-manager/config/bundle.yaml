@@ -54,6 +54,24 @@ spec:
 apiVersion: trust.cert-manager.io/v1alpha1
 kind: Bundle
 metadata:
+  name: dfguard-client-ca
+spec:
+  sources:
+    - secret:
+        name: dfguard-client-ca
+        key: "tls.crt"
+  target:
+    secret:
+      key: "ca.crt"
+      metadata:
+        labels:
+          cnpg.io/reload: ""
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/trust.cert-manager.io/bundle_v1alpha1.json
+apiVersion: trust.cert-manager.io/v1alpha1
+kind: Bundle
+metadata:
   name: cluster-roots
 spec:
   sources:

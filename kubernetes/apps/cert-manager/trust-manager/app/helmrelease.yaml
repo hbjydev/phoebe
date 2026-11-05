@@ -23,6 +23,7 @@ spec:
         - root-ca
         - postgres-client-ca
         - dragonfly-client-ca
+        - dfguard-client-ca
 
     app:
       trust:
