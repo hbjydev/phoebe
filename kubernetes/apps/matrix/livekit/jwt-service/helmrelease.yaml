@@ -22,7 +22,7 @@ spec:
               LIVEKIT_JWT_BIND: :8081
               LIVEKIT_URL: wss://livekit.hayden.moe
               LIVEKIT_FULL_ACCESS_HOMESERVERS: hayden.moe
-              LIVEKIT_REDIS_URL: redis://dragonfly.database.svc.cluster.local:6379/6
+              LIVEKIT_REDIS_URL: redis://localhost:6379/0
             envFrom:
               - secretRef:
                   name: livekit-keys
