@@ -7,6 +7,7 @@ resources:
   - ./networkpolicy.yaml
   - ./podmonitor.yaml
   - ./base/ks.yaml
+  - ./base/proxy
 
 patches:
   - target:
