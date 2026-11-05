@@ -38,6 +38,10 @@ spec:
     egress.policy.home.arpa/block-all: "true"
     role: master
 
+  aclFromSecret:
+    key: acl.conf
+    name: dragonfly-acls
+
   env:
     - name: MAX_MEMORY
       valueFrom:
