@@ -22,6 +22,7 @@ spec:
       authorizedSecrets:
         - root-ca
         - postgres-client-ca
+        - dragonfly-client-ca
 
     app:
       trust:
