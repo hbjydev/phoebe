@@ -25,7 +25,7 @@ spec:
           cpu: 100m
           memory: 140Mi
         limits:
-          memory: 200Mi
+          memory: 512Mi
 
   storage:
     volumeClaimTemplate:
