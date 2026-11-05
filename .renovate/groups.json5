@@ -11,6 +11,43 @@
     { matchDatasources: ["docker"], matchUpdateTypes: ["digest"],         semanticCommitType: "chore" },
 
     {
+      description: "*Arr Services Group",
+      groupName: "*arr services",
+      groupSlug: "smart-home",
+      matchDatasources: ["docker"],
+      matchDepNames: ["/.+arr/", "/seerr/"],
+    },
+    {
+      description: "Smart Home Services Group",
+      groupName: "Smart home",
+      groupSlug: "smart-home",
+      matchDatasources: ["docker"],
+      matchDepNames: ["/ha-mcp/", "/home-assistant/", "/matterjs-server/", "/homeassistant-otbr/"],
+    },
+    {
+      description: "Download Services Group",
+      groupName: "Downloads",
+      groupSlug: "downloads",
+      matchDatasources: ["docker"],
+      matchDepNames: ["/sabnzbd/", "/qbittorrent/", "/slskd/", "/qui/"],
+    },
+
+    {
+      description: "External DNS Group",
+      groupName: "External DNS",
+      groupSlug: "external-dns",
+      matchDatasources: ["docker"],
+      matchDepNames: ["/external-dns/"],
+    },
+
+    {
+      description: "Terraform Group",
+      groupName: "Terraform",
+      groupSlug: "terraform",
+      matchManagers: ["terraform"],
+    },
+
+    {
       description: "1Password Connect group",
       groupName: "1Password Connect",
       matchDatasources: ["docker"],
