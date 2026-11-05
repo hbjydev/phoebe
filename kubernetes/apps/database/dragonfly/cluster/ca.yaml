@@ -24,6 +24,7 @@ spec:
         - .database.svc.cluster.local
         - .database.svc
         - dragonfly
+        - dfguard
   duration: 8766h # 1 year
   privateKey:
     algorithm: ECDSA
