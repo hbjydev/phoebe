@@ -108,7 +108,7 @@ spec:
               csi.cert-manager.io/issuer-kind: Issuer
               csi.cert-manager.io/key-algorithm: Ed25519
               csi.cert-manager.io/key-usages: server auth
-              csi.cert-manager.io/dns-names: dfguard.$${POD_NAMESPACE}.svc.cluster.local,$${POD_NAME}.$${POD_NAMESPACE}.svc.cluster.local
+              csi.cert-manager.io/dns-names: dfguard.${POD_NAMESPACE}.svc.cluster.local,${POD_NAME}.${POD_NAMESPACE}.svc.cluster.local
 
       dragonfly-cert:
         type: custom
@@ -124,7 +124,7 @@ spec:
               csi.cert-manager.io/issuer-kind: ClusterIssuer
               csi.cert-manager.io/key-algorithm: Ed25519
               csi.cert-manager.io/key-usages: client auth
-              csi.cert-manager.io/dns-names: $${POD_NAME}.$${POD_NAMESPACE}.svc.cluster.local
+              csi.cert-manager.io/dns-names: ${POD_NAME}.${POD_NAMESPACE}.svc.cluster.local
 
       client-ca:
         type: secret
