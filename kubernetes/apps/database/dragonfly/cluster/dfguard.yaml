@@ -134,8 +134,8 @@ spec:
             readOnly: true
 
       root-ca:
-        type: configMap
-        name: cluster-roots
+        type: secret
+        name: root-ca
         globalMounts:
           - path: /tls/ca
             readOnly: true
