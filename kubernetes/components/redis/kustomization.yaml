@@ -6,7 +6,8 @@ resources:
   - ./dragonfly.yaml
   - ./networkpolicy.yaml
   - ./podmonitor.yaml
-  - ./base/ks.yaml
+
+  - ./manual
   - ./base/proxy
 
 patches:
