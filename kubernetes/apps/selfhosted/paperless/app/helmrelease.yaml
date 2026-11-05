@@ -31,7 +31,7 @@ spec:
             ingress.policy.home.arpa/external: allow
             egress.policy.home.arpa/internet: "true"
             egress.policy.home.arpa/smtp-relay: allow
-            db.policy.home.arpa/df-paperless-redis: allow
+            db.policy.home.arpa/dragonfly: allow
         containers:
           app:
             image:

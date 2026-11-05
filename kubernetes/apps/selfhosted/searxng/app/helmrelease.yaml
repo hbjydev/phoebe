@@ -20,7 +20,7 @@ spec:
             ingress.policy.home.arpa/external: allow
             egress.policy.home.arpa/internet: allow
             prom.policy.home.arpa/kps: allow
-            db.policy.home.arpa/df-searxng-redis: allow
+            db.policy.home.arpa/dragonfly: allow
         containers:
           app:
             image:

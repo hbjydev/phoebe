@@ -1,4 +1,36 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cilium.io/ciliumclusterwidenetworkpolicy_v2.json
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: "apps-to-dragonfly"
+spec:
+  endpointSelector:
+    matchLabels:
+      db.policy.home.arpa/dragonfly: allow
+  egress:
+    - toEndpoints: &redis
+        - matchLabels:
+            app.kubernetes.io/name: dragonfly
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+      toPorts: &redisPorts
+        - ports:
+            - port: "6379"
+    - toEndpoints: &dfproxy
+        - matchLabels:
+            app.kubernetes.io/name: dfguard
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+      toPorts: *redisPorts
+    - toEndpoints: *redis
+      icmps: [{}]
+    - toEndpoints: *dfproxy
+      icmps: [{}]
+
+---
 # yaml-language-server: $schema=https://k8s-schemas.m00nlit.dev/cilium.io/ciliumnetworkpolicy_v2.json
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
@@ -22,10 +54,19 @@ spec:
               protocol: TCP
     - fromEndpoints:
         - matchLabels:
+            db.policy.home.arpa/dragonfly: allow
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
             k8s:io.kubernetes.pod.namespace: database
             app.kubernetes.io/name: dragonfly
             app.kubernetes.io/part-of: dragonfly
-            role: replica
         - matchLabels:
             k8s:io.kubernetes.pod.namespace: dragonfly-system
             control-plane: controller-manager
@@ -48,6 +89,17 @@ spec:
     matchLabels:
       app.kubernetes.io/name: *app
       app.kubernetes.io/instance: *app
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            db.policy.home.arpa/dragonfly: allow
+          matchExpressions:
+            - key: io.kubernetes.pod.namespace
+              operator: Exists
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP
   egress:
     - toEndpoints:
         - matchLabels:
