@@ -104,7 +104,7 @@ spec:
             driver: csi.cert-manager.io
             readOnly: true
             volumeAttributes:
-              csi.cert-manager.io/issuer-name: database-server-ca
+              csi.cert-manager.io/issuer-name: dragonfly-server-ca
               csi.cert-manager.io/issuer-kind: Issuer
               csi.cert-manager.io/key-algorithm: Ed25519
               csi.cert-manager.io/key-usages: server auth
@@ -135,7 +135,7 @@ spec:
 
       root-ca:
         type: configMap
-        name: root-ca
+        name: cluster-roots
         globalMounts:
           - path: /tls/ca
             readOnly: true
