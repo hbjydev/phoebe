@@ -34,7 +34,7 @@ spec:
                             csi.cert-manager.io/key-encoding: PKCS8
                             csi.cert-manager.io/key-usages: client auth
                             csi.cert-manager.io/dns-names: ${APP}
-                      - name: root-ca
+                      - name: cluster-roots
                         configMap:
                           name: cluster-roots
                           defaultMode: 0440
@@ -59,7 +59,7 @@ spec:
                           - name: dragonfly-certs
                             mountPath: /var/run/secrets/dragonfly
                             readOnly: true
-                          - name: root-ca
+                          - name: cluster-roots
                             mountPath: /var/run/secrets/root-ca
                             readOnly: true
                         securityContext:
@@ -96,7 +96,7 @@ spec:
                             csi.cert-manager.io/key-encoding: PKCS8
                             csi.cert-manager.io/key-usages: client auth
                             csi.cert-manager.io/dns-names: ${APP}
-                      - name: root-ca
+                      - name: cluster-roots
                         configMap:
                           name: cluster-roots
                           defaultMode: 0440
@@ -121,7 +121,7 @@ spec:
                           - name: dragonfly-certs
                             mountPath: /var/run/secrets/dragonfly
                             readOnly: true
-                          - name: root-ca
+                          - name: cluster-roots
                             mountPath: /var/run/secrets/root-ca
                             readOnly: true
                         securityContext:
