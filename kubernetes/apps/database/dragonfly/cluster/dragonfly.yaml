@@ -5,18 +5,32 @@ kind: Dragonfly
 metadata:
   name: dragonfly
 spec:
-  replicas: 1
+  replicas: 2
+
+  snapshot:
+    cron: "*/5 * * * *"
+    persistentVolumeClaimSpec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 2Gi
+
+  image: ghcr.io/dragonflydb/dragonfly:v2.0.2@sha256:061f00b201b58e12f974e4e96c761a881ee1c05e9d8ee967466a604b7299753b
   args:
+    - "--bind=::"
     - "--admin_bind=::"
     - --maxmemory=$(MAX_MEMORY)Mi
     - --proactor_threads=2
     - --cluster_mode=emulated
     - --lock_on_hashtags
     - --default_lua_flags=allow-undeclared-keys
+    - --dbfilename=persistentState
+
   resources:
     requests:
       cpu: 100m
-      memory: 512Mi
+      memory: 128Mi
     limits:
       memory: 512Mi
 
@@ -30,3 +44,18 @@ spec:
         resourceFieldRef:
           resource: limits.memory
           divisor: 1Mi
+
+  authentication:
+    clientCaCertSecret:
+      name: dragonfly-client-ca
+      key: ca.crt
+
+  tlsSecretRef:
+    name: dragonfly-server-cert
+
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
+    fsGroupChangePolicy: OnRootMismatch
