@@ -32,7 +32,8 @@ spec:
       retries: 3
   values:
     defaultPodOptions:
-      annotations: {}
+      annotations:
+        trust.home.arpa/profile: node
       labels: {}
       schedulingGates: []
 
