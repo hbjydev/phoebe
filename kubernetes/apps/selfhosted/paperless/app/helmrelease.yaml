@@ -45,7 +45,7 @@ spec:
               PAPERLESS_TASK_WORKERS: "2"
 
               # Redis Config
-              PAPERLESS_REDIS: "redis://paperless-redis:6379"
+              PAPERLESS_REDIS: "redis://localhost:6379"
 
               # Folders
               PAPERLESS_DATA_DIR: /mnt/paperless/data

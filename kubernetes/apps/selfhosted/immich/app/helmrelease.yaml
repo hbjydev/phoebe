@@ -58,7 +58,7 @@ spec:
                     name: ${APP}-postgres
                     key: url
 
-              REDIS_HOSTNAME: ${APP}-redis.selfhosted.svc.cluster.local
+              REDIS_HOSTNAME: localhost
               REDIS_PORT: 6379
               REDIS_DBINDEX: 0
 
