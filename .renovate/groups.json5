@@ -48,6 +48,13 @@
     },
 
     {
+      description: "Mise Tools Group",
+      groupName: "Mise Tools",
+      groupSlug: "mise-tools",
+      matchManagers: ["mise"],
+    },
+
+    {
       description: "1Password Connect group",
       groupName: "1Password Connect",
       matchDatasources: ["docker"],
