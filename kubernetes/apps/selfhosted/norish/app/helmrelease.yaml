@@ -74,6 +74,10 @@ spec:
               OIDC_SCOPES: groups
               OIDC_GROUPS_CLAIM: groups
               OIDC_ADMIN_GROUP: norish_admin@sso.hayden.moe
+              DEFAULT_LOCALE: en
+              ENABLED_LOCALES: en,es
+              PAGE_SOLVER_ENABLED: true
+              PAGE_SOLVER_ENDPOINT: http://localhost:8191/v1
             envFrom:
               - secretRef:
                   name: norish
@@ -113,6 +117,17 @@ spec:
                 memory: 128Mi
               limits:
                 memory: 2Gi
+
+          byparr:
+            image:
+              repository: ghcr.io/thephaseless/byparr
+              tag: 3.1.1@sha256:c66fa161187b8fa527bfad7eefa2647ea1c553f77df68cbffd6fe83366d1787b
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
 
     service:
       app:
