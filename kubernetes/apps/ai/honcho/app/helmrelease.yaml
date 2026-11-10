@@ -43,7 +43,7 @@ spec:
 
               # Caching
               CACHE_ENABLED: "true"
-              CACHE_URL: redis://honcho-redis.ai.svc.cluster.local:6379/0?suppress=true
+              CACHE_URL: redis://localhost:6379/0?suppress=true
 
               # Embeddings
               EMBEDDING_MODEL_CONFIG__DIMENSIONS_MODE: never
