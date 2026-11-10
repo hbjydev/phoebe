@@ -1,0 +1,13 @@
+amends "package://github.com/jdx/hk/releases/download/v2.11.1/hk@2.11.1#/Config.pkl"
+import "package://github.com/jdx/hk/releases/download/v2.11.1/hk@2.11.1#/Builtins.pkl"
+
+local linters = new Mapping {
+    ["jactionlint"] = Builtins.jactionlint
+    ["yaml-check"] = new Step {
+        name = "yaml-check"
+        check = "mise run yaml-check"
+        fix = "mise run yaml-check --fix"
+    }
+}
+
+steps = linters

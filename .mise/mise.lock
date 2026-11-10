@@ -492,11 +492,6 @@ url = "https://github.com/aubepkg/aube/releases/download/v2.10.0/aube-v2.10.0-x8
 signer = "sigstore-oidc:https://github.com/aubepkg/aube/.github/workflows/release.yml"
 repository_ids = { repository = "1214542327" }
 
-[[tools."cargo:minijinja-cli"]]
-version = "2.21.0"
-backend = "cargo:minijinja-cli"
-specifiers = ["latest"]
-
 [[tools.cmctl]]
 version = "2.6.2"
 backend = "aqua:cert-manager/cmctl"
