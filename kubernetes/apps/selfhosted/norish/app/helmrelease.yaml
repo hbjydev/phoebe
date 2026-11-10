@@ -1,0 +1,135 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: norish
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    defaultPodOptions:
+      annotations: {}
+      labels: {}
+      schedulingGates: []
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
+    controllers:
+      main:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          annotations:
+            trust.home.arpa/profile: node
+          labels:
+            ingress.policy.home.arpa/external: allow
+            egress.policy.home.arpa/internet: "true"
+            db.policy.home.arpa/postgres: allow
+            db.policy.home.arpa/dragonfly: allow
+            trust.home.arpa/inject: "true"
+        containers:
+          app:
+            image:
+              repository: norishapp/norish
+              tag: v0.26.1-beta@sha256:fa026262378cf6b0cb855acc4a84ec0e3ca9e8e46531acfaeb49919d0ee7ca3c
+            env:
+              PORT: &port 8080
+              TRUSTED_ORIGINS: https://norish.hayden.moe
+              AUTH_URL: https://norish.hayden.moe
+              DATABASE_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: ${APP}-postgres
+                    key: url
+              OBSCURA_ENDPOINT: ws://localhost:9222
+              VALKEY_URL: "valkey://localhost:6379"
+              UPLOADS_DIR: /data/uploads
+              OIDC_NAME: 'Hayden.moe SSO'
+              OIDC_ISSUER: https://sso.hayden.moe/oauth2/openid/norish
+              OIDC_CLIENT_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: norish-kanidm-oauth2-credentials
+                    key: CLIENT_ID
+              OIDC_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: norish-kanidm-oauth2-credentials
+                    key: CLIENT_SECRET
+              OIDC_WELLKNOWN: https://sso.hayden.moe/oauth2/openid/norish/.well-known/openid-configuration
+            envFrom:
+              - secretRef:
+                  name: ${APP}-secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/v1/health/ready
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                memory: 2Gi
+
+          obscura:
+            image:
+              repository: norishapp/obscura
+              tag: 0.2.5-norish.1@sha256:7bd78a6dbb8329a172f8c4d38cd7a875139b5a7756118579c376c978f612a0a9
+            env:
+              OBSCURA_CDP_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: norish
+                    key: OBSCURA_CDP_TOKEN
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                memory: 2Gi
+
+    service:
+      app:
+        controller: main
+        ports:
+          http:
+            port: *port
+
+    route:
+      app:
+        hostnames: ["{{ .Release.Name }}.hayden.moe"]
+        parentRefs:
+          - name: external
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
+
+    persistence:
+      data:
+        existingClaim: "{{ .Release.Name }}"

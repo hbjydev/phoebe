@@ -1,0 +1,42 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app norish
+  namespace: &namespace selfhosted
+spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/redis
+    - ../../../../components/kopiur
+    - ../../../../components/postgres/cert
+    - ../../../../components/kanidm/private
+  dependsOn:
+    - name: miroir-config
+      namespace: miroir-system
+  interval: 1h
+  path: ./kubernetes/apps/selfhosted/norish/app
+  postBuild:
+    substitute:
+      APP: *app
+      NAMESPACE: *namespace
+
+      OIDC_DISPLAY_NAME: Norish
+      OIDC_IMAGE_URL: https://cdn.jsdelivr.net/gh/selfhst/icons@main/svg/norish.svg
+      OIDC_ORIGIN: https://norish.hayden.moe/
+      OIDC_REDIRECT_URLS: '["https://norish.hayden.moe/api/auth/callback/oidc"]'
+      OIDC_GROUP_PREFIX: norish
+      OIDC_USERS_GROUP_MEMBERS: '[hayden, invisible]'
+      OIDC_ADMIN_GROUP_MEMBERS: '[hayden]'
+  prune: true
+  retryInterval: 2m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: *namespace
+  timeout: 5m
+  wait: false

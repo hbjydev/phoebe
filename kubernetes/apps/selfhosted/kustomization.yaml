@@ -8,6 +8,7 @@ components:
 resources:
   - ./immich/ks.yaml
   - ./miniflux/ks.yaml
+  - ./norish/ks.yaml
   - ./paperless/ks.yaml
   - ./searxng/ks.yaml
   - ./smtp-relay/ks.yaml
