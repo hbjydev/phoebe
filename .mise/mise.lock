@@ -446,7 +446,7 @@ signer = "sigstore-oidc:https://github.com/aubepkg/aube/.github/workflows/releas
 repository_ids = { repository = "1214542327" }
 
 [[tools."cargo:minijinja-cli"]]
-version = "2.21.0"
+version = "3.1.0"
 backend = "cargo:minijinja-cli"
 specifiers = ["latest"]
 
