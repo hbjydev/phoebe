@@ -22,6 +22,29 @@ permissions:
   contents: read
 
 jobs:
+  yaml-schema-check:
+    name: YAML Schema Check
+    runs-on: ubuntu-26.04
+    timeout-minutes: 2
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Repo
+        uses: bitshift-systems/.github/actions/setup-repo@50b88cc93d8640157770512ec9e11750d6c06a31 # setup-repo-v2.2.0
+        with:
+          cache-key: yaml-schema-check
+          install-args: uv
+
+      - name: Check YAML schemas
+        env:
+          MISE_TASK_RUN_AUTO_INSTALL: false
+        run: mise run yaml-check
+
   workflow-lint:
     name: Workflow Lint
     runs-on: ubuntu-26.04
@@ -40,6 +63,7 @@ jobs:
     if: ${{ !cancelled() }}
     name: Build Success
     needs:
+      - yaml-schema-check
       - workflow-lint
     runs-on: ubuntu-26.04
     permissions: {}
