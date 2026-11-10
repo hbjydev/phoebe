@@ -1,5 +1,5 @@
-# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/operator.victoriametrics.com/vmnodescrape_v1beta1.json
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/operator.victoriametrics.com/vmnodescrape_v1beta1.json
 apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMNodeScrape
 metadata:
@@ -34,6 +34,7 @@ spec:
       regex: "^(uid|id|name)$"
 
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/operator.victoriametrics.com/vmnodescrape_v1beta1.json
 apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMNodeScrape
 metadata:

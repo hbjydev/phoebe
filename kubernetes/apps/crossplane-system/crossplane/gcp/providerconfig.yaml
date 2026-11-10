@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/gcp.m.upbound.io/clusterproviderconfig_v1beta1.json
 apiVersion: gcp.m.upbound.io/v1beta1
 kind: ClusterProviderConfig
 metadata:
@@ -9,8 +10,8 @@ spec:
     source: ImpersonateServiceAccount
     impersonateServiceAccount:
       name: sa-b-phoebe-crossplane-rm@prj-b-seed-ahjd.iam.gserviceaccount.com
-
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/gcp.m.upbound.io/clusterproviderconfig_v1beta1.json
 apiVersion: gcp.m.upbound.io/v1beta1
 kind: ClusterProviderConfig
 metadata:
@@ -21,8 +22,8 @@ spec:
     source: ImpersonateServiceAccount
     impersonateServiceAccount:
       name: sa-b-phoebe-crossplane-stg@prj-b-seed-ahjd.iam.gserviceaccount.com
-
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/gcp.m.upbound.io/clusterproviderconfig_v1beta1.json
 apiVersion: gcp.m.upbound.io/v1beta1
 kind: ClusterProviderConfig
 metadata:

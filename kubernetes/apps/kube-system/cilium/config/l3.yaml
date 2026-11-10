@@ -29,7 +29,6 @@ spec:
       advertisements:
         matchLabels:
           advertise: bgp
-
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cilium.io/ciliumbgpclusterconfig_v2.json
 apiVersion: cilium.io/v2
@@ -49,8 +48,8 @@ spec:
           peerAddress: 192.168.4.1
           peerConfigRef:
             name: l3-bgp-peer-config
-
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/core/service_v1.json
 apiVersion: v1
 kind: Service
 metadata:

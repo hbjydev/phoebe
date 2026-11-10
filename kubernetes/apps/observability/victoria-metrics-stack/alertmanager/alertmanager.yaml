@@ -1,5 +1,5 @@
-# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/operator.victoriametrics.com/vmalertmanager_v1beta1.json
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/operator.victoriametrics.com/vmalertmanager_v1beta1.json
 apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMAlertmanager
 metadata:
@@ -15,7 +15,6 @@ spec:
     limits:
       cpu: 500m
       memory: 512Mi
-
 ---
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/operator.victoriametrics.com/vmalertmanagerconfig_v1beta1.json
 apiVersion: operator.victoriametrics.com/v1beta1

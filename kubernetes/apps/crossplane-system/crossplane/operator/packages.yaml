@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/pkg.crossplane.io/provider_v1.json
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
@@ -8,6 +9,7 @@ spec:
   runtimeConfigRef:
     name: provider-gcp-cloudplatform
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/pkg.crossplane.io/deploymentruntimeconfig_v1beta1.json
 apiVersion: pkg.crossplane.io/v1beta1
 kind: DeploymentRuntimeConfig
 metadata:
@@ -38,8 +40,8 @@ spec:
                 items:
                   - key: credential-configuration.json
                     path: credential-configuration.json
-
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/pkg.crossplane.io/provider_v1.json
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
@@ -49,6 +51,7 @@ spec:
   runtimeConfigRef:
     name: provider-gcp-iam
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/pkg.crossplane.io/deploymentruntimeconfig_v1beta1.json
 apiVersion: pkg.crossplane.io/v1beta1
 kind: DeploymentRuntimeConfig
 metadata:
@@ -78,8 +81,8 @@ spec:
                 items:
                   - key: credential-configuration.json
                     path: credential-configuration.json
-
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/pkg.crossplane.io/provider_v1.json
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
@@ -89,6 +92,7 @@ spec:
   runtimeConfigRef:
     name: provider-gcp-storage
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/pkg.crossplane.io/deploymentruntimeconfig_v1beta1.json
 apiVersion: pkg.crossplane.io/v1beta1
 kind: DeploymentRuntimeConfig
 metadata:
@@ -118,16 +122,16 @@ spec:
                 items:
                   - key: credential-configuration.json
                     path: credential-configuration.json
-
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/pkg.crossplane.io/function_v1.json
 apiVersion: pkg.crossplane.io/v1
 kind: Function
 metadata:
   name: function-patch-and-transform
 spec:
   package: xpkg.crossplane.io/crossplane-contrib/function-patch-and-transform:v0.10.3
-
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/pkg.crossplane.io/function_v1.json
 apiVersion: pkg.crossplane.io/v1
 kind: Function
 metadata:
@@ -135,6 +139,7 @@ metadata:
 spec:
   package: xpkg.crossplane.io/crossplane-contrib/function-go-templating:v0.12.3
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/pkg.crossplane.io/function_v1.json
 apiVersion: pkg.crossplane.io/v1
 kind: Function
 metadata:

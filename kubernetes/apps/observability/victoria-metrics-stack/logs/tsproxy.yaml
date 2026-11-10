@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/networking.k8s.io/ingress_v1.json
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -11,12 +12,12 @@ spec:
     - hosts:
         - victorialogs
   rules:
-  - http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: vlsingle-victoria-logs
-            port:
-              number: 9428
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: vlsingle-victoria-logs
+                port:
+                  number: 9428
