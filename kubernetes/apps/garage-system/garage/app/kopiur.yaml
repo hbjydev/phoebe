@@ -112,9 +112,8 @@ spec:
     - pvc:
         name: garage-data
   volumeSnapshotClassName: miroir-snap
----
 
-# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotschedule_v1alpha1.json
+---
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/snapshotschedule_v1alpha1.json
 apiVersion: kopiur.home-operations.com/v1alpha1
 kind: SnapshotSchedule
@@ -127,6 +126,7 @@ spec:
     concurrencyPolicy: Forbid
     cron: "0 */12 * * *"
     runOnCreate: false
+
 ---
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kopiur.home-operations.com/restore_v1alpha1.json
 apiVersion: kopiur.home-operations.com/v1alpha1
