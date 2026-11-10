@@ -13,7 +13,7 @@
     {
       description: "*Arr Services Group",
       groupName: "*arr services",
-      groupSlug: "smart-home",
+      groupSlug: "arr-services",
       matchDatasources: ["docker"],
       matchDepNames: ["/.+arr/", "/seerr/"],
     },
