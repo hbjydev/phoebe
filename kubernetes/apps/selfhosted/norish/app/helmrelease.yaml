@@ -18,7 +18,8 @@ spec:
       retries: 3
   values:
     defaultPodOptions:
-      annotations: {}
+      annotations:
+        trust.home.arpa/profile: node
       labels: {}
       schedulingGates: []
       securityContext:
@@ -33,8 +34,6 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         pod:
-          annotations:
-            trust.home.arpa/profile: node
           labels:
             ingress.policy.home.arpa/external: allow
             egress.policy.home.arpa/internet: "true"
