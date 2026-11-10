@@ -2,7 +2,7 @@
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   packageRules: [
     // Datasource-specific types and scopes
-    { matchFileNames:   ["mise.toml", "mise.lock"], semanticCommitType: "build", semanticCommitScope: "tools" },
+    { matchFileNames:   [".mise/config.toml", ".mise/mise.lock"], semanticCommitType: "build", semanticCommitScope: "tools" },
     { matchDatasources: ["docker"],                 semanticCommitScope: "image" },
 
     // Update type-specific types
