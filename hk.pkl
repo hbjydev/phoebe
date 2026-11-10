@@ -2,12 +2,14 @@ amends "package://github.com/jdx/hk/releases/download/v2.11.1/hk@2.11.1#/Config.
 import "package://github.com/jdx/hk/releases/download/v2.11.1/hk@2.11.1#/Builtins.pkl"
 
 local linters = new Mapping {
-    ["jactionlint"] = Builtins.jactionlint
-    ["yaml-check"] = new Step {
-        name = "yaml-check"
-        check = "mise run yaml-check"
-        fix = "mise run yaml-check --fix"
-    }
+  ["jactionlint"] = Builtins.jactionlint
+  ["yaml-check"] = new Step {
+    glob = List("kubernetes/**/*.yaml")
+    name = "yaml-check"
+    check = "mise run yaml-check"
+    fix = "mise run yaml-check --fix"
+    stage = List("kubernetes/**/*.yaml")
+  }
 }
 
 steps = linters
