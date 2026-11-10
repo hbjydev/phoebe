@@ -73,7 +73,7 @@ spec:
               OIDC_WELLKNOWN: https://sso.hayden.moe/oauth2/openid/norish/.well-known/openid-configuration
             envFrom:
               - secretRef:
-                  name: ${APP}-secret
+                  name: norish
             probes:
               liveness: &probes
                 enabled: true
