@@ -12,7 +12,10 @@ from os import environ
 from pathlib import Path
 import re
 import sys
+import warnings
 from ruamel.yaml import YAML
+
+warnings.filterwarnings("ignore")
 
 is_ci = environ.get("CI", "false") == "true"
 
