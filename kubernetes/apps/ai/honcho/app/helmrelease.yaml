@@ -20,7 +20,7 @@ spec:
             trust.home.arpa/inject: "true"
             ingress.policy.home.arpa/internal: allow
             db.policy.home.arpa/postgres: allow
-            db.policy.home.arpa/df-honcho-redis: allow
+            db.policy.home.arpa/dragonfly: allow
             egress.policy.home.arpa/litellm: allow
             egress.policy.home.arpa/internet: allow
         containers:
