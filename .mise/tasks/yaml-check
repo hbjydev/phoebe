@@ -1,0 +1,101 @@
+#!/usr/bin/env -S uv run --script
+#MISE description="Check that all YAML files in the kubernetes directory have a schema comment at the top of each document."
+#MISE tools.uv="0.13.7"
+#USAGE flag "-F --fix" help="Add missing schema comments to YAML files."
+
+# /// script
+# dependencies = ["ruamel.yaml"]
+# ///
+
+from io import StringIO
+from os import environ
+from pathlib import Path
+import re
+import sys
+from ruamel.yaml import YAML
+
+yaml = YAML(typ="rt")
+yaml.indent(mapping=2, sequence=4, offset=2)
+yaml.width = 999
+yaml.explicit_start = True
+yaml.preserve_quotes = True
+
+root = Path(__file__).resolve().parents[2] / "kubernetes"
+
+schema = re.compile(
+    r"^# yaml-language-server:[ \t]+\$schema=[ \t]*\S+",
+    re.MULTILINE,
+)
+
+# Match standalone YAML document markers, with optional comments.
+boundary = re.compile(
+    r"^(?:---|\.\.\.)[ \t]*(?:#[^\r\n]*)?\r?$",
+    re.MULTILINE,
+)
+
+files = sorted(
+    path
+    for path in root.rglob("*")
+    if path.is_file() and path.suffix in {".yaml", ".yml"}
+)
+
+if not files:
+    sys.exit(f"No YAML files found in {root}")
+
+
+def generate_schema_comment(api_version: str, kind: str) -> str:
+    group = "core"
+    version = api_version
+    if "/" in api_version:
+        [group, version] = api_version.lower().split("/", 1)
+
+    return f"yaml-language-server: $schema=https://k8s-schemas.home-operations.com/{group}/{kind.lower()}_{version}.json"
+
+should_fix = bool(environ.get("usage_fix", "false") == "true")
+missing = 0
+total = 0
+
+for path in files:
+    with path.open(encoding="utf-8") as stream:
+        documents = list(yaml.load_all(stream))
+
+    changed = False
+
+    for number, document in enumerate(documents, start=1):
+        if document is None:
+            continue
+
+        comments = document.ca.comment
+        tokens = comments[1] if comments and comments[1] else []
+        header = "".join(token.value for token in tokens)
+
+        if not schema.match(header):
+            total += 1
+            missing += 1
+            if should_fix:
+                if "apiVersion" not in document or "kind" not in document:
+                    # not a kubernetes yaml
+                    continue
+
+                schema_comment = generate_schema_comment(
+                    document["apiVersion"],
+                    document["kind"],
+                )
+
+                document.yaml_set_comment_before_after_key(
+                    next(iter(document)),
+                    before=schema_comment,
+                )
+
+                changed = True
+            else:
+                missing += 1
+                print(f"{path}:{number}: Missing schema comment.")
+
+    if changed:
+        output = StringIO()
+        yaml.dump_all(documents, output)
+        path.write_text(output.getvalue(), encoding="utf-8")
+
+
+sys.exit(1 if missing else 0)
