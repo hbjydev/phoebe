@@ -70,14 +70,14 @@ for path in files:
         tokens = comments[1] if comments and comments[1] else []
         header = "".join(token.value for token in tokens)
 
+        if "apiVersion" not in document or "kind" not in document:
+            # not a kubernetes yaml
+            continue
+
         if not schema.match(header):
             total += 1
             missing += 1
             if should_fix:
-                if "apiVersion" not in document or "kind" not in document:
-                    # not a kubernetes yaml
-                    continue
-
                 schema_comment = generate_schema_comment(
                     document["apiVersion"],
                     document["kind"],
