@@ -53,6 +53,7 @@ def generate_schema_comment(api_version: str, kind: str) -> str:
 
 should_fix = bool(environ.get("usage_fix", "false") == "true")
 missing = 0
+fixed = 0
 total = 0
 
 for path in files:
@@ -87,6 +88,7 @@ for path in files:
                     before=schema_comment,
                 )
 
+                fixed += 1
                 changed = True
             else:
                 missing += 1
@@ -98,4 +100,6 @@ for path in files:
         path.write_text(output.getvalue(), encoding="utf-8")
 
 
-sys.exit(1 if missing else 0)
+sys.exit(1 if fixed != missing else 0)
+
+# vim:ft=python
