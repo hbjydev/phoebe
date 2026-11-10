@@ -14,6 +14,8 @@ import re
 import sys
 from ruamel.yaml import YAML
 
+is_ci = environ.get("CI", "false") == "true"
+
 yaml = YAML(typ="rt")
 yaml.indent(mapping=2, sequence=4, offset=2)
 yaml.width = 999
@@ -77,12 +79,13 @@ for path in files:
         if not schema.match(header):
             total += 1
             missing += 1
-            if should_fix:
-                schema_comment = generate_schema_comment(
-                    document["apiVersion"],
-                    document["kind"],
-                )
 
+            schema_comment = generate_schema_comment(
+                document["apiVersion"],
+                document["kind"],
+            )
+
+            if should_fix:
                 document.yaml_set_comment_before_after_key(
                     next(iter(document)),
                     before=schema_comment,
@@ -92,7 +95,11 @@ for path in files:
                 changed = True
             else:
                 missing += 1
-                print(f"{path}:{number}: Missing schema comment.")
+                if is_ci:
+                    print(f"::error file={path},line={document.lc.line},title=Missing schema comment::This document is missing a schema comment. Please add the following comment at the top of the document:%0A%0A# {schema_comment}%0A%0AYou can generate the correct schema comment using the following command:%0A%0Amise tasks yaml-check --fix")
+                    pass
+                else:
+                    print(f"{path}:{number}: Missing schema comment.")
 
     if changed:
         output = StringIO()
