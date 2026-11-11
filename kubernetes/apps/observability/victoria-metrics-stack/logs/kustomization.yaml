@@ -5,6 +5,5 @@ kind: Kustomization
 resources:
   - ./kopiur.yaml
   - ./tsproxy.yaml
-  - ./vlagent.yaml
   - ./vlsingle.yaml
   - ./grafanadatasource.yaml

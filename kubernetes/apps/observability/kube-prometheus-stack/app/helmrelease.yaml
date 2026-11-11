@@ -25,6 +25,7 @@ spec:
     prometheus:
       enabled: false
     prometheus-node-exporter:
+      enabled: false
       fullnameOverride: node-exporter
     kube-state-metrics:
       fullnameOverride: kube-state-metrics
