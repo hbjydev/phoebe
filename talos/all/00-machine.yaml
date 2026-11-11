@@ -5,3 +5,7 @@ machine:
     - phoebe.hayden.moe
   features:
     diskQuotaSupport: true
+  logging:
+    destinations:
+      - endpoint: "tcp://127.0.0.1:5140"
+        format: "json_lines"

@@ -18,3 +18,7 @@ spec:
       port: 514
       targetPort: 514
       protocol: TCP
+    - name: syslog-unifi
+      port: 515
+      targetPort: 515
+      protocol: TCP

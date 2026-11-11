@@ -6,3 +6,4 @@ resources:
   - ./serviceaccount.yaml
   - ./collector.yaml
   - ./service.yaml
+  - ./tcproute.yaml
