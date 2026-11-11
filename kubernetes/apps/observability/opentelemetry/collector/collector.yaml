@@ -204,7 +204,7 @@ spec:
           queue_size: 1000
 
       otlp_http/vmetrics:
-        metrics_endpoint: http://vmsingle-victoria-metrics.observability.svc.cluster.local:8428/insert/opentelemetry/v1/metrics
+        metrics_endpoint: http://vmsingle-victoria-metrics.observability.svc.cluster.local:8428/opentelemetry/v1/metrics
         compression: gzip
         timeout: 10s
         retry_on_failure:
