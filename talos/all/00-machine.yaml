@@ -7,5 +7,5 @@ machine:
     diskQuotaSupport: true
   logging:
     destinations:
-      - endpoint: "tcp://127.0.0.1:5140"
+      - endpoint: "tcp://10.80.0.10:5140"
         format: "json_lines"
