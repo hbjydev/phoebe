@@ -35,3 +35,25 @@ spec:
         certificateRefs:
           - kind: Secret
             name: hayden-moe-tls
+    - name: syslog-tcp
+      protocol: TCP
+      port: 514
+      allowedRoutes:
+        kinds:
+          - kind: TCPRoute
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              kubernetes.io/metadata.name: observability
+    - name: talos-tcp
+      protocol: TCP
+      port: 5140
+      allowedRoutes:
+        kinds:
+          - kind: TCPRoute
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              kubernetes.io/metadata.name: observability
