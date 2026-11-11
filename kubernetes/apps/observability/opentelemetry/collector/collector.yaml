@@ -86,7 +86,7 @@ spec:
 
       syslog/unifi:
         tcp:
-          listen_address: "[::]:514"
+          listen_address: "[::]:515"
         protocol: rfc3164
 
       tcp_log:
@@ -260,6 +260,21 @@ spec:
         logs/otel:
           receivers: [otlp]
           processors: [memory_limiter, k8s_attributes, resource, batch]
+          exporters: [otlp_http/vlogs]
+
+        logs/talos_machine:
+          receivers: [tcp_log]
+          processors: [memory_limiter, transform/talos, batch]
+          exporters: [otlp_http/vlogs]
+
+        logs/syslog_new:
+          receivers: [syslog/new]
+          processors: [memory_limiter, transform/syslog, batch]
+          exporters: [otlp_http/vlogs]
+
+        logs/syslog_unifi:
+          receivers: [syslog/unifi]
+          processors: [memory_limiter, transform/syslog, batch]
           exporters: [otlp_http/vlogs]
 
         logs/k8s:
