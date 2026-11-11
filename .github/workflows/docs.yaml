@@ -30,7 +30,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup Repo
-        uses: bitshift-systems/.github/actions/setup-repo@50b88cc93d8640157770512ec9e11750d6c06a31 # setup-repo-v2.2.0
+        uses: bitshift-systems/.github/actions/setup-repo@a0aab65f0651370a9be252117577556a9ee67bab # setup-repo-v2.2.1
         with:
           cache-key: docs-build
           install-args: node aube
