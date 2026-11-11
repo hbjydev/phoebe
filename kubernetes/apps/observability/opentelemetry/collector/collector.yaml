@@ -3,24 +3,95 @@
 apiVersion: opentelemetry.io/v1beta1
 kind: OpenTelemetryCollector
 metadata:
-  name: otel-collector
+  name: otel-daemonset
 spec:
   mode: daemonset
   serviceAccount: otel-collector
-  image: otel/opentelemetry-collector-contrib:0.165.0
+  image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.165.0
+
   resources:
     requests:
       cpu: 50m
       memory: 128Mi
     limits:
+      cpu: 1000m
       memory: 512Mi
+
   env:
-    - name: NODE_NAME
+    - name: K8S_NODE_NAME
       valueFrom:
         fieldRef:
           fieldPath: spec.nodeName
+    - name: OTEL_RESOURCE_ATTRIBUTES
+      value: "host.name=$(K8S_NODE_NAME)"
+
+  volumes:
+    - name: proc
+      hostPath:
+        path: /proc
+    - name: root
+      hostPath:
+        path: /
+    - name: sys
+      hostPath:
+        path: /sys
+    - name: varlogpods
+      hostPath:
+        path: /var/log/pods
+  volumeMounts:
+    - name: proc
+      mountPath: /host/proc
+      readOnly: true
+    - name: root
+      mountPath: /host/root
+      readOnly: true
+    - name: sys
+      mountPath: /host/sys
+      readOnly: true
+    - name: varlogpods
+      mountPath: /var/log/pods
+      readOnly: true
+
   config:
     receivers:
+      file_log/pods:
+        include:
+          - /var/log/pods/*/*/*.log
+        exclude:
+          - /var/log/pods/*/otc-container/*.log
+        start_at: end
+        include_file_path: true
+        include_file_name: false
+        operators:
+          - type: container
+            id: container-parser
+          - type: json_parser
+            on_error: send_quiet
+
+      host_metrics:
+        collection_interval: 10s
+        root_path: /host
+        scrapers:
+          cpu: {}
+          memory: {}
+          disk: {}
+          #          filesystem: {}
+          load: {}
+          network: {}
+
+      syslog/new:
+        tcp:
+          listen_address: "[::]:514"
+        protocol: rfc5424
+
+      syslog/unifi:
+        tcp:
+          listen_address: "[::]:514"
+        protocol: rfc3164
+
+      tcp_log:
+        listen_address: "[::]:5140"
+
       otlp:
         protocols:
           grpc:
@@ -30,15 +101,15 @@ spec:
 
     processors:
       memory_limiter:
-        check_interval: 1s
-        limit_percentage: 80
-        spike_limit_percentage: 20
+        check_interval: 5s
+        limit_percentage: 70
+        spike_limit_percentage: 25
 
       k8s_attributes:
         auth_type: serviceAccount
         passthrough: false
         filter:
-          node_from_env_var: NODE_NAME
+          node_from_env_var: K8S_NODE_NAME
         extract:
           metadata:
             - k8s.namespace.name
@@ -52,6 +123,13 @@ spec:
             - k8s.cronjob.name
             - k8s.node.name
             - k8s.container.name
+            - container.id
+            - container.image.name
+            - container.image.tags
+          labels:
+            - tag_name: app.label.component
+              key: app.kubernetes.io/component
+              from: pod
         pod_association:
           - sources:
               - from: resource_attribute
@@ -61,6 +139,41 @@ spec:
                 name: k8s.pod.uid
           - sources:
               - from: connection
+
+      resource_detection/env:
+        detectors: [env]
+        timeout: 2s
+
+      transform/hostmetrics:
+        metric_statements:
+          - context: datapoint
+            statements:
+              - set(attributes["instance"], resource.attributes["host.name"])
+
+      transform/talos:
+        error_mode: ignore
+        log_statements:
+          - context: log
+            conditions:
+              - IsString(log.body) and IsMatch(log.body, "^\\{")
+            statements:
+              - merge_maps(log.cache, ParseJSON(log.body), "upsert")
+              - set(resource.attributes["service.name"], log.cache["talos-service"])
+              - set(resource.attributes["host.name"], log.cache["hostname"])
+              - set(log.attributes["level"], log.cache["talos-level"])
+              - set(log.body, log.cache["msg"])
+              - set(log.time_unix_nano, UnixNano(Time(log.cache["talos-time"], "%Y-%m-%dT%H:%M:%S.%fZ")))
+
+      transform/syslog:
+        error_mode: ignore
+        log_statements:
+          - context: log
+            statements:
+              - set(resource.attributes["host.name"], attributes["hostname"])
+              - set(resource.attributes["service.name"], attributes["appname"])
+              - delete_key(attributes, "hostname")
+              - delete_key(attributes, "appname")
+              - set(log.body, attributes["message"])
 
       resource:
         attributes:
@@ -133,11 +246,23 @@ spec:
           receivers: [otlp]
           processors: [memory_limiter, k8s_attributes, resource, batch]
           exporters: [otlp_http/vtraces]
-        metrics:
+
+        metrics/otel:
           receivers: [otlp]
           processors: [memory_limiter, k8s_attributes, resource, batch]
           exporters: [otlp_http/vmetrics]
-        logs:
+
+        metrics/host:
+          receivers: [host_metrics]
+          processors: [memory_limiter, resource_detection/env, transform/hostmetrics, batch]
+          exporters: [otlp_http/vmetrics]
+
+        logs/otel:
           receivers: [otlp]
           processors: [memory_limiter, k8s_attributes, resource, batch]
+          exporters: [otlp_http/vlogs]
+
+        logs/k8s:
+          receivers: [file_log/pods]
+          processors: [memory_limiter, k8s_attributes, batch]
           exporters: [otlp_http/vlogs]
