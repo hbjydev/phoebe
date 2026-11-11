@@ -46,6 +46,17 @@ spec:
           selector:
             matchLabels:
               kubernetes.io/metadata.name: observability
+    - name: syslog-unifi-tcp
+      protocol: TCP
+      port: 515
+      allowedRoutes:
+        kinds:
+          - kind: TCPRoute
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              kubernetes.io/metadata.name: observability
     - name: talos-tcp
       protocol: TCP
       port: 5140
