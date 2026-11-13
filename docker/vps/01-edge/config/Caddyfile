@@ -101,6 +101,15 @@ hayden.moe {
 		reverse_proxy https://matrix.hayden.moe
 	}
 
+	# GoToSocial .well-known — proxy to the gts subdomain
+	@gts path /.well-known/webfinger
+	handle @gts {
+    header {
+      Access-Control-Allow-Origin "*"
+    }
+		reverse_proxy https://gts.hayden.moe
+	}
+
 	# Everything else → anubis bot-challenge; anubis forwards non-challenge
 	# traffic back to caddy:8082 which passes it through to the S3 website.
 	reverse_proxy anubis:8083 {
